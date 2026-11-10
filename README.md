@@ -16,7 +16,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | Cerita scroll 4 babak dari ±6.000 partikel (canvas 2D, tanpa library): Al-Aqsa → اقرأ → SPEAK UP → Al-Aqsa saat fajar. Partikel menghindari kursor, klik/tap memberi gelombang, dan sudut pandang 3D ikut posisi mouse. Animasi berhenti saat hero tidak terlihat. |
+| Hero | **Lentera Fajar.** Ilustrasi kompleks Al-Aqsa (Kubah Shakhrah, Masjid Qibli, menara, zaitun) dalam dua versi: malam dan fajar. Kursor menjadi cahaya yang menyingkap warna fajar; klik menyalakan pelita berisi satu kata Inggris + Arab; scroll menerbitkan matahari dalam 4 babak copy. Parallax 3 lapis, debu cahaya, motif keffiyeh di tepi bawah. Canvas 2D tanpa library, ±60 fps. |
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
