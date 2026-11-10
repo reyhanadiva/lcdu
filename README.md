@@ -16,7 +16,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | Layar dibelah dua: sisi Inggris dan sisi Arab. Garis pembelah mengikuti kursor (miring mengikuti posisi vertikal). Di HP, knob bisa diseret. Ada animasi sapuan sekali saat halaman dibuka. |
+| Hero | Cerita scroll 4 babak dari ±6.000 partikel (canvas 2D, tanpa library): Al-Aqsa → اقرأ → SPEAK UP → Al-Aqsa saat fajar. Partikel menghindari kursor, klik/tap memberi gelombang, dan sudut pandang 3D ikut posisi mouse. Animasi berhenti saat hero tidak terlihat. |
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
@@ -40,7 +40,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
 - [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`).
 - [ ] **Tujuan donasi**: situs lama mencampur "Donasi LCDU" dan "Donasi untuk Palestina" di satu rekening. Perlu dipisah/diperjelas.
-- [ ] **Teks ayat** QS. Al-Baqarah: 261 (potongan awal) — cek di quran.kemenag.go.id.
+- [ ] **Teks ayat** QS. Al-Baqarah: 261 (potongan awal) dan QS. Al-Isra: 1 (potongan) — cek di quran.kemenag.go.id.
 - [ ] **Jadwal**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB.
 - [ ] **Soal kuis** dan kunci jawaban — minta guru Inggris & Arab mengecek ulang.
 

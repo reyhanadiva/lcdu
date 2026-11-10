@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LCDU · Kelas Bahasa Inggris &amp; Arab</title>
+<title>LCDU · Kelas Bahasa Arab &amp; Inggris</title>
 <meta name="description" content="Kelas Bahasa Inggris dan Arab online dari LCDU. Rp100.000 per term, sisanya donasi sesuai kesanggupan.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -97,38 +97,48 @@ button{font:inherit;color:inherit}
 .nav .btn{min-height:42px;padding:.5em 1.1em;font-size:.92rem;box-shadow:none}
 @media (min-width:900px){.nav-links{display:flex}}
 
-/* ===== HERO ===== */
-.hero{position:relative;overflow:clip;color:var(--on-color);isolation:isolate;--sp:56%;--t:0%;--ang:0deg;touch-action:pan-y}
-.layer{background:var(--lazuardi)}
-.layer-ar{position:absolute;inset:0;background:var(--zamrud);clip-path:polygon(calc(var(--sp) + var(--t)) 0,100% 0,100% 100%,calc(var(--sp) - var(--t)) 100%);z-index:1}
-.layer-ar::before,.layer-en::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='white' stroke-width='1.2'%3E%3Crect x='18' y='18' width='36' height='36'/%3E%3Crect x='18' y='18' width='36' height='36' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='9'/%3E%3Cpath d='M0 0L18 18M72 0L54 18M0 72L18 54M72 72L54 54'/%3E%3C/g%3E%3C/svg%3E");background-size:72px 72px}
-.layer-en::before{opacity:.06;background-image:radial-gradient(circle at 1px 1px,white 1.2px,transparent 1.6px);background-size:22px 22px}
-.layer-en{position:relative}
-.hero-inner{position:relative;display:grid;grid-template-rows:auto 1fr auto;gap:clamp(24px,4vh,48px);min-height:min(94svh,920px);padding-block:clamp(104px,15vh,150px) clamp(36px,6vh,64px)}
-.hero-tag{display:flex;align-items:center;gap:10px;font-weight:600;font-size:var(--step--1);color:var(--on-color-soft)}
-.hero-tag i{width:10px;height:10px;border-radius:50%;background:var(--kunyit);display:inline-block}
-.layer-ar .hero-tag{justify-content:flex-end}
-.hero-word{align-self:center;font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,11vw,8.6rem);line-height:.9;letter-spacing:-.045em;margin:0}
-.hero-word span{display:block}
-.hero-word span:nth-child(2){padding-left:1.2em;font-weight:500;color:var(--on-color-soft)}
-.layer-ar .hero-word{font-family:var(--f-ar-display);font-weight:700;font-size:clamp(4rem,15vw,12.5rem);line-height:1.05;letter-spacing:0;text-align:right;direction:rtl}
-.layer-ar .hero-word span:nth-child(2){padding-left:0;padding-right:.9em;font-weight:500}
-.hero-foot{display:grid;gap:24px;align-items:end}
-.hero-lede{max-width:46ch;font-size:var(--step-1);line-height:1.5;color:var(--on-color)}
-.hero-lede b{background:var(--kunyit);color:var(--kunyit-ink);padding:0 .3em;border-radius:6px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+/* ===== HERO: cerita scroll Al-Aqsa (selalu malam → fajar, satu tampilan gelap yang disengaja) ===== */
+.hero{--night:#050920;--night-2:#0D1645;--dawn-warm:#F2A65A;--dawn-gold:#F2C14E;--hero-fg:#EEF1FA;--hero-soft:rgba(238,241,250,.72);--dawn:0;
+  position:relative;height:420vh;background:var(--night);color:var(--hero-fg)}
+.hero-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
+.hero-sky{position:absolute;inset:0;z-index:-2;background:
+  radial-gradient(120% 70% at 70% 0%,var(--night-2) 0%,transparent 60%),
+  linear-gradient(180deg,var(--night) 0%,#081039 70%,#0B1650 100%)}
+.hero-sky::after{content:"";position:absolute;inset:0;opacity:var(--dawn);background:
+  radial-gradient(90% 55% at 68% 100%,rgba(242,166,90,.75) 0%,rgba(242,193,78,.28) 35%,transparent 70%),
+  linear-gradient(180deg,transparent 30%,rgba(120,60,90,.35) 100%)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;display:block}
+.hero-shade{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(5,9,32,.82) 0%,rgba(5,9,32,.45) 34%,transparent 56%)}
+@media (max-width:899px){.hero-shade{background:linear-gradient(180deg,rgba(5,9,32,.9) 0%,rgba(5,9,32,.55) 42%,transparent 60%)}}
+.hero-copy{position:relative;height:100%}
+.beat{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));top:clamp(92px,13vh,130px);display:grid;gap:clamp(16px,2.4vh,26px);align-content:start;opacity:0;pointer-events:none;will-change:opacity,transform}
+@media (min-width:720px){.beat{left:max(32px,env(safe-area-inset-left,0px))}}
+@media (min-width:900px){.beat{right:auto;width:min(46vw,640px);top:50%;transform:translateY(-50%)}}
+.beat.is-live{pointer-events:auto}
+.no-js .beat-0,.beat-0{opacity:1}
+.hero-eyebrow{display:flex;align-items:center;gap:10px;font-weight:600;font-size:var(--step--1);color:var(--hero-soft)}
+.hero-eyebrow i{width:22px;height:2px;background:var(--dawn-gold);display:inline-block}
+.hero-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(3.6rem,8.2vw,8.6rem);line-height:.86;letter-spacing:-.055em;margin:0}
+.hero-h1 span{display:block}
+.hero-sub{max-width:40ch;font-size:var(--step-1);line-height:1.5;color:var(--hero-soft)}
+.hero-sub b{color:var(--hero-fg)}
+.hero .btn-ghost{color:var(--hero-fg)}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px}
-@media (min-width:900px){.hero-foot{grid-template-columns:1fr auto}}
-
-.split{position:absolute;inset:0;z-index:2;pointer-events:none}
-.split-line{position:absolute;top:-10%;bottom:-10%;left:var(--sp);width:2px;margin-left:-1px;background:rgba(255,255,255,.75);transform:rotate(var(--ang));transform-origin:50% 50%}
-.split-knob{position:absolute;top:50%;left:var(--sp);transform:translate(-50%,-50%);pointer-events:auto;display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:var(--surface);color:var(--ink);font-weight:800;font-size:.85rem;box-shadow:0 12px 30px -8px rgba(0,0,0,.45);cursor:ew-resize;touch-action:none;user-select:none;-webkit-user-select:none}
-.split-knob .ar{font-family:var(--f-ar-display);font-size:1.1rem;line-height:1;color:var(--zamrud)}
-.split-knob .en{color:var(--lazuardi)}
-.split-knob svg{width:18px;height:18px;opacity:.6}
-.hero:has(.split-range:focus-visible) .split-knob{outline:3px solid var(--kunyit);outline-offset:3px}
-.split-hint{position:absolute;left:50%;bottom:calc(100% + 10px);transform:translateX(-50%);white-space:nowrap;font-size:.75rem;font-weight:600;color:var(--on-color);opacity:.9;transition:opacity .4s}
-.hero.touched .split-hint{opacity:0}
+.beat-h{font-family:var(--f-display);font-weight:700;font-size:clamp(2.1rem,4.6vw,4.6rem);line-height:.98;letter-spacing:-.035em}
+.beat-p{max-width:38ch;font-size:var(--step-1);line-height:1.5;color:var(--hero-soft)}
+.beat-ar{font-family:var(--f-ar);font-size:clamp(1.5rem,2.4vw,2.2rem);line-height:1.7;color:var(--dawn-gold);direction:rtl;text-align:left}
+.beat-ref{font-size:var(--step--1);color:var(--hero-soft);margin-top:-10px}
+.hero-progress{position:absolute;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 24px);display:grid;gap:10px;justify-items:start;font-size:.78rem;font-weight:700;color:var(--hero-soft)}
+@media (min-width:720px){.hero-progress{left:max(32px,env(safe-area-inset-left,0px))}}
+.hero-progress-bars{display:flex;gap:6px}
+.hero-progress-bars i{width:34px;height:3px;border-radius:3px;background:rgba(238,241,250,.22);overflow:hidden;position:relative}
+.hero-progress-bars i::after{content:"";position:absolute;inset:0;background:var(--dawn-gold);transform:scaleX(var(--f,0));transform-origin:left}
+.hero-progress [lang="ar"]{font-family:var(--f-ar-display);font-size:1rem}
+.hero-hint{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);display:grid;justify-items:center;gap:8px;font-size:.78rem;font-weight:600;color:var(--hero-soft);transition:opacity .4s}
+.hero-hint i{width:2px;height:34px;border-radius:2px;background:linear-gradient(var(--dawn-gold),transparent);animation:hint 1.8s var(--ease) infinite}
+@keyframes hint{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@media (max-width:899px){.hero-hint{display:none}}
+@media (prefers-reduced-motion: reduce){.hero{height:auto}.hero-stage{position:relative;height:100svh;min-height:640px}.beat:not(.beat-0){display:none}.hero-hint,.hero-progress{display:none}}
 
 /* Strip informasi di bawah hero */
 .ticker{background:var(--ink);color:var(--paper);overflow:hidden;border-block:1px solid var(--line)}
@@ -426,45 +436,43 @@ button{font:inherit;color:inherit}
 </header>
 
 <main id="top">
-<!-- ============ HERO: dua lapis yang dibelah kursor ============ -->
-<section class="hero" id="hero" data-cursor="Geser untuk berganti bahasa" aria-label="Pembuka">
-  <div class="layer layer-en">
-    <div class="wrap hero-inner">
-      <p class="hero-tag"><i></i>Kelas Bahasa Inggris</p>
-      <h1 class="hero-word" lang="en" aria-label="Speak with confidence. Belajar Bahasa Inggris dan Arab di LCDU"><span>Speak</span><span>with</span><span>confidence.</span></h1>
-      <div class="hero-foot">
-        <p class="hero-lede">Kelas Bahasa Inggris dan Arab online untuk usia 16 tahun ke atas. <b>Rp100.000 per term</b>, selebihnya donasi sesuai kesanggupan.</p>
+<!-- ============ HERO: Al-Aqsa dari partikel, dirangkai lewat scroll ============ -->
+<section class="hero" id="hero" data-cursor="Sentuh partikelnya" aria-label="Pembuka">
+  <div class="hero-stage">
+    <div class="hero-sky" aria-hidden="true"></div>
+    <canvas id="aqsa" aria-hidden="true"></canvas>
+    <div class="hero-shade" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <div class="beat beat-0 is-live" data-c="0">
+        <p class="hero-eyebrow"><i></i>Kelas Bahasa Arab dan Inggris dari LCDU</p>
+        <h1 class="hero-h1"><span>Bahasa</span><span>untuk</span><span>umat.</span></h1>
+        <p class="hero-sub">Belajar online bersama guru tersertifikasi. <b>Rp100.000 per term</b>, selebihnya donasi sesuai kesanggupan.</p>
         <div class="hero-cta">
           <a class="btn btn-sun" href="#cek-level">Cek level kamu</a>
           <a class="btn btn-ghost" href="#kelas">Lihat jadwal</a>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="layer layer-ar" aria-hidden="true">
-    <div class="wrap hero-inner">
-      <p class="hero-tag">Kelas Bahasa Arab<i></i></p>
-      <p class="hero-word" lang="ar"><span>تَكَلَّمْ</span><span>بِثِقَةٍ</span></p>
-      <div class="hero-foot">
-        <p class="hero-lede">Kelas Bahasa Inggris dan Arab online untuk usia 16 tahun ke atas. <b>Rp100.000 per term</b>, selebihnya donasi sesuai kesanggupan.</p>
-        <div class="hero-cta">
-          <a class="btn btn-sun" href="#cek-level" tabindex="-1">Cek level kamu</a>
-          <a class="btn btn-ghost" href="#kelas" tabindex="-1">Lihat jadwal</a>
-        </div>
+      <div class="beat" data-c=".32">
+        <h2 class="beat-h">Arab, untuk memahami wahyu.</h2>
+        <p class="beat-p">Bahasa Al-Qur'an, dan bahasa saudara-saudara kita di Al-Aqsa.</p>
+      </div>
+      <div class="beat" data-c=".62">
+        <h2 class="beat-h">Inggris, agar suara kita sampai ke dunia.</h2>
+        <p class="beat-p">Kabar dari Palestina perlu disampaikan dalam bahasa yang dipahami dunia.</p>
+      </div>
+      <div class="beat" data-c=".95">
+        <h2 class="beat-h">Dua bahasa. Satu amanah.</h2>
+        <p class="beat-ar" lang="ar">مِنَ الْمَسْجِدِ الْحَرَامِ إِلَى الْمَسْجِدِ الْأَقْصَى</p>
+        <p class="beat-ref">QS. Al-Isra: 1</p>
+        <div class="hero-cta"><a class="btn btn-sun" href="#cek-level">Mulai dari cek level</a><a class="btn btn-ghost" href="#biaya">Lihat biaya</a></div>
       </div>
     </div>
-  </div>
-  <div class="split" aria-hidden="true">
-    <div class="split-line"></div>
-    <div class="split-knob" id="knob">
-      <span class="split-hint">Geser</span>
-      <span class="en">EN</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>
-      <span class="ar">ع</span>
+    <div class="hero-progress" aria-hidden="true">
+      <span id="hero-label">Al-Aqsa</span>
+      <div class="hero-progress-bars"><i></i><i></i><i></i></div>
     </div>
+    <div class="hero-hint" id="hero-hint" aria-hidden="true"><span>Scroll untuk melanjutkan cerita</span><i></i></div>
   </div>
-  <label class="sr-only" for="split-range">Geser untuk menampilkan sisi Bahasa Inggris atau Bahasa Arab</label>
-  <input class="split-range sr-only" id="split-range" type="range" min="5" max="95" value="56">
 </section>
 
 <div class="ticker" aria-hidden="true">
@@ -683,37 +691,262 @@ button{font:inherit;color:inherit}
   var $ = function(s,r){return (r||document).querySelector(s)};
   var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 
-  /* ---------- HERO: belahan dua bahasa ---------- */
-  var hero = $('#hero'), knob = $('#knob'), range = $('#split-range');
-  var s = .56, target = .56, t = 0, tTarget = 0, raf = null, dragging = false, introTimers = [];
-  function paint(){
-    s += (target - s) * .12; t += (tTarget - t) * .12;
-    var w = hero.clientWidth, h = hero.clientHeight;
-    var ang = Math.atan2(2 * (t/100) * w, h) * 180 / Math.PI;
-    hero.style.setProperty('--sp', (s*100).toFixed(2) + '%');
-    hero.style.setProperty('--t', t.toFixed(2) + '%');
-    hero.style.setProperty('--ang', ang.toFixed(2) + 'deg');
-    if (Math.abs(target - s) > .0005 || Math.abs(tTarget - t) > .01) raf = requestAnimationFrame(paint); else raf = null;
-  }
-  function go(){ if (!raf) raf = requestAnimationFrame(paint); }
-  function setTarget(x){ target = Math.min(.95, Math.max(.05, x)); range.value = Math.round(target*100); go(); }
-  function stopIntro(){ introTimers.forEach(clearTimeout); introTimers = []; hero.classList.add('touched'); }
-  hero.addEventListener('pointermove', function(e){
-    if (e.pointerType !== 'mouse' && !dragging) return;
-    var r = hero.getBoundingClientRect();
-    stopIntro();
-    setTarget((e.clientX - r.left) / r.width);
-    tTarget = reduce ? 0 : ((e.clientY - r.top) / r.height - .5) * 8;
-    go();
-  });
-  hero.addEventListener('pointerleave', function(){ tTarget = 0; go(); });
-  knob.addEventListener('pointerdown', function(e){ dragging = true; knob.setPointerCapture(e.pointerId); stopIntro(); });
-  knob.addEventListener('pointermove', function(e){ if(!dragging) return; var r = hero.getBoundingClientRect(); setTarget((e.clientX - r.left)/r.width); });
-  ['pointerup','pointercancel'].forEach(function(ev){ knob.addEventListener(ev, function(){ dragging = false; }); });
-  range.addEventListener('input', function(){ stopIntro(); target = range.value/100; go(); });
-  if (!reduce){
-    [[250,.88],[1150,.16],[2050,.56]].forEach(function(p){ introTimers.push(setTimeout(function(){ target = p[1]; go(); }, p[0])); });
-  }
+  /* ---------- HERO: partikel Al-Aqsa ---------- */
+  (function(){
+    var hero = $('#hero'), cv = $('#aqsa'); if (!hero || !cv) return;
+    var ctx = cv.getContext('2d');
+    var beats = $$('.beat', hero), bars = $$('.hero-progress-bars i', hero), label = $('#hero-label'), hint = $('#hero-hint');
+    var LABELS = ['Al-Aqsa','اقرأ','Speak up','Fajar di Al-Aqsa'];
+    var CENTERS = [0,.32,.62,.95];
+    /* palet: 0 emas kubah, 1 ubin biru, 2 biru gelap, 3 batu, 4 perak, 5 hijau pohon, 6 putih, 7 biru muda, 8 fajar */
+    var PAL = ['#F2C14E','#3C78E6','#2147B8','#D8C7A0','#B7C0CE','#3E8C66','#EEF2FF','#8FB2FF','#FFB46B'];
+    var mobile = innerWidth < 700;
+    var N = mobile ? 2600 : 6000;
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, stage = {cx:0, cy:0, fit:1};
+
+    /* ---- gambar bentuk di kanvas tersembunyi (1000 x 600 satuan), lalu ambil titiknya ---- */
+    function arch(g, x, y, w, h){ g.beginPath(); g.moveTo(x, y + h); g.lineTo(x, y + w/2); g.arc(x + w/2, y + w/2, w/2, Math.PI, 0); g.lineTo(x + w, y + h); g.closePath(); g.fill(); }
+    function cut(g, fn){ g.globalCompositeOperation = 'destination-out'; fn(); g.globalCompositeOperation = 'source-over'; }
+    function drawAqsa(g){
+      var C = function(i){ g.fillStyle = PAL[i]; };
+      /* pelataran dan tangga berarkade (qanatir) */
+      C(3); g.fillRect(0, 528, 1000, 26);
+      g.fillRect(360, 500, 280, 28);
+      cut(g, function(){ for (var i = 0; i < 4; i++) arch(g, 378 + i*66, 506, 40, 24); });
+      /* Masjid Qibli (kubah perak) di kiri */
+      C(3); g.fillRect(36, 432, 262, 96);
+      cut(g, function(){ for (var i = 0; i < 6; i++) arch(g, 54 + i*40, 456, 20, 44); });
+      C(3); g.fillRect(148, 404, 74, 30);
+      C(4); g.beginPath(); g.moveTo(138, 406); g.bezierCurveTo(140, 344, 230, 344, 232, 406); g.closePath(); g.fill();
+      C(4); g.fillRect(183, 330, 4, 22);
+      /* Kubah Shakhrah: dinding segi delapan, ubin biru, marmer di bawah */
+      C(1); g.fillRect(330, 348, 340, 152);
+      C(2); g.fillRect(330, 348, 56, 152); g.fillRect(614, 348, 56, 152);
+      C(6); g.fillRect(330, 466, 340, 34);
+      C(0); g.fillRect(330, 348, 340, 9);
+      cut(g, function(){
+        for (var i = 0; i < 5; i++) arch(g, 404 + i*40, 392, 18, 40);
+        arch(g, 344, 392, 14, 36); arch(g, 364, 392, 12, 36); arch(g, 628, 392, 12, 36); arch(g, 646, 392, 14, 36);
+      });
+      /* leher kubah */
+      C(1); g.fillRect(404, 292, 192, 56);
+      C(2); g.fillRect(404, 292, 24, 56); g.fillRect(572, 292, 24, 56);
+      cut(g, function(){ for (var i = 0; i < 6; i++) arch(g, 438 + i*22, 304, 10, 28); });
+      /* kubah emas */
+      C(0); g.beginPath(); g.moveTo(396, 294); g.bezierCurveTo(394, 214, 446, 166, 500, 160); g.bezierCurveTo(554, 166, 606, 214, 604, 294); g.closePath(); g.fill();
+      /* tiang dan bulan sabit */
+      C(0); g.fillRect(497, 122, 6, 40);
+      g.beginPath(); g.arc(500, 108, 13, 0, Math.PI*2); g.fill();
+      cut(g, function(){ g.beginPath(); g.arc(505, 104, 11, 0, Math.PI*2); g.fill(); });
+      /* menara di kanan */
+      C(3); g.fillRect(806, 246, 24, 282); g.fillRect(797, 312, 42, 8); g.fillRect(800, 246, 36, 6);
+      C(4); g.beginPath(); g.moveTo(804, 246); g.lineTo(818, 196); g.lineTo(832, 246); g.closePath(); g.fill();
+      /* pohon zaitun dan cemara */
+      C(5);
+      [[712,470,13,58],[742,482,11,46],[884,468,14,60],[312,484,11,44],[952,486,10,42]].forEach(function(t){ g.beginPath(); g.ellipse(t[0], t[1], t[2], t[3], 0, 0, Math.PI*2); g.fill(); });
+      g.beginPath(); g.ellipse(930, 486, 36, 28, 0, 0, Math.PI*2); g.fill();
+      C(3); g.fillRect(926, 506, 7, 22);
+    }
+    function drawIqra(g){
+      g.fillStyle = PAL[0]; g.textAlign = 'center'; g.textBaseline = 'middle';
+      var size = 340; g.font = '700 ' + size + 'px "Reem Kufi","Noto Naskh Arabic",serif';
+      var w = g.measureText('اقرأ').width; if (w > 900){ size = size * 900 / w; g.font = '700 ' + size + 'px "Reem Kufi","Noto Naskh Arabic",serif'; }
+      g.fillText('اقرأ', 500, 300);
+    }
+    function drawSpeak(g){
+      g.textAlign = 'center'; g.textBaseline = 'middle';
+      var size = 210; g.font = '800 ' + size + 'px Unbounded,"Arial Black",sans-serif';
+      var w = g.measureText('SPEAK').width; if (w > 940){ size = size * 940 / w; g.font = '800 ' + size + 'px Unbounded,"Arial Black",sans-serif'; }
+      g.fillStyle = PAL[6]; g.fillText('SPEAK', 500, 300 - size*0.52);
+      g.fillStyle = PAL[7]; g.fillText('UP.', 500, 300 + size*0.52);
+    }
+    function nearest(r, gc, b){
+      var best = 0, bd = 1e9;
+      for (var i = 0; i < PAL.length; i++){
+        var h = PAL[i], pr = parseInt(h.substr(1,2),16), pg = parseInt(h.substr(3,2),16), pb = parseInt(h.substr(5,2),16);
+        var d = (pr-r)*(pr-r) + (pg-gc)*(pg-gc) + (pb-b)*(pb-b); if (d < bd){ bd = d; best = i; }
+      }
+      return best;
+    }
+    function sample(draw, depthFn){
+      var c = document.createElement('canvas'); c.width = 1000; c.height = 600;
+      var g = c.getContext('2d'); draw(g);
+      var d = g.getImageData(0, 0, 1000, 600).data, pts = [];
+      for (var y = 0; y < 600; y += 3) for (var x = 0; x < 1000; x += 3){
+        var k = (y*1000 + x)*4; if (d[k+3] > 150) pts.push([x, y, nearest(d[k], d[k+1], d[k+2])]);
+      }
+      for (var i = pts.length - 1; i > 0; i--){ var j = Math.random()*(i+1)|0, t = pts[i]; pts[i] = pts[j]; pts[j] = t; }
+      var X = new Float32Array(N), Y = new Float32Array(N), Z = new Float32Array(N), Cc = new Uint8Array(N);
+      for (var n = 0; n < N; n++){
+        var p = pts[n % pts.length], jit = n >= pts.length ? 1.6 : 0;
+        X[n] = p[0] + (Math.random()-.5)*jit; Y[n] = p[1] + (Math.random()-.5)*jit; Cc[n] = p[2];
+        Z[n] = depthFn(p[0], p[1], p[2]);
+      }
+      return {x:X, y:Y, z:Z, c:Cc};
+    }
+    function aqsaDepth(x, y, c){
+      var z = (Math.random()-.5)*26;
+      if (c === 0 && y < 300){ var u = (x-500)/104; z -= Math.sqrt(Math.max(0, 1 - u*u))*70; }
+      if (c === 2) z += 26;
+      return z;
+    }
+    function flatDepth(){ return (Math.random()-.5)*60; }
+
+    var T = [], ready = false;
+    var px = new Float32Array(N), py = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
+    var sx0 = new Float32Array(N), sy0 = new Float32Array(N), delay = new Float32Array(N), swirl = new Float32Array(N), sz = new Float32Array(N);
+    for (var i = 0; i < N; i++){ delay[i] = Math.random(); swirl[i] = (Math.random()-.5)*2; sz[i] = .7 + Math.random()*.8; }
+    var stars = []; for (var s = 0; s < (mobile ? 90 : 170); s++) stars.push([Math.random(), Math.random()*.75, Math.random()*6.28, .3 + Math.random()*.7]);
+
+    function build(){
+      var A = sample(drawAqsa, aqsaDepth);
+      var A2 = {x:A.x, y:A.y, z:A.z, c:new Uint8Array(A.c)};
+      for (var n = 0; n < N; n++){ if (A2.c[n] === 6 || A2.c[n] === 3) A2.c[n] = (n % 3 === 0) ? 8 : A2.c[n]; }
+      T = [A, sample(drawIqra, flatDepth), sample(drawSpeak, flatDepth), A2];
+      /* posisi awal: tersebar seperti bintang */
+      for (var n = 0; n < N; n++){ px[n] = sx0[n] = Math.random()*W; py[n] = sy0[n] = Math.random()*H*.9; }
+      ready = true;
+    }
+
+    function resize(){
+      var r = hero.querySelector('.hero-stage').getBoundingClientRect();
+      W = Math.round(r.width*DPR); H = Math.round(r.height*DPR);
+      cv.width = W; cv.height = H;
+      var vw = r.width, vh = r.height, box;
+      if (vw >= 900) box = {x: vw*.36, y: vh*.10, w: vw*.66, h: vh*.86};
+      else box = {x: -vw*.05, y: vh*.52, w: vw*1.1, h: vh*.44};
+      var fit = Math.min(box.w/1000, box.h/600);
+      stage = {cx:(box.x + box.w/2)*DPR, cy:(box.y + box.h/2)*DPR, fit:fit*DPR};
+      if (reduce) frame(performance.now());
+    }
+
+    /* ---- input ---- */
+    var mx = -9999, my = -9999, yaw = 0, pitch = 0, yawT = 0, pitchT = 0, pulse = 0, pulseX = 0, pulseY = 0;
+    hero.addEventListener('pointermove', function(e){
+      var r = cv.getBoundingClientRect();
+      mx = (e.clientX - r.left)*DPR; my = (e.clientY - r.top)*DPR;
+      if (!reduce){ yawT = ((e.clientX - r.left)/r.width - .5)*.55; pitchT = ((e.clientY - r.top)/r.height - .5)*.22; }
+    });
+    hero.addEventListener('pointerleave', function(){ mx = my = -9999; yawT = pitchT = 0; });
+    hero.addEventListener('pointerdown', function(e){
+      if (e.target.closest('a,button')) return;
+      var r = cv.getBoundingClientRect(); pulse = 1; pulseX = (e.clientX - r.left)*DPR; pulseY = (e.clientY - r.top)*DPR;
+    });
+
+    /* ---- scroll ---- */
+    var prog = 0, progS = 0;
+    function readScroll(){
+      if (reduce) return;
+      var r = hero.getBoundingClientRect(), total = hero.offsetHeight - innerHeight;
+      prog = total > 0 ? Math.min(1, Math.max(0, -r.top/total)) : 0;
+    }
+    function updateCopy(p){
+      beats.forEach(function(b, i){
+        var c = CENTERS[i], d = Math.abs(p - c);
+        var o = Math.max(0, Math.min(1, 1 - Math.max(0, d - .07)/.07));
+        var shift = (c - p)*240;
+        b.style.opacity = o.toFixed(3);
+        b.style.translate = '0 ' + shift.toFixed(1) + 'px';
+        b.classList.toggle('is-live', o > .6);
+        b.setAttribute('aria-hidden', o > .6 ? 'false' : 'true');
+      });
+      bars.forEach(function(b, i){ var f = Math.max(0, Math.min(1, (p - CENTERS[i])/(CENTERS[i+1] - CENTERS[i]))); b.style.setProperty('--f', f.toFixed(3)); });
+      var k = 0; CENTERS.forEach(function(c, i){ if (p >= c - .12) k = i; });
+      if (label.textContent !== LABELS[k]){ label.textContent = LABELS[k]; if (k === 1) label.setAttribute('lang','ar'); else label.removeAttribute('lang'); }
+      hint.style.opacity = p > .03 ? 0 : 1;
+      hero.style.setProperty('--dawn', Math.max(0, Math.min(1, (p - .74)/.18)).toFixed(3));
+    }
+
+    /* ---- gambar ---- */
+    var t0 = performance.now(), running = true, raf = 0;
+    function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2; }
+    function frame(now){
+      raf = 0;
+      if (!ready) return;
+      progS += (prog - progS)*.14;
+      var p = reduce ? 0 : progS;
+      yaw += (yawT - yaw)*.06; pitch += (pitchT - pitch)*.06;
+      var intro = reduce ? 1 : Math.min(1, (now - t0)/2600);
+      updateCopy(p);
+
+      /* segmen aktif */
+      var k = 0; while (k < CENTERS.length - 2 && p > CENTERS[k+1]) k++;
+      var local = (p - CENTERS[k])/(CENTERS[k+1] - CENTERS[k]);
+      var A = T[k], B = T[k+1];
+      var cy = Math.cos(yaw), sy = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
+      var R = 120*DPR, R2 = R*R, time = now/1000;
+
+      ctx.clearRect(0, 0, W, H);
+      /* bintang */
+      ctx.fillStyle = '#EEF2FF';
+      for (var s = 0; s < stars.length; s++){
+        var st = stars[s]; ctx.globalAlpha = (.25 + .45*Math.abs(Math.sin(time*.6 + st[2])))*st[3]*(1 - +getDawn()*.7);
+        ctx.fillRect(st[0]*W, st[1]*H, DPR*1.2, DPR*1.2);
+      }
+      ctx.globalAlpha = 1;
+
+      var groups = []; for (var g = 0; g < PAL.length; g++) groups.push([]);
+      for (var n = 0; n < N; n++){
+        var t = Math.max(0, Math.min(1, (local - .2 - delay[n]*.28)/.42)), e = reduce ? 0 : ease(t);
+        var ux = A.x[n] + (B.x[n] - A.x[n])*e, uy = A.y[n] + (B.y[n] - A.y[n])*e, uz = A.z[n] + (B.z[n] - A.z[n])*e;
+        var sw = Math.sin(e*Math.PI)*swirl[n]*90; uy += sw; ux += sw*.6;
+        var u = ux - 500, v = uy - 300;
+        var X = u*cy + uz*sy, Z1 = -u*sy + uz*cy, Y = v*cp - Z1*sp, Z = v*sp + Z1*cp;
+        var sc = 900/(900 + Z);
+        var tx = stage.cx + X*sc*stage.fit, ty = stage.cy + Y*sc*stage.fit;
+        if (intro < 1){
+          var it = ease(Math.max(0, Math.min(1, (intro - delay[n]*.45)/.55)));
+          tx = sx0[n] + (tx - sx0[n])*it; ty = sy0[n] + (ty - sy0[n])*it;
+        }
+        var ax = (tx - px[n])*.085, ay = (ty - py[n])*.085;
+        var dx = px[n] - mx, dy = py[n] - my, d2 = dx*dx + dy*dy;
+        if (d2 < R2 && d2 > .01){ var d = Math.sqrt(d2), f = (1 - d/R)*5.5*DPR; ax += dx/d*f; ay += dy/d*f; }
+        if (pulse > 0){ var qx = px[n] - pulseX, qy = py[n] - pulseY, q2 = qx*qx + qy*qy, PR = 260*DPR;
+          if (q2 < PR*PR && q2 > .01){ var q = Math.sqrt(q2), pf = (1 - q/PR)*pulse*16*DPR; ax += qx/q*pf; ay += qy/q*pf; } }
+        vx[n] = (vx[n] + ax)*.78; vy[n] = (vy[n] + ay)*.78;
+        px[n] += vx[n]; py[n] += vy[n];
+        var col = e < .5 ? A.c[n] : B.c[n];
+        groups[col].push(n, sc);
+      }
+      pulse = pulse > .02 ? pulse*.6 : 0;
+
+      for (var gi = 0; gi < PAL.length; gi++){
+        var arr = groups[gi]; if (!arr.length) continue;
+        ctx.fillStyle = PAL[gi];
+        for (var m = 0; m < arr.length; m += 2){
+          var id = arr[m], size = (1.25 + arr[m+1]*.9)*sz[id]*DPR*(mobile ? 1.05 : 1);
+          ctx.fillRect(px[id] - size/2, py[id] - size/2, size, size);
+        }
+      }
+      /* cahaya kursor */
+      if (mx > -9000){
+        ctx.globalCompositeOperation = 'lighter';
+        var lg = ctx.createRadialGradient(mx, my, 0, mx, my, 200*DPR);
+        lg.addColorStop(0, 'rgba(242,193,78,.16)'); lg.addColorStop(1, 'rgba(242,193,78,0)');
+        ctx.fillStyle = lg; ctx.fillRect(mx - 200*DPR, my - 200*DPR, 400*DPR, 400*DPR);
+        ctx.globalCompositeOperation = 'source-over';
+      }
+      if (running && !reduce) raf = requestAnimationFrame(frame);
+    }
+    function getDawn(){ return hero.style.getPropertyValue('--dawn') || 0; }
+    function start(){ if (!raf && running) raf = requestAnimationFrame(frame); }
+
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(en){ running = en[0].isIntersecting && !document.hidden; if (running && !reduce) start(); }, {rootMargin:'100px'}).observe(hero);
+    }
+    document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running && !reduce) start(); });
+    window.addEventListener('scroll', readScroll, {passive:true});
+    window.addEventListener('resize', function(){ var m = innerWidth < 700; resize(); readScroll(); });
+
+    var fontsReady = document.fonts && document.fonts.load ? Promise.all([
+      document.fonts.load('700 100px "Reem Kufi"'), document.fonts.load('800 100px Unbounded')
+    ]).catch(function(){}) : Promise.resolve();
+    var timeout = new Promise(function(r){ setTimeout(r, 1500); });
+    resize(); readScroll();
+    Promise.race([fontsReady, timeout]).then(function(){ build(); t0 = performance.now(); if (reduce) frame(t0); else start(); });
+  })();
+
 
   /* ---------- Kursor ---------- */
   var cur = $('#cursor'), curLabel = $('#cursor-label');
