@@ -204,18 +204,18 @@ function leafCard(kind, rng){
       g.restore();
     }
   } else {
-    /* cemara: gumpalan sisik daun rapat, tepi bergerigi */
-    for (let i = 0; i < 900; i++){
-      const a = rng()*Math.PI*2, r = Math.pow(rng(), .6)*S*.46, x = S/2 + Math.cos(a)*r*.62, y = S/2 + Math.sin(a)*r, k = rng(), d = 1 - r/(S*.46);
-      g.fillStyle = `rgb(${34 + k*22 + d*14},${58 + k*26 + d*20},${36 + k*16 + d*8})`;
-      g.beginPath(); g.ellipse(x, y, 3 + rng()*4, 7 + rng()*7, a, 0, Math.PI*2); g.fill();
+    /* cemara: ranting bersisik rapat berbentuk lidah api (ujung lebih terang), tepi bergerigi */
+    for (let i = 0; i < 1400; i++){
+      const t = rng(), y = S*(.98 - t*.94), half = S*.42*Math.sin(Math.PI*Math.pow(t, .7))*(1 - t*.35), x = S/2 + (rng()*2 - 1)*half, k = rng(), lift = t*.6 + rng()*.4;
+      g.fillStyle = `rgb(${30 + k*18 + lift*28},${52 + k*22 + lift*34},${32 + k*12 + lift*14})`;
+      g.beginPath(); g.ellipse(x, y, 2 + rng()*2.5, 6 + rng()*7, (x - S/2)/S*.9, 0, Math.PI*2); g.fill();
     }
   }
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
 }
 /* tajuk dari kartu: tiap kartu = satu segi empat acak di dalam gumpalan elipsoid. Normal dibuat "membulat" (dari pusat
    gumpalan ke luar) supaya tajuk diterangi seperti satu volume lembut, bukan kartu-kartu datar. */
-function cardCanopy(rng, clumps, n, size, center){
+function cardCanopy(rng, clumps, n, size, center, upright = false){
   const pos = [], nor = [], uv = [], idx = [], v = new THREE.Vector3(), q = new THREE.Quaternion(), e = new THREE.Euler(), nn = new THREE.Vector3();
   const vol = clumps.map(c => c.r[0]*c.r[1]*c.r[2]), tot = vol.reduce((a, b) => a + b, 0);
   const corners = [[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]];
@@ -226,7 +226,9 @@ function cardCanopy(rng, clumps, n, size, center){
     const l = Math.hypot(x, y, z) || 1, sh = .55 + .45*Math.pow(l, .5); x = x/l*sh*(l > .2 ? 1 : .5); y = y/l*sh; z = z/l*sh;
     const px = c.p[0] + x*c.r[0], py = c.p[1] + y*c.r[1], pz = c.p[2] + z*c.r[2];
     nn.set(px - center[0], (py - center[1])*1.4 + .35, pz - center[2]).normalize();
-    q.setFromEuler(e.set(rng()*6.28, rng()*6.28, rng()*6.28));
+    /* upright: kartu berdiri menghadap keluar dari sumbu batang (cemara); selain itu arah acak (zaitun) */
+    if (upright) q.setFromEuler(e.set((rng() - .5)*.7, Math.atan2(px - center[0], pz - center[2]) + (rng() - .5)*1.3, (rng() - .5)*.5, 'YXZ'));
+    else q.setFromEuler(e.set(rng()*6.28, rng()*6.28, rng()*6.28));
     const s = size*(.7 + rng()*.6), b = pos.length/3;
     for (const [cu, cv] of corners){
       v.set(cu*s, cv*s, 0).applyQuaternion(q); pos.push(px + v.x, py + v.y, pz + v.z); nor.push(nn.x, nn.y, nn.z); uv.push(cu + .5, cv + .5);
@@ -595,11 +597,14 @@ export default {
     }
     /* cemara: inti kerucut gelap + kartu sisik daun membentuk gelendong ramping (tinggi satuan, diskala per pohon) */
     function cypressVariant(seed){
-      const r = mulberry32(seed), clumps = [];
-      for (let i = 0; i < 9; i++){ const t = (i + .5)/9, rad = .5*Math.sin(Math.PI*Math.pow(t, .75))*(1 - t*.25) + .05; clumps.push({ p: [(r() - .5)*.06, .15 + t*3.45, (r() - .5)*.06], r: [rad, .32, rad] }); }
-      const core = new THREE.ConeGeometry(.36, 3.3, 7, 1); core.translate(0, 1.95, 0);
+      const r = mulberry32(seed), clumps = [], n = 14, bend = (r() - .5)*.12;
+      for (let i = 0; i < n; i++){
+        const t = (i + .5)/n, rad = .42*Math.sin(Math.PI*Math.pow(t, .7))*(1 - t*.3) + .04;
+        clumps.push({ p: [bend*t*t + (r() - .5)*.04, .25 + t*3.4, (r() - .5)*.04], r: [rad, .3, rad] });
+      }
+      const core = new THREE.CylinderGeometry(.02, .3, 3.2, 7, 1); core.translate(0, 1.85, 0);
       const trunk = new THREE.CylinderGeometry(.05, .08, .5, 6); trunk.translate(0, .25, 0);
-      return [[mergeGeometries([core, trunk]), cypCore], [cardCanopy(r, clumps, mobile ? 90 : 220, .5, [0, 1.8, 0]), cypLeaf]];
+      return [[mergeGeometries([core, trunk]), cypCore], [cardCanopy(r, clumps, mobile ? 130 : 330, .4, [0, 1.8, 0], true), cypLeaf]];
     }
     [['zaitun', oliveVariant, [101, 202, 303]], ['cemara', cypressVariant, [404, 505]]].forEach(([k, f, seeds]) => vegKinds[k] = seeds.map(sd => ({ parts: f(sd), slots: [] })));
     const vegSlot = (kind, sx, sy) => (x, z, s) => {
