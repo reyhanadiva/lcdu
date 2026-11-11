@@ -33,7 +33,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
   GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
-  jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`.
+  jendela hangat sejak awal). Fallback: WebGL gagal → `lentera-hd`. Fps rendah menurunkan kualitas dulu (MSAA/bayangan/bloom/DPR, bisa naik lagi
+  bila lancar); baru pindah ke `lentera-hd` bila di tingkat terendah fps < 24 (dulu langsung pindah → pemilik tidak bisa memakai 3D).
   Anti-aliasing: composer memakai render target MSAA (4× desktop, 2× HP) + alpha-to-coverage untuk daun/sprite; shader
   yang memakai `pow`/`normalize` pada varying wajib di-clamp (dengan MSAA nilai bisa sedikit di luar rentang → NaN → blok
   hitam di bloom). `?debug-perf` juga membuka `window.__dio` untuk memeriksa.
@@ -71,7 +72,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Tiga babak = tiga suasana yang jelas berbeda (permintaan pemilik), berubah bertahap sepanjang scroll, bukan melompat:
   Foto: malam → fajar biru + lampu menyala → matahari terbit keemasan. 3D: malam → fajar ungu-jingga → pagi cerah
   (matahari tinggi, langit biru, kabut tipis). Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
-  (kontras ≥ 6:1); babak 1–2 putih dengan bayangan lembut hanya di belakang teks (foto tidak digelapkan).
+  (kontras ≥ 6:1); babak 1–2 putih di atas gradasi lebar & lembut dari pojok kiri-atas yang memudar habis sebelum
+  babak 3. Jangan pakai elips/bercak gelap di belakang teks dan jangan ada gradasi yang berhenti mendadak (pemilik menolak:
+  terlihat sebagai bulatan hitam dan garis).
 - Kursor: kursor bawaan tidak disembunyikan, tidak ada kursor kustom. Di hero: cahaya hangat lembut mengikuti kursor
   (HP: mengikuti jari) dan menyingkap fajar di sekitarnya. Di luar hero: tanpa efek kursor khusus.
 - Navbar: tersembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah; muncul saat fokus

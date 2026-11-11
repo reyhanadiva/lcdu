@@ -180,12 +180,14 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero[data-text="top"] .beat{bottom:auto;top:calc(env(safe-area-inset-top,0px) + clamp(112px,16vh,156px))}
 @media (orientation: portrait){.hero[data-text="top"] .beat{top:calc(env(safe-area-inset-top,0px) + clamp(88px,11.5svh,128px))}}
 @media (orientation: portrait) and (min-width:600px){.hero[data-text="top"] .beat{right:max(40px,env(safe-area-inset-right,0px));width:auto;max-width:620px}}
-/* scrim: hanya pita tipis di atas (wordmark) — foto tidak digelapkan. Teks babak 1–2 (putih, langit gelap) diberi bayangan
-   lembut di belakangnya; babak 3 jatuh di langit fajar yang terang, jadi teksnya biru tua (kontras ≥ 6:1) tanpa bayangan gelap */
+/* scrim: pita tipis di atas (wordmark) + gradasi lebar & lembut dari pojok kiri-atas (seperti langit yang lebih gelap di
+   sisi itu, bukan bercak) selama teks putih babak 1–2 tampil; memudar habis sebelum babak 3. Babak 3 jatuh di langit
+   fajar yang terang, jadi teksnya biru tua (kontras ≥ 6:1) tanpa penggelapan sama sekali */
 .hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.6) 0%,rgba(4,8,32,.32) 7%,transparent 13%)}
-.hero[data-text="top"] .hero-scrim::after{display:none}
-.hero[data-text="top"] .beat:not(.beat-2)::before{content:"";position:absolute;inset:-34% -16% -40% -14%;z-index:-1;pointer-events:none;
-  background:radial-gradient(closest-side,rgba(4,8,32,.86) 0%,rgba(4,8,32,.8) 55%,rgba(4,8,32,.42) 80%,transparent 100%)}
+.hero[data-text="top"] .hero-scrim::after{display:block;opacity:calc(1 - clamp(0,(var(--p,0) - .67)*7,1));
+  background:radial-gradient(ellipse 95% 80% at 0% 18%,rgba(4,8,32,.7) 0%,rgba(4,8,32,.6) 30%,rgba(4,8,32,.32) 58%,rgba(4,8,32,.1) 78%,transparent 100%)}
+@media (orientation: portrait){.hero[data-text="top"] .hero-scrim::after{background:linear-gradient(180deg,rgba(4,8,32,.62) 0%,rgba(4,8,32,.56) 22%,rgba(4,8,32,.3) 36%,rgba(4,8,32,.08) 46%,transparent 54%)}}
+.hero[data-text="top"] .beat:not(.beat-2){text-shadow:0 1px 2px rgba(4,8,32,.55),0 2px 22px rgba(4,8,32,.75),0 0 60px rgba(4,8,32,.55)}
 .hero[data-text="top"] .beat-2{color:#10163A;text-shadow:0 1px 1px rgba(255,240,224,.35),0 2px 30px rgba(255,236,214,.6)}
 /* editor titik cahaya (?edit-spots) — alat kerja pemilik, bukan untuk pengunjung */
 .hd-editing .hero-copy{opacity:.15}

@@ -336,9 +336,9 @@ function foliageMaterial(map, windU, sway, under){
 
 /* ================= tingkat kualitas ================= */
 const TIERS = [
-  { dpr: 1, shadow: 0, bloom: 0 },        // darurat: tanpa bayangan & bloom
-  { dpr: 1.25, shadow: 1024, bloom: .5 }, // HP: bloom setengah resolusi
-  { dpr: 1.75, shadow: 2048, bloom: 1 },  // laptop
+  { dpr: 1, shadow: 0, bloom: 0, msaa: 0 },        // darurat: tanpa bayangan & bloom
+  { dpr: 1.25, shadow: 1024, bloom: .5, msaa: 2 }, // HP: bloom setengah resolusi
+  { dpr: 1.5, shadow: 2048, bloom: 1, msaa: 4 },   // laptop (MSAA 4× sudah menghaluskan tepi; DPR > 1.5 terlalu berat)
 ];
 
 export default {
@@ -1114,12 +1114,13 @@ export default {
     const sd = new THREE.Vector3(), tmpC = new THREE.Color();
     let lastTarget = -1;
 
-    /* ---------- kualitas otomatis: fps < 40 pada 2 detik pertama → pindah ke Lentera HD;
-       setelah itu, fps rendah menurunkan bayangan/bloom/DPR bertahap ---------- */
-    let tier = mobile ? 1 : 2, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 20, gaveUp = false, firstCheck = true;
+    /* ---------- kualitas otomatis: fps rendah menurunkan MSAA/bayangan/bloom/DPR bertahap; baru pindah ke Lentera HD bila
+       di tingkat terendah pun fps < 24 (perangkat benar-benar tidak sanggup) ---------- */
+    const TOP = mobile ? 1 : 2; let tier = TOP, raised = 0, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 20, gaveUp = false, firstCheck = true;
     function applyTier(){
       const t = TIERS[tier];
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, t.dpr));
+      for (const rt of [composer.renderTarget1, composer.renderTarget2]) if (rt.samples !== t.msaa){ rt.samples = t.msaa; rt.dispose(); }
       sun.castShadow = t.shadow > 0;
       if (t.shadow){ sun.shadow.mapSize.set(t.shadow, t.shadow); if (sun.shadow.map){ sun.shadow.map.dispose(); sun.shadow.map = null; } }
       mats.forEach(m => m.needsUpdate = true);
@@ -1133,8 +1134,16 @@ export default {
       fpsN++; fpsT += dt;
       if (firstCheck ? fpsT < 2000 : fpsN < 90) return;
       const fps = 1000*fpsN/fpsT; fpsN = fpsT = 0;
-      if (firstCheck){ firstCheck = false; if (fps < 40 && state.fallback && !DEBUG_PERF){ gaveUp = true; state.fallback('lentera-hd'); } return; }
+      if (firstCheck && fps < 40 && tier > 0){ tier = fps < 25 ? 0 : tier - 1; warmup = 40; applyTier(); return; }   // ukur lagi 2 detik di tingkat baru
+      if (firstCheck && tier === 0){
+        firstCheck = false;
+        if (fps < 24 && state.fallback && !DEBUG_PERF){ gaveUp = true; state.fallback('lentera-hd'); }
+        return;
+      }
+      firstCheck = false;
       if (fps < 45 && tier > 0){ tier--; warmup = 40; applyTier(); }
+      /* penurunan awal bisa karena patah-patah saat model dimuat: bila ternyata lancar, naik lagi (maksimal 2 kali) */
+      else if (fps > 57 && tier < TOP && raised < 2){ tier++; raised++; warmup = 40; applyTier(); }
     }
 
     function resize(){

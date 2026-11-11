@@ -143,12 +143,13 @@ export default {
       const g = bctx; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(nightC, 0, 0);
       g.globalCompositeOperation = 'luminosity'; g.globalAlpha = .3; g.drawImage(dawnC, 0, 0);
       g.globalCompositeOperation = 'screen'; g.globalAlpha = 1;
-      const sk = g.createLinearGradient(0, 0, 0, horizonY + H*.05);
-      sk.addColorStop(0, 'rgba(40,60,140,.32)'); sk.addColorStop(.6, 'rgba(90,90,170,.3)'); sk.addColorStop(1, 'rgba(120,100,170,.18)');
+      /* semua gradasi memudar ke 0 di kedua ujung dan mengisi seluruh kanvas → tidak ada garis batas */
+      const sk = g.createLinearGradient(0, 0, 0, horizonY + H*.25);
+      sk.addColorStop(0, 'rgba(40,60,140,.32)'); sk.addColorStop(.5, 'rgba(90,90,170,.3)'); sk.addColorStop(.8, 'rgba(120,100,170,.14)'); sk.addColorStop(1, 'rgba(120,100,170,0)');
       g.fillStyle = sk; g.fillRect(0, 0, W, H);
-      const hz = g.createLinearGradient(0, horizonY - H*.3, 0, horizonY + H*.04);
-      hz.addColorStop(0, 'rgba(255,140,150,0)'); hz.addColorStop(.7, 'rgba(255,140,140,.3)'); hz.addColorStop(1, 'rgba(255,170,130,.42)');
-      g.fillStyle = hz; g.fillRect(0, 0, W, horizonY + H*.04);
+      const hz = g.createLinearGradient(0, horizonY - H*.32, 0, horizonY + H*.14);
+      hz.addColorStop(0, 'rgba(255,140,150,0)'); hz.addColorStop(.55, 'rgba(255,140,140,.26)'); hz.addColorStop(.72, 'rgba(255,165,130,.36)'); hz.addColorStop(1, 'rgba(255,170,130,0)');
+      g.fillStyle = hz; g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = 'source-over';
     }
     const toScreen = ([x, y]) => [view.ox + x*view.dw, view.oy + y*view.dh];
@@ -172,9 +173,9 @@ export default {
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
       /* garis waktu (p = 0..1), tiap perubahan berjalan sepanjang scroll, tidak melompat:
          lampu menyala .04–.46 · malam → fajar biru .14–.5 · pendar matahari di cakrawala .44–.66 ·
-         matahari terbit (sapuan keemasan) .54–.96 · sinar & cahaya penuh .72–1 */
+         matahari terbit (sapuan keemasan) .58–.96 · sinar & cahaya penuh .72–1 */
       const lit = smooth((p - .04)/.42)*n, blue = dawn ? smooth((p - .14)/.36) : 0, first = dawn ? smooth((p - .44)/.22) : 0;
-      const dawnT = dawn ? smooth((p - .54)/.42) : 0, full = dawn ? smooth((p - .72)/.28) : 0;
+      const dawnT = dawn ? smooth((p - .58)/.38) : 0, full = dawn ? smooth((p - .72)/.28) : 0;
       const pa = st.pointer.active;
       if (pa){ const tx = st.pointer.x*DPR, ty = st.pointer.y*DPR; lx = lx < 0 ? tx : lx + (tx - lx)*.2; ly = ly < 0 ? ty : ly + (ty - ly)*.2; }
       if (st.reduce){ const key = p.toFixed(4) + (pa ? `${lx | 0},${ly | 0}` : '-') + (dawn ? 'd' : ''); if (key === last) return; last = key; }
