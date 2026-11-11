@@ -14,5 +14,19 @@
       "jpg"
     ]
   },
-  "wide": null
+  "wide": {
+    "night": "night-wide-v2",
+    "dawn": "dawn-wide",
+    "w": 1536,
+    "h": 1024,
+    "widths": [
+      1280,
+      1536
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ]
+  }
 }

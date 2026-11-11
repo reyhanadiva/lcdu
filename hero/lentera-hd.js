@@ -15,7 +15,7 @@ const WEBP = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUA
 /* per orientasi (koordinat relatif gambar): titik fokus cover (kubah), matahari di foto fajar, garis cakrawala */
 const ART = {
   tall: { focus: [.556, .3], sun: [.845, .602], horizon: .63, origin: [.556, .71] },
-  wide: { focus: [.72, .4], sun: [.94, .39], horizon: .45, origin: [.72, .5] },   // perkiraan; periksa ulang saat night-wide-v2 tersedia
+  wide: { focus: [.73, .4], sun: [.942, .389], horizon: .43, origin: [.735, .625] },
 };
 const MASK_Q = .25;   // resolusi masker = 1/4 kanvas
 /* jenis titik cahaya (kolom ke-4 di spots.json):

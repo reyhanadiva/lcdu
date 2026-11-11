@@ -16,7 +16,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | Cerita scroll 3 babak: gelap → cahaya kontribusi menyala → fajar. Dua varian untuk dibandingkan lewat tombol di kiri bawah (atau `?hero=lentera|diorama`): **Lentera** (ilustrasi 2D, ratusan cahaya kecil menyingkap warna fajar), **3D** (maket three.js, kamera bergerak dari malam ke fajar). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
+| Hero | Cerita scroll 3 babak: malam → lampu menyala dari Kubah ke luar → fajar. Dua varian lewat tombol di kiri bawah (atau `?hero=lentera-hd|diorama`): **Foto** (default; foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu) dan **3D** (model Kubah & Qibli). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
@@ -31,11 +31,12 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
 
-## Gambar hero (Lentera HD)
+## Gambar hero (hero Foto)
 
 - Sumber: `assets/hero/night-tall.png` & `dawn-tall.png` (1024×1536, sejajar, lulus `tools/check-align.py`).
-  Pasangan wide (1536×1024) menunggu `night-wide-v2.png`; `night-wide.png` lama tidak sejajar dan tidak dipakai.
-- Turunan web di `assets/hero/build/` (AVIF → WebP → JPG, lebar 750 & 1024), dibuat ulang dengan
+  Pasangan wide: `night-wide-v2.png` + `dawn-wide.png` (1536×1024, lulus; 0 px, korelasi 0,61). `night-wide.png` lama
+  tidak sejajar dan tidak dipakai.
+- Turunan web di `assets/hero/build/` (AVIF → WebP → JPG; tall 750 & 1024, wide 1280 & 1536), dibuat ulang dengan
   `python3 tools/build-hero-images.py`. Lihat `tools/README.md`.
 - Titik cahaya: `hero/spots.json`, atur di browser dengan `?hero=lentera-hd&edit-spots` lalu "Salin JSON".
 
@@ -67,7 +68,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 ## Perlu dilengkapi / diverifikasi sebelum live
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
-- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D dan gambar hero Lentera HD).
+- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D dan gambar hero hero Foto).
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: Placement Test, formulir registrasi, WhatsApp admin, Instagram, alamat (saat ini `#`).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.

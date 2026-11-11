@@ -11,7 +11,8 @@ const sw = document.getElementById('hero-switch');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 
-const VARIANTS = { 'lentera-hd': './lentera-hd.js', lentera: './lentera.js', diorama: './diorama.js' };
+/* 'lentera-hd' = hero foto (gambar malam/fajar dari ChatGPT), tombol "Foto"; 'diorama' = 3D */
+const VARIANTS = { 'lentera-hd': './lentera-hd.js', diorama: './diorama.js' };
 const DEFAULT = 'lentera-hd';
 const NEEDS_WEBGL = { diorama: true };
 const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
@@ -65,7 +66,7 @@ function updateCopy(p) {
 let current = null, currentMod = null, currentName = '', wanted = '', loadToken = 0;
 async function load(name, auto = false) {
   if (NEEDS_WEBGL[name] && !hasWebGL) name = 'lentera-hd';   // 3D tidak bisa jalan → Lentera HD
-  if (!VARIANTS[name]) name = 'lentera';
+  if (!VARIANTS[name]) name = DEFAULT;
   if (!auto) {
     wanted = name;
     try { localStorage.setItem('lcdu-hero', name); } catch (e) {}
@@ -82,14 +83,14 @@ async function load(name, auto = false) {
   if (mod.default.supports && !(await mod.default.supports(state))) {
     if (token !== loadToken) return;
     note.remove();
-    return load(name === 'lentera-hd' ? 'lentera' : 'lentera-hd', true);   // mis. Lentera HD belum punya aset landscape
+    if (name !== DEFAULT) return load(DEFAULT, true);
+    console.warn('Hero: aset foto untuk layar ini belum ada'); return;
   }
   if (token !== loadToken) return;
   if (current) { current.destroy(); current = null; }
   holder.innerHTML = '';
   hero.dataset.text = mod.default.text || 'bottom';
-  /* Lentera lama tidak punya tombol lagi; ia hanya pengganti Lentera HD di layar melebar sampai foto HD wide siap */
-  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === (name === 'lentera' ? 'lentera-hd' : name)));
+  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
   current = mod.default.mount(holder, state);
   currentMod = mod.default; currentName = name;
 }
@@ -121,6 +122,6 @@ document.addEventListener('visibilitychange', () => { state.visible = !document.
 
 let first = new URL(location.href).searchParams.get('hero');
 if (!first) { try { first = localStorage.getItem('lcdu-hero'); } catch (e) {} if (first === 'diorama' && weakDevice) first = DEFAULT; }
-if (first === 'lentera') first = DEFAULT;   // pilihan lama yang tersimpan → Lentera HD
+if (first === 'lentera') first = DEFAULT;   // hero kanvas lama sudah dihapus → hero foto
 resize(); readScroll();
 load(first || DEFAULT).then(start);

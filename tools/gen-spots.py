@@ -37,12 +37,28 @@ AREAS = {
         ('lentera jalan zaitun', 'g', 1.0, ('pts', [(300, 1470), (470, 1502), (565, 1452), (760, 1478), (900, 1468), (995, 1452)])),
         ('lampu rumah di bukit', 'c', .4, ('pts', [(860, 1000), (900, 992), (932, 985), (958, 978), (988, 972), (1010, 990), (760, 1004), (700, 1010), (115, 1015), (60, 1025), (300, 1018), (350, 1010)])),
     ],
+    # gambar wide 1536x1024 (night-wide-v2 / dawn-wide)
+    'wide': [
+        ('jendela drum', 'w', .6, ('row', (1010, 428, 1240), 7)),
+        ('jendela segi delapan', 'w', .7, ('pts', [(890 + i*36, 573) for i in range(14) if not 6 <= i <= 7])),
+        ('pintu Kubah', 'w', 1.5, ('pts', [(1115, 612)])),
+        ('jendela Masjid Qibli', 'w', .6, ('row', (380, 578, 590), 6)),
+        ('lentera arkade kiri', 'a', .85, ('pts', [(455, 640), (495, 640), (535, 640)])),
+        ('lentera paviliun', 'a', .8, ('pts', [(722, 632), (1427, 632)])),
+        ('lentera arkade depan', 'a', 1.0, ('pts', [(842, 702), (906, 700), (975, 700), (1050, 702)])),
+        ('tiang lampu pelataran', 'l', 1.0, ('pts', [(605, 668), (655, 676), (1180, 700), (1300, 690), (1395, 718), (1150, 768)])),
+        ('lentera puncak tembok', 'l', .75, ('line', (20, 642, 380, 652), 6)),
+        ('lentera tembok depan & tangga', 'l', .8, ('pts', [(1100, 772), (1190, 768), (1262, 760), (1300, 805), (1445, 818)])),
+        ('jendela kota tua', 'w', .45, ('pts', [(40, 560), (90, 575), (150, 555), (200, 585), (250, 560), (300, 600), (60, 610), (130, 600), (180, 535), (230, 600)])),
+        ('lentera kebun zaitun', 'g', 1.0, ('pts', [(260, 905), (480, 930), (560, 880), (820, 900), (150, 962), (420, 958), (700, 975), (980, 992)])),
+        ('lampu rumah di bukit', 'c', .4, ('pts', [(1300, 470), (1350, 465), (1420, 455), (1480, 460), (1380, 500), (700, 470), (760, 480), (640, 490), (120, 520), (60, 500), (250, 500), (1500, 500)])),
+    ],
 }
 
 
 def main():
     kind = sys.argv[1] if len(sys.argv) > 1 else 'tall'
-    img = Image.open(os.path.join(ROOT, 'assets', 'hero', f'night-{kind}.png'))
+    img = Image.open(os.path.join(ROOT, 'assets', 'hero', {'tall': 'night-tall.png', 'wide': 'night-wide-v2.png'}[kind]))
     W, H = img.size
     spots = []
     for name, kind_, size, (mode, geo, *rest) in AREAS[kind]:

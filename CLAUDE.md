@@ -20,14 +20,15 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - `index.html` — seluruh halaman (CSS & JS section non-hero inline). Token warna/font di `:root` paling atas.
 - `hero/hero.js` — pengendali hero: scroll → progres `p` (0..1), kursor, teks per babak, pemuat varian, tombol pembanding.
   Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
-- `hero/lentera-hd.js` — varian **default**: foto malam/fajar asli (`assets/hero/build/`, dari `tools/build-hero-images.py`),
+- `hero/lentera-hd.js` — hero **Foto** (tombol "Foto", default; id varian tetap `lentera-hd`): foto malam/fajar dari
+  ChatGPT (`assets/hero/build/`, dari `tools/build-hero-images.py`), pasangan tall & wide sudah lulus `check-align.py`,
   titik cahaya di `hero/spots.json` (editor: `?hero=lentera-hd&edit-spots`). Teks ditaruh di langit (`text: 'top'`).
   Cahaya babak 2 harus **masuk akal** (keputusan pemilik): hanya di sumber nyata — jendela/pintu (w), lentera arkade (a),
   tiang lampu/lentera tembok (l), lentera di tanah (g), lampu kota jauh (c) — dengan genangan cahaya di tanah, menyala
   bergelombang dari Kubah ke luar. Jangan kembali ke titik acak yang melayang.
-  `supports()` → false bila aset orientasi layar belum ada; `hero.js` lalu memakai Lentera lama (sekarang: landscape).
-- `hero/lentera.js` + `hero/scene2d.js` — varian 2D lama: **tanpa tombol** (dihapus pemilik); hanya cadangan diam-diam di
-  layar melebar sampai foto HD wide siap, lalu boleh dihapus total.
+  `supports()` → false bila aset orientasi layar belum ada.
+- Hero ilustrasi kanvas lama (`lentera.js`, `scene2d.js`) **sudah dihapus** atas permintaan pemilik. Pembanding hanya
+  "Foto" dan "3D".
 - `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`, `prep-model-textures.py`;
   Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
@@ -69,14 +70,14 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri** untuk Lentera lama & 3D. **Lentera HD**: teks di area
   langit — layar tegak di ±8–45% tinggi layar (kubah foto ada di 52–77%, teks tidak boleh menyentuhnya), desktop kiri-atas;
   scrim gradien tipis dari atas, kontras ≥ 4.5:1 di semua babak. Petunjuk gulir di atas keffiyeh, di area pohon zaitun.
-- Aset Lentera HD (keputusan pemilik): pasangan **tall** (1024×1536) dipakai apa adanya. Pasangan **wide** menunggu
-  `assets/hero/night-wide-v2.png` — jangan diproses sebelum ada dan lulus `tools/check-align.py` (≤ 4 px per zona pada
-  lebar 1536, korelasi ≥ 0,40). **Jangan pernah memperbesar gambar melampaui resolusi aslinya**; butiran film halus
+- Aset hero Foto: pasangan **tall** (1024×1536, night-tall + dawn-tall) dan **wide** (1536×1024, night-wide-v2 +
+  dawn-wide) — keduanya lulus `tools/check-align.py` (≤ 4 px per zona pada lebar 1536, korelasi ≥ 0,40). Pasangan baru
+  wajib lulus skrip itu dulu. `night-wide.png` lama tidak sejajar dan tidak dipakai. **Jangan pernah memperbesar gambar melampaui resolusi aslinya**; butiran film halus
   ditampilkan otomatis bila foto tampil lebih besar dari aslinya. Target unduhan hero di HP < 700 KB (sekarang ±150 KB AVIF).
 
 ## Prioritas berikutnya
 1. Pemilik memilih Lentera atau 3D (atau gabungan). Bantu dengan prototipe yang bisa dilihat di browser pane.
-   Lentera HD jalan untuk layar tegak; versi landscape menunggu night-wide-v2.
+   Hero Foto jalan di layar tegak dan melebar.
 2. Naikkan kualitas visual varian terpilih:
    - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.

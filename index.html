@@ -7,8 +7,9 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="assets/brand/web/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/brand/web/apple-touch-icon.png">
-<!-- Lentera HD: foto malam tegak dimuat lebih awal (ukuran dipilih browser; rumusnya sama dengan pickWidth di hero/lentera-hd.js) -->
+<!-- Hero foto: foto malam dimuat lebih awal sesuai orientasi layar (ukuran dipilih browser; rumusnya sama dengan pickWidth di hero/lentera-hd.js) -->
 <link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-tall-750.avif" imagesrcset="assets/hero/build/night-tall-750.avif 750w, assets/hero/build/night-tall-1024.avif 1024w" imagesizes="(min-aspect-ratio: 2/3) 100vw, 66.67vh" media="(orientation: portrait)" fetchpriority="high">
+<link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-wide-v2-1280.avif" imagesrcset="assets/hero/build/night-wide-v2-1280.avif 1280w, assets/hero/build/night-wide-v2-1536.avif 1536w" imagesizes="(min-aspect-ratio: 3/2) 100vw, 150vh" media="(orientation: landscape)" fetchpriority="high">
 <meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU, untuk dakwah dan umat. Rp100.000 per term (1 semester), sudah termasuk seluruh biaya belajar.">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -181,6 +182,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (orientation: portrait) and (min-width:600px){.hero[data-text="top"] .beat{right:max(40px,env(safe-area-inset-right,0px));width:auto;max-width:620px}}
 .hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.66) 0%,rgba(4,8,32,.6) 22%,rgba(4,8,32,.38) 40%,rgba(4,8,32,0) 55%)}
 .hero[data-text="top"] .hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.45)}
+/* layar melebar: teks di kiri-atas → scrim radial dari pojok kiri-atas (langit fajar di sana terang) */
+@media (orientation: landscape){.hero[data-text="top"] .hero-scrim{background:radial-gradient(100% 100% at 0% 0%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.8) 50%,rgba(4,8,32,.45) 75%,transparent 100%)}}
 /* editor titik cahaya (?edit-spots) — alat kerja pemilik, bukan untuk pengunjung */
 .hd-editing .hero-copy{opacity:.15}
 .hd-edit-layer{position:absolute;inset:0;cursor:crosshair}
@@ -505,7 +508,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </section>
 <div class="hero-switch" id="hero-switch" role="group" aria-label="Bandingkan varian hero">
   <span>Hero</span>
-  <button type="button" data-v="lentera-hd" aria-label="Lentera HD"><span class="long">Lentera </span>HD</button>
+  <button type="button" data-v="lentera-hd">Foto</button>
   <button type="button" data-v="diorama">3D</button>
 </div>
 
