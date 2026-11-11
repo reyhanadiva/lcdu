@@ -11,6 +11,7 @@ import { UnrealBloomPass } from '../vendor/three/addons/postprocessing/UnrealBlo
 import { OutputPass } from '../vendor/three/addons/postprocessing/OutputPass.js';
 import { GLTFLoader } from '../vendor/three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from '../vendor/three/addons/libs/meshopt_decoder.module.js';
+import { mergeGeometries } from '../vendor/three/addons/utils/BufferGeometryUtils.js';
 
 /* GSAP (UMD) dimuat sekali; kalau gagal, kamera tetap jalan tanpa easing tambahan */
 let gsap = null;
@@ -140,7 +141,15 @@ function makeTextures(S){
     const k = (.8 + e*.2)*(.9 + n*.18); return [228*k, 212*k, 178*k];
   }), { rep: [.12, .12], strength: 2 });
 
-  return { marble, stone, tile, band, ribs, paving };
+  /* kulit kayu zaitun: alur memanjang berpilin, abu-abu kecokelatan (u = sepanjang batang, v = keliling) */
+  const fb = makeFbm(4, 4);
+  const bark = pattern(S/2, S/2, (g, w, h, height) => pixels(g, w, h, (u, v) => {
+    const n = fb(u, v), ridge = Math.pow(Math.abs(Math.sin((v*7 + u*1 + n*1.6)*Math.PI)), .45);
+    if (height) return ridge*.75 + n*.25;
+    const k = .62 + ridge*.38 + n*.25; return [128*k, 122*k, 112*k];
+  }), { rep: [1, 1], strength: 4 });
+
+  return { marble, stone, tile, band, ribs, paving, bark };
 }
 
 /* UV sesuai ukuran dunia supaya tekstur tidak meregang */
@@ -175,6 +184,94 @@ function glowSprite(){
   const c = canvas(64, 64), g = c.getContext('2d'), rg = g.createRadialGradient(32, 32, 0, 32, 32, 32);
   rg.addColorStop(0, 'rgba(255,248,230,1)'); rg.addColorStop(.15, 'rgba(255,205,130,.95)'); rg.addColorStop(.45, 'rgba(255,160,80,.28)'); rg.addColorStop(1, 'rgba(255,140,60,0)');
   g.fillStyle = rg; g.fillRect(0, 0, 64, 64); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+}
+
+/* ================= vegetasi: kartu daun, batang bengkok ================= */
+/* tekstur kartu daun beralfa (dilukis di canvas): ranting + daun lonjong. kind 'zaitun' = hijau keperakan, 'cemara' = sisik rapat */
+function leafCard(kind, rng){
+  const S = 256, c = canvas(S, S), g = c.getContext('2d');
+  if (kind === 'zaitun'){
+    g.strokeStyle = '#5a4a38'; g.lineWidth = 3; g.lineCap = 'round';
+    g.beginPath(); g.moveTo(S*.5, S*.98); g.quadraticCurveTo(S*.46, S*.55, S*.54, S*.06); g.stroke();
+    for (let i = 0; i < 22; i++){
+      const t = .1 + i/22*.85, side = i%2 ? 1 : -1, bx = S*(.5 + (.04 - t*.02)*side*.3 + (t - .5)*.06), by = S*(.98 - t*.92);
+      const a = -Math.PI/2 + side*(.55 + rng()*.5), L = S*(.2 + rng()*.1), W = L*(.16 + rng()*.05);
+      g.save(); g.translate(bx, by); g.rotate(a + Math.PI/2);
+      const gr = g.createLinearGradient(-W, 0, W, 0), k = rng();
+      gr.addColorStop(0, `rgb(${120 + k*30},${134 + k*26},${96 + k*20})`); gr.addColorStop(.5, `rgb(${84 + k*24},${102 + k*22},${64 + k*16})`); gr.addColorStop(1, `rgb(${70 + k*20},${88 + k*20},${54 + k*14})`);
+      g.fillStyle = gr; g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(W, -L*.45, 0, -L); g.quadraticCurveTo(-W, -L*.45, 0, 0); g.fill();
+      g.strokeStyle = 'rgba(200,210,180,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, -2); g.lineTo(0, -L*.92); g.stroke();
+      g.restore();
+    }
+  } else {
+    /* cemara: gumpalan sisik daun rapat, tepi bergerigi */
+    for (let i = 0; i < 900; i++){
+      const a = rng()*Math.PI*2, r = Math.pow(rng(), .6)*S*.46, x = S/2 + Math.cos(a)*r*.62, y = S/2 + Math.sin(a)*r, k = rng(), d = 1 - r/(S*.46);
+      g.fillStyle = `rgb(${34 + k*22 + d*14},${58 + k*26 + d*20},${36 + k*16 + d*8})`;
+      g.beginPath(); g.ellipse(x, y, 3 + rng()*4, 7 + rng()*7, a, 0, Math.PI*2); g.fill();
+    }
+  }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 4; return t;
+}
+/* tajuk dari kartu: tiap kartu = satu segi empat acak di dalam gumpalan elipsoid. Normal dibuat "membulat" (dari pusat
+   gumpalan ke luar) supaya tajuk diterangi seperti satu volume lembut, bukan kartu-kartu datar. */
+function cardCanopy(rng, clumps, n, size, center){
+  const pos = [], nor = [], uv = [], idx = [], v = new THREE.Vector3(), q = new THREE.Quaternion(), e = new THREE.Euler(), nn = new THREE.Vector3();
+  const vol = clumps.map(c => c.r[0]*c.r[1]*c.r[2]), tot = vol.reduce((a, b) => a + b, 0);
+  const corners = [[-.5, -.5], [.5, -.5], [.5, .5], [-.5, .5]];
+  for (let i = 0; i < n; i++){
+    let pick = rng()*tot, c = clumps[0]; for (let j = 0; j < clumps.length; j++){ pick -= vol[j]; if (pick <= 0){ c = clumps[j]; break; } }
+    /* titik di elipsoid, condong ke kulit luar supaya siluet terisi */
+    let x, y, z; do { x = rng()*2 - 1; y = rng()*2 - 1; z = rng()*2 - 1; } while (x*x + y*y + z*z > 1);
+    const l = Math.hypot(x, y, z) || 1, sh = .55 + .45*Math.pow(l, .5); x = x/l*sh*(l > .2 ? 1 : .5); y = y/l*sh; z = z/l*sh;
+    const px = c.p[0] + x*c.r[0], py = c.p[1] + y*c.r[1], pz = c.p[2] + z*c.r[2];
+    nn.set(px - center[0], (py - center[1])*1.4 + .35, pz - center[2]).normalize();
+    q.setFromEuler(e.set(rng()*6.28, rng()*6.28, rng()*6.28));
+    const s = size*(.7 + rng()*.6), b = pos.length/3;
+    for (const [cu, cv] of corners){
+      v.set(cu*s, cv*s, 0).applyQuaternion(q); pos.push(px + v.x, py + v.y, pz + v.z); nor.push(nn.x, nn.y, nn.z); uv.push(cu + .5, cv + .5);
+    }
+    idx.push(b, b + 1, b + 2, b, b + 2, b + 3);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('normal', new THREE.Float32BufferAttribute(nor, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx);
+  return g;
+}
+/* tabung bengkok: jari-jari mengecil ke ujung, permukaan beralur memilin (khas batang zaitun tua) */
+function gnarledTube(points, r0, r1, seg, rad, twist, groove){
+  const curve = new THREE.CatmullRomCurve3(points), g = new THREE.TubeGeometry(curve, seg, 1, rad, false), p = g.attributes.position, c = new THREE.Vector3(), d = new THREE.Vector3();
+  for (let i = 0; i <= seg; i++){
+    const t = i/seg; curve.getPointAt(t, c); const r = lerp(r0, r1, Math.pow(t, .8));
+    for (let j = 0; j <= rad; j++){
+      const k = i*(rad + 1) + j, a = j/rad*Math.PI*2;
+      d.fromBufferAttribute(p, k).sub(c);
+      d.multiplyScalar(r*(1 + groove*Math.sin(a*3 + t*twist) + groove*.5*Math.sin(a*5 - t*twist*1.7)));
+      p.setXYZ(k, c.x + d.x, c.y + d.y, c.z + d.z);
+    }
+  }
+  g.deleteAttribute('tangent'); g.computeVertexNormals(); scaleUV(g, 3, 1); return g;
+}
+/* materi daun: alfa terpotong (bayangan ikut berlubang), dua sisi, sisi bawah keperakan, ayunan angin halus */
+function foliageMaterial(map, windU, sway, under){
+  const m = new THREE.MeshStandardMaterial({ map, alphaTest: .5, side: THREE.DoubleSide, roughness: .78 });
+  m.onBeforeCompile = sh => {
+    sh.uniforms.uTime = windU.uTime;
+    sh.vertexShader = 'uniform float uTime;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+      #ifdef USE_INSTANCING
+        vec3 ip = instanceMatrix[3].xyz;
+      #else
+        vec3 ip = vec3(0.);
+      #endif
+      float sw = max(position.y - ${sway[0].toFixed(2)}, 0.)*${sway[1].toFixed(3)}, ph = ip.x*.37 + ip.z*.23;
+      transformed.x += (sin(uTime*1.3 + ph + position.y*.8) + .35*sin(uTime*3.1 + ph*2. + position.x*3.))*sw;
+      transformed.z += cos(uTime*1.1 + ph*1.3 + position.z)*sw*.8;`);
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', ''))
+      .replace('#include <color_fragment>', `#include <color_fragment>
+      if (!gl_FrontFacing) diffuseColor.rgb = mix(diffuseColor.rgb, vec3(${under}), .5);`);
+  };
+  m.customProgramCacheKey = () => 'daun' + under;
+  return m;
 }
 
 /* ================= tingkat kualitas ================= */
@@ -470,22 +567,59 @@ export default {
       const o = make(at[0], at[1], size); vegetation.push({ o, base: o.scale.clone() }); return o;
     }
 
-    /* ---------- pohon zaitun & cemara (lewat plant(), jadi mematuhi zona larangan) ---------- */
-    const leaf = std({ color: 0x4b7352, roughness: .85, flatShading: true }), leafD = std({ color: 0x24432f, roughness: .9, flatShading: true }), bark = std({ color: 0x5b4634, roughness: 1 });
-    const blobG = new THREE.IcosahedronGeometry(1, 1), trunkG = new THREE.CylinderGeometry(.14, .24, 1.3, 7);
+    /* ---------- pohon zaitun & cemara (lewat plant(), jadi mematuhi zona larangan) ----------
+       Tiap jenis punya 2–3 varian bentuk; semua pohon satu varian digambar sebagai InstancedMesh (batang + tajuk).
+       make() hanya membuat "slot" (Object3D tak tampak); matriksnya disalin ke instance setelah semua ditanam. */
+    const windU = { uTime: { value: 0 } };
     const rv = mulberry32(21);
-    const oliveTree = (x, z, s) => {
-      const g = new THREE.Group(); g.position.set(x, Y0, z); g.scale.setScalar(s); g.rotation.y = rv()*6; scene.add(g);
-      add(g, trunkG, bark, 0, .65).rotation.z = .15;
-      [[0, 1.7, 0, .9], [.6, 1.5, .2, .7], [-.6, 1.55, -.1, .72], [.1, 2.15, -.3, .65], [-.2, 1.4, .5, .6]].forEach(b => add(g, blobG, leaf, b[0], b[1], b[2]).scale.setScalar(b[3]));
-      return g;
+    const barkMat = std({ map: T.bark.map, normalMap: T.bark.normalMap, normalScale: new THREE.Vector2(1.4, 1.4), roughness: .95, color: 0xd8d0c4 });
+    const oliveLeaf = foliageMaterial(leafCard('zaitun', mulberry32(3)), windU, [1.2, .022], '.40,.45,.36'); mats.push(oliveLeaf);
+    const cypLeaf = foliageMaterial(leafCard('cemara', mulberry32(4)), windU, [.6, .006], '.07,.12,.07'); mats.push(cypLeaf);
+    const cypCore = std({ color: 0x1d3322, roughness: 1 });
+    const vegKinds = {};
+    /* zaitun: batang pendek bengkok yang bercabang 3–4, tajuk lebar tak beraturan di ujung cabang */
+    function oliveVariant(seed){
+      const r = mulberry32(seed), lean = (r() < .5 ? -1 : 1)*(.35 + r()*.35), fork = .95 + r()*.3, top = [lean*.4, fork, (r() - .5)*.3];
+      const geos = [gnarledTube([new THREE.Vector3(0, 0, 0), new THREE.Vector3(lean*.2 + (r() - .5)*.12, fork*.35, (r() - .5)*.12), new THREE.Vector3(lean*.3, fork*.7, (r() - .5)*.15), new THREE.Vector3(...top)],
+        .36, .18, mobile ? 10 : 18, mobile ? 7 : 10, 7, .11)];
+      const clumps = [], nb = 3 + Math.floor(r()*2);
+      for (let i = 0; i < nb; i++){
+        const a = i/nb*Math.PI*2 + r()*.8, out = .6 + r()*.6, up = .35 + r()*.7;
+        const end = [top[0] + Math.cos(a)*out, top[1] + up, top[2] + Math.sin(a)*out];
+        geos.push(gnarledTube([new THREE.Vector3(...top), new THREE.Vector3(top[0] + Math.cos(a)*out*.45, top[1] + up*.55, top[2] + Math.sin(a)*out*.45), new THREE.Vector3(...end)], .14, .04, mobile ? 6 : 10, 5, 4, .06));
+        clumps.push({ p: [end[0], end[1] + .1, end[2]], r: [.55 + r()*.3, .36 + r()*.18, .55 + r()*.3] });
+      }
+      clumps.push({ p: [top[0], top[1] + .95, top[2]], r: [.7, .45, .7] });
+      const crown = cardCanopy(r, clumps, mobile ? 440 : 1100, .34, [top[0], top[1] + .8, top[2]]);
+      return [[mergeGeometries(geos), barkMat], [crown, oliveLeaf]];
+    }
+    /* cemara: inti kerucut gelap + kartu sisik daun membentuk gelendong ramping (tinggi satuan, diskala per pohon) */
+    function cypressVariant(seed){
+      const r = mulberry32(seed), clumps = [];
+      for (let i = 0; i < 9; i++){ const t = (i + .5)/9, rad = .5*Math.sin(Math.PI*Math.pow(t, .75))*(1 - t*.25) + .05; clumps.push({ p: [(r() - .5)*.06, .15 + t*3.45, (r() - .5)*.06], r: [rad, .32, rad] }); }
+      const core = new THREE.ConeGeometry(.36, 3.3, 7, 1); core.translate(0, 1.95, 0);
+      const trunk = new THREE.CylinderGeometry(.05, .08, .5, 6); trunk.translate(0, .25, 0);
+      return [[mergeGeometries([core, trunk]), cypCore], [cardCanopy(r, clumps, mobile ? 90 : 220, .5, [0, 1.8, 0]), cypLeaf]];
+    }
+    [['zaitun', oliveVariant, [101, 202, 303]], ['cemara', cypressVariant, [404, 505]]].forEach(([k, f, seeds]) => vegKinds[k] = seeds.map(sd => ({ parts: f(sd), slots: [] })));
+    const vegSlot = (kind, sx, sy) => (x, z, s) => {
+      const o = new THREE.Object3D(), vs = vegKinds[kind], v = vs[Math.floor(rv()*vs.length)];
+      o.position.set(x, Y0, z); o.rotation.y = rv()*6.28; o.scale.set(s*sx, s*sy, s*sx); o.updateMatrix(); v.slots.push(o); return o;
     };
-    const cypG = new THREE.SphereGeometry(.5, 10, 12);
-    const cypress = (x, z, h) => { const m = add(scene, cypG, leafD, x, Y0 + h*.5, z); m.scale.set(1, h, 1); return m; };
-    [[-13, 6, 1.2], [12, 7, 1.1], [-15, -9, 1.2], [16.5, 9, 1.25], [9, -12, 1.1], [-16, -16, 1.0], [11.5, -4, .9], [-12, 1, .95], [14, -17, 1.05], [4.5, -16, .95]]
-      .forEach(([x, z, s]) => plant('zaitun', x, z, s, 1.3*s, 2.9*s, oliveTree));
+    [[-13, 6, 1.2], [12, 7, 1.1], [-15, -9, 1.2], [16.5, 9, 1.25], [9, -12, 1.1], [-16, -16, 1.0], [11.5, -4, .9], [-12, 1, .95], [14, -17, 1.05], [4.5, -16, .95], [6.5, -20, 1], [13, -9.5, .95], [-1, -20, .9], [17, -2, 1.1], [-16.5, -20.5, 1]]
+      .forEach(([x, z, s]) => plant('zaitun', x, z, s, 1.8*s, 3.1*s, vegSlot('zaitun', 1, 1)));
     [[-18.5, 12], [-17.2, 12.6], [18.6, -13], [17.4, -13.5], [10, 13.5], [-6.5, 13.6], [18.7, 4], [-18.7, -6], [18.6, -19], [-18.6, -19.5]]
-      .forEach(([x, z]) => { const h = 3.2 + rv(); plant('cemara', x, z, h, .55, h, cypress); });
+      .forEach(([x, z]) => { const h = 3.2 + rv(); plant('cemara', x, z, h, .55, h, (x, z) => vegSlot('cemara', 1, h/3.7)(x, z, 1)); });
+    /* InstancedMesh per varian & bagian; tiap slot ingat (mesh, indeks) agar cadangan "mengecil" bisa menyalin matriksnya */
+    const vegMeshes = [];
+    for (const vs of Object.values(vegKinds)) for (const v of vs){
+      if (!v.slots.length) continue;
+      v.parts.forEach(([geo, mat]) => {
+        const im = new THREE.InstancedMesh(geo, mat, v.slots.length); im.castShadow = im.receiveShadow = true;
+        v.slots.forEach((o, i) => { im.setMatrixAt(i, o.matrix); (o.userData.inst ||= []).push([im, i]); });
+        im.computeBoundingSphere(); scene.add(im); vegMeshes.push(im);
+      });
+    }
     if (new URL(location.href).searchParams.has('debug-veg')){ window.__vegReport = vegReport; console.table(vegReport.length ? vegReport : [{ hasil: 'semua vegetasi aman' }]); }
 
     /* ---------- kota tua di sekeliling: rumah batu + kubah kecil di atap (instanced) ---------- */
@@ -633,7 +767,7 @@ export default {
       fpsN++; fpsT += dt;
       if (firstCheck ? fpsT < 2000 : fpsN < 90) return;
       const fps = 1000*fpsN/fpsT; fpsN = fpsT = 0;
-      if (firstCheck){ firstCheck = false; if (fps < 40 && state.fallback){ gaveUp = true; state.fallback('lentera-hd'); } return; }
+      if (firstCheck){ firstCheck = false; if (fps < 40 && state.fallback && !DEBUG_PERF){ gaveUp = true; state.fallback('lentera-hd'); } return; }
       if (fps < 45 && tier > 0){ tier--; warmup = 40; applyTier(); }
     }
 
@@ -647,20 +781,31 @@ export default {
     }
     applyTier();
 
+    /* ?debug-perf: draw call, segitiga, dan waktu render (gl.finish) per frame → window.__dioramaPerf (fallback otomatis mati) */
+    const DEBUG_PERF = new URL(location.href).searchParams.has('debug-perf');
+    /* ?debug-cam=x,y,z,tx,ty,tz: kamera bebas untuk memeriksa detail (hanya pengembangan) */
+    const DEBUG_CAM = (new URL(location.href).searchParams.get('debug-cam') || '').split(',').map(Number).filter(n => !isNaN(n)).length === 6 ? new URL(location.href).searchParams.get('debug-cam').split(',').map(Number) : null;
+    if (DEBUG_PERF){ renderer.info.autoReset = false; window.__dioramaPerf = { frames: [] }; }
+
     function frame(st, now){
       watchFps(now);
+      const t0 = DEBUG_PERF ? (renderer.info.reset(), performance.now()) : 0;
       const p = st.p, lit = smooth(p/.62), dawn = smooth((p - .5)/.5), time = st.reduce ? 0 : now/1000;
       if (toCam){ if (p !== lastTarget){ toCam(p); lastTarget = p; } } else cam.p = p;
 
       /* kamera */
       const aspect = st.w/st.h;
       pose(camera, smooth(cam.p), st.w, st.h);
+      if (DEBUG_CAM){ camera.position.set(DEBUG_CAM[0], DEBUG_CAM[1], DEBUG_CAM[2]); camera.lookAt(DEBUG_CAM[3], DEBUG_CAM[4], DEBUG_CAM[5]); camera.updateMatrixWorld(); }
 
       /* cadangan: vegetasi yang tetap terlalu dekat kamera mengecil halus (tidak pernah menyambar layar) */
       for (const v of vegetation){
-        const d = v.o.position.distanceTo(camera.position), k = smooth((d - VEG_FADE[0])/(VEG_FADE[1] - VEG_FADE[0]));
+        const d = DEBUG_CAM ? 99 : v.o.position.distanceTo(camera.position), k = smooth((d - VEG_FADE[0])/(VEG_FADE[1] - VEG_FADE[0]));
+        if (k === v.k) continue; v.k = k;
         v.o.scale.copy(v.base).multiplyScalar(Math.max(k, .001)); v.o.visible = k > .01;
+        if (v.o.userData.inst){ v.o.updateMatrix(); for (const [im, i] of v.o.userData.inst){ im.setMatrixAt(i, v.o.matrix); im.instanceMatrix.needsUpdate = true; } }
       }
+      windU.uTime.value = st.reduce ? 0 : now/1000;
 
       /* cahaya kursor mengikuti titik di lantai pelataran */
       cursorAmt += ((st.pointer.active ? 1 : 0) - cursorAmt)*(st.reduce ? 1 : .08);
@@ -701,6 +846,12 @@ export default {
       bloom.strength = lerp(.62, .24, dawn); bloom.threshold = lerp(.8, 1.0, dawn);
 
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
+      if (DEBUG_PERF){
+        renderer.getContext().finish();
+        const f = window.__dioramaPerf.frames; f.push(performance.now() - t0); if (f.length > 120) f.shift();
+        Object.assign(window.__dioramaPerf, { p: +p.toFixed(2), calls: renderer.info.render.calls, triangles: renderer.info.render.triangles,
+          ms: +(f.reduce((a, b) => a + b, 0)/f.length).toFixed(2), tier, dpr: renderer.getPixelRatio() });
+      }
     }
 
     /* ---------- editor lentera 3D (?edit-lights): klik permukaan model/tanah untuk menambah, klik titik untuk menghapus ---------- */
