@@ -22,9 +22,10 @@ export default {
 
     function layout(){
       DPR = Math.min(devicePixelRatio || 1, state.w > 1200 ? 1.25 : 1.6);
-      W = Math.round(state.w*DPR); H = Math.round(state.h*DPR); cv.width = W; cv.height = H;
+      W = Math.max(1, Math.round(state.w*DPR)); H = Math.max(1, Math.round(state.h*DPR)); cv.width = W; cv.height = H;
       tmp.width = W; tmp.height = H; mask.width = Math.ceil(W/4); mask.height = Math.ceil(H/4);
-      view = computeView(W, H, state.w >= 900);
+      const wide = state.w >= 900, center = state.layout === 'b';
+      view = computeView(W, H, wide, 1, wide && !center ? .66 : .5, wide ? (center ? .24 : .04) : .2);
       night = renderWorld(W, H, view, NIGHT); dawn = renderWorld(W, H, view, DAWN);
       stars = makeStars(W, H, state.w >= 900 ? 200 : 110, DPR);
       spots = SPOTS.map(s => [view.ox + s[0]*view.s, view.oy + s[1]*view.s, s[2]*view.s]).filter(s => s[0] > -40 && s[0] < W + 40 && s[1] < H);

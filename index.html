@@ -92,7 +92,14 @@ button{font:inherit;color:inherit}
 .btn-ink:hover{transform:translateY(-2px)}
 
 /* ===== NAV ===== */
-.nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:0;right:0;z-index:50;pointer-events:none}
+.nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:0;right:0;z-index:50;pointer-events:none;transition:transform .45s var(--ease)}
+/* sembunyi selama hero & saat scroll ke bawah; tetap muncul bila menerima fokus keyboard */
+.nav.is-hidden{transform:translateY(calc(-100% - 24px))}
+.nav.is-hidden:focus-within{transform:none}
+@media (prefers-reduced-motion: reduce){.nav{transition:none}}
+.skip{position:fixed;left:16px;top:12px;z-index:200;padding:12px 18px;border-radius:999px;background:var(--kunyit);color:var(--kunyit-ink);font-weight:800;text-decoration:none;transform:translateY(-200%)}
+.skip:focus{transform:none}
+main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px)}
 .nav .wrap{display:flex;justify-content:center}
 .nav-bar{pointer-events:auto;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 18px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--line) inset,0 10px 30px -12px rgba(16,26,61,.35);width:100%;max-width:880px;justify-content:space-between}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:800;letter-spacing:.04em;font-size:1rem}
@@ -109,17 +116,25 @@ button{font:inherit;color:inherit}
 .hero-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
 .hero-canvas{position:absolute;inset:0;z-index:-2}
 .hero-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(4,8,32,.62) 0%,rgba(4,8,32,.28) 40%,transparent 62%)}
-@media (max-width:899px){.hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.65) 0%,rgba(4,8,32,.25) 38%,transparent 55%)}}
+.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(0deg,rgba(4,8,32,.85) 0%,rgba(4,8,32,.74) 30%,rgba(4,8,32,.46) 50%,transparent 68%)}
+.hero[data-layout="a"] .hero-scrim{background:radial-gradient(130% 100% at 0% 100%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.72) 42%,rgba(4,8,32,.36) 66%,transparent 90%)}
+@media (max-width:899px){.hero[data-layout] .hero-scrim{background:linear-gradient(0deg,rgba(4,8,32,.82) 0%,rgba(4,8,32,.55) 30%,rgba(4,8,32,.1) 52%,transparent 60%)}}
 /* fajar lebih terang: scrim hangat ekstra di babak 3 supaya teks putih tetap terbaca */
 .hero-scrim::after{content:"";position:absolute;inset:0;background:inherit;opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.9)}
 .hero-copy{position:relative;height:100%;pointer-events:none}
-.beat{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));top:clamp(100px,14vh,150px);margin:0;opacity:0;font-family:var(--f-display);font-weight:800;letter-spacing:-.05em;text-shadow:0 2px 40px rgba(4,8,32,.55);text-wrap:balance;will-change:opacity,transform}
-@media (min-width:720px){.beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(54vw,720px)}}
-.beat-0{opacity:1;font-size:clamp(3.6rem,9vw,9.4rem);line-height:.86}
-.beat-0 span{display:block}
-.beat-1,.beat-2{font-size:clamp(2.3rem,5.2vw,5.4rem);line-height:.95}
-.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 54px);translate:-50% 0;display:grid;justify-items:center;gap:10px;font-size:.78rem;font-weight:600;color:var(--hero-soft);transition:opacity .5s}
+/* identitas tetap di pojok kiri atas hero (bukan tautan) */
+.hero-id{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 18px);margin:0;display:flex;align-items:center;gap:10px;text-shadow:0 1px 12px rgba(4,8,32,.6)}
+.hero-id b{display:block;font-family:var(--f-display);font-weight:800;letter-spacing:.06em;font-size:1rem;line-height:1.1}
+.hero-id small{display:block;font-size:.72rem;font-weight:600;color:var(--hero-soft);letter-spacing:.01em}
+@media (min-width:720px){.hero-id{left:max(40px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 26px)}}
+/* teks babak: memudar di tempat (tanpa geser). Dua usulan tata letak: a = kiri-bawah, b = tengah-bawah */
+.beat{--bottom:calc(env(safe-area-inset-bottom,0px) + clamp(120px,17vh,168px));position:absolute;bottom:var(--bottom);margin:0;opacity:0;font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,1.1rem + 3.4vw,4.4rem);line-height:1.02;letter-spacing:-.035em;text-shadow:0 1px 2px rgba(4,8,32,.45),0 2px 28px rgba(4,8,32,.6);text-wrap:balance;will-change:opacity}
+.beat-0{opacity:1}
+.hero[data-layout="a"] .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:720px){.hero[data-layout="a"] .beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
+.hero[data-layout="b"] .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));margin-inline:auto;max-width:min(64vw,940px);text-align:center}
+@media (max-width:719px){.hero[data-layout="b"] .beat{max-width:none}}
+.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);translate:-50% 0;display:grid;justify-items:center;gap:10px;font-size:.78rem;font-weight:600;color:var(--hero-soft);transition:opacity .5s}
 .scroll-cue i{width:2px;height:40px;border-radius:2px;background:linear-gradient(var(--sun),transparent);transform-origin:top;animation:cue 2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .hero-meter{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;width:3px;height:min(34vh,260px);border-radius:3px;background:rgba(243,245,252,.18);overflow:hidden}
@@ -404,13 +419,6 @@ button{font:inherit;color:inherit}
 .fab:hover{transform:translateY(-3px)}
 .fab svg{width:22px;height:22px;fill:currentColor}
 
-/* ===== Kursor ===== */
-.cursor{position:fixed;left:0;top:0;transform:translate(-100px,-100px);z-index:100;pointer-events:none;display:none}
-.cursor-ring{width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;border:2px solid #fff;mix-blend-mode:difference;transition:width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),background-color .3s}
-.cursor-label{position:absolute;left:24px;top:-12px;white-space:nowrap;padding:5px 10px;border-radius:999px;background:var(--kunyit);color:var(--kunyit-ink);font-size:.75rem;font-weight:800;opacity:0;transform:scale(.8);transform-origin:left;transition:opacity .2s,transform .2s var(--ease)}
-.cursor.has-label .cursor-label{opacity:1;transform:none}
-.cursor.has-label .cursor-ring{width:14px;height:14px;margin:-7px 0 0 -7px;background:#fff}
-@media (pointer:fine){.cursor.ready{display:block}}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
@@ -419,6 +427,7 @@ button{font:inherit;color:inherit}
 <script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script>
 </head>
 <body>
+<a class="skip" href="#cek-level">Lewati ke konten</a>
 
 <!-- ============ NAV ============ -->
 <header class="nav">
@@ -440,12 +449,13 @@ button{font:inherit;color:inherit}
 
 <main id="top">
 <!-- ============ HERO: gelap menjadi terang ============ -->
-<section class="hero" id="hero" aria-label="Pembuka">
+<section class="hero" id="hero" aria-label="Pembuka" data-layout="a">
   <div class="hero-stage">
     <div class="hero-canvas" id="hero-canvas" role="img" aria-label="Kompleks Masjid Al-Aqsa yang perlahan berubah dari gelap malam menjadi terang fajar"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
+    <p class="hero-id"><span class="brand-mark" aria-hidden="true">L</span><span><b>LCDU</b><small lang="en">Language Course for Da'wah &amp; Ummah</small></span></p>
     <div class="hero-copy">
-      <h1 class="beat beat-0"><span>Bahasa</span><span>untuk</span><span>umat.</span></h1>
+      <h1 class="beat beat-0">Kelas Bahasa Arab &amp; Inggris untuk dakwah dan umat.</h1>
       <p class="beat beat-1" aria-hidden="true">Setiap ilmu yang kita pelajari menyalakan satu cahaya.</p>
       <p class="beat beat-2" aria-hidden="true">Bersama, kita nyalakan harapan untuk Palestina.</p>
     </div>
@@ -475,7 +485,7 @@ button{font:inherit;color:inherit}
       <p class="lede">Jawab tiga soal singkat. Kamu langsung dapat gambaran kelas yang cocok sebelum ikut Placement Test.</p>
       <p class="level-note">Ini perkiraan cepat. Level kelas kamu tetap ditentukan lewat Placement Test resmi LCDU.</p>
     </div>
-    <div class="quiz" id="quiz" data-lang="en" data-cursor="Pilih jawaban">
+    <div class="quiz" id="quiz" data-lang="en">
       <div class="quiz-tabs" role="tablist" aria-label="Pilih bahasa">
         <button class="quiz-tab" role="tab" aria-selected="true" data-lang="en" id="tab-en">Bahasa Inggris</button>
         <button class="quiz-tab" role="tab" aria-selected="false" data-lang="ar" id="tab-ar">Bahasa Arab</button>
@@ -533,7 +543,7 @@ button{font:inherit;color:inherit}
       </div>
     </div>
     <div class="cls" id="cls" data-lang="en">
-      <div class="cls-visual" data-cursor="Ganti foto kelas">
+      <div class="cls-visual">
         <span class="cls-glyph" id="cls-glyph">Aa</span>
         <span class="cls-photo-note">Slot foto kelas</span>
       </div>
@@ -592,7 +602,7 @@ button{font:inherit;color:inherit}
       <p class="lede">Seret kartu ke samping untuk membaca cerita berikutnya.</p>
       <div class="stack-ctrl"><button class="btn btn-ghost" id="next-story" type="button">Cerita berikutnya</button></div>
     </div>
-    <div class="stack" id="stack" data-cursor="Seret">
+    <div class="stack" id="stack">
       <article class="card"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">LCDU adalah kursus yang luar biasa bagi seseorang yang ingin belajar atau meningkatkan kemampuan bahasa Inggris mereka.</p><div class="card-who"><span class="avatar">AS</span><div><b>Aninda Salma</b><span>Siswa Pre-Intermediate</span></div></div></article>
       <article class="card"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">Gaya belajarnya dikembangkan lebih lanjut agar siswa lebih cepat memahami materi. Program ini sangat baik. Terima kasih banyak, guru.</p><div class="card-who"><span class="avatar">FR</span><div><b>Fitriza Rahma</b><span>Siswa Elementary</span></div></div></article>
       <article class="card you"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">Cerita berikutnya bisa datang dari kamu.</p><div class="card-who"><a class="btn btn-ink" href="#alur">Mulai daftar</a></div></article>
@@ -666,7 +676,6 @@ button{font:inherit;color:inherit}
 
 <a class="fab" id="tanya" href="#tanya" aria-label="Tanya admin lewat WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg>Tanya admin</a>
 
-<div class="cursor" id="cursor" aria-hidden="true"><div class="cursor-ring"></div><span class="cursor-label" id="cursor-label"></span></div>
 
 <script>
 (function(){
@@ -676,22 +685,18 @@ button{font:inherit;color:inherit}
   var $ = function(s,r){return (r||document).querySelector(s)};
   var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 
-  /* ---------- Kursor ---------- */
-  var cur = $('#cursor'), curLabel = $('#cursor-label');
-  if (fine && !reduce){
-    cur.classList.add('ready');
-    var cx = -100, cy = -100, tx = -100, ty = -100, crun = false;
-    function cloop(){ cx += (tx-cx)*.22; cy += (ty-cy)*.22; cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)'; if (Math.abs(tx-cx)+Math.abs(ty-cy) > .3) requestAnimationFrame(cloop); else crun = false; }
-    document.addEventListener('pointermove', function(e){
-      tx = e.clientX; ty = e.clientY;
-      if (!crun){ crun = true; requestAnimationFrame(cloop); }
-      var host = e.target.closest && e.target.closest('[data-cursor]');
-      var onCtl = e.target.closest && e.target.closest('a,button,label,input');
-      if (host && !onCtl){ curLabel.textContent = host.getAttribute('data-cursor'); cur.classList.add('has-label'); }
-      else cur.classList.remove('has-label');
-    });
-    document.addEventListener('pointerleave', function(){ tx = ty = -100; });
+  /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
+  var nav = $('.nav'), heroEl = $('#hero'), lastY = window.scrollY, run = 0, grace = 0, inHero = true, nTick = false;
+  function navUpdate(){
+    nTick = false;
+    var y = window.scrollY, dy = y - lastY; lastY = y;
+    if (y < heroEl.offsetTop + heroEl.offsetHeight - 80){ inHero = true; nav.classList.add('is-hidden'); return; }
+    if (inHero){ inHero = false; run = 0; grace = window.innerHeight*.6; nav.classList.remove('is-hidden'); return; }  // baru melewati hero: tampil dulu
+    if (dy < 0){ run = Math.min(run, 0) + dy; if (run < -6){ nav.classList.remove('is-hidden'); grace = 0; } }
+    else if (dy > 0){ run = Math.max(run, 0) + dy; if (run > grace + 24){ nav.classList.add('is-hidden'); grace = 0; } }
   }
+  window.addEventListener('scroll', function(){ if (!nTick){ nTick = true; requestAnimationFrame(navUpdate); } }, {passive:true});
+  navUpdate();
 
   /* ---------- Kuis level ---------- */
   var Q = {
@@ -889,13 +894,6 @@ button{font:inherit;color:inherit}
       $$('.member', teamEl).forEach(function(m){ m.classList.toggle('out', g !== 'all' && m.dataset.g.split(' ').indexOf(g) < 0); });
     });
   });
-  if (fine && !reduce){
-    $$('.member', teamEl).forEach(function(m){
-      var p = $('.portrait', m);
-      m.addEventListener('pointermove', function(e){ var r = p.getBoundingClientRect(); var x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5; p.style.transform = 'perspective(700px) rotateY('+(x*10)+'deg) rotateX('+(-y*10)+'deg)'; });
-      m.addEventListener('pointerleave', function(){ p.style.transform = ''; });
-    });
-  }
 
   /* ---------- Salin rekening ---------- */
   var copyBtn = $('#copy'), copied = $('#copied'), acct = $('#acct');
@@ -923,7 +921,19 @@ button{font:inherit;color:inherit}
 <script type="module">
 /* Scroll halus untuk seluruh halaman (Lenis, di-vendor). Tidak aktif saat prefers-reduced-motion. */
 import Lenis from './vendor/lenis/lenis.mjs';
-if (!matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: .12, anchors: true, autoRaf: true });
+const lenis = matchMedia('(prefers-reduced-motion: reduce)').matches ? null : (window.lenis = new Lenis({ lerp: .12, autoRaf: true }));
+/* tautan #anchor: hormati scroll-margin-top (nav tidak menutupi judul) dan pindahkan fokus ke section tujuan */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#"]'); if (!a || e.defaultPrevented) return;
+  const id = a.getAttribute('href'), t = id.length > 1 && document.getElementById(id.slice(1));
+  if (!t || t === a) return;
+  e.preventDefault();
+  if (lenis) lenis.scrollTo(t, { offset: -(parseFloat(getComputedStyle(t).scrollMarginTop) || 0) });
+  else t.scrollIntoView();
+  history.pushState(null, '', id);
+  if (!t.hasAttribute('tabindex')) t.setAttribute('tabindex', '-1');
+  t.focus({ preventScroll: true });
+});
 </script>
 <script type="module" src="./hero/hero.js"></script>
 </body>

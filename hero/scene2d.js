@@ -107,11 +107,12 @@ function fore(c, P){
   branch(1720, -40, 1300, 150, 1560, 40, 9, -1);
 }
 
-/* Tampilan: skala & posisi dunia di layar. focus = posisi kubah horizontal (0..1). */
-export function computeView(W, H, wide, zoom = 1, focus = .66){
+/* Tampilan: skala & posisi dunia di layar. focus = posisi kubah horizontal (0..1),
+   lift = seberapa jauh dunia diangkat (bagian dari tinggi layar) supaya kubah tidak tertutup teks di bawah. */
+export function computeView(W, H, wide, zoom = 1, focus = .66, lift = 0){
   let s, ox, oy;
-  if (wide){ s = Math.max(W/1600, H/900)*zoom; ox = W*focus - 1000*s; oy = H - 900*s + 80*s; }
-  else { s = Math.max(W/760, H/1150)*zoom; ox = W*.5 - 1000*s; oy = H - 900*s - H*.02; }
+  if (wide){ s = Math.max(W/1600, H/900)*zoom; ox = W*focus - 1000*s; oy = H - 900*s + 80*s - H*lift; }
+  else { s = Math.max(W/760, H/1150)*zoom; ox = W*.5 - 1000*s; oy = H - 900*s - H*.02 - H*lift; }
   return { s, ox, oy };
 }
 
@@ -120,6 +121,7 @@ export function renderWorld(W, H, view, P, withFore = true){
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const g = c.getContext('2d'); g.setTransform(view.s, 0, 0, view.s, view.ox, view.oy);
   hills(g, P); city(g, P); if (withFore) fore(g, P);
+  g.fillStyle = P.ground; g.fillRect(-2000, 899, 6000, 4000);   // tanah diteruskan ke bawah saat dunia diangkat
   return c;
 }
 

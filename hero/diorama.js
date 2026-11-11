@@ -1,5 +1,6 @@
 /* Varian 3 — Diorama 3D (three.js): kompleks Al-Aqsa sebagai maket. Scroll menggerakkan kamera dan waktu,
-   dari malam gelap → ratusan lentera menyala → matahari terbit. Kursor sedikit menggeser sudut pandang.
+   dari malam gelap → ratusan lentera menyala → matahari terbit. Kursor/jari = cahaya hangat di titik yang ditunjuk
+   (kamera tidak ikut bergerak — tanpa parallax).
    Semua tekstur dibuat prosedural (canvas) — tidak ada aset luar. Pita kaligrafi hanyalah ornamen abstrak,
    bukan tulisan ayat, supaya tidak ada teks Al-Qur'an yang keliru. */
 import * as THREE from 'three';
@@ -462,6 +463,13 @@ export default {
     }));
     lanterns.frustumCulled = false; scene.add(lanterns);
 
+    /* ---------- cahaya kursor: lampu hangat + pendar lembut di titik yang ditunjuk ---------- */
+    const cursorLight = new THREE.PointLight(0xffb066, 0, 16, 1.4); cursorLight.position.set(0, Y1 + 1.6, 0); scene.add(cursorLight);
+    const cursorGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowSprite(), color: 0xffc58a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0 }));
+    cursorGlow.scale.setScalar(8); cursorGlow.position.copy(cursorLight.position); scene.add(cursorGlow);
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), -Y1), hit = new THREE.Vector3();
+    let cursorAmt = 0;
+
     /* ---------- pascaproses: bloom halus untuk lentera, jendela, dan matahari ---------- */
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
@@ -483,7 +491,7 @@ export default {
     const cam = { p: state.p };
     const toCam = gsap && !state.reduce ? gsap.quickTo(cam, 'p', { duration: .9, ease: 'power3.out' }) : null;
     const k3 = new THREE.Vector3(), lk = new THREE.Vector3(), sd = new THREE.Vector3(), tmpC = new THREE.Color();
-    let yaw = 0, pitch = 0, lastTarget = -1;
+    let lastTarget = -1;
 
     /* ---------- kualitas otomatis: turun tingkat kalau fps rendah, terakhir pindah ke Lentera ---------- */
     let tier = mobile ? 1 : 2, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 40, gaveUp = false;
@@ -513,7 +521,9 @@ export default {
       bloom.resolution.set(w*Math.max(t.bloom, .25), h*Math.max(t.bloom, .25));
       renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%';
       camera.aspect = w/h;
-      if (w >= 900) camera.setViewOffset(w*1.34, h, 0, 0, w, h); else camera.setViewOffset(w, h*1.5, 0, 0, w, h);
+      /* kubah di atas area teks: layout a (desktop) → kubah di kanan; layout b & HP → kubah di tengah */
+      const wide = w >= 900, center = !wide || state.layout === 'b';
+      camera.setViewOffset(center ? w : w*1.34, h*(wide ? 1.1 : 1.5), 0, h*(wide ? .06 : .3), w, h);
       camera.updateProjectionMatrix();
       lU.uScale.value = h*renderer.getPixelRatio()/2; starU.uPx.value = renderer.getPixelRatio();
     }
@@ -523,15 +533,20 @@ export default {
       watchFps(now);
       const p = st.p, lit = smooth(p/.62), dawn = smooth((p - .5)/.5), time = st.reduce ? 0 : now/1000;
       if (toCam){ if (p !== lastTarget){ toCam(p); lastTarget = p; } } else cam.p = p;
-      if (st.pointer.active && !st.reduce){ yaw += ((st.pointer.x/st.w - .5)*.06 - yaw)*.06; pitch += ((st.pointer.y/st.h - .5)*.03 - pitch)*.06; }
-      else { yaw *= .94; pitch *= .94; }
 
       /* kamera */
       const cp = smooth(cam.p), aspect = st.w/st.h, far = aspect < 1 ? 1 + (1 - aspect)*1.25 : 1;
       KEYS.getPoint(cp, k3); LOOK.getPoint(cp, lk);
-      const az = k3.x + yaw, el = k3.y + pitch, rad = k3.z*far;
+      const az = k3.x, el = k3.y, rad = k3.z*far;
       camera.position.set(Math.sin(az)*Math.cos(el)*rad, Math.sin(el)*rad + 1.5, Math.cos(az)*Math.cos(el)*rad);
       camera.lookAt(lk);
+
+      /* cahaya kursor mengikuti titik di lantai pelataran */
+      cursorAmt += ((st.pointer.active ? 1 : 0) - cursorAmt)*(st.reduce ? 1 : .08);
+      if (st.pointer.active){
+        camera.updateMatrixWorld(); ndc.set(st.pointer.x/st.w*2 - 1, 1 - st.pointer.y/st.h*2); ray.setFromCamera(ndc, camera);
+        if (ray.ray.intersectPlane(floor, hit)){ hit.y += 1.6; cursorLight.position.lerp(hit, st.reduce ? 1 : .2); cursorGlow.position.copy(cursorLight.position); }
+      }
 
       /* langit, matahari terbit dari bawah cakrawala */
       for (let i = 0; i < 3; i++){ const k = ['top', 'mid', 'hor'][i]; skyU[k].value.copy(SKY.n[i]).lerp(SKY.d[i], dawn); }
@@ -555,6 +570,7 @@ export default {
       glowMat.color.copy(P.glow).multiplyScalar(win*3.2*flick);
       doorMat.emissiveIntensity = win*1.4;
       warm.forEach(l => l.intensity = win*24*flick);
+      cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
       lU.uLit.value = lit; lU.uOp.value = 1 - dawn*.6; lU.uTime.value = time;
       bloom.strength = lerp(.62, .32, dawn); bloom.threshold = lerp(.8, .95, dawn);
 

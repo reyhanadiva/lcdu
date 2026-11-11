@@ -14,10 +14,14 @@ const NEEDS_WEBGL = { diorama: true };
 const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
 const CENTERS = [0, .5, 1];
 
+/* usulan tata letak teks (sementara, untuk dibandingkan): ?layout=a (kiri-bawah) | b (tengah-bawah) */
+const LAYOUT = new URL(location.href).searchParams.get('layout') === 'b' ? 'b' : 'a';
+hero.dataset.layout = LAYOUT;
+
 const state = {
   p: 0, target: 0,
   pointer: { x: 0, y: 0, active: false },
-  w: 0, h: 0, reduce, coarse, visible: true,
+  w: 0, h: 0, reduce, coarse, visible: true, layout: LAYOUT,
 };
 
 /* ---------- scroll ---------- */
@@ -28,15 +32,18 @@ function readScroll() {
 }
 addEventListener('scroll', readScroll, { passive: true });
 
-/* ---------- kursor / sentuhan ---------- */
-function setPointer(e) {
+/* ---------- kursor / sentuhan: cahaya mengikuti mouse; di HP mengikuti jari (juga saat menggeser) ---------- */
+let releaseT = 0;
+function setPointer(x, y) {
   const r = holder.getBoundingClientRect();
-  state.pointer.x = e.clientX - r.left; state.pointer.y = e.clientY - r.top; state.pointer.active = true;
+  state.pointer.x = x - r.left; state.pointer.y = y - r.top; state.pointer.active = true; clearTimeout(releaseT);
 }
-hero.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' || e.buttons) setPointer(e); });
-hero.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') setPointer(e); });
-hero.addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') setTimeout(() => state.pointer.active = false, 700); });
+hero.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') setPointer(e.clientX, e.clientY); });
 hero.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') state.pointer.active = false; });
+const onTouch = e => { const t = e.touches[0]; if (t) setPointer(t.clientX, t.clientY); };
+hero.addEventListener('touchstart', onTouch, { passive: true });
+hero.addEventListener('touchmove', onTouch, { passive: true });
+hero.addEventListener('touchend', () => { releaseT = setTimeout(() => state.pointer.active = false, 900); }, { passive: true });
 
 /* ---------- teks per babak ---------- */
 function smooth(t) { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); }
@@ -45,7 +52,6 @@ function updateCopy(p) {
     const d = Math.abs(p - CENTERS[i]);
     const o = 1 - smooth((d - .12) / .14);
     b.style.opacity = o.toFixed(3);
-    b.style.transform = `translateY(${((CENTERS[i] - p) * 90).toFixed(1)}px)`;
     b.setAttribute('aria-hidden', o > .5 ? 'false' : 'true');
   });
   hero.style.setProperty('--p', p.toFixed(4));
