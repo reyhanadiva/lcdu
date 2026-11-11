@@ -661,13 +661,13 @@ export default {
     }
     const onPlatform = (x, z) => Math.abs(x) < PX - 1 && z > PZ0 + 1 && z < PZ1 - 1 && !(Math.abs(x) < 9 && Math.abs(z) < 9) && !(x > -12.5 && x < -2.5 && z < -8.8);
     const vegReport = [], vegetation = [];
-    function plant(kind, x, z, size, radius, height, make){
+    function plant(kind, x, z, size, radius, height, make, where = onPlatform){
       let why = vegViolation(x, z, radius, height), at = [x, z];
       if (why){
         at = null;
         for (let r = 1.5; r <= 6 && !at; r += 1.5) for (let a = 0; a < 12 && !at; a++){
           const nx = x + Math.cos(a/12*Math.PI*2)*r, nz = z + Math.sin(a/12*Math.PI*2)*r;
-          if (onPlatform(nx, nz) && !vegViolation(nx, nz, radius, height)) at = [nx, nz];
+          if (where(nx, nz) && !vegViolation(nx, nz, radius, height)) at = [nx, nz];
         }
         vegReport.push({ jenis: kind, posisi: `${x}, ${z}`, alasan: why, tindakan: at ? `dipindah ke ${at[0].toFixed(1)}, ${at[1].toFixed(1)}` : 'dihapus' });
         if (!at) return null;
@@ -750,14 +750,17 @@ export default {
     }
     /* InstancedMesh per varian & bagian; tiap slot ingat (mesh, indeks) agar cadangan "mengecil" bisa menyalin matriksnya */
     const vegMeshes = [];
-    for (const vs of Object.values(vegKinds)) for (const v of vs){
-      if (!v.slots.length) continue;
-      v.parts.forEach(([geo, mat]) => {
-        const im = new THREE.InstancedMesh(geo, mat, v.slots.length); im.castShadow = im.receiveShadow = true;
-        v.slots.forEach((o, i) => { im.setMatrixAt(i, o.matrix); (o.userData.inst ||= []).push([im, i]); });
-        im.computeBoundingSphere(); scene.add(im); vegMeshes.push(im);
-      });
+    function buildVeg(kinds){
+      for (const k of kinds) for (const v of vegKinds[k]){
+        if (!v.slots.length) continue;
+        v.parts.forEach(([geo, mat, shadow = true]) => {
+          const im = new THREE.InstancedMesh(geo, mat, v.slots.length); im.castShadow = shadow; im.receiveShadow = shadow;
+          v.slots.forEach((o, i) => { im.setMatrixAt(i, o.matrix); (o.userData.inst ||= []).push([im, i]); });
+          im.computeBoundingSphere(); scene.add(im); vegMeshes.push(im);
+        });
+      }
     }
+    buildVeg(Object.keys(vegKinds));
     if (new URL(location.href).searchParams.has('debug-veg')){ window.__vegReport = vegReport; console.table(vegReport.length ? vegReport : [{ hasil: 'semua vegetasi aman' }]); }
 
     /* ---------- kota tua di sekeliling (instanced) ----------
@@ -766,7 +769,10 @@ export default {
        ukuran rumah). Jendela kecil emissive prosedural di dinding badan rumah, menyala bertahap bersama babak 2.
        Rumah jauh (> 72 unit) cukup badan saja (LOD sederhana); kabut menyamarkan sisanya. */
     const hillN = (x, z) => Math.sin(x*.045 + 1.3)*Math.cos(z*.038 - .7) + .5*Math.sin(x*.11 - z*.07 + 2.1) + .25*Math.sin(x*.23 + z*.19);
-    const hillH = (x, z) => { const r = Math.hypot(x, z), east = Math.max(0, x/r)*.6; return smooth((r - 96)/75)*(7 + 9*(.5 + .5*hillN(x, z)) + east*10); };
+    /* panorama Bukit Zaitun dipasang di busur ini (arah matahari terbit); medan 3D di belakang kota direndahkan di sana */
+    const PANO_AZ = .36 - Math.PI, PANO_SPAN = 1.05, PANO_R = 165;
+    const panoMask = (x, z) => { let d = Math.atan2(x, z) - PANO_AZ; d = Math.atan2(Math.sin(d), Math.cos(d)); return smooth(1 - Math.abs(d)/(PANO_SPAN*.62)); };
+    const hillH = (x, z) => { const r = Math.hypot(x, z), east = Math.max(0, x/r)*.6; return smooth((r - 96)/75)*(7 + 9*(.5 + .5*hillN(x, z)) + east*10)*(1 - .9*panoMask(x, z)*smooth((r - 110)/30)); };
     const grove = (x, z) => .5 + .5*Math.sin(x*.21 + Math.sin(z*.13)*2)*Math.cos(z*.17 - Math.sin(x*.09));
     const cityU = { uWinLit: { value: 0 }, uWinI: { value: 0 } };
     function cityMaterial(windows, opts){
@@ -801,12 +807,17 @@ export default {
     const domeG = mergeGeometries([new THREE.CylinderGeometry(1, 1, .3, 14).translate(0, .15, 0), new THREE.SphereGeometry(1, 14, 7, 0, Math.PI*2, 0, Math.PI/2).translate(0, .3, 0)]);
     const vaultG = new THREE.CylinderGeometry(.5, .5, 1, 12, 1, false, 0, Math.PI).rotateZ(Math.PI/2);   // poros sepanjang x, setengah atas
     const stairG = mergeGeometries(Array.from({ length: 6 }, (_, i) => new THREE.BoxGeometry(1/6, (i + 1)/6, .9).translate(-.5 + (i + .5)/6, (i + 1)/12, 0)));
-    const rcity = mulberry32(31), cityN = mobile ? 420 : 760, items = { body: [], parapet: [], hut: [], dome: [], vault: [], stair: [] };
+    /* rumah < 46 unit dari pusat = volume 3D (dekat); sisanya juga 3D dulu, lalu diganti sprite gugus rumah setelah atlas termuat */
+    const CITY_NEAR = 46, newItems = () => ({ body: [], parapet: [], hut: [], dome: [], vault: [], stair: [] });
+    const rcity = mulberry32(31), cityN = mobile ? 420 : 760, nearItems = newItems(), farItems = newItems();
+    let items = nearItems;
     const q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), off = new THREE.Vector3();
     const put = (k, x, y, z, rot, sx, sy, sz, col) => items[k].push({ x, y, z, rot, sx, sy, sz, col });
     for (let i = 0; i < cityN; i++){
       let x, z; do { x = (rcity() - .5)*170; z = (rcity() - .5)*170; } while ((Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3) || (z > PZ1 && Math.abs(x) < 34 && z < PZ1 + 22) || Math.hypot(x, z) > 94);   // kota berakhir di kaki bukit
       const w = 2 + rcity()*4, d = 2 + rcity()*4, h = 1.5 + rcity()*4, rot = (rcity() - .5)*.3, far = Math.hypot(x, z) > 72, col = rcity();
+      if (Math.hypot(x, z) < CITY_NEAR + 10 && vegViolation(x, z, Math.max(w, d)*.6, h + 2)) continue;   // zona larangan juga untuk rumah dekat kamera (tepi layar, area teks)
+      items = Math.hypot(x, z) < CITY_NEAR ? nearItems : farItems;
       const gy = hillH(x, z) - (hillH(x, z) > .05 ? .4 : 0), P = (k, X, Y, Z, ...rest) => put(k, X, Y + gy, Z, ...rest);   // rumah di lereng ikut naik
       P('body', x, 0, z, rot, w, h, d, col);
       if (far) continue;
@@ -826,8 +837,8 @@ export default {
       if (rcity() < .18 && h < 4){ const o = at(w/2 + .45, 0); P('stair', x + o.x, 0, z + o.z, rot + Math.PI/2, Math.min(d*.8, h*1.1), h, 1, col); }
     }
     const mtx = new THREE.Matrix4(), sc = new THREE.Vector3(), ps = new THREE.Vector3(), cc = new THREE.Color();
-    const cityMeshes = [['body', unitBox, cityBody], ['parapet', parapetG, cityTrim], ['hut', hutG, cityTrim], ['dome', domeG, plaster], ['vault', vaultG, plaster], ['stair', stairG, cityTrim]].map(([k, geo, mat]) => {
-      const list = items[k], im = new THREE.InstancedMesh(geo, mat, list.length), rnd = new Float32Array(list.length);
+    const buildCity = items => [['body', unitBox, cityBody], ['parapet', parapetG, cityTrim], ['hut', hutG, cityTrim], ['dome', domeG, plaster], ['vault', vaultG, plaster], ['stair', stairG, cityTrim]].map(([k, g0, mat]) => {
+      const list = items[k], geo = g0.clone(), im = new THREE.InstancedMesh(geo, mat, list.length), rnd = new Float32Array(list.length);
       list.forEach((it, i) => {
         q.setFromAxisAngle(up, it.rot); mtx.compose(ps.set(it.x, it.y, it.z), q, sc.set(it.sx, it.sy, it.sz)); im.setMatrixAt(i, mtx); rnd[i] = it.col;
         /* batu pasir hangat; kubah & lengkung plester krem pucat atau abu timah */
@@ -837,12 +848,15 @@ export default {
       geo.setAttribute('aRnd', new THREE.InstancedBufferAttribute(rnd, 1));
       im.castShadow = im.receiveShadow = true; scene.add(im); return im;
     });
+    buildCity(nearItems);
+    let farCity = buildCity(farItems);
     /* parapet tembok pelataran */
     const merlons = new THREE.InstancedMesh(merlonGeo, stoneMat, merlonPts.length);
     merlonPts.forEach((m, i) => { ps.set(...m[0]); q.setFromAxisAngle(up, m[1]); sc.set(1, 1, 1); mtx.compose(ps, q, sc); merlons.setMatrixAt(i, mtx); });
     merlons.castShadow = true; scene.add(merlons);
     /* ---------- bukit jauh: medan beralun mengelilingi kota (Bukit Zaitun lebih tinggi di timur), warna tanah +
        bercak kebun zaitun gelap, rumah kecil di lereng (instanced, jendela ikut menyala). Kabut menyamarkan detail. ---------- */
+    let meshH = hillH;
     {
       const segA = mobile ? 96 : 180, segR = mobile ? 20 : 34, pos = [], col = [], idx = [], cc2 = new THREE.Color();
       for (let j = 0; j <= segR; j++) for (let i = 0; i <= segA; i++){
@@ -853,7 +867,7 @@ export default {
       for (let j = 0; j < segR; j++) for (let i = 0; i < segA; i++){ const k = j*(segA + 1) + i; idx.push(k, k + 1, k + segA + 1, k + 1, k + segA + 2, k + segA + 1); }   // berlawanan jarum jam dilihat dari atas → normal menghadap ke atas
       /* tinggi permukaan jaring yang sebenarnya (interpolasi grid), supaya titik pohon & rumah tidak melayang */
       const gridAt = (j, i) => { const r = 88 + Math.pow(j/segR, 1.3)*170, a = i/segA*Math.PI*2; return hillH(Math.cos(a)*r, Math.sin(a)*r); };
-      const meshH = (x, z) => {
+      meshH = (x, z) => {
         const r = Math.hypot(x, z), a = (Math.atan2(z, x) + Math.PI*2)%(Math.PI*2), fj = Math.pow(Math.min(1, Math.max(0, (r - 88)/170)), 1/1.3)*segR, fi = a/(Math.PI*2)*segA;
         const j = Math.min(segR - 1, Math.floor(fj)), i = Math.floor(fi), u = fi - i, v = fj - j;
         return Math.min(lerp(lerp(gridAt(j, i), gridAt(j, i + 1), u), lerp(gridAt(j + 1, i), gridAt(j + 1, i + 1), u), v), hillH(x, z));
@@ -950,6 +964,101 @@ export default {
         scene.add(m); models[name] = m; pl.proc.visible = false;
       }).catch(err => console.warn('Model 3D gagal dimuat, memakai bangunan prosedural:', name, err));
     }
+
+    /* ---------- aset dari lembar acuan ChatGPT (assets/models/extras, dibuat tools/make-extras.py) ----------
+       Tekstur foto (tembok, pelataran, tanah, plester), sprite pohon & gugus rumah untuk jarak tengah/jauh, panorama
+       Bukit Zaitun. Dimuat malas; selama memuat atau bila gagal, versi prosedural tetap tampil (cadangan). */
+    const EX = mobile ? '-m' : '', exURL = n => new URL(`../assets/models/extras/${n}`, import.meta.url).href, texLoader = new THREE.TextureLoader();
+    const loadTex = (n, srgb, wrap = THREE.RepeatWrapping) => texLoader.loadAsync(exURL(n)).then(t => { if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = wrap; t.anisotropy = 4; return t; });
+    Promise.all(['wall', 'paving', 'ground', 'plaster'].flatMap(n => [loadTex(`tex-${n}${EX}.webp`, true), loadTex(`tex-${n}${EX}-n.webp`)]).concat(loadTex(`tex-paving${EX}-r.webp`))).then(([w, wn, p, pn, g, gn, pl, pln, pr]) => {
+      if (!alive) return;
+      const use = (mats_, map, nrm, rep, extra = {}) => { [map, nrm, extra.roughnessMap].forEach(t => t && t.repeat.set(...rep)); for (const m of mats_){ Object.assign(m, { map, normalMap: nrm }, extra); m.needsUpdate = true; } };
+      use([stoneMat, stoneLight, cityBody, cityTrim], w, wn, [.7, .9]);                       // kota memakai uv dunia sendiri; repeat diabaikan
+      use([pavMat], p, pn, [.3, .3], { roughnessMap: pr });
+      use([ground.material], g, gn, [70, 70]);
+      use([plaster], pl, pln, [2, 1]);
+      P.ground[1].set('#cdb79c');                                                               // tekstur sudah berwarna; warna dasar fajar dibuat netral
+    }).catch(err => console.warn('Tekstur foto gagal dimuat, memakai tekstur prosedural:', err));
+
+    const spriteMaterial = (map, billboard) => {
+      const m = std({ map, alphaTest: .5, side: THREE.DoubleSide, roughness: 1 });
+      m.onBeforeCompile = sh => {
+        if (billboard){
+          /* papan reklame silindris: selalu menghadap kamera di bidang datar, tetap tegak */
+          sh.vertexShader = sh.vertexShader.replace('#include <defaultnormal_vertex>', '#include <defaultnormal_vertex>\n transformedNormal = normalize(vec3(0., .55, 1.));')
+            .replace('#include <project_vertex>', `vec4 bc = modelMatrix*instanceMatrix*vec4(0., 0., 0., 1.);
+              vec2 bs = vec2(length(instanceMatrix[0].xyz), length(instanceMatrix[1].xyz));
+              vec3 br = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]); br = normalize(vec3(br.x, 0., br.z));
+              vec4 mvPosition = viewMatrix*vec4(bc.xyz + br*transformed.x*bs.x + vec3(0., transformed.y*bs.y, 0.), 1.);
+              gl_Position = projectionMatrix*mvPosition;`);
+        }
+        sh.fragmentShader = sh.fragmentShader.replace('#include <normal_fragment_begin>', THREE.ShaderChunk.normal_fragment_begin.replace('normal *= faceDirection;', ''));
+      };
+      m.customProgramCacheKey = () => 'sprite' + billboard;
+      mats.push(m); return m;
+    };
+    /* bidang bersilang (n) dengan uv menunjuk ke satu kotak di atlas; normal ke atas → pencahayaan lembut seperti tajuk */
+    const atlasGeo = (rect, n) => {
+      const g = mergeGeometries(Array.from({ length: n }, (_, i) => new THREE.PlaneGeometry(1, 1).translate(0, .5, 0).rotateY(i*Math.PI/n)));
+      const uv = g.attributes.uv, nr = g.attributes.normal;
+      for (let i = 0; i < uv.count; i++){ uv.setXY(i, lerp(rect[0], rect[2], uv.getX(i)), lerp(rect[1], rect[3], uv.getY(i))); nr.setXYZ(i, 0, 1, 0); }
+      return g;
+    };
+    const blobTex = (() => { const c = canvas(64, 64), g = c.getContext('2d'), rg = g.createRadialGradient(32, 32, 0, 32, 32, 32); rg.addColorStop(0, 'rgba(0,0,0,.55)'); rg.addColorStop(.6, 'rgba(0,0,0,.22)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = rg; g.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+    const blobMat = new THREE.MeshBasicMaterial({ map: blobTex, transparent: true, depthWrite: false, color: 0x000000 });
+    const blobGeo = new THREE.PlaneGeometry(1.25, 1.25).rotateX(-Math.PI/2).translate(0, .04, 0);
+    const groundAt = (x, z) => Math.abs(x) < PX && z > PZ0 && z < PZ1 ? Y0 : Math.hypot(x, z) > 88 ? meshH(x, z) : 0;
+    const panoU = { map: { value: null }, uDawn: { value: 0 }, uFog: { value: new THREE.Color() }, uHaze: { value: .4 } };
+    let pano = null;
+    Promise.all([fetch(exURL('extras.json')).then(r => r.json()), loadTex(`trees${EX}.webp`, true, THREE.ClampToEdgeWrapping), loadTex(`houses${EX}.webp`, true, THREE.ClampToEdgeWrapping), loadTex(`panorama${EX}.webp`, true, THREE.ClampToEdgeWrapping)]).then(([meta, treeTex, houseTex, panoTex]) => {
+      if (!alive) return;
+      const rs = mulberry32(81);
+      /* pohon tengah & jauh: sprite 3 bidang bersilang + bayangan bulat (blob), lewat plant() */
+      const treeMat = spriteMaterial(treeTex, false);
+      vegKinds['zaitun-sprite'] = meta.trees.zaitun.map(r => ({ aspect: r[4], parts: [[atlasGeo(r, 3), treeMat, false], [blobGeo, blobMat, false]], slots: [] }));
+      vegKinds['cemara-sprite'] = meta.trees.cemara.map(r => ({ aspect: r[4], parts: [[atlasGeo(r, 3), treeMat, false], [blobGeo, blobMat, false]], slots: [] }));
+      const slot = (kind, h, v) => (x, z) => {
+        const o = new THREE.Object3D(); o.position.set(x, groundAt(x, z) - .05, z); o.rotation.y = rs()*6.28; o.scale.set(h*v.aspect, h, h*v.aspect); o.updateMatrix(); v.slots.push(o); return o;
+      };
+      const cityArea = (x, z) => { const r = Math.hypot(x, z); return r > 24 && r < 90 && !(Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3); };
+      const hillArea = (x, z) => { const r = Math.hypot(x, z); return r > 98 && r < 150 && grove(x, z) > .5; };
+      const spot = where => { for (let k = 0; k < 400; k++){ const a = rs()*Math.PI*2, r = 24 + rs()*130, x = Math.cos(a)*r, z = Math.sin(a)*r; if (where(x, z)) return [+x.toFixed(1), +z.toFixed(1)]; } return null; };
+      for (const [where, n] of [[cityArea, mobile ? 30 : 60], [hillArea, mobile ? 40 : 80]]) for (let i = 0; i < n; i++){
+        const at = spot(where); if (!at) continue;
+        const cyp = rs() < .25, kind = cyp ? 'cemara-sprite' : 'zaitun-sprite', vs = vegKinds[kind], v = vs[Math.floor(rs()*vs.length)], h = cyp ? 3.6 + rs()*1.6 : 2.6 + rs()*1.2;
+        plant(kind, at[0], at[1], h, h*v.aspect*.5, h, slot(kind, h, v), where);
+      }
+      /* rumah tengah & jauh: sprite gugus rumah (papan reklame), menggantikan volume 3D jauh */
+      const houseMat = spriteMaterial(houseTex, true), houseGeo = rect => atlasGeo(rect, 1);
+      vegKinds['rumah-sprite'] = meta.houses.map(r => ({ aspect: r[4], parts: [[houseGeo(r), houseMat, false]], slots: [] }));
+      const farArea = (x, z) => { const r = Math.hypot(x, z); return r > CITY_NEAR && r < 92 && !(z > PZ1 && Math.abs(x) < 34 && z < PZ1 + 22); };
+      farItems.body.forEach((b, i) => {
+        if (i%2 || b.y > groundAt(b.x, b.z) + .5) return;                                       // separuh rumah lantai dasar jadi titik gugus
+        const vs = vegKinds['rumah-sprite'], v = vs[Math.floor(rs()*vs.length)], wdt = 8 + rs()*4, h = wdt/v.aspect;
+        plant('rumah-sprite', +b.x.toFixed(1), +b.z.toFixed(1), h, wdt*.5, h, (x, z) => {
+          const o = new THREE.Object3D(); o.position.set(x, groundAt(x, z) - .2, z); o.scale.set(wdt, h, 1); o.updateMatrix(); v.slots.push(o); return o;
+        }, farArea);
+      });
+      farCity.forEach(m => { scene.remove(m); m.geometry.dispose(); }); farCity = [];
+      buildVeg(['zaitun-sprite', 'cemara-sprite', 'rumah-sprite']);
+      /* panorama: busur silinder di belakang kota ke arah matahari terbit; malam = digelapkan & dibirukan lewat shader */
+      panoU.map.value = panoTex;
+      const ph = PANO_R*PANO_SPAN/meta.panorama.aspect, pg = new THREE.CylinderGeometry(PANO_R, PANO_R, ph, 48, 1, true, PANO_AZ - PANO_SPAN/2, PANO_SPAN);
+      const puv = pg.attributes.uv; for (let i = 0; i < puv.count; i++) puv.setX(i, 1 - puv.getX(i));   // dilihat dari dalam: balik kiri-kanan
+      pg.translate(0, ph/2 - ph*.3, 0);
+      pano = new THREE.Mesh(pg, new THREE.ShaderMaterial({
+        uniforms: panoU, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false,
+        vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+        fragmentShader: `uniform sampler2D map; uniform float uDawn, uHaze; uniform vec3 uFog; varying vec2 vUv;
+          void main(){ vec4 t = texture2D(map, vUv); if (t.a < .01) discard;
+            float l = dot(t.rgb, vec3(.2126, .7152, .0722));
+            vec3 night = vec3(.006, .011, .035) + l*vec3(.04, .06, .14);   // malam: digelapkan & dibirukan, menyatu dengan bukit 3D
+            vec3 c = mix(night, t.rgb*1.2, uDawn);
+            gl_FragColor = vec4(mix(c, uFog, uHaze), t.a); }`
+      }));
+      scene.add(pano);
+      if (window.__vegReport) console.table(vegReport.filter(r => r.jenis.endsWith('sprite')));
+    }).catch(err => console.warn('Sprite/panorama gagal dimuat, memakai versi prosedural:', err));
 
     /* ---------- cahaya kursor: lampu hangat + pendar lembut di titik yang ditunjuk ---------- */
     const cursorLight = new THREE.PointLight(0xffb066, 0, 16, 1.4); cursorLight.position.set(0, Y1 + 1.6, 0); scene.add(cursorLight);
@@ -1081,6 +1190,7 @@ export default {
       lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
       for (const { u, k } of hazeLayers){ lerpC(P.haze[0], P.haze[1], dawn, u.uCol.value); u.uOp.value = (.25 - dawn*.08)*k; u.uSun.value.copy(sd); u.uWarm.value = dawn; }
       grade.uniforms.uDawn.value = dawn;
+      panoU.uDawn.value = smooth((dawn - .1)/.8); panoU.uFog.value.copy(scene.fog.color); panoU.uHaze.value = lerp(.5, .28, dawn);
       lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
       renderer.toneMappingExposure = lerp(.92, .76, dawn);
       const envI = lerp(.12, .52, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
