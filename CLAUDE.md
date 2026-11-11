@@ -46,6 +46,11 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   prosedural (0 KB aset). Palet dicocokkan ke `assets/models/source/extras/` (lembar acuan pemilik).
   Anggaran: segitiga vegetasi ≤ 150 rb desktop (sekarang ±48 rb), HP ±40% (±18 rb). Draw call ±136 (dulu ±390).
   Alat pengembang: `?debug-perf` (draw call, segitiga, waktu render; fallback otomatis mati), `?debug-cam=x,y,z,tx,ty,tz`.
+  Tahap 2 (aset 2D dari `assets/models/source/extras/`, dibuat `tools/make-extras.py` → `assets/models/extras/`):
+  pohon tengah/jauh = sprite 3 bidang bersilang + blob shadow; rumah > 46 unit = sprite gugus rumah (papan reklame);
+  panorama Bukit Zaitun di busur ke arah matahari terbit (malam dibirukan lewat shader, medan 3D di situ direndahkan);
+  tembok/pelataran/tanah/plester bertekstur foto mulus. Semua lewat `plant()`; dimuat malas, prosedural = cadangan.
+  Anggaran aset: desktop ±1,06 MB, HP ±0,29 MB (target ≤ 1,5 MB / ≈ 700 KB).
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 

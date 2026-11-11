@@ -50,6 +50,10 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   di batu Qibli dinetralkan, masker jendela sebagai lapisan emissive terpisah.
 - Catatan akurasi: serambi Qibli hanya 3 lengkung (mengikuti gambar acuan; aslinya 7), sisi belakang Qibli "ditebak"
   generator (menghadap selatan, tidak terlihat kamera).
+- **Sprite dan tekstur dibuat dari gambar yang dihasilkan ChatGPT** (`assets/models/source/extras/`: lembar zaitun,
+  cemara, gugus rumah, tekstur batu/tanah, panorama fajar). Hasil di `assets/models/extras/` dibuat dengan
+  `tools/make-extras.py` (latar abu dihapus dengan kunci warna, tekstur dibuat mulus, panorama dipotong ke pita bukit +
+  kota jauh). Tidak ada gambar yang diperbesar; berkas asli tidak ditimpa. Ukuran: ±1,06 MB desktop, ±0,29 MB HP.
 
 ## Logo
 
@@ -68,7 +72,8 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 ## Perlu dilengkapi / diverifikasi sebelum live
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
-- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D dan gambar hero hero Foto).
+- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D, gambar hero Foto, serta sprite,
+  tekstur, dan panorama hero 3D) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: Placement Test, formulir registrasi, WhatsApp admin, Instagram, alamat (saat ini `#`).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
