@@ -32,8 +32,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."
   3. "Bersama, kita nyalakan harapan untuk Palestina."
 - Wordmark permanen kiri atas hero: "LCDU" + "Language Course for Da'wah & Ummah" (identitas, bukan tombol/tautan).
-- **Jangan menulis "gratis"** atau klaim biaya baru di mana pun; biaya belum dikonfirmasi pemilik. Klaim biaya yang sudah
-  ada (Rp0/bulan, Rp100.000 registrasi, "non-profit", meta description) menunggu konfirmasi — jangan ubah diam-diam.
+- Biaya (fakta dari pemilik): **Rp100.000 per term, tidak gratis.** Jangan menulis "gratis" di mana pun. Klaim lama
+  (angka "Rp0", "tidak ada biaya kursus bulanan") berisiko dibaca "gratis" dan menunggu keputusan pemilik — jangan ubah diam-diam.
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
   Scroll harus pendek dan jelas.
@@ -44,7 +44,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.
 - Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun, motif keffiyeh × semangka di tepi bawah hero.
 - Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
-- Palet: biru Lazuardi (Inggris), hijau Zamrud (Arab), kuning Kunyit (aksi).
+- Logo resmi: `assets/brand/` (PNG transparan; turunan web di `assets/brand/web/`, versi warna & putih). Jangan ubah bentuk,
+  proporsi, atau huruf logo. Navbar/footer: warna di mode terang, putih di mode gelap; hero selalu putih.
+- Palet (diselaraskan dengan logo, disetujui pemilik): biru Lazuardi (Inggris) = biru logo `#1724C0`, hijau Zamrud (Arab)
+  `#5B752D` = hijau logo `#7FA33F` digelapkan (hue sama), kuning Kunyit `#FFC21A` (aksi, tidak berubah).
+  `--lazuardi`/`--zamrud` = **isi** (latar dengan teks putih); `--lazuardi-ink`/`--zamrud-ink` = **tinta** (teks, garis
+  indikator; lebih terang di mode gelap); `--logo-biru`/`--logo-hijau` = warna logo persis, hanya dekoratif, bukan teks.
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
   Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
