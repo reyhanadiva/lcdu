@@ -1,7 +1,8 @@
 # LCDU landing page — konteks untuk Claude Code
 
 ## Proyek
-Landing page marketing LCDU: kelas Bahasa Arab & Inggris online (usia 16+), program non-profit di bawah
+Landing page marketing LCDU (**Language Course for Da'wah and Ummah**): kelas Bahasa Arab & Inggris online (usia 16+),
+untuk dakwah dan umat, nirlaba, di bawah
 Yayasan Taqwa Cerdas Kreatif (Alfa Centauri Schools, Bandung). Tujuan halaman: pendaftaran siswa dan donasi.
 Pemilik: Bapak Reyhan (non-developer, berpikir sebagai desainer). Kode akhirnya diserahkan ke tim IT sekolah.
 
@@ -13,28 +14,48 @@ Pemilik: Bapak Reyhan (non-developer, berpikir sebagai desainer). Kode akhirnya 
 ## Menjalankan lokal
 Situs statis. Modul ES butuh server (bukan `file://`):
 `python3 -m http.server 8000` atau `npx serve .` → buka `http://localhost:8000/?hero=lentera` atau `?hero=diorama`.
+Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); jika masih basi, buka lewat `127.0.0.1`.
 
 ## Struktur
 - `index.html` — seluruh halaman (CSS & JS section non-hero inline). Token warna/font di `:root` paling atas.
 - `hero/hero.js` — pengendali hero: scroll → progres `p` (0..1), kursor, teks per babak, pemuat varian, tombol pembanding.
   Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
 - `hero/lentera.js` + `hero/scene2d.js` — varian 2D (canvas): ilustrasi Al-Aqsa malam & fajar, cahaya kontribusi.
-- `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`).
+- `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
+  GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera, kualitas otomatis & fallback ke Lentera.
+- `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
+  supaya `scroll-margin-top` dihormati.
 
 ## Keputusan yang sudah dikunci (jangan diubah tanpa bertanya)
-- Konsep hero: **gelap → terang**. Cerita 3 babak lewat scroll, tanpa tombol/teks tambahan di dalam hero:
-  1. "Bahasa untuk umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya." 3. "Bersama, kita nyalakan harapan untuk Palestina."
+- Hero harus jelas: kursus bahasa Arab & Inggris yang nirlaba untuk dakwah dan umat. Pesan Palestina tetap ada lewat cerita
+  **gelap → terang**. Cerita 3 babak lewat scroll (copy persis, hanya pemilik yang mengubah):
+  1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."
+  3. "Bersama, kita nyalakan harapan untuk Palestina."
+- Wordmark permanen kiri atas hero: "LCDU" + "Language Course for Da'wah & Ummah" (identitas, bukan tombol/tautan).
+- **Jangan menulis "gratis"** atau klaim biaya baru di mana pun; biaya belum dikonfirmasi pemilik. Klaim biaya yang sudah
+  ada (Rp0/bulan, Rp100.000 registrasi, "non-profit", meta description) menunggu konfirmasi — jangan ubah diam-diam.
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
-- Tidak ada klik-untuk-lentera, tidak ada parallax berlebihan pada elemen hero. Scroll harus pendek dan jelas.
+- Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
+  Scroll harus pendek dan jelas.
+- Kursor: kursor bawaan tidak disembunyikan, tidak ada kursor kustom. Di hero: cahaya hangat lembut mengikuti kursor
+  (HP: mengikuti jari) dan menyingkap fajar di sekitarnya. Di luar hero: tanpa efek kursor khusus.
+- Navbar: tersembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah; muncul saat fokus
+  keyboard; skip link "Lewati ke konten"; tanpa slide saat reduced-motion.
+- Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.
 - Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun, motif keffiyeh × semangka di tepi bawah hero.
 - Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
-- Palet: biru Lazuardi (Inggris), hijau Zamrud (Arab), kuning Kunyit (aksi). Font: Unbounded, Plus Jakarta Sans, Reem Kufi, Noto Naskh Arabic.
+- Palet: biru Lazuardi (Inggris), hijau Zamrud (Arab), kuning Kunyit (aksi).
+- Font: woff2 di-host sendiri (subset Latin/Arab, `font-display: swap`, preload font utama), bukan CDN.
+  **Menunggu pilihan pemilik** (lihat `type-test.html`, hapus setelah dipilih): judul Latin (Fraunces / Instrument Serif /
+  Bricolage Grotesque / Unbounded), teks Plus Jakarta Sans, Arab Reem Kufi (judul) + Noto Naskh Arabic atau Amiri (teks).
+- **Menunggu pilihan pemilik:** tata letak teks hero `?layout=a` (kiri-bawah) atau `?layout=b` (tengah-bawah);
+  setelah dipilih, hapus parameter sementara di `hero/hero.js` dan CSS layout yang tidak dipakai.
 
 ## Prioritas berikutnya
 1. Pemilik memilih Lentera atau 3D (atau gabungan). Bantu dengan prototipe yang bisa dilihat di browser pane.
+   Varian "Lentera HD" (gambar asli malam/fajar) sudah diminta; gambarnya ada di `hero/*.png` (belum dipakai).
 2. Naikkan kualitas visual varian terpilih:
-   - 3D: ganti bangunan primitif dengan model glTF Al-Aqsa yang detail (berlisensi, kompres dengan Draco/Meshopt),
-     pencahayaan & material lebih kaya, post-processing ringan (bloom untuk lentera), scroll halus (Lenis), easing kamera (GSAP).
+   - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh).
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
