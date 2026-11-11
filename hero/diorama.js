@@ -83,18 +83,28 @@ function makeTextures(S){
     const k = 196 + vein*52 + n*10; return [k, k - 4, k - 12];
   }), { rep: [.45, .45], strength: 1.2 });
 
-  /* batu kapur Yerusalem: blok berlapis, nat, bintik */
-  const fs = makeFbm(8, 3);
-  const tint = Array.from({ length: 64 }, () => Math.random());
+  /* batu kapur Yerusalem: lapisan blok beragam lebar, tepi pahat (drafted margin) lebih halus & terang, bidang tengah
+     berbintik kasar, warna per blok berbeda, noda luntur menurun */
+  const fs = makeFbm(8, 3), fsd = makeFbm(16, 2), rs = mulberry32(77);
+  const course = (rows, maxCols, rng) => {
+    const hs = Array.from({ length: rows }, () => .7 + rng()*.6), ht = hs.reduce((x, y) => x + y, 0); let acc = 0;
+    return hs.map(h => { const y0 = acc/ht; acc += h; const n = 2 + Math.floor(rng()*(maxCols - 1)), cuts = [0]; for (let i = 1; i < n; i++) cuts.push((i + (rng() - .5)*.5)/n); const shift = rng(); return { y0, y1: acc/ht, cuts, shift, tints: cuts.map(() => rng()) }; });
+  };
+  const cell = (rows, u, v) => {
+    const r = rows.find(r => v < r.y1) || rows[rows.length - 1], uu = (u + r.shift)%1;
+    let k = r.cuts.length - 1; while (k > 0 && uu < r.cuts[k]) k--;
+    const x0 = r.cuts[k], x1 = k + 1 < r.cuts.length ? r.cuts[k + 1] : 1;
+    return { fu: (uu - x0)/(x1 - x0), fv: (v - r.y0)/(r.y1 - r.y0), w: x1 - x0, h: r.y1 - r.y0, t: r.tints[k] };
+  };
+  const stoneRows = course(5, 3, rs);
   const stone = pattern(S, S, (g, w, h, height) => pixels(g, w, h, (u, v) => {
-    const rows = 4, row = Math.floor(v*rows), off = row%2 ? .25 : 0, cols = 2, col = Math.floor((u + off)*cols)%cols;
-    const fu = ((u + off)*cols)%1, fv = (v*rows)%1, edge = Math.min(fu, 1 - fu, fv*2, (1 - fv)*2);
-    const mortar = smooth(edge/.035), n = fs(u, v), t = tint[(row*cols + col)%64];
-    if (height) return mortar*(.75 + n*.25);
-    const k = mortar*(.86 + t*.14) + (1 - mortar)*.62;
-    return [(226 + n*24)*k, (206 + n*22)*k, (168 + n*18)*k];
-  }), { rep: [.7, .9], strength: 2.4 });
-
+    const c = cell(stoneRows, u, v), ex = Math.min(c.fu, 1 - c.fu)*c.w, ey = Math.min(c.fv, 1 - c.fv)*c.h, e = Math.min(ex, ey);
+    const mortar = smooth(e/.008), draft = smooth((e - .012)/.01), n = fs(u, v), pit = fsd(u, v);
+    if (height) return mortar*(.6 + draft*(.15 + pit*.3) + (1 - draft)*.12);
+    const streak = Math.max(0, fs(u, .37) - .55)*(1 - c.fv)*.5;
+    const k = mortar*(.84 + c.t*.16 + draft*(pit - .5)*.12 + (1 - draft)*.06 - streak) + (1 - mortar)*.66;
+    return [(228 + n*20)*k, (210 + n*18)*k, (174 + n*14)*k];
+  }), { rep: [.7, .9], strength: 3 });
   /* ubin biru: bintang delapan (dua bujur sangkar bertumpuk) di grid, nat tipis */
   const tile = pattern(S, S, (g, w, h, height) => {
     const cell = w/2;
@@ -133,13 +143,22 @@ function makeTextures(S){
   pixels(ribH.getContext('2d'), 512, 32, u => 1 - Math.pow(Math.abs(Math.sin(u*Math.PI*36)), .35));
   const ribs = texFrom(toNormal(ribH, 3), false, [1, 1]);
 
-  /* paving pelataran: lempeng besar */
-  const fp = makeFbm(4, 3);
+  /* paving pelataran: lempeng batu beragam ukuran, nat berlumut tipis, warna per lempeng, aus di tengah;
+     plus roughness map (nat & lumut kasar, batu aus lebih halus) */
+  const fp = makeFbm(4, 3), fm2 = makeFbm(32, 2), pavRows = course(6, 4, mulberry32(91));
+  const pav = (u, v) => {
+    const c = cell(pavRows, u, v), e = Math.min(Math.min(c.fu, 1 - c.fu)*c.w, Math.min(c.fv, 1 - c.fv)*c.h);
+    const joint = 1 - smooth(e/.006), moss = joint*smooth((fm2(u, v) - .42)/.2), n = fp(u, v), wear = smooth(1 - Math.hypot(c.fu - .5, c.fv - .5)*1.6);
+    return { c, joint, moss, n, wear };
+  };
   const paving = pattern(S, S, (g, w, h, height) => pixels(g, w, h, (u, v) => {
-    const fu = (u*3)%1, fv = (v*3 + (Math.floor(u*3)%2)*.5)%1, e = smooth(Math.min(fu, 1 - fu, fv, 1 - fv)/.03), n = fp(u, v);
-    if (height) return e*(.7 + n*.3);
-    const k = (.8 + e*.2)*(.9 + n*.18); return [228*k, 212*k, 178*k];
-  }), { rep: [.12, .12], strength: 2 });
+    const { c, joint, moss, n, wear } = pav(u, v);
+    if (height) return (1 - joint)*(.72 + n*.2 + fm2(u, v)*.08) + joint*.15;
+    const k = (.8 + c.t*.2)*(.92 + n*.14 + wear*.04)*(1 - joint*.45);
+    return [(232*k)*(1 - moss) + 92*moss, (216*k)*(1 - moss) + 104*moss, (182*k)*(1 - moss) + 62*moss];
+  }), { rep: [.12, .12], strength: 2.4 });
+  const pr = canvas(S/2, S/2); pixels(pr.getContext('2d'), S/2, S/2, (u, v) => { const { joint, moss, n, wear } = pav(u, v); return Math.min(1, .62 + n*.2 - wear*.12 + joint*.3 + moss*.2); });
+  paving.roughnessMap = texFrom(pr, false, [.12, .12]);
 
   /* kulit kayu zaitun: alur memanjang berpilin, abu-abu kecokelatan (u = sepanjang batang, v = keliling) */
   const fb = makeFbm(4, 4);
@@ -233,6 +252,13 @@ function leafCard(kind, rng){
       g.fillStyle = gr; g.beginPath(); g.moveTo(0, 0); g.quadraticCurveTo(W, -L*.45, 0, -L); g.quadraticCurveTo(-W, -L*.45, 0, 0); g.fill();
       g.strokeStyle = 'rgba(200,210,180,.35)'; g.lineWidth = 1; g.beginPath(); g.moveTo(0, -2); g.lineTo(0, -L*.92); g.stroke();
       g.restore();
+    }
+  } else if (kind === 'rumput'){
+    /* rumpun rumput kering Mediterania: helai melengkung dari dasar, hijau zaitun ke jerami */
+    for (let i = 0; i < 70; i++){
+      const x0 = S*(.2 + rng()*.6), hgt = S*(.35 + rng()*.6), bend = (rng() - .5)*S*.35, k = rng();
+      g.strokeStyle = `rgb(${110 + k*60},${120 + k*40},${62 + k*20})`; g.lineWidth = 2 + rng()*3; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(x0, S); g.quadraticCurveTo(x0 + bend*.3, S - hgt*.6, x0 + bend, S - hgt); g.stroke();
     }
   } else {
     /* cemara: ranting bersisik rapat berbentuk lidah api (ujung lebih terang), tepi bergerigi */
@@ -400,7 +426,7 @@ export default {
     const leadMat = std({ color: 0x8f98a8, metalness: .55, roughness: .42 });
     const glowMat = new THREE.MeshBasicMaterial({ color: 0x000000 });            // ruang dalam yang menyala lewat jendela
     const darkIn = std({ color: 0x1a140f, roughness: 1 });
-    const pavMat = std({ map: T.paving.map, normalMap: T.paving.normalMap, roughness: .9 });
+    const pavMat = std({ map: T.paving.map, normalMap: T.paving.normalMap, roughnessMap: T.paving.roughnessMap, roughness: 1 });
 
     /* ---------- tanah & pelataran (Haram al-Sharif) ---------- */
     const Y0 = .9, PX = 20, PZ0 = -23, PZ1 = 15, PW = PX*2, PD = PZ1 - PZ0, PZC = (PZ0 + PZ1)/2;
@@ -409,9 +435,10 @@ export default {
     const pg = boxG(PW, Y0, PD); add(scene, pg, [stoneMat, stoneMat, pavMat, stoneMat, stoneMat, stoneMat], 0, Y0/2, PZC);
     /* tembok keliling + parapet bergerigi (instanced) */
     const walls = [[0, PZ1 + .4, PW + .8, .8], [0, PZ0 - .4, PW + .8, .8], [PX + .4, PZC, .8, PD], [-PX - .4, PZC, .8, PD]];
-    walls.forEach(w => add(scene, boxG(w[2], 1.6, w[3]), stoneMat, w[0], .8, w[1]));
-    const merlonGeo = boxG(.42, .38, .5), merlonPts = [];
-    walls.forEach(w => { const along = w[2] > w[3], len = along ? w[2] : w[3]; for (let t = -len/2 + .4; t <= len/2 - .4; t += .9) merlonPts.push([along ? [w[0] + t, 1.79, w[1]] : [w[0], 1.79, w[1] + t], along ? 0 : Math.PI/2]); });
+    walls.forEach(w => { add(scene, boxG(w[2], 1.6, w[3]), stoneMat, w[0], .8, w[1]); add(scene, boxG(w[2] + .14, .09, w[3] + .14), stoneLight, w[0], 1.645, w[1]); });   // tembok + lis penutup
+    /* merlon: badan + topi piramida rendah (parapet lebih halus daripada kotak polos) */
+    const merlonGeo = mergeGeometries([boxG(.4, .3, .46).translate(0, -.04, 0), new THREE.ConeGeometry(.3, .16, 4, 1).rotateY(Math.PI/4).translate(0, .19, 0)].map(nonIdx)), merlonPts = [];
+    walls.forEach(w => { const along = w[2] > w[3], len = along ? w[2] : w[3]; for (let t = -len/2 + .4; t <= len/2 - .4; t += .9) merlonPts.push([along ? [w[0] + t, 1.88, w[1]] : [w[0], 1.88, w[1] + t], along ? 0 : Math.PI/2]); });
 
     /* teras atas di sekitar Kubah Shakhrah */
     add(scene, boxG(17, .5, 17), [stoneLight, stoneLight, pavMat, stoneLight, stoneLight, stoneLight], 0, Y0 + .25, 0);
@@ -669,6 +696,33 @@ export default {
       .forEach(([x, z, s]) => plant('zaitun', x, z, s, 1.8*s, 3.1*s, vegSlot('zaitun', 1, 1)));
     [[-18.5, 12], [-17.2, 12.6], [18.6, -13], [17.4, -13.5], [10, 13.5], [-6.5, 13.6], [18.7, 4], [-18.7, -6], [18.6, -19], [-18.6, -19.5]]
       .forEach(([x, z]) => { const h = 3.2 + rv(); plant('cemara', x, z, h, .55, h, (x, z) => vegSlot('cemara', 1, h/3.7)(x, z, 1)); });
+    /* rumput & semak zaitun kecil di sela pelataran, batu lepas: juga lewat plant() (zona larangan) */
+    const grassLeaf = foliageMaterial(leafCard('rumput', mulberry32(6)), windU, [0, .03], '.30,.30,.18'); mats.push(grassLeaf);
+    function grassVariant(seed){
+      const r = mulberry32(seed), qs = [];
+      for (let t = 0; t < 3; t++){
+        const ox = (r() - .5)*.6, oz = (r() - .5)*.6, sz = .7 + r()*.5;
+        for (let i = 0; i < 3; i++) qs.push(new THREE.PlaneGeometry(.8*sz, .42*sz).translate(0, .21*sz, 0).rotateY(i*Math.PI/3 + r()).translate(ox, 0, oz));
+      }
+      const g = mergeGeometries(qs); const nrm = g.attributes.normal; for (let i = 0; i < nrm.count; i++) nrm.setXYZ(i, 0, 1, 0);
+      return [[g, grassLeaf]];
+    }
+    const shrubVariant = seed => { const r = mulberry32(seed); return [[cardCanopy(r, [{ p: [0, .38, 0], r: [.55, .34, .55] }, { p: [.3, .28, .15], r: [.32, .24, .32] }], mobile ? 90 : 210, .3, [0, .15, 0]), oliveLeaf]]; };
+    vegKinds.rumput = [606, 707].map(sd => ({ parts: grassVariant(sd), slots: [] }));
+    vegKinds.semak = [808, 909].map(sd => ({ parts: shrubVariant(sd), slots: [] }));
+    const nearBuilding = (x, z) => (Math.abs(x) < 11 && Math.abs(z) < 11) || (x > -13.5 && x < -1.5 && z < -7.5);
+    const rg = mulberry32(61), spot = () => { let x, z; do { x = (rg() - .5)*(PW - 3); z = PZ0 + 1.5 + rg()*(PD - 3); } while (nearBuilding(x, z)); return [x, z]; };
+    for (let i = 0, n = mobile ? 30 : 70; i < n; i++){ const [x, z] = spot(), sz = .7 + rg()*.7; plant('rumput', +x.toFixed(1), +z.toFixed(1), sz, .45*sz, .45*sz, vegSlot('rumput', 1, 1)); }
+    for (let i = 0, n = mobile ? 8 : 18; i < n; i++){ const [x, z] = spot(), sz = .8 + rg()*.6; plant('semak', +x.toFixed(1), +z.toFixed(1), sz, .8*sz, .75*sz, vegSlot('semak', 1, 1)); }
+    {
+      const n = mobile ? 60 : 150, rocks = new THREE.InstancedMesh(new THREE.DodecahedronGeometry(1, 0), stoneLight, n), o = new THREE.Object3D(), tint = new THREE.Color();
+      for (let i = 0; i < n; i++){
+        const [x, z] = spot(), sz = .05 + Math.pow(rg(), 2)*.14;
+        o.position.set(x, Y0 + sz*.25, z); o.rotation.set(rg()*3, rg()*3, rg()*3); o.scale.set(sz*(1 + rg()*.6), sz*.6, sz); o.updateMatrix(); rocks.setMatrixAt(i, o.matrix);
+        rocks.setColorAt(i, tint.setHSL(.09, .18 + rg()*.1, .55 + rg()*.2));
+      }
+      rocks.castShadow = rocks.receiveShadow = true; scene.add(rocks);
+    }
     /* InstancedMesh per varian & bagian; tiap slot ingat (mesh, indeks) agar cadangan "mengecil" bisa menyalin matriksnya */
     const vegMeshes = [];
     for (const vs of Object.values(vegKinds)) for (const v of vs){
