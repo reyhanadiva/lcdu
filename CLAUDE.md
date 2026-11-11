@@ -20,7 +20,11 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - `index.html` — seluruh halaman (CSS & JS section non-hero inline). Token warna/font di `:root` paling atas.
 - `hero/hero.js` — pengendali hero: scroll → progres `p` (0..1), kursor, teks per babak, pemuat varian, tombol pembanding.
   Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
+- `hero/lentera-hd.js` — varian **default**: foto malam/fajar asli (`assets/hero/build/`, dari `tools/build-hero-images.py`),
+  titik cahaya di `hero/spots.json` (editor: `?hero=lentera-hd&edit-spots`). Teks ditaruh di langit (`text: 'top'`).
+  `supports()` → false bila aset orientasi layar belum ada; `hero.js` lalu memakai Lentera lama (sekarang: landscape).
 - `hero/lentera.js` + `hero/scene2d.js` — varian 2D (canvas): ilustrasi Al-Aqsa malam & fajar, cahaya kontribusi.
+- `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
   GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
   jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`
@@ -55,12 +59,17 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
   Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
-- Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri**, ukuran fluid `clamp()`. Desktop: kubah di kanan;
-  HP: kubah di tengah, diangkat di atas teks. Scrim radial kiri-bawah + scrim tipis di atas (wordmark).
+- Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri** untuk Lentera lama & 3D. **Lentera HD**: teks di area
+  langit — layar tegak di ±8–45% tinggi layar (kubah foto ada di 52–77%, teks tidak boleh menyentuhnya), desktop kiri-atas;
+  scrim gradien tipis dari atas, kontras ≥ 4.5:1 di semua babak. Petunjuk gulir di atas keffiyeh, di area pohon zaitun.
+- Aset Lentera HD (keputusan pemilik): pasangan **tall** (1024×1536) dipakai apa adanya. Pasangan **wide** menunggu
+  `assets/hero/night-wide-v2.png` — jangan diproses sebelum ada dan lulus `tools/check-align.py` (≤ 4 px per zona pada
+  lebar 1536, korelasi ≥ 0,40). **Jangan pernah memperbesar gambar melampaui resolusi aslinya**; butiran film halus
+  ditampilkan otomatis bila foto tampil lebih besar dari aslinya. Target unduhan hero di HP < 700 KB (sekarang ±150 KB AVIF).
 
 ## Prioritas berikutnya
 1. Pemilik memilih Lentera atau 3D (atau gabungan). Bantu dengan prototipe yang bisa dilihat di browser pane.
-   Varian "Lentera HD" (gambar asli malam/fajar) sudah diminta; gambarnya ada di `hero/*.png` (belum dipakai).
+   Lentera HD jalan untuk layar tegak; versi landscape menunggu night-wide-v2.
 2. Naikkan kualitas visual varian terpilih:
    - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.

@@ -31,6 +31,14 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
 
+## Gambar hero (Lentera HD)
+
+- Sumber: `assets/hero/night-tall.png` & `dawn-tall.png` (1024×1536, sejajar, lulus `tools/check-align.py`).
+  Pasangan wide (1536×1024) menunggu `night-wide-v2.png`; `night-wide.png` lama tidak sejajar dan tidak dipakai.
+- Turunan web di `assets/hero/build/` (AVIF → WebP → JPG, lebar 750 & 1024), dibuat ulang dengan
+  `python3 tools/build-hero-images.py`. Lihat `tools/README.md`.
+- Titik cahaya: `hero/spots.json`, atur di browser dengan `?hero=lentera-hd&edit-spots` lalu "Salin JSON".
+
 ## Logo
 
 - Sumber: `assets/brand/lcdu-logo-wide.png` (PNG resmi, latar sudah transparan, 4461×1767) dan `lcdu-logo-square.png`

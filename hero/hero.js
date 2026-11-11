@@ -1,5 +1,7 @@
 /* Pengendali hero: scroll → progres 0..1, kursor, teks per babak, dan pemuat varian.
-   Setiap varian adalah modul dengan export default { mount(container, state) → { frame(state, now), resize(), destroy() } }. */
+   Setiap varian adalah modul dengan export default { mount(container, state) → { frame(state, now), resize(), destroy() } }.
+   Opsional: `supports(state)` (boleh async) → false bila varian tidak bisa dipakai di layar ini (mis. aset orientasi itu
+   belum ada), dan `text: 'top'` bila teks babak harus ditaruh di area langit (atas) alih-alih kiri-bawah. */
 
 const hero = document.getElementById('hero');
 const holder = document.getElementById('hero-canvas');
@@ -9,7 +11,8 @@ const sw = document.getElementById('hero-switch');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 
-const VARIANTS = { lentera: './lentera.js', diorama: './diorama.js' };
+const VARIANTS = { 'lentera-hd': './lentera-hd.js', lentera: './lentera.js', diorama: './diorama.js' };
+const DEFAULT = 'lentera-hd';
 const NEEDS_WEBGL = { diorama: true };
 const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
 const CENTERS = [0, .5, 1];
@@ -56,34 +59,49 @@ function updateCopy(p) {
 }
 
 /* ---------- varian ---------- */
-let current = null, currentName = '', loadToken = 0;
-async function load(name) {
+/* wanted = pilihan pengunjung (disimpan); currentName = yang benar-benar tampil (bisa berbeda karena fallback) */
+let current = null, currentMod = null, currentName = '', wanted = '', loadToken = 0;
+async function load(name, auto = false) {
   if (NEEDS_WEBGL[name] && !hasWebGL) name = 'lentera-hd';   // 3D tidak bisa jalan → Lentera HD
-  if (!VARIANTS[name]) name = 'lentera';                      // Lentera HD belum ada → Lentera lama
+  if (!VARIANTS[name]) name = 'lentera';
+  if (!auto) {
+    wanted = name;
+    try { localStorage.setItem('lcdu-hero', name); } catch (e) {}
+    const url = new URL(location.href); url.searchParams.set('hero', name); history.replaceState(null, '', url);
+  }
   if (name === currentName) return;
   const token = ++loadToken;
-  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
-  try { localStorage.setItem('lcdu-hero', name); } catch (e) {}
-  const url = new URL(location.href); url.searchParams.set('hero', name); history.replaceState(null, '', url);
   const note = document.createElement('div'); note.className = 'hero-loading'; note.textContent = 'Memuat…';
   if (name === 'diorama') holder.appendChild(note);
   let mod;
   try { mod = await import(VARIANTS[name]); }
   catch (err) { note.textContent = 'Varian ini gagal dimuat.'; console.error(err); return; }
+  resize();
+  if (mod.default.supports && !(await mod.default.supports(state))) {
+    if (token !== loadToken) return;
+    note.remove();
+    return load(name === 'lentera-hd' ? 'lentera' : 'lentera-hd', true);   // mis. Lentera HD belum punya aset landscape
+  }
   if (token !== loadToken) return;
   if (current) { current.destroy(); current = null; }
   holder.innerHTML = '';
-  resize();
+  hero.dataset.text = mod.default.text || 'bottom';
+  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
   current = mod.default.mount(holder, state);
-  currentName = name;
+  currentMod = mod.default; currentName = name;
 }
-/* varian boleh meminta pindah (mis. 3D terlalu berat di perangkat ini) */
-state.fallback = name => { console.info('Hero: pindah otomatis ke', name); load(name); };
+/* varian boleh meminta pindah (mis. 3D terlalu berat di perangkat ini); tidak mengubah pilihan pengunjung */
+state.fallback = name => { console.info('Hero: pindah otomatis ke', name); load(name, true); };
 sw.addEventListener('click', e => { const b = e.target.closest('button'); if (b) load(b.dataset.v); });
+/* setelah layar diputar/diubah ukurannya: coba lagi varian pilihan, atau mundur bila varian sekarang tak lagi didukung */
+async function recheck() {
+  if (wanted && wanted !== currentName) return load(wanted, true);
+  if (currentMod && currentMod.supports && !(await currentMod.supports(state))) { const keep = currentName; currentName = ''; load(keep, true); }
+}
 
 /* ---------- ukuran & loop ---------- */
 function resize() { const r = holder.getBoundingClientRect(); state.w = r.width; state.h = r.height; }
-let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); readScroll(); current && current.resize(); }, 150); });
+let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); readScroll(); current && current.resize(); recheck(); }, 150); });
 
 let raf = 0;
 function frame(now) {
@@ -101,4 +119,4 @@ document.addEventListener('visibilitychange', () => { state.visible = !document.
 let first = new URL(location.href).searchParams.get('hero');
 if (!first) { try { first = localStorage.getItem('lcdu-hero'); } catch (e) {} }
 resize(); readScroll();
-load(first || 'lentera').then(start);
+load(first || DEFAULT).then(start);

@@ -7,6 +7,8 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="assets/brand/web/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/brand/web/apple-touch-icon.png">
+<!-- Lentera HD: foto malam tegak dimuat lebih awal (ukuran dipilih browser; rumusnya sama dengan pickWidth di hero/lentera-hd.js) -->
+<link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-tall-750.avif" imagesrcset="assets/hero/build/night-tall-750.avif 750w, assets/hero/build/night-tall-1024.avif 1024w" imagesizes="(min-aspect-ratio: 2/3) 100vw, 66.67vh" media="(orientation: portrait)" fetchpriority="high">
 <meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU, untuk dakwah dan umat. Rp100.000 per term (1 semester), sudah termasuk seluruh biaya belajar.">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -170,7 +172,24 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-switch span{padding:0 8px 0 10px;font-weight:600;opacity:.7}
 .hero-switch button{border:0;background:transparent;color:inherit;font-weight:700;padding:8px 12px;border-radius:999px;cursor:pointer;min-height:36px}
 .hero-switch button[aria-pressed="true"]{background:#F2C14E;color:#2A1E00}
-@media (max-width:520px){.hero-switch span{display:none}.hero-switch button{padding:8px 10px}}
+@media (max-width:520px){.hero-switch span{display:none}.hero-switch button{padding:8px 10px}.hero-switch .long{display:none}}
+/* ===== Lentera HD: foto malam/fajar. Teks di area langit (atas): HP di 8–45% tinggi layar, desktop kiri-atas ===== */
+.hd-grain{position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-size:160px}
+.hd-grain[hidden]{display:none}
+.hero[data-text="top"] .beat{bottom:auto;top:calc(env(safe-area-inset-top,0px) + clamp(112px,16vh,156px))}
+@media (orientation: portrait){.hero[data-text="top"] .beat{top:calc(env(safe-area-inset-top,0px) + clamp(88px,11.5svh,128px))}}
+@media (orientation: portrait) and (min-width:600px){.hero[data-text="top"] .beat{right:max(40px,env(safe-area-inset-right,0px));width:auto;max-width:620px}}
+.hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.66) 0%,rgba(4,8,32,.6) 22%,rgba(4,8,32,.38) 40%,rgba(4,8,32,0) 55%)}
+.hero[data-text="top"] .hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.45)}
+/* editor titik cahaya (?edit-spots) — alat kerja pemilik, bukan untuk pengunjung */
+.hd-editing .hero-copy{opacity:.15}
+.hd-edit-layer{position:absolute;inset:0;cursor:crosshair}
+.hd-dot{position:absolute;width:calc(14px*var(--s,1) + 6px);aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid #FFC21A;background:rgba(255,194,26,.25);padding:0;cursor:pointer}
+.hd-dot:hover{background:#FF7A6E;border-color:#fff}
+.hd-edit-panel{position:fixed;right:16px;top:16px;z-index:300;display:grid;gap:8px;max-width:280px;padding:14px 16px;border-radius:14px;background:rgba(10,14,40,.92);color:#F3F5FC;font-size:.85rem;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+.hd-edit-panel button{border:0;border-radius:999px;padding:8px 12px;font-weight:700;background:#F2C14E;color:#2A1E00;cursor:pointer}
+.hd-edit-panel button[data-a="reset"]{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+.hd-edit-panel textarea{width:100%;height:120px;font:12px/1.4 ui-monospace,monospace}
 .hero-loading{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;color:var(--hero-soft);font-size:.9rem;z-index:-1}
 @media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none;transform:none}}
 
@@ -484,6 +503,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </section>
 <div class="hero-switch" id="hero-switch" role="group" aria-label="Bandingkan varian hero">
   <span>Hero</span>
+  <button type="button" data-v="lentera-hd" aria-label="Lentera HD"><span class="long">Lentera </span>HD</button>
   <button type="button" data-v="lentera">Lentera</button>
   <button type="button" data-v="diorama">3D</button>
 </div>
