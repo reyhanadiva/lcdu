@@ -118,8 +118,6 @@ function frame(now) {
 }
 function start() { if (!raf && state.visible) raf = requestAnimationFrame(frame); }
 new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !document.hidden; start(); }, { rootMargin: '60px' }).observe(hero);
-/* tepi bawah hero (motif keffiyeh) masih di layar → angkat tombol mengambang (lihat .hero-in-view di CSS) */
-new IntersectionObserver(en => document.documentElement.classList.toggle('hero-in-view', en[0].isIntersecting)).observe(hero.querySelector('.kufiyah'));
 document.addEventListener('visibilitychange', () => { state.visible = !document.hidden; start(); });
 
 let first = new URL(location.href).searchParams.get('hero');

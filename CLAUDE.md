@@ -34,6 +34,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
   GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
   jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`.
+  Anti-aliasing: composer memakai render target MSAA (4× desktop, 2× HP) + alpha-to-coverage untuk daun/sprite; shader
+  yang memakai `pow`/`normalize` pada varying wajib di-clamp (dengan MSAA nilai bisa sedikit di luar rentang → NaN → blok
+  hitam di bloom). `?debug-perf` juga membuka `window.__dio` untuk memeriksa.
   Kubah & Qibli dari `assets/models/optimized/*.glb` (TRELLIS.2, Meshopt; `-mobile` untuk HP), dimuat malas; bangunan
   prosedural = layar sementara & cadangan bila gagal. Lentera dari `hero/lights3d.json` (editor `?hero=diorama&edit-lights`).
   Anggaran aset 3D: desktop ≤ 3 MB (sekarang 2,98 MB), HP 1,77 MB. HP lemah tidak membuka 3D dari preferensi tersimpan.
@@ -64,13 +67,18 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Donasi **sukarela**, sesuai kesanggupan. Jangan menulis "gratis" atau "Rp0" di mana pun; angka utama selalu Rp100.000 per term.
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
-  Scroll harus pendek dan jelas.
+  Scroll harus pendek dan jelas (tinggi hero 340vh; dinaikkan dari 290vh karena pemilik merasa transisi terlalu cepat).
+- Tiga babak = tiga suasana yang jelas berbeda (permintaan pemilik), berubah bertahap sepanjang scroll, bukan melompat:
+  Foto: malam → fajar biru + lampu menyala → matahari terbit keemasan. 3D: malam → fajar ungu-jingga → pagi cerah
+  (matahari tinggi, langit biru, kabut tipis). Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
+  (kontras ≥ 6:1); babak 1–2 putih dengan bayangan lembut hanya di belakang teks (foto tidak digelapkan).
 - Kursor: kursor bawaan tidak disembunyikan, tidak ada kursor kustom. Di hero: cahaya hangat lembut mengikuti kursor
   (HP: mengikuti jari) dan menyingkap fajar di sekitarnya. Di luar hero: tanpa efek kursor khusus.
 - Navbar: tersembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah; muncul saat fokus
   keyboard; skip link "Lewati ke konten"; tanpa slide saat reduced-motion.
 - Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.
-- Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun, motif keffiyeh × semangka di tepi bawah hero.
+- Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun. Motif keffiyeh × semangka **tidak di dalam
+  hero** (keputusan pemilik): tampil sebagai pembatas tepat setelah hero, di awal section berikutnya.
 - Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
 - Logo resmi: `assets/brand/` (PNG transparan; turunan web di `assets/brand/web/`, versi warna & putih). Jangan ubah bentuk,
   proporsi, atau huruf logo. Navbar/footer: warna di mode terang, putih di mode gelap; hero selalu putih.
@@ -83,7 +91,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
 - Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri** untuk Lentera lama & 3D. **Lentera HD**: teks di area
   langit — layar tegak di ±8–45% tinggi layar (kubah foto ada di 52–77%, teks tidak boleh menyentuhnya), desktop kiri-atas;
-  scrim gradien tipis dari atas, kontras ≥ 4.5:1 di semua babak. Petunjuk gulir di atas keffiyeh, di area pohon zaitun.
+  pita gelap tipis di atas (wordmark) + bayangan elips di belakang teks babak 1–2, kontras ≥ 4.5:1 di semua babak. Petunjuk gulir di atas keffiyeh, di area pohon zaitun.
 - Aset hero Foto: pasangan **tall** (1024×1536, night-tall + dawn-tall) dan **wide** (1536×1024, night-wide-v2 +
   dawn-wide) — keduanya lulus `tools/check-align.py` (≤ 4 px per zona pada lebar 1536, korelasi ≥ 0,40). Pasangan baru
   wajib lulus skrip itu dulu. `night-wide.png` lama tidak sejajar dan tidak dipakai. **Jangan pernah memperbesar gambar melampaui resolusi aslinya**; butiran film halus

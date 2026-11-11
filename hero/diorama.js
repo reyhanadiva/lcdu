@@ -1,5 +1,5 @@
 /* Varian 3 — Diorama 3D (three.js): kompleks Al-Aqsa sebagai maket. Scroll menggerakkan kamera dan waktu,
-   dari malam gelap → ratusan lentera menyala → matahari terbit. Kursor/jari = cahaya hangat di titik yang ditunjuk
+   dari malam gelap → fajar ungu-jingga dengan ratusan lentera menyala → pagi cerah. Kursor/jari = cahaya hangat di titik yang ditunjuk
    (kamera tidak ikut bergerak — tanpa parallax).
    Semua tekstur dibuat prosedural (canvas) — tidak ada aset luar. Pita kaligrafi hanyalah ornamen abstrak,
    bukan tulisan ayat, supaya tidak ada teks Al-Qur'an yang keliru. */
@@ -313,7 +313,7 @@ function gnarledTube(points, r0, r1, seg, rad, twist, groove){
 }
 /* materi daun: alfa terpotong (bayangan ikut berlubang), dua sisi, sisi bawah keperakan, ayunan angin halus */
 function foliageMaterial(map, windU, sway, under){
-  const m = new THREE.MeshStandardMaterial({ map, alphaTest: .5, side: THREE.DoubleSide, roughness: .78 });
+  const m = new THREE.MeshStandardMaterial({ map, alphaTest: .5, alphaToCoverage: true, side: THREE.DoubleSide, roughness: .78 });   // tepi daun halus dengan MSAA
   m.onBeforeCompile = sh => {
     sh.uniforms.uTime = windU.uTime;
     sh.vertexShader = 'uniform float uTime;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
@@ -344,7 +344,7 @@ const TIERS = [
 export default {
   mount(holder, state){
     const mobile = state.w < 900 || state.coarse;
-    const renderer = new THREE.WebGLRenderer({ antialias: !mobile, powerPreference: 'high-performance' });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     holder.appendChild(renderer.domElement);
@@ -378,25 +378,26 @@ export default {
     }
 
     /* ---------- langit: gradasi, hamburan fajar di sekitar matahari, cakram matahari ---------- */
-    const skyU = { top: { value: new THREE.Vector3() }, mid: { value: new THREE.Vector3() }, hor: { value: new THREE.Vector3() }, sunDir: { value: new THREE.Vector3(0, 0, 1) }, sunAmt: { value: 0 }, moonDir: { value: new THREE.Vector3(0, .3, -1) }, moonAmt: { value: 1 } };
+    const skyU = { top: { value: new THREE.Vector3() }, mid: { value: new THREE.Vector3() }, hor: { value: new THREE.Vector3() }, sunDir: { value: new THREE.Vector3(0, 0, 1) }, sunAmt: { value: 0 }, uDay: { value: 0 }, moonDir: { value: new THREE.Vector3(0, .3, -1) }, moonAmt: { value: 1 } };
     const sky = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), new THREE.ShaderMaterial({
       side: THREE.BackSide, depthWrite: false, fog: false, uniforms: skyU,
       vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-      fragmentShader: `uniform vec3 top, mid, hor, sunDir, moonDir; uniform float sunAmt, moonAmt; varying vec3 vD;
+      fragmentShader: `uniform vec3 top, mid, hor, sunDir, moonDir; uniform float sunAmt, moonAmt, uDay; varying vec3 vD;
         void main(){ float h = vD.y; vec3 sd = normalize(sunDir);
           vec3 c = mix(hor, mid, smoothstep(-.02, .2, h)); c = mix(c, top, smoothstep(.2, .75, h));
-          float az = max(dot(normalize(vD.xz), normalize(sd.xz)), 0.);
-          c += vec3(1., .5, .25)*pow(az, 5.)*(1. - smoothstep(-.05, .32, h))*.55*sunAmt;
-          float s = max(dot(vD, sd), 0.);
+          float az = max(dot(normalize(vD.xz + 1e-5), normalize(sd.xz + 1e-5)), 0.);
+          c += vec3(1., .5, .25)*pow(az, 5.)*(1. - smoothstep(-.05, .32, h))*.55*sunAmt*(1. - uDay*.85);   // semburat jingga hanya saat fajar
+          float s = clamp(dot(vD, sd), 0., 1.);
           c += vec3(1., .88, .66)*smoothstep(.9991, .9994, s)*11.*sunAmt;          // cakram
-          c += vec3(1., .62, .3)*(pow(s, 40.)*.55 + pow(s, 8.)*.07)*sunAmt;     // halo
+          c += mix(vec3(1., .62, .3), vec3(1., .93, .8), uDay)*(pow(s, 40.)*.55 + pow(s, 8.)*.07)*sunAmt;     // halo: jingga saat fajar, putih-keemasan saat pagi
           vec3 md = normalize(moonDir); float m = dot(vD, md);
           float crescent = smoothstep(.99955, .99975, m)*(1. - smoothstep(.99955, .99975, dot(vD, normalize(md + vec3(.006, .004, 0.)))));
           c += vec3(.92, .95, 1.)*crescent*3.*moonAmt + vec3(.35, .45, .8)*pow(max(m, 0.), 300.)*.35*moonAmt;   // bulan sabit + pendar
           gl_FragColor = vec4(c, 1.); }`
     }));
     scene.add(sky);
-    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#3A5AA6'), hex3('#D48C7C'), hex3('#F4B077')] };   // fajar dibuat lebih dalam supaya tidak memutih
+    /* tiga suasana: malam · fajar (biru keunguan, cakrawala merah muda-jingga) · pagi cerah (biru jernih) */
+    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#25336F'), hex3('#9A6E98'), hex3('#F29A72')], s: [hex3('#2D6AD0'), hex3('#78B2EE'), hex3('#D9ECF7')] };
 
     /* bintang berkelip (shader titik) */
     const starN = 1600, sp = [], sph = [];
@@ -423,7 +424,7 @@ export default {
         fragmentShader: `uniform vec3 uCol, uSun; uniform float uOp, uWarm; varying float vY; varying vec2 vXZ;
           void main(){ float s = pow(max(dot(vXZ, normalize(uSun.xz)), 0.), 3.);
             vec3 c = mix(uCol, vec3(1., .72, .48), s*uWarm*.6);
-            gl_FragColor = vec4(c, uOp*(1. + s*uWarm*.8)*pow(1. - vY, 2.2)); }`
+            gl_FragColor = vec4(c, uOp*(1. + s*uWarm*.8)*pow(clamp(1. - vY, 0., 1.), 2.2)); }`   // clamp: dengan MSAA vY bisa sedikit > 1 → pow negatif = NaN → blok hitam di bloom
       }));
       m.position.y = y; scene.add(m); return { m, u, k };
     });
@@ -977,11 +978,11 @@ export default {
       use([pavMat], p, pn, [.3, .3], { roughnessMap: pr });
       use([ground.material], g, gn, [70, 70]);
       use([plaster], pl, pln, [2, 1]);
-      P.ground[1].set('#cdb79c');                                                               // tekstur sudah berwarna; warna dasar fajar dibuat netral
+      P.ground[1].set('#b8a08e'); P.ground[2].set('#e4d4be');                                 // tekstur sudah berwarna; warna dasar fajar & pagi dibuat netral
     }).catch(err => console.warn('Tekstur foto gagal dimuat, memakai tekstur prosedural:', err));
 
     const spriteMaterial = (map, billboard) => {
-      const m = std({ map, alphaTest: .5, side: THREE.DoubleSide, roughness: 1 });
+      const m = std({ map, alphaTest: .5, alphaToCoverage: true, side: THREE.DoubleSide, roughness: 1 });
       m.onBeforeCompile = sh => {
         if (billboard){
           /* papan reklame silindris: selalu menghadap kamera di bidang datar, tetap tegak */
@@ -1068,7 +1069,9 @@ export default {
     let cursorAmt = 0;
 
     /* ---------- pascaproses: bloom halus untuk lentera, jendela, dan matahari ---------- */
-    const composer = new EffectComposer(renderer);
+    /* MSAA di kanvas perantara: tanpa ini, 'antialias' renderer tidak berlaku saat bloom aktif dan semua tepi
+       (tiang, ornamen, daun) tampak bergerigi & berkedip saat kamera bergerak */
+    const composer = new EffectComposer(renderer, new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: mobile ? 2 : 4 }));
     composer.addPass(new RenderPass(scene, camera));
     const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .55, .55, .82);
     composer.addPass(bloom); composer.addPass(new OutputPass());
@@ -1076,24 +1079,29 @@ export default {
        hangat saat fajar; sorotan hangat; saturasi sedikit dinaikkan; tepi layar sedikit lebih gelap (tidak menurunkan
        kontras teks putih) */
     const grade = new ShaderPass({
-      uniforms: { tDiffuse: { value: null }, uDawn: { value: 0 }, uVig: { value: .32 } },
+      uniforms: { tDiffuse: { value: null }, uDawn: { value: 0 }, uDay: { value: 0 }, uVig: { value: .32 } },
       vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-      fragmentShader: `uniform sampler2D tDiffuse; uniform float uDawn, uVig; varying vec2 vUv;
+      fragmentShader: `uniform sampler2D tDiffuse; uniform float uDawn, uDay, uVig; varying vec2 vUv;
         void main(){ vec4 t = texture2D(tDiffuse, vUv); vec3 c = t.rgb; float l = dot(c, vec3(.299, .587, .114));
-          vec3 lo = mix(vec3(.95, .98, 1.06), vec3(1.04, .99, .95), uDawn), hi = vec3(1.03, 1., .965);
+          vec3 lo = mix(mix(vec3(.95, .98, 1.06), vec3(1.04, .97, .98), uDawn), vec3(.98, 1., 1.03), uDay), hi = mix(vec3(1.03, 1., .965), vec3(1.02, 1.01, .98), uDay);
           c *= mix(lo, hi, smoothstep(.15, .8, l));
-          c = mix(vec3(l), c, 1.07);
+          c = mix(vec3(l), c, 1.07 + uDay*.08);
+          c = mix(c, (c - .5)*1.06 + .5, uDay);   // pagi cerah: sedikit lebih kontras
           vec2 d = vUv - .5; c *= 1. - dot(d, d)*uVig;
           gl_FragColor = vec4(c, t.a); }`
     });
     composer.addPass(grade);
 
     /* ---------- palet waktu ---------- */
+    /* [malam, fajar, pagi cerah] — dicampur oleh dawn (malam→fajar) lalu day (fajar→pagi) */
     const P = {
-      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .52],
-      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 2.05], fog: [C('#0b1236'), C('#c98f78')], fogD: [.0115, .0045],
-      ground: [C('#2c2f52'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#d99a7a')],
+      hemiSky: [C('#3b4f9e'), C('#b88fb0'), C('#cfe2ff')], hemiGround: [C('#141a3a'), C('#4a3838'), C('#8f7656')], hemiI: [.15, .42, .95],
+      sunCol: [C('#8ea6ff'), C('#ff9550'), C('#fff0d6')], sunI: [.05, 1.5, 3.1], fog: [C('#0b1236'), C('#a77a8c'), C('#cfdbe6')], fogD: [.0115, .0065, .0018],
+      ground: [C('#2c2f52'), C('#8a6a54'), C('#c9aa80')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#c48b92'), C('#e4ecf2')],
+      exp: [.92, .8, .9], env: [.12, .4, .75], bloom: [.62, .34, .18],
     };
+    const mix3 = (k, a, b, out) => out.copy(P[k][0]).lerp(P[k][1], a).lerp(P[k][2], b);
+    const num3 = (k, a, b) => lerp(lerp(P[k][0], P[k][1], a), P[k][2], b);
 
     /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ---------- */
     const endAz = .36, vd = new THREE.Vector3(-Math.sin(endAz), 0, -Math.cos(endAz)), rgt = new THREE.Vector3(Math.cos(endAz), 0, -Math.sin(endAz));
@@ -1143,12 +1151,13 @@ export default {
     const DEBUG_PERF = new URL(location.href).searchParams.has('debug-perf');
     /* ?debug-cam=x,y,z,tx,ty,tz: kamera bebas untuk memeriksa detail (hanya pengembangan) */
     const DEBUG_CAM = (new URL(location.href).searchParams.get('debug-cam') || '').split(',').map(Number).filter(n => !isNaN(n)).length === 6 ? new URL(location.href).searchParams.get('debug-cam').split(',').map(Number) : null;
-    if (DEBUG_PERF){ renderer.info.autoReset = false; window.__dioramaPerf = { frames: [] }; }
+    if (DEBUG_PERF){ renderer.info.autoReset = false; window.__dioramaPerf = { frames: [] }; window.__dio = { bloom, grade, skyU, sun, scene, renderer, camera }; }
 
     function frame(st, now){
       watchFps(now);
       const t0 = DEBUG_PERF ? (renderer.info.reset(), performance.now()) : 0;
-      const p = st.p, lit = smooth(p/.62), dawn = smooth((p - .5)/.5), time = st.reduce ? 0 : now/1000;
+      /* lampu menyala .0–.55 · malam → fajar .2–.6 · fajar → pagi cerah .6–1 (matahari naik tinggi, cahaya putih-keemasan) */
+      const p = st.p, lit = smooth(p/.55), dawn = smooth((p - .2)/.4), day = smooth((p - .6)/.4), time = st.reduce ? 0 : now/1000;
       if (toCam){ if (p !== lastTarget){ toCam(p); lastTarget = p; } } else cam.p = p;
 
       /* kamera */
@@ -1173,38 +1182,38 @@ export default {
       }
 
       /* langit, matahari terbit dari bawah cakrawala */
-      for (let i = 0; i < 3; i++){ const k = ['top', 'mid', 'hor'][i]; skyU[k].value.copy(SKY.n[i]).lerp(SKY.d[i], dawn); }
-      skyU.hor.value.addScalar(lit*.035*(1 - dawn));
+      for (let i = 0; i < 3; i++){ const k = ['top', 'mid', 'hor'][i]; skyU[k].value.copy(SKY.n[i]).lerp(SKY.d[i], dawn).lerp(SKY.s[i], day); }
+      skyU.hor.value.addScalar(lit*.035*(1 - dawn)); skyU.uDay.value = day;
       sunH.copy(vd).addScaledVector(rgt, aspect >= 1 ? .2 : .06).normalize();
-      const sunEl = lerp(-.1, .2, smooth((p - .55)/.45));
+      const sunEl = lerp(-.08, .04, smooth((p - .4)/.25)) + day*.5;   // terbit di cakrawala saat fajar, lalu naik tinggi
       sd.copy(sunH).multiplyScalar(Math.cos(sunEl)); sd.y = Math.sin(sunEl);
-      skyU.sunDir.value.copy(sd); skyU.sunAmt.value = smooth((p - .5)/.35);
-      starU.uOp.value = 1 - smooth((p - .45)/.4); starU.uTime.value = time;
+      skyU.sunDir.value.copy(sd); skyU.sunAmt.value = smooth((p - .42)/.25);
+      starU.uOp.value = 1 - smooth((p - .25)/.3); starU.uTime.value = time;
       const night = 1 - dawn;
       moonSky.copy(vd0).addScaledVector(rgt0, aspect >= 1 ? .24 : .08).normalize().multiplyScalar(Math.cos(.17)).setY(Math.sin(.17));
       skyU.moonDir.value.copy(moonSky); skyU.moonAmt.value = night;
       moon.intensity = 1.5*night;
-      lerpC(P.hemiSky[0], P.hemiSky[1], dawn, hemi.color); lerpC(P.hemiGround[0], P.hemiGround[1], dawn, hemi.groundColor); hemi.intensity = lerp(P.hemiI[0], P.hemiI[1], dawn) + lit*.1;
-      lerpC(P.sunCol[0], P.sunCol[1], dawn, sun.color); sun.intensity = lerp(P.sunI[0], P.sunI[1], dawn);
+      mix3('hemiSky', dawn, day, hemi.color); mix3('hemiGround', dawn, day, hemi.groundColor); hemi.intensity = num3('hemiI', dawn, day) + lit*.1*(1 - day);
+      mix3('sunCol', dawn, day, sun.color); sun.intensity = num3('sunI', dawn, day);
       if (dawn < .02) sun.position.set(-30, 50, -25); else sun.position.copy(sd).setY(Math.max(sd.y, .12)).normalize().multiplyScalar(90);
-      lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
-      for (const { u, k } of hazeLayers){ lerpC(P.haze[0], P.haze[1], dawn, u.uCol.value); u.uOp.value = (.25 - dawn*.08)*k; u.uSun.value.copy(sd); u.uWarm.value = dawn; }
-      grade.uniforms.uDawn.value = dawn;
-      panoU.uDawn.value = smooth((dawn - .1)/.8); panoU.uFog.value.copy(scene.fog.color); panoU.uHaze.value = lerp(.5, .28, dawn);
-      lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
-      renderer.toneMappingExposure = lerp(.92, .76, dawn);
-      const envI = lerp(.12, .52, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
+      mix3('fog', dawn, day, scene.fog.color); scene.fog.density = num3('fogD', dawn, day);
+      for (const { u, k } of hazeLayers){ mix3('haze', dawn, day, u.uCol.value); u.uOp.value = (.25 - dawn*.06 - day*.13)*k; u.uSun.value.copy(sd); u.uWarm.value = dawn*(1 - day*.8); }
+      grade.uniforms.uDawn.value = dawn; grade.uniforms.uDay.value = day;
+      panoU.uDawn.value = smooth((dawn - .1)/.8); panoU.uFog.value.copy(scene.fog.color); panoU.uHaze.value = lerp(lerp(.5, .3, dawn), .12, day);
+      mix3('ground', dawn, day, ground.material.color);
+      renderer.toneMappingExposure = num3('exp', dawn, day);
+      const envI = num3('env', dawn, day) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
 
       /* jendela: sebagian sudah menyala hangat sejak awal; lentera menyala bersama babak 2, meredup saat fajar */
-      const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
+      const win = Math.max(.4, lit)*(1 - dawn*.35)*(1 - day), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
       glowMat.color.copy(P.glow).multiplyScalar(win*3.2*flick);
       doorMat.emissiveIntensity = win*1.4;
       cityU.uWinLit.value = .12 + .3*lit; cityU.uWinI.value = win*2.6*flick;   // jendela kota menyala bertahap bersama lampu kota
       modelMats.forEach(m => m.emissiveIntensity = win*2.4*flick);
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
-      lU.uLit.value = lit; lU.uOp.value = 1 - dawn*.6; lU.uTime.value = time;
-      bloom.strength = lerp(.62, .24, dawn); bloom.threshold = lerp(.8, 1.0, dawn);
+      lU.uLit.value = lit; lU.uOp.value = (1 - dawn*.3)*(1 - day*.85); lU.uTime.value = time;
+      bloom.strength = num3('bloom', dawn, day); bloom.threshold = lerp(lerp(.8, .92, dawn), 1.0, day);
 
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
       if (DEBUG_PERF){

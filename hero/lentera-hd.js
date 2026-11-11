@@ -3,7 +3,9 @@
    Babak 2: lampu menyala di sumber yang masuk akal (hero/spots.json: jendela, lentera arkade, tiang lampu, lentera jalan,
             rumah di bukit), bergelombang dari Kubah ke luar — seperti ilmu yang menyebar. Tiap lampu menyingkap warna fajar
             di sekitarnya lewat masker lembut beresolusi rendah dan memberi genangan cahaya di tanah. Padam lagi saat scroll naik.
-   Babak 3: fajar menyapu dari arah matahari (bukan crossfade), haze hangat, sinar halus.
+            Bersamaan, langit malam berangsur menjadi fajar biru (blue hour) dengan semburat merah muda di cakrawala.
+   Babak 3: matahari terbit — cahaya keemasan menyapu dari arah matahari (bukan crossfade), haze hangat, sinar halus.
+   Tiga suasana yang jelas berbeda: malam (biru gelap, bintang) → fajar biru + lampu → matahari terbit keemasan.
    Kursor/jari = cahaya lembut yang menyingkap fajar. Tanpa klik, tanpa parallax. ?edit-spots membuka editor titik cahaya. */
 
 const BUILD = new URL('../assets/hero/build/', import.meta.url);
@@ -84,8 +86,8 @@ export default {
   mount(holder, state){
     const cv = canvas(); cv.className = 'hd-canvas'; holder.appendChild(cv);
     const ctx = cv.getContext('2d');
-    const nightC = canvas(), dawnC = canvas(), tmp = canvas(), mask = canvas();
-    const nctx = nightC.getContext('2d'), dctx = dawnC.getContext('2d'), tctx = tmp.getContext('2d'), mctx = mask.getContext('2d');
+    const nightC = canvas(), dawnC = canvas(), blueC = canvas(), tmp = canvas(), mask = canvas();
+    const nctx = nightC.getContext('2d'), dctx = dawnC.getContext('2d'), bctx = blueC.getContext('2d'), tctx = tmp.getContext('2d'), mctx = mask.getContext('2d');
     const MASK = maskSprite(), GLOW = glowSprite(), RAYS = raySprite();
     const grain = document.createElement('div'); grain.className = 'hd-grain'; grain.style.backgroundImage = `url(${grainURL()})`; holder.appendChild(grain);
 
@@ -114,7 +116,7 @@ export default {
       if (!night) return;
       DPR = Math.min(devicePixelRatio || 1, state.w > 1200 ? 1.25 : 1.5);
       W = Math.max(1, Math.round(state.w*DPR)); H = Math.max(1, Math.round(state.h*DPR));
-      for (const c of [cv, nightC, dawnC, tmp]){ c.width = W; c.height = H; }
+      for (const c of [cv, nightC, dawnC, blueC, tmp]){ c.width = W; c.height = H; }
       mask.width = Math.ceil(W*MASK_Q); mask.height = Math.ceil(H*MASK_Q);
       const art = ART[orient], iw = night.naturalWidth, ih = night.naturalHeight;
       const s = Math.max(W/iw, H/ih), dw = iw*s, dh = ih*s;
@@ -122,6 +124,7 @@ export default {
       nctx.drawImage(night, view.ox, view.oy, dw, dh);
       if (dawn) dctx.drawImage(dawn, view.ox, view.oy, dw, dh);
       sun = toScreen(art.sun); horizonY = view.oy + art.horizon*dh;
+      if (dawn) blueHour();
       base = dw*.032;
       /* urutan menyala: dari Kubah ke luar (jarak di gambar), sedikit acak supaya tidak seperti cincin sempurna */
       const o = art.origin;
@@ -133,6 +136,20 @@ export default {
       /* butiran film hanya bila foto tampil lebih besar dari resolusi aslinya (layar retina) */
       grain.hidden = s*(devicePixelRatio || 1)/DPR <= 1.05;
       last = '';
+    }
+    /* fajar biru (babak 2): foto malam yang diterangi struktur foto fajar (luminositas saja, warna tetap biru),
+       langit sedikit lebih terang, dan semburat merah muda-jingga di cakrawala. Dibuat sekali per tata letak. */
+    function blueHour(){
+      const g = bctx; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(nightC, 0, 0);
+      g.globalCompositeOperation = 'luminosity'; g.globalAlpha = .3; g.drawImage(dawnC, 0, 0);
+      g.globalCompositeOperation = 'screen'; g.globalAlpha = 1;
+      const sk = g.createLinearGradient(0, 0, 0, horizonY + H*.05);
+      sk.addColorStop(0, 'rgba(40,60,140,.32)'); sk.addColorStop(.6, 'rgba(90,90,170,.3)'); sk.addColorStop(1, 'rgba(120,100,170,.18)');
+      g.fillStyle = sk; g.fillRect(0, 0, W, H);
+      const hz = g.createLinearGradient(0, horizonY - H*.3, 0, horizonY + H*.04);
+      hz.addColorStop(0, 'rgba(255,140,150,0)'); hz.addColorStop(.7, 'rgba(255,140,140,.3)'); hz.addColorStop(1, 'rgba(255,170,130,.42)');
+      g.fillStyle = hz; g.fillRect(0, 0, W, horizonY + H*.04);
+      g.globalCompositeOperation = 'source-over';
     }
     const toScreen = ([x, y]) => [view.ox + x*view.dw, view.oy + y*view.dh];
 
@@ -153,9 +170,11 @@ export default {
     function frame(st, now){
       if (!night) return;
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
-      /* fajar dua lapis supaya terang bertahap: 'pre' = cahaya pagi merembes merata sejak tengah babak 2,
-         'dawnT' = sapuan dari arah matahari yang menyelesaikannya */
-      const lit = smooth(p/.62)*n, pre = dawn ? smooth((p - .36)/.6) : 0, dawnT = dawn ? smooth((p - .45)/.55) : 0;
+      /* garis waktu (p = 0..1), tiap perubahan berjalan sepanjang scroll, tidak melompat:
+         lampu menyala .04–.46 · malam → fajar biru .14–.5 · pendar matahari di cakrawala .44–.66 ·
+         matahari terbit (sapuan keemasan) .54–.96 · sinar & cahaya penuh .72–1 */
+      const lit = smooth((p - .04)/.42)*n, blue = dawn ? smooth((p - .14)/.36) : 0, first = dawn ? smooth((p - .44)/.22) : 0;
+      const dawnT = dawn ? smooth((p - .54)/.42) : 0, full = dawn ? smooth((p - .72)/.28) : 0;
       const pa = st.pointer.active;
       if (pa){ const tx = st.pointer.x*DPR, ty = st.pointer.y*DPR; lx = lx < 0 ? tx : lx + (tx - lx)*.2; ly = ly < 0 ? ty : ly + (ty - ly)*.2; }
       if (st.reduce){ const key = p.toFixed(4) + (pa ? `${lx | 0},${ly | 0}` : '-') + (dawn ? 'd' : ''); if (key === last) return; last = key; }
@@ -164,14 +183,14 @@ export default {
       ctx.drawImage(nightC, 0, 0);
 
       /* bintang berkelip (memudar menjelang fajar) */
-      const starA = 1 - smooth((p - .4)/.4);
+      const starA = 1 - smooth((p - .16)/.4);
       if (starA > 0 && stars.length){
         ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = '#dfe8ff';
         for (const s of stars){ ctx.globalAlpha = starA*(.18 + .22*Math.sin(t*(.7 + s[3]) + s[2]))*s[3]; const r = 1.2*DPR*s[3]; ctx.fillRect(s[0] - r/2, s[1] - r/2, r, r); }
         ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
       }
 
-      if (pre > 0){ ctx.globalAlpha = pre*.55; ctx.drawImage(dawnC, 0, 0); ctx.globalAlpha = 1; }   // langit & bangunan mulai terang merata
+      if (blue > 0){ ctx.globalAlpha = blue; ctx.drawImage(blueC, 0, 0); ctx.globalAlpha = 1; }   // malam → fajar biru
 
       if (dawn){
         /* masker: area mana yang sudah "fajar" */
@@ -203,7 +222,7 @@ export default {
         }
         if (pa){ const r = Math.min(W, H)*.22; mctx.globalAlpha = .85; mctx.drawImage(MASK, (lx - r)*q, (ly - r)*q, r*2*q, r*2*q); }
         mctx.globalAlpha = 1;
-        if (dawnT > 0 || pre > 0 || k > 0 || pa){
+        if (dawnT > 0 || k > 0 || pa){
           tctx.globalCompositeOperation = 'source-over'; tctx.clearRect(0, 0, W, H); tctx.drawImage(dawnC, 0, 0);
           tctx.globalCompositeOperation = 'destination-in'; tctx.drawImage(mask, 0, 0, W, H);
           ctx.drawImage(tmp, 0, 0);
@@ -223,16 +242,28 @@ export default {
       }
       if (pa){ const r = Math.min(W, H)*.2; ctx.globalAlpha = .32*(1 - dawnT*.5); ctx.drawImage(GLOW, lx - r, ly - r, r*2, r*2); }
 
-      /* fajar: haze hangat di cakrawala, pendar matahari, sinar halus */
+      /* cahaya pertama: pendar kecil di titik matahari terbit, sebelum sapuan dimulai */
+      if (first > 0 && dawnT < 1){
+        const fr = Math.max(W, H)*(.12 + first*.16), fg = ctx.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], fr);
+        fg.addColorStop(0, 'rgba(255,224,170,.85)'); fg.addColorStop(.25, 'rgba(255,170,120,.35)'); fg.addColorStop(1, 'rgba(255,140,120,0)');
+        ctx.globalAlpha = first*(1 - dawnT); ctx.fillStyle = fg; ctx.fillRect(0, 0, W, H);
+      }
+
+      /* matahari terbit: haze hangat di cakrawala, pendar matahari, sinar (paling kuat di babak 3) */
       if (dawnT > 0){
         const hz = ctx.createLinearGradient(0, horizonY - H*.22, 0, horizonY + H*.12);
         hz.addColorStop(0, 'rgba(255,170,110,0)'); hz.addColorStop(.6, 'rgba(255,178,120,.16)'); hz.addColorStop(1, 'rgba(255,170,110,0)');
         ctx.globalAlpha = dawnT; ctx.fillStyle = hz; ctx.fillRect(0, 0, W, H);
         const sg = ctx.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], Math.max(W, H)*.45);
         sg.addColorStop(0, 'rgba(255,214,150,.45)'); sg.addColorStop(1, 'rgba(255,180,120,0)');
-        ctx.globalAlpha = dawnT*.8; ctx.fillStyle = sg; ctx.fillRect(0, 0, W, H);
+        ctx.globalAlpha = dawnT*.6; ctx.fillStyle = sg; ctx.fillRect(0, 0, W, H);
         const rs = Math.max(W, H)*1.1;
-        ctx.save(); ctx.translate(sun[0], sun[1]); ctx.rotate(t*.02); ctx.globalAlpha = dawnT*.2; ctx.drawImage(RAYS, -rs/2, -rs/2, rs, rs); ctx.restore();
+        ctx.save(); ctx.translate(sun[0], sun[1]); ctx.rotate(t*.02); ctx.globalAlpha = dawnT*.12 + full*.08; ctx.drawImage(RAYS, -rs/2, -rs/2, rs, rs); ctx.restore();
+        if (full > 0){   // cahaya pagi penuh: sorotan keemasan lembut dari arah matahari ke seluruh pemandangan
+          const lg = ctx.createLinearGradient(sun[0], sun[1], sun[0] - W*1.1, sun[1] + H*.4);
+          lg.addColorStop(0, 'rgba(255,214,150,.12)'); lg.addColorStop(1, 'rgba(255,214,150,0)');
+          ctx.globalAlpha = full; ctx.fillStyle = lg; ctx.fillRect(0, 0, W, H);
+        }
       }
       ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
     }

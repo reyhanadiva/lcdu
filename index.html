@@ -134,7 +134,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 /* ===== HERO: gelap → terang lewat scroll. Dua varian visual (lentera, 3D) berbagi copy dan alur yang sama ===== */
 .hero{--night:#040820;--hero-fg:#F3F5FC;--hero-soft:rgba(243,245,252,.78);--sun:#F2C14E;
-  position:relative;height:290vh;background:var(--night);color:var(--hero-fg)}
+  position:relative;height:340vh;background:var(--night);color:var(--hero-fg)}
 .hero-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
 .hero-canvas{position:absolute;inset:0;z-index:-2}
 .hero-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -161,7 +161,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-meter::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--sun),#FFE7B0);transform:scaleY(var(--p,0));transform-origin:bottom}
 @media (min-width:720px){.hero-meter{right:max(28px,env(safe-area-inset-right,0px))}}
 /* keffiyeh × semangka: kulit hijau, putih, jaring keffiyeh, daging merah berbiji */
-.kufiyah{position:absolute;left:0;right:0;bottom:0;height:42px;z-index:2;
+.kufiyah{position:relative;height:42px;
   background:
     radial-gradient(ellipse 1.8px 2.8px at 50% 50%,#151515 98%,transparent) 0 34px/22px 7px repeat-x,
     linear-gradient(#149954 0 6px,#F7F7F2 6px 8px,transparent 8px 32px,#E4312B 32px),
@@ -180,10 +180,13 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero[data-text="top"] .beat{bottom:auto;top:calc(env(safe-area-inset-top,0px) + clamp(112px,16vh,156px))}
 @media (orientation: portrait){.hero[data-text="top"] .beat{top:calc(env(safe-area-inset-top,0px) + clamp(88px,11.5svh,128px))}}
 @media (orientation: portrait) and (min-width:600px){.hero[data-text="top"] .beat{right:max(40px,env(safe-area-inset-right,0px));width:auto;max-width:620px}}
-.hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.66) 0%,rgba(4,8,32,.6) 22%,rgba(4,8,32,.38) 40%,rgba(4,8,32,0) 55%)}
-.hero[data-text="top"] .hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .4)*1.15),.45)}   /* ikut menebal perlahan bersama fajar */
-/* layar melebar: teks di kiri-atas → scrim radial dari pojok kiri-atas (langit fajar di sana terang) */
-@media (orientation: landscape){.hero[data-text="top"] .hero-scrim{background:radial-gradient(100% 100% at 0% 0%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.8) 50%,rgba(4,8,32,.45) 75%,transparent 100%)}}
+/* scrim: hanya pita tipis di atas (wordmark) — foto tidak digelapkan. Teks babak 1–2 (putih, langit gelap) diberi bayangan
+   lembut di belakangnya; babak 3 jatuh di langit fajar yang terang, jadi teksnya biru tua (kontras ≥ 6:1) tanpa bayangan gelap */
+.hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.6) 0%,rgba(4,8,32,.32) 7%,transparent 13%)}
+.hero[data-text="top"] .hero-scrim::after{display:none}
+.hero[data-text="top"] .beat:not(.beat-2)::before{content:"";position:absolute;inset:-34% -16% -40% -14%;z-index:-1;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(4,8,32,.86) 0%,rgba(4,8,32,.8) 55%,rgba(4,8,32,.42) 80%,transparent 100%)}
+.hero[data-text="top"] .beat-2{color:#10163A;text-shadow:0 1px 1px rgba(255,240,224,.35),0 2px 30px rgba(255,236,214,.6)}
 /* editor titik cahaya (?edit-spots) — alat kerja pemilik, bukan untuk pengunjung */
 .hd-editing .hero-copy{opacity:.15}
 .hd-edit-layer{position:absolute;inset:0;cursor:crosshair}
@@ -458,9 +461,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 /* ===== Mengambang ===== */
 .fab{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;display:flex;align-items:center;gap:10px;padding:12px 18px 12px 14px;border-radius:999px;background:var(--zamrud);color:var(--on-color);font-weight:700;text-decoration:none;box-shadow:0 14px 30px -10px rgba(6,92,65,.6);transition:transform .25s var(--ease)}
-/* selama hero terlihat, tombol mengambang naik supaya motif keffiyeh di tepi bawah hero tidak tertutup */
-.hero-switch,.fab{transition:translate .4s var(--ease)}
-.hero-in-view .hero-switch,.hero-in-view .fab{translate:0 -48px}
 .fab:hover{transform:translateY(-3px)}
 .fab svg{width:22px;height:22px;fill:currentColor}
 
@@ -506,7 +506,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </div>
     <div class="hero-meter" aria-hidden="true"></div>
     <div class="scroll-cue" id="scroll-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
-    <div class="kufiyah" aria-hidden="true"></div>
   </div>
 </section>
 <div class="hero-switch" id="hero-switch" role="group" aria-label="Bandingkan varian hero">
@@ -514,6 +513,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <button type="button" data-v="lentera-hd">Foto</button>
   <button type="button" data-v="diorama">3D</button>
 </div>
+
+<!-- motif keffiyeh × semangka: pembatas di awal section setelah hero (tidak tampil di dalam hero) -->
+<div class="kufiyah" aria-hidden="true"></div>
 
 <div class="ticker" aria-hidden="true">
   <div class="ticker-track">
