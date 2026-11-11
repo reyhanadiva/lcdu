@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LCDU · Kelas Bahasa Arab &amp; Inggris</title>
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="assets/brand/web/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="assets/brand/web/apple-touch-icon.png">
 <meta name="description" content="Kelas Bahasa Inggris dan Arab online dari LCDU. Rp100.000 per term, sisanya donasi sesuai kesanggupan.">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -109,8 +112,13 @@ button{font:inherit;color:inherit}
 main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px)}
 .nav .wrap{display:flex;justify-content:center}
 .nav-bar{pointer-events:auto;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 18px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--line) inset,0 10px 30px -12px rgba(16,26,61,.35);width:100%;max-width:880px;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:700;letter-spacing:.04em;font-size:1rem}
-.brand-mark{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(90deg,var(--lazuardi) 50%,var(--zamrud) 50%);color:#fff;font-size:.8rem}
+.brand{display:flex;align-items:center;text-decoration:none;border-radius:8px}
+.brand img{display:block;height:30px;width:auto}
+/* logo resmi: versi warna di latar terang, versi putih di latar gelap */
+.logo-dark{display:none!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .logo-light{display:none!important}:root:not([data-theme="light"]) .logo-dark{display:block!important}}
+:root[data-theme="dark"] .logo-light{display:none!important}
+:root[data-theme="dark"] .logo-dark{display:block!important}
 .nav-links{display:none;gap:2px;list-style:none;margin:0;padding:0}
 .nav-links a{display:block;padding:.55em .85em;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink-soft);transition:color .2s,background-color .2s}
 .nav-links a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
@@ -130,7 +138,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-copy{position:relative;height:100%;pointer-events:none}
 /* identitas tetap di pojok kiri atas hero (bukan tautan); scrim atas menjaga keterbacaannya saat fajar */
 .hero-id{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 18px);margin:0;display:flex;align-items:center;gap:10px;text-shadow:0 1px 12px rgba(4,8,32,.6)}
-.hero-id b{display:block;font-family:var(--f-display);font-weight:700;letter-spacing:.05em;font-size:1rem;line-height:1.1}
+.hero-id{flex-direction:column;align-items:flex-start;gap:6px}
+.hero-id img{display:block;height:clamp(30px,2.2rem,40px);width:auto;filter:drop-shadow(0 1px 8px rgba(4,8,32,.5))}
 .hero-id small{display:block;font-size:.72rem;font-weight:600;color:var(--hero-soft);letter-spacing:.01em}
 @media (min-width:720px){.hero-id{left:max(40px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 26px)}}
 /* teks babak: kiri-bawah, memudar di tempat (tanpa geser) */
@@ -415,7 +424,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .foot-links a{text-decoration:none;font-weight:600}
 .foot-links a:hover{text-decoration:underline}
 .foot h4{margin:0 0 14px;font-size:var(--step--1);color:var(--ink-soft)}
-.wordmark{width:fit-content;font-family:var(--f-display);font-weight:700;font-size:clamp(4rem,22vw,18rem);line-height:.86;letter-spacing:-.04em;background:linear-gradient(90deg,var(--lazuardi) 0 50%,var(--zamrud) 50% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+.wordmark{margin-top:clamp(40px,6vw,72px)}
+.wordmark img{display:block;width:clamp(220px,42vw,560px);height:auto}
 .legal{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;font-size:var(--step--1);color:var(--ink-soft)}
 
 /* ===== Mengambang ===== */
@@ -437,7 +447,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <header class="nav">
   <div class="wrap">
     <nav class="nav-bar" aria-label="Navigasi utama">
-      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">L</span>LCDU</a>
+      <a class="brand" href="#top"><img class="logo-light" src="assets/brand/web/lcdu-lockup-color.png" width="90" height="30" alt="LCDU"><img class="logo-dark" src="assets/brand/web/lcdu-lockup-white.png" width="90" height="30" alt="LCDU"></a>
       <ul class="nav-links">
         <li><a href="#cek-level">Cek level</a></li>
         <li><a href="#kelas">Kelas</a></li>
@@ -457,7 +467,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="hero-stage">
     <div class="hero-canvas" id="hero-canvas" role="img" aria-label="Kompleks Masjid Al-Aqsa yang perlahan berubah dari gelap malam menjadi terang fajar"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
-    <p class="hero-id"><span class="brand-mark" aria-hidden="true">L</span><span><b>LCDU</b><small lang="en">Language Course for Da'wah &amp; Ummah</small></span></p>
+    <p class="hero-id"><img src="assets/brand/web/lcdu-lockup-white.png" width="120" height="40" alt="LCDU"><small lang="en">Language Course for Da'wah &amp; Ummah</small></p>
     <div class="hero-copy">
       <h1 class="beat beat-0">Kelas Bahasa Arab &amp; Inggris untuk dakwah dan umat.</h1>
       <p class="beat beat-1" aria-hidden="true">Setiap ilmu yang kita pelajari menyalakan satu cahaya.</p>
@@ -674,7 +684,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <ul class="foot-links"><li><a href="#tanya">WhatsApp admin</a></li><li><a href="#">Instagram</a></li><li><a href="#">Alamat sekretariat</a></li></ul>
     </div>
   </div>
-  <div class="wordmark" aria-hidden="true">LCDU</div>
+  <div class="wordmark"><img class="logo-light" src="assets/brand/web/lcdu-logo-color.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"><img class="logo-dark" src="assets/brand/web/lcdu-logo-white.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"></div>
   <div class="legal"><span>© 2026 LCDU, Yayasan Taqwa Cerdas Kreatif</span><span>Bandung, Jawa Barat</span></div>
 </footer>
 

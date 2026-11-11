@@ -31,10 +31,24 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
 
+## Logo
+
+- Sumber: `assets/brand/lcdu-logo-wide.png` (PNG resmi, latar sudah transparan, 4461×1767) dan `lcdu-logo-square.png`
+  (latar abu-abu, resolusi rendah, tidak dipakai di situs).
+- Turunan untuk web di `assets/brand/web/` dibuat dengan **memotong dan memperkecil** PNG resmi, bentuk, proporsi, dan
+  huruf tidak diubah. Tidak ada tracing ke SVG.
+  - `lcdu-logo-color.png` / `lcdu-logo-white.png`: logo lengkap + tagline "For a Better Ummah" (footer).
+  - `lcdu-lockup-color.png` / `lcdu-lockup-white.png`: ikon "d" + LCDU + garis, tanpa tagline (hero, navbar).
+  - Versi putih = semua piksel logo diwarnai putih, kanal transparansi asli dipertahankan.
+  - Favicon (`/favicon.ico`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`) dari ikon "d".
+- Warna logo (diukur dari PNG): biru `#1724C0`, hijau `#7FA33F`, teks tagline `#332C2B`.
+- [ ] **Minta berkas vektor resmi (SVG/AI/PDF) dari pembuat logo.** PNG cukup untuk sekarang, tetapi vektor lebih tajam
+  di semua ukuran dan lebih ringan.
+
 ## Perlu dilengkapi / diverifikasi sebelum live
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
-- [ ] **Logo** LCDU asli (saat ini wordmark sementara) dan logo mitra.
+- [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: Placement Test, formulir registrasi, WhatsApp admin, Instagram, alamat (saat ini `#`).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
