@@ -9,6 +9,7 @@ import { EffectComposer } from '../vendor/three/addons/postprocessing/EffectComp
 import { RenderPass } from '../vendor/three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '../vendor/three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from '../vendor/three/addons/postprocessing/OutputPass.js';
+import { ShaderPass } from '../vendor/three/addons/postprocessing/ShaderPass.js';
 import { GLTFLoader } from '../vendor/three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from '../vendor/three/addons/libs/meshopt_decoder.module.js';
 import { mergeGeometries } from '../vendor/three/addons/utils/BufferGeometryUtils.js';
@@ -397,13 +398,19 @@ export default {
 
     /* kabut atmosfer + cincin kabut di cakrawala */
     scene.fog = new THREE.FogExp2(0x16225E, .006);
-    const hazeU = { uCol: { value: new THREE.Color() }, uOp: { value: 0 } };
-    const haze = new THREE.Mesh(new THREE.CylinderGeometry(170, 170, 60, 48, 1, true), new THREE.ShaderMaterial({
-      uniforms: hazeU, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false,
-      vertexShader: 'varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-      fragmentShader: 'uniform vec3 uCol; uniform float uOp; varying float vY; void main(){ gl_FragColor = vec4(uCol, uOp*pow(1. - vY, 2.2)); }'
-    }));
-    haze.position.y = 28; scene.add(haze);
+    /* kabut berlapis: dua cincin kabut (antara kota & bukit, dan di cakrawala); saat fajar menghangat ke arah matahari */
+    const hazeLayers = [[118, 26, 10, .6], [170, 60, 28, 1]].map(([r, h, y, k]) => {
+      const u = { uCol: { value: new THREE.Color() }, uOp: { value: 0 }, uSun: { value: new THREE.Vector3(0, 0, 1) }, uWarm: { value: 0 } };
+      const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 64, 1, true), new THREE.ShaderMaterial({
+        uniforms: u, transparent: true, depthWrite: false, side: THREE.BackSide, fog: false,
+        vertexShader: 'varying float vY; varying vec2 vXZ; void main(){ vY = uv.y; vXZ = normalize(position.xz); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+        fragmentShader: `uniform vec3 uCol, uSun; uniform float uOp, uWarm; varying float vY; varying vec2 vXZ;
+          void main(){ float s = pow(max(dot(vXZ, normalize(uSun.xz)), 0.), 3.);
+            vec3 c = mix(uCol, vec3(1., .72, .48), s*uWarm*.6);
+            gl_FragColor = vec4(c, uOp*(1. + s*uWarm*.8)*pow(1. - vY, 2.2)); }`
+      }));
+      m.position.y = y; scene.add(m); return { m, u, k };
+    });
 
     /* ---------- cahaya ---------- */
     const hemi = new THREE.HemisphereLight(0x3a4d9a, 0x0b0f22, .5); scene.add(hemi);
@@ -931,6 +938,21 @@ export default {
     composer.addPass(new RenderPass(scene, camera));
     const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .55, .55, .82);
     composer.addPass(bloom); composer.addPass(new OutputPass());
+    /* color grading seragam + vignette halus (setelah tone mapping, ruang sRGB): bayangan sedikit dingin di malam hari,
+       hangat saat fajar; sorotan hangat; saturasi sedikit dinaikkan; tepi layar sedikit lebih gelap (tidak menurunkan
+       kontras teks putih) */
+    const grade = new ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uDawn: { value: 0 }, uVig: { value: .32 } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+      fragmentShader: `uniform sampler2D tDiffuse; uniform float uDawn, uVig; varying vec2 vUv;
+        void main(){ vec4 t = texture2D(tDiffuse, vUv); vec3 c = t.rgb; float l = dot(c, vec3(.299, .587, .114));
+          vec3 lo = mix(vec3(.95, .98, 1.06), vec3(1.04, .99, .95), uDawn), hi = vec3(1.03, 1., .965);
+          c *= mix(lo, hi, smoothstep(.15, .8, l));
+          c = mix(vec3(l), c, 1.07);
+          vec2 d = vUv - .5; c *= 1. - dot(d, d)*uVig;
+          gl_FragColor = vec4(c, t.a); }`
+    });
+    composer.addPass(grade);
 
     /* ---------- palet waktu ---------- */
     const P = {
@@ -1032,7 +1054,8 @@ export default {
       lerpC(P.sunCol[0], P.sunCol[1], dawn, sun.color); sun.intensity = lerp(P.sunI[0], P.sunI[1], dawn);
       if (dawn < .02) sun.position.set(-30, 50, -25); else sun.position.copy(sd).setY(Math.max(sd.y, .12)).normalize().multiplyScalar(90);
       lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
-      lerpC(P.haze[0], P.haze[1], dawn, hazeU.uCol.value); hazeU.uOp.value = .25 - dawn*.08;
+      for (const { u, k } of hazeLayers){ lerpC(P.haze[0], P.haze[1], dawn, u.uCol.value); u.uOp.value = (.25 - dawn*.08)*k; u.uSun.value.copy(sd); u.uWarm.value = dawn; }
+      grade.uniforms.uDawn.value = dawn;
       lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
       renderer.toneMappingExposure = lerp(.92, .76, dawn);
       const envI = lerp(.12, .52, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
@@ -1068,7 +1091,7 @@ export default {
         '<div><button type="button" data-a="copy">Salin JSON</button> <button type="button" data-a="auto">Isi otomatis</button> <button type="button" data-a="reset">Kembalikan ke berkas</button></div><span class="hd-edit-msg" role="status"></span>';
       document.body.appendChild(panel);
       const info = panel.querySelector('.hd-edit-info'), msg = panel.querySelector('.hd-edit-msg');
-      const skip = new Set([sky, haze, lanterns, stars, cursorGlow]);
+      const skip = new Set([sky, ...hazeLayers.map(l => l.m), lanterns, stars, cursorGlow]);
       const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
       function refresh(){
         if (marks){ scene.remove(marks); marks.dispose(); }
