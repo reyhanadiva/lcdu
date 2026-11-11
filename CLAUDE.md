@@ -48,8 +48,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
   Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
-- **Menunggu pilihan pemilik:** tata letak teks hero `?layout=a` (kiri-bawah) atau `?layout=b` (tengah-bawah);
-  setelah dipilih, hapus parameter sementara di `hero/hero.js` dan CSS layout yang tidak dipakai.
+- Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri**, ukuran fluid `clamp()`. Desktop: kubah di kanan;
+  HP: kubah di tengah, diangkat di atas teks. Scrim radial kiri-bawah + scrim tipis di atas (wordmark).
 
 ## Prioritas berikutnya
 1. Pemilik memilih Lentera atau 3D (atau gabungan). Bantu dengan prototipe yang bisa dilihat di browser pane.

@@ -521,9 +521,9 @@ export default {
       bloom.resolution.set(w*Math.max(t.bloom, .25), h*Math.max(t.bloom, .25));
       renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%';
       camera.aspect = w/h;
-      /* kubah di atas area teks: layout a (desktop) → kubah di kanan; layout b & HP → kubah di tengah */
-      const wide = w >= 900, center = !wide || state.layout === 'b';
-      camera.setViewOffset(center ? w : w*1.34, h*(wide ? 1.1 : 1.5), 0, h*(wide ? .06 : .3), w, h);
+      /* teks di kiri-bawah: desktop → kubah di kanan; HP → kubah di tengah, di atas teks */
+      const wide = w >= 900;
+      camera.setViewOffset(wide ? w*1.34 : w, h*(wide ? 1.1 : 1.5), 0, h*(wide ? .06 : .3), w, h);
       camera.updateProjectionMatrix();
       lU.uScale.value = h*renderer.getPixelRatio()/2; starU.uPx.value = renderer.getPixelRatio();
     }

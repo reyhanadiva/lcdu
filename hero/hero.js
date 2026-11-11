@@ -14,14 +14,10 @@ const NEEDS_WEBGL = { diorama: true };
 const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
 const CENTERS = [0, .5, 1];
 
-/* usulan tata letak teks (sementara, untuk dibandingkan): ?layout=a (kiri-bawah) | b (tengah-bawah) */
-const LAYOUT = new URL(location.href).searchParams.get('layout') === 'b' ? 'b' : 'a';
-hero.dataset.layout = LAYOUT;
-
 const state = {
   p: 0, target: 0,
   pointer: { x: 0, y: 0, active: false },
-  w: 0, h: 0, reduce, coarse, visible: true, layout: LAYOUT,
+  w: 0, h: 0, reduce, coarse, visible: true,
 };
 
 /* ---------- scroll ---------- */

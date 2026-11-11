@@ -123,24 +123,21 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
 .hero-canvas{position:absolute;inset:0;z-index:-2}
 .hero-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(0deg,rgba(4,8,32,.85) 0%,rgba(4,8,32,.74) 30%,rgba(4,8,32,.46) 50%,transparent 68%)}
-.hero[data-layout="a"] .hero-scrim{background:radial-gradient(130% 100% at 0% 100%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.72) 42%,rgba(4,8,32,.36) 66%,transparent 90%)}
-@media (max-width:899px){.hero[data-layout] .hero-scrim{background:linear-gradient(0deg,rgba(4,8,32,.82) 0%,rgba(4,8,32,.55) 30%,rgba(4,8,32,.1) 52%,transparent 60%)}}
+.hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,rgba(4,8,32,.62) 0,rgba(4,8,32,.3) 70px,transparent 150px),radial-gradient(130% 100% at 0% 100%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.72) 42%,rgba(4,8,32,.36) 66%,transparent 90%)}
+@media (max-width:899px){.hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.62) 0,rgba(4,8,32,.3) 70px,transparent 150px),linear-gradient(0deg,rgba(4,8,32,.82) 0%,rgba(4,8,32,.55) 30%,rgba(4,8,32,.1) 52%,transparent 60%)}}
 /* fajar lebih terang: scrim hangat ekstra di babak 3 supaya teks putih tetap terbaca */
 .hero-scrim::after{content:"";position:absolute;inset:0;background:inherit;opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.9)}
 .hero-copy{position:relative;height:100%;pointer-events:none}
-/* identitas tetap di pojok kiri atas hero (bukan tautan) */
+/* identitas tetap di pojok kiri atas hero (bukan tautan); scrim atas menjaga keterbacaannya saat fajar */
 .hero-id{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 18px);margin:0;display:flex;align-items:center;gap:10px;text-shadow:0 1px 12px rgba(4,8,32,.6)}
 .hero-id b{display:block;font-family:var(--f-display);font-weight:700;letter-spacing:.05em;font-size:1rem;line-height:1.1}
 .hero-id small{display:block;font-size:.72rem;font-weight:600;color:var(--hero-soft);letter-spacing:.01em}
 @media (min-width:720px){.hero-id{left:max(40px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 26px)}}
-/* teks babak: memudar di tempat (tanpa geser). Dua usulan tata letak: a = kiri-bawah, b = tengah-bawah */
+/* teks babak: kiri-bawah, memudar di tempat (tanpa geser) */
 .beat{--bottom:calc(env(safe-area-inset-bottom,0px) + clamp(120px,17vh,168px));position:absolute;bottom:var(--bottom);margin:0;opacity:0;font-family:var(--f-display);font-weight:600;font-size:clamp(2.2rem,1.3rem + 3.8vw,4.9rem);line-height:1.04;letter-spacing:-.015em;text-shadow:0 1px 2px rgba(4,8,32,.45),0 2px 28px rgba(4,8,32,.6);text-wrap:balance;will-change:opacity}
 .beat-0{opacity:1}
-.hero[data-layout="a"] .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
-@media (min-width:720px){.hero[data-layout="a"] .beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
-.hero[data-layout="b"] .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));margin-inline:auto;max-width:min(64vw,940px);text-align:center}
-@media (max-width:719px){.hero[data-layout="b"] .beat{max-width:none}}
+.beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
+@media (min-width:720px){.beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
 .scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);translate:-50% 0;display:grid;justify-items:center;gap:10px;font-size:.78rem;font-weight:600;color:var(--hero-soft);transition:opacity .5s}
 .scroll-cue i{width:2px;height:40px;border-radius:2px;background:linear-gradient(var(--sun),transparent);transform-origin:top;animation:cue 2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
@@ -456,7 +453,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 <main id="top">
 <!-- ============ HERO: gelap menjadi terang ============ -->
-<section class="hero" id="hero" aria-label="Pembuka" data-layout="a">
+<section class="hero" id="hero" aria-label="Pembuka">
   <div class="hero-stage">
     <div class="hero-canvas" id="hero-canvas" role="img" aria-label="Kompleks Masjid Al-Aqsa yang perlahan berubah dari gelap malam menjadi terang fajar"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
