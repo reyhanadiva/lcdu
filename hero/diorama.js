@@ -627,21 +627,79 @@ export default {
     }
     if (new URL(location.href).searchParams.has('debug-veg')){ window.__vegReport = vegReport; console.table(vegReport.length ? vegReport : [{ hasil: 'semua vegetasi aman' }]); }
 
-    /* ---------- kota tua di sekeliling: rumah batu + kubah kecil di atap (instanced) ---------- */
-    const cityGeo = new THREE.BoxGeometry(1, 1, 1); cityGeo.translate(0, .5, 0);
-    const cityN = mobile ? 420 : 760, cityMesh = new THREE.InstancedMesh(cityGeo, std({ color: 0xffffff, roughness: .95 }), cityN);
-    const roofN = Math.round(cityN*.35), roofMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(.5, 12, 6, 0, Math.PI*2, 0, Math.PI/2), std({ color: 0xffffff, roughness: .9 }), roofN);
-    const mtx = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), ps = new THREE.Vector3(), cc = new THREE.Color(), up = new THREE.Vector3(0, 1, 0);
-    let ri = 0;
-    for (let i = 0; i < cityN; i++){
-      let x, z; do { x = (Math.random() - .5)*170; z = (Math.random() - .5)*170; } while ((Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3) || (z > PZ1 && Math.abs(x) < 34 && z < PZ1 + 22));
-      const w = 2 + Math.random()*4, d = 2 + Math.random()*4, h = 1.5 + Math.random()*4.5, rot = Math.random()*.3;
-      ps.set(x, 0, z); q.setFromAxisAngle(up, rot); sc.set(w, h, d); mtx.compose(ps, q, sc); cityMesh.setMatrixAt(i, mtx);
-      cityMesh.setColorAt(i, cc.setHSL(.09 + Math.random()*.02, .32 + Math.random()*.12, .62 + Math.random()*.12));
-      if (ri < roofN && Math.random() < .5){ const s = Math.min(w, d)*.6; ps.set(x, h, z); sc.set(s, s*.8, s); mtx.compose(ps, q, sc); roofMesh.setMatrixAt(ri, mtx); roofMesh.setColorAt(ri, cc.setHSL(.09, .2, .75)); ri++; }
+    /* ---------- kota tua di sekeliling (instanced) ----------
+       Rumah batu bervolume: badan (kadang bertumpuk dua), parapet di atap datar, rumah tangga di atap, kubah kecil,
+       atap lengkung (barrel vault), tangga luar. Tekstur batu dipetakan menurut posisi dunia (kepadatan sama di semua
+       ukuran rumah). Jendela kecil emissive prosedural di dinding badan rumah, menyala bertahap bersama babak 2.
+       Rumah jauh (> 72 unit) cukup badan saja (LOD sederhana); kabut menyamarkan sisanya. */
+    const cityU = { uWinLit: { value: 0 }, uWinI: { value: 0 } };
+    function cityMaterial(windows, opts){
+      const m = std({ map: T.stone.map, normalMap: T.stone.normalMap, normalScale: new THREE.Vector2(.8, .8), roughness: .93, ...opts });
+      m.onBeforeCompile = sh => {
+        Object.assign(sh.uniforms, cityU);
+        sh.vertexShader = 'attribute float aRnd;\nvarying vec4 vCity;\n' + sh.vertexShader.replace('#include <uv_vertex>', `#include <uv_vertex>
+          vec4 cw = modelMatrix*instanceMatrix*vec4(position, 1.);
+          vec3 cn = normalize(mat3(modelMatrix)*mat3(instanceMatrix)*normal);
+          vec2 cuv = abs(cn.y) > .6 ? cw.xz : (abs(cn.x) > abs(cn.z) ? cw.zy : cw.xy);
+          vMapUv = cuv*.34; vNormalMapUv = vMapUv;
+          vCity = vec4(cuv, abs(cn.y) < .3 ? 1. : 0., aRnd);`);
+        sh.fragmentShader = 'uniform float uWinLit, uWinI;\nvarying vec4 vCity;\n' + sh.fragmentShader.replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+          ${windows ? `if (vCity.z > .5 && vCity.y > .6){
+            vec2 cell = vCity.xy*vec2(.62, .46) + vCity.w*13.;
+            vec2 id = floor(cell), f = fract(cell);
+            float h = fract(sin(dot(id, vec2(12.9898, 78.233)) + vCity.w*43.7)*43758.5453);
+            float win = step(.4, f.x)*step(f.x, .6)*step(.32, f.y)*step(f.y, .7)*step(.35, h);
+            diffuseColor.rgb *= 1. - win*.6;
+            totalEmissiveRadiance += vec3(1., .6, .28)*win*step(fract(h*7.31), uWinLit)*uWinI*(.55 + .45*fract(h*3.7));
+          }` : ''}`);
+      };
+      m.customProgramCacheKey = () => 'kota' + windows;
+      return m;
     }
-    roofMesh.count = ri;
-    cityMesh.castShadow = cityMesh.receiveShadow = roofMesh.castShadow = true; scene.add(cityMesh, roofMesh);
+    const cityBody = cityMaterial(true, { color: 0xffffff }), cityTrim = cityMaterial(false, { color: 0xffffff });
+    const plaster = std({ color: 0xffffff, roughness: .82 });
+    const unitBox = new THREE.BoxGeometry(1, 1, 1).translate(0, .5, 0);
+    /* parapet: cincin 4 dinding tipis di tepi atap (tinggi tetap .32, diskala lebar-panjang saja) */
+    const parapetG = mergeGeometries([[0, .475, 1, .05], [0, -.475, 1, .05], [.475, 0, .05, .9], [-.475, 0, .05, .9]].map(([x, z, w, d]) => new THREE.BoxGeometry(w, .32, d).translate(x, .16, z)));
+    const hutG = mergeGeometries([new THREE.BoxGeometry(1.3, 1.1, 1.3).translate(0, .55, 0), new THREE.BoxGeometry(1.5, .08, 1.5).translate(0, 1.14, 0)]);
+    const domeG = mergeGeometries([new THREE.CylinderGeometry(1, 1, .3, 14).translate(0, .15, 0), new THREE.SphereGeometry(1, 14, 7, 0, Math.PI*2, 0, Math.PI/2).translate(0, .3, 0)]);
+    const vaultG = new THREE.CylinderGeometry(.5, .5, 1, 12, 1, false, 0, Math.PI).rotateZ(Math.PI/2);   // poros sepanjang x, setengah atas
+    const stairG = mergeGeometries(Array.from({ length: 6 }, (_, i) => new THREE.BoxGeometry(1/6, (i + 1)/6, .9).translate(-.5 + (i + .5)/6, (i + 1)/12, 0)));
+    const rcity = mulberry32(31), cityN = mobile ? 420 : 760, items = { body: [], parapet: [], hut: [], dome: [], vault: [], stair: [] };
+    const q = new THREE.Quaternion(), up = new THREE.Vector3(0, 1, 0), off = new THREE.Vector3();
+    const put = (k, x, y, z, rot, sx, sy, sz, col) => items[k].push({ x, y, z, rot, sx, sy, sz, col });
+    for (let i = 0; i < cityN; i++){
+      let x, z; do { x = (rcity() - .5)*170; z = (rcity() - .5)*170; } while ((Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3) || (z > PZ1 && Math.abs(x) < 34 && z < PZ1 + 22));
+      const w = 2 + rcity()*4, d = 2 + rcity()*4, h = 1.5 + rcity()*4, rot = (rcity() - .5)*.3, far = Math.hypot(x, z) > 72, col = rcity();
+      put('body', x, 0, z, rot, w, h, d, col);
+      if (far) continue;
+      const at = (lx, lz) => off.set(lx, 0, lz).applyAxisAngle(up, rot);
+      const r = rcity();
+      if (r < .3){                                   // bertumpuk: lantai atas lebih kecil, menepi ke satu sudut
+        const w2 = w*(.45 + rcity()*.25), d2 = d*(.45 + rcity()*.25), h2 = 1.3 + rcity()*1.6, o = at((w - w2)/2*(rcity() < .5 ? -1 : 1), (d - d2)/2*(rcity() < .5 ? -1 : 1));
+        put('parapet', x, h, z, rot, w, 1, d, col); put('body', x + o.x, h, z + o.z, rot, w2, h2, d2, col); put('parapet', x + o.x, h + h2, z + o.z, rot, w2, 1, d2, col);
+      } else if (r < .58){                           // kubah kecil di atas drum
+        const s = Math.min(w, d)*(.26 + rcity()*.08); put('parapet', x, h, z, rot, w, 1, d, col); put('dome', x, h, z, rot, s, s*(.8 + rcity()*.3), s, col);
+      } else if (r < .74){                           // atap lengkung
+        put('vault', x, h, z, rot, w, Math.min(w, d)*.55, d, col);
+      } else {                                       // atap datar berparapet + rumah tangga
+        put('parapet', x, h, z, rot, w, 1, d, col);
+        if (rcity() < .6){ const o = at((w/2 - .8)*(rcity() < .5 ? -1 : 1), (d/2 - .8)*(rcity() < .5 ? -1 : 1)); put('hut', x + o.x, h, z + o.z, rot, 1, 1, 1, col); }
+      }
+      if (rcity() < .18 && h < 4){ const o = at(w/2 + .45, 0); put('stair', x + o.x, 0, z + o.z, rot + Math.PI/2, Math.min(d*.8, h*1.1), h, 1, col); }
+    }
+    const mtx = new THREE.Matrix4(), sc = new THREE.Vector3(), ps = new THREE.Vector3(), cc = new THREE.Color();
+    const cityMeshes = [['body', unitBox, cityBody], ['parapet', parapetG, cityTrim], ['hut', hutG, cityTrim], ['dome', domeG, plaster], ['vault', vaultG, plaster], ['stair', stairG, cityTrim]].map(([k, geo, mat]) => {
+      const list = items[k], im = new THREE.InstancedMesh(geo, mat, list.length), rnd = new Float32Array(list.length);
+      list.forEach((it, i) => {
+        q.setFromAxisAngle(up, it.rot); mtx.compose(ps.set(it.x, it.y, it.z), q, sc.set(it.sx, it.sy, it.sz)); im.setMatrixAt(i, mtx); rnd[i] = it.col;
+        /* batu pasir hangat; kubah & lengkung plester krem pucat atau abu timah */
+        if (mat === plaster) cc.setHSL(.09 + it.col*.02, it.col < .25 ? .06 : .3, it.col < .25 ? .62 : .8); else cc.setHSL(.085 + it.col*.025, .3 + it.col*.14, .64 + it.col*.12);
+        im.setColorAt(i, cc);
+      });
+      geo.setAttribute('aRnd', new THREE.InstancedBufferAttribute(rnd, 1));
+      im.castShadow = im.receiveShadow = true; scene.add(im); return im;
+    });
     /* parapet tembok pelataran */
     const merlons = new THREE.InstancedMesh(merlonGeo, stoneMat, merlonPts.length);
     merlonPts.forEach((m, i) => { ps.set(...m[0]); q.setFromAxisAngle(up, m[1]); sc.set(1, 1, 1); mtx.compose(ps, q, sc); merlons.setMatrixAt(i, mtx); });
@@ -844,6 +902,7 @@ export default {
       const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
       glowMat.color.copy(P.glow).multiplyScalar(win*3.2*flick);
       doorMat.emissiveIntensity = win*1.4;
+      cityU.uWinLit.value = .12 + .3*lit; cityU.uWinI.value = win*2.6*flick;   // jendela kota menyala bertahap bersama lampu kota
       modelMats.forEach(m => m.emissiveIntensity = win*2.4*flick);
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
