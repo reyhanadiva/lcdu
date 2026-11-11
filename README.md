@@ -1,7 +1,7 @@
 # LCDU Landing Page
 
 Prototipe landing page LCDU (kelas Bahasa Inggris & Arab, Yayasan Taqwa Cerdas Kreatif).
-Satu file statis `index.html`, tanpa build step dan tanpa library. Bisa langsung di-deploy ke Vercel.
+Situs statis tanpa build step: `index.html`, modul hero di `hero/`, dan three.js (MIT) di `vendor/three/` yang hanya dimuat untuk varian 3D. Bisa langsung di-deploy ke Vercel.
 
 ## Konsep: "Dua Aksara"
 
@@ -16,7 +16,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | **Lentera Fajar.** Ilustrasi kompleks Al-Aqsa (Kubah Shakhrah, Masjid Qibli, menara, zaitun) dalam dua versi: malam dan fajar. Kursor menjadi cahaya yang menyingkap warna fajar; klik menyalakan pelita berisi satu kata Inggris + Arab; scroll menerbitkan matahari dalam 4 babak copy. Parallax 3 lapis, debu cahaya, motif keffiyeh di tepi bawah. Canvas 2D tanpa library, ±60 fps. |
+| Hero | Cerita scroll 3 babak: gelap → cahaya kontribusi menyala → fajar. Tiga varian untuk dibandingkan lewat tombol di kiri bawah (atau `?hero=lentera|mozaik|diorama`): **Lentera** (ilustrasi 2D, ratusan cahaya kecil menyingkap warna fajar), **Mozaik** (ubin glasir berbalik satu per satu membentuk Al-Aqsa), **3D** (maket three.js, kamera bergerak dari malam ke fajar). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
