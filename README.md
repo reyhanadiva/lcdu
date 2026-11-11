@@ -16,7 +16,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | Cerita scroll 3 babak: gelap → cahaya kontribusi menyala → fajar. Tiga varian untuk dibandingkan lewat tombol di kiri bawah (atau `?hero=lentera|mozaik|diorama`): **Lentera** (ilustrasi 2D, ratusan cahaya kecil menyingkap warna fajar), **Mozaik** (ubin glasir berbalik satu per satu membentuk Al-Aqsa), **3D** (maket three.js, kamera bergerak dari malam ke fajar). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
+| Hero | Cerita scroll 3 babak: gelap → cahaya kontribusi menyala → fajar. Dua varian untuk dibandingkan lewat tombol di kiri bawah (atau `?hero=lentera|diorama`): **Lentera** (ilustrasi 2D, ratusan cahaya kecil menyingkap warna fajar), **3D** (maket three.js, kamera bergerak dari malam ke fajar). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |

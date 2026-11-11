@@ -9,7 +9,7 @@ const sw = document.getElementById('hero-switch');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 
-const VARIANTS = { lentera: './lentera.js', mozaik: './mozaik.js', diorama: './diorama.js' };
+const VARIANTS = { lentera: './lentera.js', diorama: './diorama.js' };
 const CENTERS = [0, .5, 1];
 
 const state = {

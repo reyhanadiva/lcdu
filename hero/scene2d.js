@@ -1,5 +1,5 @@
 /* Ilustrasi kompleks Al-Aqsa (kanvas 2D) dalam dua palet: malam dan fajar.
-   Koordinat dunia: 1600 x 900, Kubah Shakhrah berpusat di x = 1000. Dipakai oleh varian lentera dan mozaik. */
+   Koordinat dunia: 1600 x 900, Kubah Shakhrah berpusat di x = 1000. Dipakai oleh varian lentera. */
 
 export const NIGHT = {dir:-1, dome:'#2E3A5E', domeHi:'#56679A', domeLo:'#1B2442', tile:'#18244F', tileSide:'#101a3c', tileLine:'rgba(120,150,220,.10)', band:'#121c44',
   marble:'#2C3555', marbleSide:'#222a47', stone:'#222A4C', stoneSide:'#191f3d', silver:'#2F3A5C', silverHi:'#4B5A88', win:'#0E1430', arch:'#0A1030',
