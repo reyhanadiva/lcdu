@@ -10,6 +10,8 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
 
 const VARIANTS = { lentera: './lentera.js', diorama: './diorama.js' };
+const NEEDS_WEBGL = { diorama: true };
+const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
 const CENTERS = [0, .5, 1];
 
 const state = {
@@ -55,6 +57,7 @@ function updateCopy(p) {
 let current = null, currentName = '', loadToken = 0;
 async function load(name) {
   if (!VARIANTS[name]) name = 'lentera';
+  if (NEEDS_WEBGL[name] && !hasWebGL) name = 'lentera';
   if (name === currentName) return;
   const token = ++loadToken;
   sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
@@ -72,6 +75,8 @@ async function load(name) {
   current = mod.default.mount(holder, state);
   currentName = name;
 }
+/* varian boleh meminta pindah (mis. 3D terlalu berat di perangkat ini) */
+state.fallback = name => { console.info('Hero: pindah otomatis ke', name); load(name); };
 sw.addEventListener('click', e => { const b = e.target.closest('button'); if (b) load(b.dataset.v); });
 
 /* ---------- ukuran & loop ---------- */
@@ -81,7 +86,7 @@ let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() 
 let raf = 0;
 function frame(now) {
   raf = 0;
-  state.p += (state.target - state.p) * (reduce ? 1 : .12);
+  state.p += (state.target - state.p) * (reduce ? 1 : window.lenis ? .22 : .12);   // Lenis sudah menghaluskan scroll
   if (Math.abs(state.target - state.p) < .0005) state.p = state.target;
   updateCopy(state.p);
   if (current) current.frame(state, now);

@@ -59,6 +59,12 @@ body{margin:0}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+/* Lenis (scroll halus) — dari vendor/lenis/lenis.css */
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+.lenis.lenis-stopped{overflow:clip}
+.lenis.lenis-smooth iframe{pointer-events:none}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--step-0);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
 h1,h2,h3{margin:0;text-wrap:balance}
@@ -105,6 +111,8 @@ button{font:inherit;color:inherit}
 .hero-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hero-scrim{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(4,8,32,.62) 0%,rgba(4,8,32,.28) 40%,transparent 62%)}
 @media (max-width:899px){.hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.65) 0%,rgba(4,8,32,.25) 38%,transparent 55%)}}
+/* fajar lebih terang: scrim hangat ekstra di babak 3 supaya teks putih tetap terbaca */
+.hero-scrim::after{content:"";position:absolute;inset:0;background:inherit;opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.9)}
 .hero-copy{position:relative;height:100%;pointer-events:none}
 .beat{position:absolute;left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px));top:clamp(100px,14vh,150px);margin:0;opacity:0;font-family:var(--f-display);font-weight:800;letter-spacing:-.05em;text-shadow:0 2px 40px rgba(4,8,32,.55);text-wrap:balance;will-change:opacity,transform}
 @media (min-width:720px){.beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(54vw,720px)}}
@@ -911,6 +919,11 @@ button{font:inherit;color:inherit}
   var d = new Date(), day = Math.floor((d - new Date(d.getFullYear(),0,0)) / 864e5), w = W[day % W.length];
   $('#w-en').textContent = w[0]; $('#w-en-id').textContent = w[1]; $('#w-ar').textContent = w[2]; $('#w-ar-id').textContent = w[3];
 })();
+</script>
+<script type="module">
+/* Scroll halus untuk seluruh halaman (Lenis, di-vendor). Tidak aktif saat prefers-reduced-motion. */
+import Lenis from './vendor/lenis/lenis.mjs';
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) window.lenis = new Lenis({ lerp: .12, anchors: true, autoRaf: true });
 </script>
 <script type="module" src="./hero/hero.js"></script>
 </body>
