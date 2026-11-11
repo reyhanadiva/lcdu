@@ -151,8 +151,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .beat-0{opacity:1}
 .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
 @media (min-width:720px){.beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
-.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);translate:-50% 0;display:grid;justify-items:center;gap:10px;font-size:.78rem;font-weight:600;color:var(--hero-soft);transition:opacity .5s}
-.scroll-cue i{width:2px;height:40px;border-radius:2px;background:linear-gradient(var(--sun),transparent);transform-origin:top;animation:cue 2s var(--ease) infinite}
+.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);translate:-50% 0;display:grid;justify-items:center;gap:8px;font-size:.85rem;font-weight:700;letter-spacing:.04em;color:#fff;text-shadow:0 1px 10px rgba(4,8,32,.9);transition:opacity .5s}
+.scroll-cue i{width:3px;height:44px;box-shadow:0 0 12px rgba(242,193,78,.6);border-radius:2px;background:linear-gradient(var(--sun),transparent);transform-origin:top;animation:cue 2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .hero-meter{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;width:3px;height:min(34vh,260px);border-radius:3px;background:rgba(243,245,252,.18);overflow:hidden}
 .hero-meter::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--sun),#FFE7B0);transform:scaleY(var(--p,0));transform-origin:bottom}

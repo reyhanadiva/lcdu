@@ -201,11 +201,11 @@ export default {
     };
 
     /* ---------- langit: gradasi, hamburan fajar di sekitar matahari, cakram matahari ---------- */
-    const skyU = { top: { value: new THREE.Vector3() }, mid: { value: new THREE.Vector3() }, hor: { value: new THREE.Vector3() }, sunDir: { value: new THREE.Vector3(0, 0, 1) }, sunAmt: { value: 0 } };
+    const skyU = { top: { value: new THREE.Vector3() }, mid: { value: new THREE.Vector3() }, hor: { value: new THREE.Vector3() }, sunDir: { value: new THREE.Vector3(0, 0, 1) }, sunAmt: { value: 0 }, moonDir: { value: new THREE.Vector3(0, .3, -1) }, moonAmt: { value: 1 } };
     const sky = new THREE.Mesh(new THREE.SphereGeometry(400, 32, 16), new THREE.ShaderMaterial({
       side: THREE.BackSide, depthWrite: false, fog: false, uniforms: skyU,
       vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix*modelViewMatrix*vec4(position,1.); }',
-      fragmentShader: `uniform vec3 top, mid, hor, sunDir; uniform float sunAmt; varying vec3 vD;
+      fragmentShader: `uniform vec3 top, mid, hor, sunDir, moonDir; uniform float sunAmt, moonAmt; varying vec3 vD;
         void main(){ float h = vD.y; vec3 sd = normalize(sunDir);
           vec3 c = mix(hor, mid, smoothstep(-.02, .2, h)); c = mix(c, top, smoothstep(.2, .75, h));
           float az = max(dot(normalize(vD.xz), normalize(sd.xz)), 0.);
@@ -213,6 +213,9 @@ export default {
           float s = max(dot(vD, sd), 0.);
           c += vec3(1., .9, .7)*smoothstep(.9991, .9994, s)*16.*sunAmt;          // cakram
           c += vec3(1., .62, .3)*(pow(s, 40.)*.9 + pow(s, 8.)*.14)*sunAmt;     // halo
+          vec3 md = normalize(moonDir); float m = dot(vD, md);
+          float crescent = smoothstep(.99955, .99975, m)*(1. - smoothstep(.99955, .99975, dot(vD, normalize(md + vec3(.006, .004, 0.)))));
+          c += vec3(.92, .95, 1.)*crescent*3.*moonAmt + vec3(.35, .45, .8)*pow(max(m, 0.), 300.)*.35*moonAmt;   // bulan sabit + pendar
           gl_FragColor = vec4(c, 1.); }`
     }));
     scene.add(sky);
@@ -247,6 +250,7 @@ export default {
     const sun = new THREE.DirectionalLight(0x9fb4ff, .6); sun.castShadow = true;
     Object.assign(sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 1, far: 160 }); sun.shadow.bias = -.0004; sun.shadow.normalBias = .03;
     scene.add(sun, sun.target);
+    const moon = new THREE.DirectionalLight(0xa9c1ff, 0); scene.add(moon);   // cahaya bulan biru lembut dari samping-belakang (rim light)
     const warm = [];
     (mobile ? [[0, 2.4, 6.5], [-4, 2.4, -6.5]] : [[0, 2.4, 6.5], [-8.5, 2.2, 3], [8, 2.2, 2], [-4, 2.4, -6.5]]).forEach(p => { const l = new THREE.PointLight(0xffa860, 0, 18, 1.6); l.position.set(...p); scene.add(l); warm.push(l); });
 
@@ -478,9 +482,9 @@ export default {
 
     /* ---------- palet waktu ---------- */
     const P = {
-      hemiSky: [C('#2a3a80'), C('#ffd2a8')], hemiGround: [C('#090c1e'), C('#5c4334')], hemiI: [.05, .55],
-      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.1, 2.1], fog: [C('#070c2c'), C('#e2a985')], fogD: [.013, .0055],
-      ground: [C('#2a2440'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#ffbf8a')],
+      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .55],
+      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 2.1], fog: [C('#0b1236'), C('#e2a985')], fogD: [.0115, .0055],
+      ground: [C('#2c2f52'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#ffbf8a')],
     };
 
     /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ---------- */
@@ -488,13 +492,17 @@ export default {
     const LOOK = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 4, 1), new THREE.Vector3(0, 4.6, 0), new THREE.Vector3(0, 5.4, -1.5)]);
     const endAz = .36, vd = new THREE.Vector3(-Math.sin(endAz), 0, -Math.cos(endAz)), rgt = new THREE.Vector3(Math.cos(endAz), 0, -Math.sin(endAz));
     const sunH = new THREE.Vector3();   // matahari terbit di latar, sedikit ke kanan (di HP hampir tengah)
+    const az0 = KEYS.points[0].x, vd0 = new THREE.Vector3(-Math.sin(az0), 0, -Math.cos(az0)), rgt0 = new THREE.Vector3(Math.cos(az0), 0, -Math.sin(az0));
+    const moonSky = new THREE.Vector3(), moonLightDir = rgt0.clone().addScaledVector(vd0, .7).setY(.55).normalize();
+    moon.position.copy(moonLightDir).multiplyScalar(90);
     const cam = { p: state.p };
     const toCam = gsap && !state.reduce ? gsap.quickTo(cam, 'p', { duration: .9, ease: 'power3.out' }) : null;
     const k3 = new THREE.Vector3(), lk = new THREE.Vector3(), sd = new THREE.Vector3(), tmpC = new THREE.Color();
     let lastTarget = -1;
 
-    /* ---------- kualitas otomatis: turun tingkat kalau fps rendah, terakhir pindah ke Lentera ---------- */
-    let tier = mobile ? 1 : 2, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 40, gaveUp = false;
+    /* ---------- kualitas otomatis: fps < 40 pada 2 detik pertama → pindah ke Lentera HD;
+       setelah itu, fps rendah menurunkan bayangan/bloom/DPR bertahap ---------- */
+    let tier = mobile ? 1 : 2, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 20, gaveUp = false, firstCheck = true;
     function applyTier(){
       const t = TIERS[tier];
       renderer.setPixelRatio(Math.min(devicePixelRatio || 1, t.dpr));
@@ -509,10 +517,10 @@ export default {
       if (dt <= 0 || dt > 250) return;                       // tab tersembunyi / baru kembali
       if (warmup > 0){ warmup--; return; }
       fpsN++; fpsT += dt;
-      if (fpsN < 90) return;
+      if (firstCheck ? fpsT < 2000 : fpsN < 90) return;
       const fps = 1000*fpsN/fpsT; fpsN = fpsT = 0;
+      if (firstCheck){ firstCheck = false; if (fps < 40 && state.fallback){ gaveUp = true; state.fallback('lentera-hd'); } return; }
       if (fps < 45 && tier > 0){ tier--; warmup = 40; applyTier(); }
-      else if (fps < 24 && tier === 0 && state.fallback){ gaveUp = true; state.fallback('lentera'); }
     }
 
     function resize(){
@@ -556,17 +564,21 @@ export default {
       sd.copy(sunH).multiplyScalar(Math.cos(sunEl)); sd.y = Math.sin(sunEl);
       skyU.sunDir.value.copy(sd); skyU.sunAmt.value = smooth((p - .5)/.35);
       starU.uOp.value = 1 - smooth((p - .45)/.4); starU.uTime.value = time;
+      const night = 1 - dawn;
+      moonSky.copy(vd0).addScaledVector(rgt0, aspect >= 1 ? .24 : .08).normalize().multiplyScalar(Math.cos(.17)).setY(Math.sin(.17));
+      skyU.moonDir.value.copy(moonSky); skyU.moonAmt.value = night;
+      moon.intensity = 1.5*night;
       lerpC(P.hemiSky[0], P.hemiSky[1], dawn, hemi.color); lerpC(P.hemiGround[0], P.hemiGround[1], dawn, hemi.groundColor); hemi.intensity = lerp(P.hemiI[0], P.hemiI[1], dawn) + lit*.1;
       lerpC(P.sunCol[0], P.sunCol[1], dawn, sun.color); sun.intensity = lerp(P.sunI[0], P.sunI[1], dawn);
       if (dawn < .02) sun.position.set(-30, 50, -25); else sun.position.copy(sd).setY(Math.max(sd.y, .12)).normalize().multiplyScalar(90);
       lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
       lerpC(P.haze[0], P.haze[1], dawn, hazeU.uCol.value); hazeU.uOp.value = .25 + dawn*.3;
       lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
-      renderer.toneMappingExposure = lerp(.8, .74, dawn);
-      const envI = lerp(.03, .55, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
+      renderer.toneMappingExposure = lerp(.92, .74, dawn);
+      const envI = lerp(.12, .55, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
 
-      /* lentera & jendela: menyala bersama babak 2, meredup saat fajar */
-      const win = lit*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
+      /* jendela: sebagian sudah menyala hangat sejak awal; lentera menyala bersama babak 2, meredup saat fajar */
+      const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
       glowMat.color.copy(P.glow).multiplyScalar(win*3.2*flick);
       doorMat.emissiveIntensity = win*1.4;
       warm.forEach(l => l.intensity = win*24*flick);

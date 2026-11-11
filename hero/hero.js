@@ -58,8 +58,8 @@ function updateCopy(p) {
 /* ---------- varian ---------- */
 let current = null, currentName = '', loadToken = 0;
 async function load(name) {
-  if (!VARIANTS[name]) name = 'lentera';
-  if (NEEDS_WEBGL[name] && !hasWebGL) name = 'lentera';
+  if (NEEDS_WEBGL[name] && !hasWebGL) name = 'lentera-hd';   // 3D tidak bisa jalan → Lentera HD
+  if (!VARIANTS[name]) name = 'lentera';                      // Lentera HD belum ada → Lentera lama
   if (name === currentName) return;
   const token = ++loadToken;
   sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));

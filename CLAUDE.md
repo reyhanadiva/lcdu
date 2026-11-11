@@ -22,7 +22,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
 - `hero/lentera.js` + `hero/scene2d.js` — varian 2D (canvas): ilustrasi Al-Aqsa malam & fajar, cahaya kontribusi.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
-  GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera, kualitas otomatis & fallback ke Lentera.
+  GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
+  jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`
+  (selama Lentera HD belum ada, `hero.js` mengarahkannya ke `lentera`). Model .glb dikerjakan terpisah (Prompt D).
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 
