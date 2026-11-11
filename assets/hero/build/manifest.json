@@ -1,0 +1,18 @@
+{
+  "tall": {
+    "night": "night-tall",
+    "dawn": "dawn-tall",
+    "w": 1024,
+    "h": 1536,
+    "widths": [
+      750,
+      1024
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ]
+  },
+  "wide": null
+}
