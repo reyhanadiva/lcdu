@@ -16,6 +16,8 @@ const DEFAULT = 'lentera-hd';
 const NEEDS_WEBGL = { diorama: true };
 const hasWebGL = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
 const CENTERS = [0, .5, 1];
+/* HP lemah (RAM ≤ 4 GB atau ≤ 4 inti) tidak membuka 3D dari preferensi tersimpan; 3D tetap bisa lewat ?hero=diorama atau tombol */
+const weakDevice = coarse && ((navigator.deviceMemory || 8) <= 4 || (navigator.hardwareConcurrency || 8) <= 4);
 
 const state = {
   p: 0, target: 0,
@@ -117,6 +119,6 @@ new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !docume
 document.addEventListener('visibilitychange', () => { state.visible = !document.hidden; start(); });
 
 let first = new URL(location.href).searchParams.get('hero');
-if (!first) { try { first = localStorage.getItem('lcdu-hero'); } catch (e) {} }
+if (!first) { try { first = localStorage.getItem('lcdu-hero'); } catch (e) {} if (first === 'diorama' && weakDevice) first = DEFAULT; }
 resize(); readScroll();
 load(first || DEFAULT).then(start);

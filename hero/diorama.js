@@ -9,11 +9,15 @@ import { EffectComposer } from '../vendor/three/addons/postprocessing/EffectComp
 import { RenderPass } from '../vendor/three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from '../vendor/three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from '../vendor/three/addons/postprocessing/OutputPass.js';
+import { GLTFLoader } from '../vendor/three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from '../vendor/three/addons/libs/meshopt_decoder.module.js';
 
 /* GSAP (UMD) dimuat sekali; kalau gagal, kamera tetap jalan tanpa easing tambahan */
 let gsap = null;
 try { await import('../vendor/gsap/gsap.min.js'); gsap = window.gsap || null; } catch (e) {}
 
+/* acak yang bisa diulang (penempatan lentera sama setiap kali dimuat) */
+const mulberry32 = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0)/4294967296; };
 const smooth = t => { t = Math.min(1, Math.max(0, t)); return t*t*(3 - 2*t); };
 const lerp = (a, b, t) => a + (b - a)*t;
 const C = h => new THREE.Color(h);
@@ -342,7 +346,7 @@ export default {
     add(dor, new THREE.TorusGeometry(.28, .05, 8, 32, Math.PI*1.45), goldMat, 0, 10.85).rotation.z = Math.PI*.78;
 
     /* ---------- Kubah Rantai (Qubbat al-Silsila) di timur ---------- */
-    const chain = new THREE.Group(); chain.position.set(6.6, Y1, 0); scene.add(chain);
+    const chain = new THREE.Group(); chain.position.set(6.9, Y1, -4.2); scene.add(chain);
     for (let i = 0; i < 11; i++){ const a = i/11*Math.PI*2; add(chain, colG, marbleMat, Math.sin(a)*1.05, .8, Math.cos(a)*1.05); }
     add(chain, new THREE.CylinderGeometry(1.25, 1.25, .25, 11), stoneLight, 0, 1.72);
     add(chain, new THREE.CylinderGeometry(.62, .7, .4, 6), tileMat, 0, 2.05);
@@ -438,24 +442,23 @@ export default {
     const hillMat = std({ color: 0x6d5a64, roughness: 1, flatShading: true });
     for (let i = 0; i < 16; i++){ const a = i/16*Math.PI*2, r = 140 + Math.random()*30; add(scene, new THREE.ConeGeometry(30 + Math.random()*25, 8 + Math.random()*11, 6), hillMat, Math.cos(a)*r, 0, Math.sin(a)*r, false); }
 
-    /* ---------- lentera kontribusi: menyala satu per satu, berkedip seperti api ---------- */
-    const LN = mobile ? 280 : 460, lp = [];
-    const inBuilding = (x, z) => Math.hypot(x, z) < 5.2 || (x > -13 && x < -2 && z < -9 && z > PZ0) || Math.hypot(x - 6.6, z) < 1.4;
-    while (lp.length < LN*3){
-      let x, y, z; const k = Math.random();
-      if (k < .5){ x = (Math.random() - .5)*38; z = PZ0 + 1 + Math.random()*(PD - 2); y = Y0 + .35; if (Math.abs(x) < 8.5 && Math.abs(z) < 8.5) y = Y1 + .35; if (inBuilding(x, z)) continue; }
-      else if (k < .62){ const a = Math.random()*Math.PI*2; x = Math.cos(a)*5.1; z = Math.sin(a)*5.1; y = Y1 + .5 + Math.random()*.4; }
-      else if (k < .68){ x = -7.5 + (Math.random() - .5)*9; z = -9.2; y = Y0 + .4 + Math.random()*.2; }
-      else { x = (Math.random() - .5)*130; z = (Math.random() - .5)*130; if (Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3) continue; y = 2 + Math.random()*5; }
-      lp.push(x, y, z);
+    /* ---------- lentera kontribusi: titik di hero/lights3d.json (editor: ?edit-lights) + lampu kota acak ---------- */
+    let alive = true, lights = [], editor = null;
+    const EDIT_LIGHTS = new URL(location.href).searchParams.has('edit-lights');
+    const CITY_N = mobile ? 90 : 160, cityPts = [], rc = mulberry32(11);
+    while (cityPts.length < CITY_N){ const x = (rc() - .5)*130, z = (rc() - .5)*130; if (Math.abs(x) < PX + 3 && z > PZ0 - 3 && z < PZ1 + 3) continue; cityPts.push([x, 2 + rc()*5, z]); }
+    /* penempatan awal otomatis (dipakai bila hero/lights3d.json belum ada atau kosong) */
+    function autoLights(){
+      const r = mulberry32(5), out = [];
+      const inBuilding = (x, z) => Math.hypot(x, z) < 6.4 || (x > -12 && x < -3 && z < -9 && z > PZ0) || Math.hypot(x - 6.9, z + 4.2) < 1.6;
+      while (out.length < 150){ const x = (r() - .5)*38, z = PZ0 + 1 + r()*(PD - 2); if (inBuilding(x, z)) continue; out.push([x, (Math.abs(x) < 8.5 && Math.abs(z) < 8.5 ? Y1 : Y0) + .35, z]); }
+      for (let i = 0; i < 40; i++){ const a = i/40*Math.PI*2; out.push([Math.cos(a)*6.7, Y1 + .45, Math.sin(a)*6.7]); }   // cincin di sekitar Kubah
+      for (let i = 0; i < 14; i++) out.push([-11 + i*.55, Y0 + .45, -8.9]);                                             // depan serambi Qibli
+      for (let i = out.length - 1; i > 0; i--){ const k = Math.floor(r()*(i + 1)); [out[i], out[k]] = [out[k], out[i]]; }
+      return out.map(q => q.map(v => +v.toFixed(2)));
     }
-    const order = Array.from({ length: LN }, (_, i) => i).sort(() => Math.random() - .5);
-    const lgeo = new THREE.BufferGeometry();
-    lgeo.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3));
-    lgeo.setAttribute('aI', new THREE.Float32BufferAttribute(order, 1));
-    lgeo.setAttribute('aPh', new THREE.Float32BufferAttribute(Array.from({ length: LN }, Math.random), 1));
-    const lU = { map: { value: glowSprite() }, uLit: { value: 0 }, uTime: { value: 0 }, uSize: { value: mobile ? 1.6 : 1.35 }, uScale: { value: 400 }, uOp: { value: 1 }, uN: { value: LN } };
-    const lanterns = new THREE.Points(lgeo, new THREE.ShaderMaterial({
+    const lU = { map: { value: glowSprite() }, uLit: { value: 0 }, uTime: { value: 0 }, uSize: { value: mobile ? 1.6 : 1.35 }, uScale: { value: 400 }, uOp: { value: 1 }, uN: { value: 1 } };
+    const lanterns = new THREE.Points(new THREE.BufferGeometry(), new THREE.ShaderMaterial({
       uniforms: lU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
       vertexShader: `attribute float aI, aPh; uniform float uLit, uTime, uSize, uScale, uN; varying float vA;
         void main(){ vec4 mv = modelViewMatrix*vec4(position, 1.);
@@ -466,6 +469,50 @@ export default {
         void main(){ vec4 t = texture2D(map, gl_PointCoord); gl_FragColor = vec4(t.rgb*2.4*vA*uOp*t.a, 1.); }`
     }));
     lanterns.frustumCulled = false; scene.add(lanterns);
+    /* urutan menyala: titik editor sesuai urutan di JSON, lampu kota diselipkan merata di antaranya */
+    function buildLanterns(){
+      const all = lights.map((q, i) => [q, (i + .5)/Math.max(1, lights.length)]).concat(cityPts.map((q, i) => [q, (i + .5)/CITY_N + .001]));
+      all.sort((a, b) => a[1] - b[1]);
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(all.flatMap(e => e[0]), 3));
+      g.setAttribute('aI', new THREE.Float32BufferAttribute(all.map((e, i) => i), 1));
+      g.setAttribute('aPh', new THREE.Float32BufferAttribute(all.map((e, i) => (i*9301 + 49297)%233280/233280), 1));
+      lanterns.geometry.dispose(); lanterns.geometry = g; lU.uN.value = all.length;
+    }
+    lights = autoLights(); buildLanterns();
+    fetch(new URL('./lights3d.json', import.meta.url)).then(r => r.ok ? r.json() : null).catch(() => null).then(d => {
+      if (!alive) return;
+      let draft = null;
+      if (EDIT_LIGHTS){ try { draft = JSON.parse(localStorage.getItem('lcdu-lights3d-draft')); } catch (e) {} }
+      const src = (draft && draft.lights) || (d && d.lights && d.lights.length ? d.lights : null);
+      if (src){ lights = src; buildLanterns(); }
+      if (editor) editor.refresh();
+    });
+
+    /* ---------- Kubah Shakhrah & Masjid Qibli dari model 3D (TRELLIS.2, dioptimasi tools/optimize-models.mjs).
+       Dimuat hanya saat varian 3D dipilih; selama memuat, adegan malam prosedural tampil sebagai layar sementara.
+       Bila model gagal dimuat, bangunan prosedural tetap dipakai (cadangan). ---------- */
+    const models = { dome: null, qibli: null }, modelMats = [];
+    const PLACE = {
+      dome: { proc: dor, size: 11, axis: 'xz', pos: [0, Y1, 0], rot: 0 },           // lebar segi delapan + serambi (maket: sedikit diperbesar)
+      qibli: { proc: qibli, size: 13, axis: 'z', pos: [-7.5, Y0, -15.8], rot: .06 },  // panjang; serambi menghadap utara (ke Kubah)
+    };
+    const gltfLoader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+    for (const name of Object.keys(PLACE)){
+      gltfLoader.loadAsync(new URL(`../assets/models/optimized/${name}${mobile ? '-mobile' : ''}.glb`, import.meta.url).href).then(g => {
+        if (!alive) return;
+        const m = g.scene, pl = PLACE[name], size = new THREE.Box3().setFromObject(m).getSize(new THREE.Vector3());
+        m.scale.setScalar(pl.size/(pl.axis === 'z' ? size.z : Math.max(size.x, size.z)));
+        m.position.set(...pl.pos); m.rotation.y = pl.rot;
+        m.traverse(o => {
+          if (!o.isMesh) return;
+          o.castShadow = o.receiveShadow = true;
+          o.material.emissiveIntensity = 0;            // lapisan jendela; kecerahannya diatur di frame()
+          mats.push(o.material); modelMats.push(o.material);
+        });
+        scene.add(m); models[name] = m; pl.proc.visible = false;
+      }).catch(err => console.warn('Model 3D gagal dimuat, memakai bangunan prosedural:', name, err));
+    }
 
     /* ---------- cahaya kursor: lampu hangat + pendar lembut di titik yang ditunjuk ---------- */
     const cursorLight = new THREE.PointLight(0xffb066, 0, 16, 1.4); cursorLight.position.set(0, Y1 + 1.6, 0); scene.add(cursorLight);
@@ -489,7 +536,7 @@ export default {
 
     /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ---------- */
     const KEYS = new THREE.CatmullRomCurve3([new THREE.Vector3(-.62, .33, 58), new THREE.Vector3(-.12, .22, 43), new THREE.Vector3(.36, .13, 35)]);
-    const LOOK = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 4, 1), new THREE.Vector3(0, 4.6, 0), new THREE.Vector3(0, 5.4, -1.5)]);
+    const LOOK = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 3.4, 1), new THREE.Vector3(0, 3.9, 0), new THREE.Vector3(0, 4.6, -1.5)]);
     const endAz = .36, vd = new THREE.Vector3(-Math.sin(endAz), 0, -Math.cos(endAz)), rgt = new THREE.Vector3(Math.cos(endAz), 0, -Math.sin(endAz));
     const sunH = new THREE.Vector3();   // matahari terbit di latar, sedikit ke kanan (di HP hampir tengah)
     const az0 = KEYS.points[0].x, vd0 = new THREE.Vector3(-Math.sin(az0), 0, -Math.cos(az0)), rgt0 = new THREE.Vector3(Math.cos(az0), 0, -Math.sin(az0));
@@ -581,6 +628,7 @@ export default {
       const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
       glowMat.color.copy(P.glow).multiplyScalar(win*3.2*flick);
       doorMat.emissiveIntensity = win*1.4;
+      modelMats.forEach(m => m.emissiveIntensity = win*2.4*flick);
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
       lU.uLit.value = lit; lU.uOp.value = 1 - dawn*.6; lU.uTime.value = time;
@@ -589,9 +637,58 @@ export default {
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
     }
 
+    /* ---------- editor lentera 3D (?edit-lights): klik permukaan model/tanah untuk menambah, klik titik untuk menghapus ---------- */
+    if (EDIT_LIGHTS) editor = makeLightEditor();
+    function makeLightEditor(){
+      const heroEl = document.getElementById('hero'); heroEl.classList.add('hd-editing');
+      const markGeo = new THREE.SphereGeometry(.17, 10, 8), markMat = new THREE.MeshBasicMaterial({ color: 0xffc21a, depthTest: false, transparent: true, opacity: .9 });
+      let marks = null;
+      const panel = document.createElement('div'); panel.className = 'hd-edit-panel';
+      panel.innerHTML = '<b>Editor lentera 3D</b><span class="hd-edit-info"></span><span>Klik bangunan atau tanah untuk menambah lentera, klik titik kuning untuk menghapus.</span>' +
+        '<div><button type="button" data-a="copy">Salin JSON</button> <button type="button" data-a="auto">Isi otomatis</button> <button type="button" data-a="reset">Kembalikan ke berkas</button></div><span class="hd-edit-msg" role="status"></span>';
+      document.body.appendChild(panel);
+      const info = panel.querySelector('.hd-edit-info'), msg = panel.querySelector('.hd-edit-msg');
+      const skip = new Set([sky, haze, lanterns, stars, cursorGlow]);
+      const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+      function refresh(){
+        if (marks){ scene.remove(marks); marks.dispose(); }
+        marks = new THREE.InstancedMesh(markGeo, markMat, Math.max(1, lights.length)); marks.count = lights.length; marks.renderOrder = 999;
+        const mm = new THREE.Matrix4(); lights.forEach((q, i) => marks.setMatrixAt(i, mm.makeTranslation(q[0], q[1], q[2])));
+        scene.add(marks); skip.add(marks); info.textContent = `${lights.length} titik lentera (+${CITY_N} lampu kota otomatis)`;
+      }
+      function changed(){ buildLanterns(); refresh(); try { localStorage.setItem('lcdu-lights3d-draft', JSON.stringify({ lights })); } catch (e) {} }
+      const onClick = e => {
+        const r = renderer.domElement.getBoundingClientRect();
+        ndc.set((e.clientX - r.left)/r.width*2 - 1, 1 - (e.clientY - r.top)/r.height*2); camera.updateMatrixWorld(); ray.setFromCamera(ndc, camera);
+        const hm = marks && ray.intersectObject(marks)[0];
+        if (hm){ lights.splice(hm.instanceId, 1); changed(); return; }
+        const h = ray.intersectObjects(scene.children, true).find(x => x.object.isMesh && !skip.has(x.object) && shown(x.object));
+        if (!h) return;
+        const n = h.face ? h.face.normal.clone().transformDirection(h.object.matrixWorld) : new THREE.Vector3(0, 1, 0);
+        const q = h.point.clone().addScaledVector(n, .25);
+        lights.push([+q.x.toFixed(2), +q.y.toFixed(2), +q.z.toFixed(2)]); changed();
+      };
+      renderer.domElement.addEventListener('click', onClick);
+      panel.addEventListener('click', async e => {
+        const a = e.target.dataset && e.target.dataset.a; if (!a) return;
+        if (a === 'auto'){ lights = autoLights(); changed(); msg.textContent = 'Diisi ulang otomatis.'; return; }
+        if (a === 'reset'){
+          try { localStorage.removeItem('lcdu-lights3d-draft'); } catch (err) {}
+          const d = await fetch(new URL('./lights3d.json', import.meta.url)).then(r => r.ok ? r.json() : null).catch(() => null);
+          lights = d && d.lights && d.lights.length ? d.lights : autoLights(); buildLanterns(); refresh(); msg.textContent = 'Dikembalikan ke hero/lights3d.json.'; return;
+        }
+        const json = '{\n  "lights": [\n' + lights.map(q => '    ' + JSON.stringify(q)).join(',\n') + '\n  ]\n}\n';
+        try { await navigator.clipboard.writeText(json); msg.textContent = 'Tersalin. Tempel ke hero/lights3d.json.'; }
+        catch (err){ const ta = document.createElement('textarea'); ta.value = json; panel.appendChild(ta); ta.select(); msg.textContent = 'Salin manual dari kotak ini (Cmd/Ctrl+C).'; }
+      });
+      refresh();
+      return { refresh, destroy(){ renderer.domElement.removeEventListener('click', onClick); panel.remove(); heroEl.classList.remove('hd-editing'); } };
+    }
+
     return {
       frame, resize,
       destroy(){
+        alive = false; if (editor) editor.destroy();
         if (gsap) gsap.killTweensOf(cam);
         composer.dispose(); renderer.dispose(); pmrem.dispose(); env.dispose();
         scene.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material){ [].concat(o.material).forEach(m => { for (const k in m) if (m[k] && m[k].isTexture) m[k].dispose(); if (m.uniforms) for (const k in m.uniforms) if (m.uniforms[k].value && m.uniforms[k].value.isTexture) m.uniforms[k].value.dispose(); m.dispose(); }); } });

@@ -24,11 +24,14 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   titik cahaya di `hero/spots.json` (editor: `?hero=lentera-hd&edit-spots`). Teks ditaruh di langit (`text: 'top'`).
   `supports()` → false bila aset orientasi layar belum ada; `hero.js` lalu memakai Lentera lama (sekarang: landscape).
 - `hero/lentera.js` + `hero/scene2d.js` — varian 2D (canvas): ilustrasi Al-Aqsa malam & fajar, cahaya kontribusi.
-- `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`. Lihat `tools/README.md`.
+- `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`, `prep-model-textures.py`;
+  Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
   GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
-  jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`
-  (selama Lentera HD belum ada, `hero.js` mengarahkannya ke `lentera`). Model .glb dikerjakan terpisah (Prompt D).
+  jendela hangat sejak awal). Fallback: WebGL gagal atau fps < 40 pada 2 detik pertama → `lentera-hd`.
+  Kubah & Qibli dari `assets/models/optimized/*.glb` (TRELLIS.2, Meshopt; `-mobile` untuk HP), dimuat malas; bangunan
+  prosedural = layar sementara & cadangan bila gagal. Lentera dari `hero/lights3d.json` (editor `?hero=diorama&edit-lights`).
+  Anggaran aset 3D: desktop ≤ 3 MB (sekarang 2,98 MB), HP 1,77 MB. HP lemah tidak membuka 3D dari preferensi tersimpan.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 

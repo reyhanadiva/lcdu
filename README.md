@@ -39,6 +39,17 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   `python3 tools/build-hero-images.py`. Lihat `tools/README.md`.
 - Titik cahaya: `hero/spots.json`, atur di browser dengan `?hero=lentera-hd&edit-spots` lalu "Salin JSON".
 
+## Sumber aset 3D
+
+- `assets/models/dome.glb` (Kubah Shakhrah) dan `qibli.glb` (Masjid Qibli) **dibuat dari gambar yang dihasilkan ChatGPT**
+  (`assets/models/source/*.png`), lalu **diubah ke 3D dengan TRELLIS.2 (lisensi MIT)**. Meshy tidak dipakai.
+- Versi web di `assets/models/optimized/` dibuat dengan `tools/prep-model-textures.py` lalu `npm run models` di `tools/`
+  (gltf-transform, meshoptimizer, sharp). Berkas asli tidak ditimpa.
+- Penyesuaian: color grade seragam, pita "kaligrafi" buatan AI di Kubah diganti ornamen polos tanpa huruf, bercak biru
+  di batu Qibli dinetralkan, masker jendela sebagai lapisan emissive terpisah.
+- Catatan akurasi: serambi Qibli hanya 3 lengkung (mengikuti gambar acuan; aslinya 7), sisi belakang Qibli "ditebak"
+  generator (menghadap selatan, tidak terlihat kamera).
+
 ## Logo
 
 - Sumber: `assets/brand/lcdu-logo-wide.png` (PNG resmi, latar sudah transparan, 4461×1767) dan `lcdu-logo-square.png`
@@ -56,6 +67,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 ## Perlu dilengkapi / diverifikasi sebelum live
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
+- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D dan gambar hero Lentera HD).
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: Placement Test, formulir registrasi, WhatsApp admin, Instagram, alamat (saat ini `#`).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
