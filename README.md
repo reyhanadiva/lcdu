@@ -20,7 +20,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
 | Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
-| Biaya | Struk yang "tercetak" saat masuk layar. |
+| Biaya | Rp100.000 per term (1 semester), sudah termasuk seluruh biaya belajar; donasi sukarela. Struk "tercetak" saat masuk layar. |
 | Kelas | Toggle Inggris/Arab; layout dicerminkan untuk Arab, jadwal ditampilkan sebagai strip hari. |
 | Syarat | Checklist interaktif; CTA berubah sesuai jumlah syarat yang terpenuhi. |
 | Cara daftar | Desktop: scroll vertikal menggerakkan 6 langkah secara horizontal. HP: daftar vertikal. |

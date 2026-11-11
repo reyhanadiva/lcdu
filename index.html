@@ -7,7 +7,7 @@
 <link rel="icon" href="favicon.ico" sizes="48x48">
 <link rel="icon" href="assets/brand/web/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="assets/brand/web/apple-touch-icon.png">
-<meta name="description" content="Kelas Bahasa Inggris dan Arab online dari LCDU. Rp100.000 per term, sisanya donasi sesuai kesanggupan.">
+<meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU, untuk dakwah dan umat. Rp100.000 per term (1 semester), sudah termasuk seluruh biaya belajar.">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -236,7 +236,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (min-width:900px){.cost{grid-template-columns:1fr 1fr}}
 .cost-copy{display:grid;gap:20px}
 .cost-big{font-family:var(--f-display);font-weight:700;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.03em;color:var(--lazuardi-ink)}
-.cost-big small{display:block;font-size:.22em;letter-spacing:0;font-weight:600;color:var(--ink-soft);margin-top:.6em;font-family:var(--f-body)}
+.cost-big small{display:block;font-size:max(.95rem,.18em);line-height:1.4;max-width:34ch;letter-spacing:0;font-weight:600;color:var(--ink-soft);margin-top:.7em;font-family:var(--f-body)}
 .receipt-wrap{display:grid;justify-items:center}
 .printer{width:min(100%,400px);height:22px;border-radius:12px;background:var(--ink);position:relative;z-index:2;box-shadow:0 10px 20px -10px rgba(0,0,0,.5)}
 .printer::after{content:"";position:absolute;left:24px;right:24px;top:9px;height:4px;border-radius:4px;background:color-mix(in srgb,var(--paper) 25%,var(--ink))}
@@ -533,16 +533,15 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="wrap cost">
     <div class="cost-copy">
       <h2 class="h2" id="cost-h">Berapa biayanya?</h2>
-      <p class="cost-big">Rp0<small>biaya kursus per bulan</small></p>
-      <p class="lede">LCDU adalah program non-profit. Tidak ada biaya kursus bulanan. Yang dibayar hanya registrasi setiap term, dan donasi sesuai kesanggupan kamu.</p>
+      <p class="cost-big">Rp100.000<small>per term (1 semester), sudah termasuk seluruh biaya belajar</small></p>
+      <p class="lede">LCDU adalah program nirlaba di bawah Yayasan Taqwa Cerdas Kreatif. Satu kali bayar Rp100.000 per term untuk satu semester belajar, tanpa biaya tambahan. Donasi bersifat sukarela, sesuai kesanggupan, untuk membantu kelas tetap berjalan.</p>
     </div>
     <div class="receipt-wrap">
       <div class="printer" aria-hidden="true"></div>
       <div class="receipt" id="receipt">
-        <div class="receipt-head"><b>LCDU</b><span>Rincian biaya belajar per term</span></div>
-        <div class="rline"><span>Kursus bulanan</span><span>Rp0</span></div>
-        <div class="rline"><span>Registrasi</span><span>Rp100.000</span></div>
-        <div class="rline"><span>Donasi</span><span>Sesuai kesanggupan</span></div>
+        <div class="receipt-head"><b>LCDU</b><span>Rincian biaya per term (1 semester)</span></div>
+        <div class="rline"><span>Biaya per term</span><span>Rp100.000</span></div>
+        <div class="rline"><span>Donasi (sukarela)</span><span>Sesuai kesanggupan</span></div>
         <div class="rline rtotal"><span>Wajib dibayar</span><span>Rp100.000</span></div>
         <p class="receipt-foot"><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah ikut menjaga kelas ini tetap terbuka.</p>
       </div>
@@ -603,7 +602,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <li class="flow-step"><span class="flow-num">1</span><div><h3>Kerjakan Placement Test</h3><p>Untuk mengetahui level yang pas buat kamu.</p></div></li>
         <li class="flow-step"><span class="flow-num">2</span><div><h3>Kirim hasilnya</h3><p>Screenshot hasil tes, lalu kirim ke Admin LCDU (Mr. Syahril).</p></div></li>
         <li class="flow-step"><span class="flow-num">3</span><div><h3>Dapatkan kelas</h3><p>Admin memberi tahu kelas yang tersedia untuk kamu.</p></div></li>
-        <li class="flow-step"><span class="flow-num">4</span><div><h3>Registrasi</h3><p>Isi formulir registrasi dan bayar biaya registrasi Rp100.000.</p></div></li>
+        <li class="flow-step"><span class="flow-num">4</span><div><h3>Registrasi</h3><p>Isi formulir registrasi dan bayar biaya term Rp100.000 (1 semester).</p></div></li>
         <li class="flow-step"><span class="flow-num">5</span><div><h3>Masuk grup dan Canvas</h3><p>Kamu masuk grup WhatsApp kelas dan mengaktifkan akun Canvas LMS.</p></div></li>
         <li class="flow-step"><span class="flow-num">6</span><div><h3>Mulai belajar</h3><p>Materi dan link Zoom tersedia di Canvas. Sampai jumpa di kelas.</p></div></li>
       </ol>
@@ -645,7 +644,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="wrap donate-grid">
     <div style="display:grid;gap:20px">
       <h2 class="h2" id="don-h">Ikut menjaga kelas ini tetap terbuka</h2>
-      <p class="lede">LCDU tidak menarik biaya kursus bulanan. Donasi kamu, sekecil apa pun, membantu kelas tetap berjalan untuk siswa berikutnya.</p>
+      <p class="lede">Biaya term sudah mencakup seluruh biaya belajar. Donasi bersifat sukarela: sekecil apa pun, membantu kelas tetap berjalan untuk siswa berikutnya.</p>
       <p class="donate-ar" lang="ar">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ</p>
       <p style="font-size:var(--step--1);color:var(--on-color-soft)">QS. Al-Baqarah: 261</p>
     </div>

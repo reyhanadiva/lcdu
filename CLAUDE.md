@@ -32,8 +32,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."
   3. "Bersama, kita nyalakan harapan untuk Palestina."
 - Wordmark permanen kiri atas hero: "LCDU" + "Language Course for Da'wah & Ummah" (identitas, bukan tombol/tautan).
-- Biaya (fakta dari pemilik): **Rp100.000 per term, tidak gratis.** Jangan menulis "gratis" di mana pun. Klaim lama
-  (angka "Rp0", "tidak ada biaya kursus bulanan") berisiko dibaca "gratis" dan menunggu keputusan pemilik — jangan ubah diam-diam.
+- Biaya (fakta dari pemilik): **Rp100.000 per term, 1 term = 1 semester, sudah mencakup seluruh biaya belajar; tidak gratis.**
+  Donasi **sukarela**, sesuai kesanggupan. Jangan menulis "gratis" atau "Rp0" di mana pun; angka utama selalu Rp100.000 per term.
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
   Scroll harus pendek dan jelas.
