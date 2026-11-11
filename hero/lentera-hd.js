@@ -153,7 +153,9 @@ export default {
     function frame(st, now){
       if (!night) return;
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
-      const lit = smooth(p/.62)*n, dawnT = dawn ? smooth((p - .5)/.5) : 0;
+      /* fajar dua lapis supaya terang bertahap: 'pre' = cahaya pagi merembes merata sejak tengah babak 2,
+         'dawnT' = sapuan dari arah matahari yang menyelesaikannya */
+      const lit = smooth(p/.62)*n, pre = dawn ? smooth((p - .36)/.6) : 0, dawnT = dawn ? smooth((p - .45)/.55) : 0;
       const pa = st.pointer.active;
       if (pa){ const tx = st.pointer.x*DPR, ty = st.pointer.y*DPR; lx = lx < 0 ? tx : lx + (tx - lx)*.2; ly = ly < 0 ? ty : ly + (ty - ly)*.2; }
       if (st.reduce){ const key = p.toFixed(4) + (pa ? `${lx | 0},${ly | 0}` : '-') + (dawn ? 'd' : ''); if (key === last) return; last = key; }
@@ -169,18 +171,20 @@ export default {
         ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
       }
 
+      if (pre > 0){ ctx.globalAlpha = pre*.55; ctx.drawImage(dawnC, 0, 0); ctx.globalAlpha = 1; }   // langit & bangunan mulai terang merata
+
       if (dawn){
         /* masker: area mana yang sudah "fajar" */
         const q = MASK_Q; mctx.globalCompositeOperation = 'source-over'; mctx.clearRect(0, 0, mask.width, mask.height);
         if (dawnT > 0){
           /* sapuan dari matahari: lingkaran lembut yang membesar, tepinya diberi gelombang supaya tidak seperti wipe digital */
           const maxR = Math.hypot(Math.max(sun[0], W - sun[0]), Math.max(sun[1], H - sun[1]))*1.08;
-          const R = dawnT*maxR, feather = maxR*.32;
+          const R = dawnT*maxR*1.1, feather = maxR*.7;           // tepi sapuan lebar & lembut
           if (dawnT > .995){ mctx.fillStyle = '#000'; mctx.fillRect(0, 0, mask.width, mask.height); }
           else {
             const rg = mctx.createRadialGradient(sun[0]*q, sun[1]*q, 0, sun[0]*q, sun[1]*q, (R + feather)*q);
             const edge = Math.max(0, R/(R + feather));
-            rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(edge, 'rgba(0,0,0,1)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
+            rg.addColorStop(0, 'rgba(0,0,0,1)'); rg.addColorStop(edge, 'rgba(0,0,0,1)'); rg.addColorStop(edge + (1 - edge)*.5, 'rgba(0,0,0,.45)'); rg.addColorStop(1, 'rgba(0,0,0,0)');
             mctx.fillStyle = rg; mctx.fillRect(0, 0, mask.width, mask.height);
             for (let i = 0; i < 7; i++){                     // gelombang di tepi sapuan
               const a = Math.PI*(.75 + i*.12) + Math.sin(t*.3 + i)*.05, rr = R + feather*.35*Math.sin(i*2.3 + t*.4);
@@ -199,7 +203,7 @@ export default {
         }
         if (pa){ const r = Math.min(W, H)*.22; mctx.globalAlpha = .85; mctx.drawImage(MASK, (lx - r)*q, (ly - r)*q, r*2*q, r*2*q); }
         mctx.globalAlpha = 1;
-        if (dawnT > 0 || k > 0 || pa){
+        if (dawnT > 0 || pre > 0 || k > 0 || pa){
           tctx.globalCompositeOperation = 'source-over'; tctx.clearRect(0, 0, W, H); tctx.drawImage(dawnC, 0, 0);
           tctx.globalCompositeOperation = 'destination-in'; tctx.drawImage(mask, 0, 0, W, H);
           ctx.drawImage(tmp, 0, 0);

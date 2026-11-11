@@ -223,7 +223,7 @@ export default {
           gl_FragColor = vec4(c, 1.); }`
     }));
     scene.add(sky);
-    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#2F4C94'), hex3('#C27C78'), hex3('#E9A06E')] };   // fajar dibuat lebih dalam supaya tidak memutih
+    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#3A5AA6'), hex3('#D48C7C'), hex3('#F4B077')] };   // fajar dibuat lebih dalam supaya tidak memutih
 
     /* bintang berkelip (shader titik) */
     const starN = 1600, sp = [], sph = [];
@@ -529,8 +529,8 @@ export default {
 
     /* ---------- palet waktu ---------- */
     const P = {
-      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .42],
-      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 1.75], fog: [C('#0b1236'), C('#b98274')], fogD: [.0115, .0048],
+      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .52],
+      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 2.05], fog: [C('#0b1236'), C('#c98f78')], fogD: [.0115, .0045],
       ground: [C('#2c2f52'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#d99a7a')],
     };
 
@@ -621,8 +621,8 @@ export default {
       lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
       lerpC(P.haze[0], P.haze[1], dawn, hazeU.uCol.value); hazeU.uOp.value = .25 - dawn*.08;
       lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
-      renderer.toneMappingExposure = lerp(.92, .64, dawn);
-      const envI = lerp(.12, .42, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
+      renderer.toneMappingExposure = lerp(.92, .76, dawn);
+      const envI = lerp(.12, .52, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
 
       /* jendela: sebagian sudah menyala hangat sejak awal; lentera menyala bersama babak 2, meredup saat fajar */
       const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
@@ -632,7 +632,7 @@ export default {
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
       lU.uLit.value = lit; lU.uOp.value = 1 - dawn*.6; lU.uTime.value = time;
-      bloom.strength = lerp(.62, .2, dawn); bloom.threshold = lerp(.8, 1.05, dawn);
+      bloom.strength = lerp(.62, .24, dawn); bloom.threshold = lerp(.8, 1.0, dawn);
 
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
     }

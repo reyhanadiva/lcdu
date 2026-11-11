@@ -154,17 +154,17 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .beat-0{opacity:1}
 .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
 @media (min-width:720px){.beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
-.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 50px);translate:-50% 0;display:grid;justify-items:center;gap:8px;font-size:.85rem;font-weight:700;letter-spacing:.04em;color:#fff;text-shadow:0 1px 10px rgba(4,8,32,.9);transition:opacity .5s}
+.scroll-cue{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 60px);translate:-50% 0;display:grid;justify-items:center;gap:8px;font-size:.85rem;font-weight:700;letter-spacing:.04em;color:#fff;text-shadow:0 1px 10px rgba(4,8,32,.9);transition:opacity .5s}
 .scroll-cue i{width:3px;height:44px;box-shadow:0 0 12px rgba(242,193,78,.6);border-radius:2px;background:linear-gradient(var(--sun),transparent);transform-origin:top;animation:cue 2s var(--ease) infinite}
 @keyframes cue{0%{transform:scaleY(0)}50%{transform:scaleY(1);transform-origin:top}50.1%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 .hero-meter{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;width:3px;height:min(34vh,260px);border-radius:3px;background:rgba(243,245,252,.18);overflow:hidden}
 .hero-meter::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--sun),#FFE7B0);transform:scaleY(var(--p,0));transform-origin:bottom}
 @media (min-width:720px){.hero-meter{right:max(28px,env(safe-area-inset-right,0px))}}
 /* keffiyeh × semangka: kulit hijau, putih, jaring keffiyeh, daging merah berbiji */
-.kufiyah{position:absolute;left:0;right:0;bottom:0;height:34px;z-index:2;
+.kufiyah{position:absolute;left:0;right:0;bottom:0;height:42px;z-index:2;
   background:
-    radial-gradient(ellipse 1.8px 2.8px at 50% 50%,#151515 98%,transparent) 0 27px/22px 7px repeat-x,
-    linear-gradient(#149954 0 5px,#F7F7F2 5px 7px,transparent 7px 26px,#E4312B 26px),
+    radial-gradient(ellipse 1.8px 2.8px at 50% 50%,#151515 98%,transparent) 0 34px/22px 7px repeat-x,
+    linear-gradient(#149954 0 6px,#F7F7F2 6px 8px,transparent 8px 32px,#E4312B 32px),
     repeating-linear-gradient(45deg,#151515 0 1.4px,transparent 1.4px 8px),
     repeating-linear-gradient(-45deg,#151515 0 1.4px,transparent 1.4px 8px),
     #F7F7F2}
@@ -181,7 +181,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (orientation: portrait){.hero[data-text="top"] .beat{top:calc(env(safe-area-inset-top,0px) + clamp(88px,11.5svh,128px))}}
 @media (orientation: portrait) and (min-width:600px){.hero[data-text="top"] .beat{right:max(40px,env(safe-area-inset-right,0px));width:auto;max-width:620px}}
 .hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.66) 0%,rgba(4,8,32,.6) 22%,rgba(4,8,32,.38) 40%,rgba(4,8,32,0) 55%)}
-.hero[data-text="top"] .hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.45)}
+.hero[data-text="top"] .hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .4)*1.15),.45)}   /* ikut menebal perlahan bersama fajar */
 /* layar melebar: teks di kiri-atas → scrim radial dari pojok kiri-atas (langit fajar di sana terang) */
 @media (orientation: landscape){.hero[data-text="top"] .hero-scrim{background:radial-gradient(100% 100% at 0% 0%,rgba(4,8,32,.86) 0%,rgba(4,8,32,.8) 50%,rgba(4,8,32,.45) 75%,transparent 100%)}}
 /* editor titik cahaya (?edit-spots) — alat kerja pemilik, bukan untuk pengunjung */
@@ -458,6 +458,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 /* ===== Mengambang ===== */
 .fab{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;display:flex;align-items:center;gap:10px;padding:12px 18px 12px 14px;border-radius:999px;background:var(--zamrud);color:var(--on-color);font-weight:700;text-decoration:none;box-shadow:0 14px 30px -10px rgba(6,92,65,.6);transition:transform .25s var(--ease)}
+/* selama hero terlihat, tombol mengambang naik supaya motif keffiyeh di tepi bawah hero tidak tertutup */
+.hero-switch,.fab{transition:translate .4s var(--ease)}
+.hero-in-view .hero-switch,.hero-in-view .fab{translate:0 -48px}
 .fab:hover{transform:translateY(-3px)}
 .fab svg{width:22px;height:22px;fill:currentColor}
 
