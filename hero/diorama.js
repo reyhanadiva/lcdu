@@ -406,18 +406,87 @@ export default {
     };
     minaret(-PX + .2, -1.5, 9.5, false); minaret(-PX + .2, PZ1 - .2, 10.5, false); minaret(14.5, PZ1 - .2, 10, true); minaret(-15, PZ0 + .2, 9, false);
 
-    /* ---------- pohon zaitun & cemara ---------- */
+    /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ----------
+       framing() dan pose() dipakai bersama oleh kamera sungguhan dan oleh pemeriksaan zona larangan vegetasi */
+    const KEYS = new THREE.CatmullRomCurve3([new THREE.Vector3(-.62, .33, 58), new THREE.Vector3(-.12, .22, 43), new THREE.Vector3(.36, .13, 35)]);
+    const LOOK = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 3.4, 1), new THREE.Vector3(0, 3.9, 0), new THREE.Vector3(0, 4.6, -1.5)]);
+    const _k = new THREE.Vector3(), _l = new THREE.Vector3();
+    function framing(c, w, h){
+      /* teks di kiri-bawah: desktop → kubah di kanan; HP → kubah di tengah, di atas teks */
+      const wide = w >= 900;
+      c.aspect = w/h; c.setViewOffset(wide ? w*1.34 : w, h*(wide ? 1.1 : 1.5), 0, h*(wide ? .06 : .3), w, h); c.updateProjectionMatrix();
+    }
+    function pose(c, cp, w, h){
+      const aspect = w/h, far = aspect < 1 ? 1 + (1 - aspect)*1.25 : 1;
+      KEYS.getPoint(cp, _k); LOOK.getPoint(cp, _l);
+      const az = _k.x, el = _k.y, rad = _k.z*far;
+      c.position.set(Math.sin(az)*Math.cos(el)*rad, Math.sin(el)*rad + 1.5, Math.cos(az)*Math.cos(el)*rad);
+      c.lookAt(_l); c.updateMatrixWorld();
+    }
+
+    /* ---------- zona larangan vegetasi ----------
+       WAJIB dipakai semua vegetasi (pohon prosedural, pohon 3D, sprite, cemara, semak — juga yang ditambahkan nanti):
+       plant(kind, x, z, size, make) memeriksa posisi terhadap jalur kamera di semua babak untuk layar desktop & HP;
+       bila melanggar, mencari posisi pengganti di dekatnya, dan bila tidak ada, pohon tidak ditanam. */
+    const VEG_MIN_DIST = 12;                                   // jarak minimum ke kamera (unit dunia)
+    const VEG_FADE = [9, 15];                                  // cadangan: di bawah 15 unit mulai mengecil, < 9 unit hilang
+    const VEG_MAX_SIZE = .22, VEG_EDGE_SIZE = .16, VEG_TEXT_SIZE = .12;   // batas tinggi tampak pohon (bagian dari tinggi layar)
+    const TEXT_ZONE = { wide: [.02, .5, .56, .92], tall: [0, .55, 1, .92] };   // area judul (x0, y0, x1, y1), varian 3D: kiri-bawah / bawah
+    const VIEWS = [];
+    for (const [w, h] of [[1440, 900], [1280, 720], [390, 844], [360, 740]]){
+      for (let i = 0; i <= 12; i++){ const c = new THREE.PerspectiveCamera(34, 1, .1, 600); framing(c, w, h); pose(c, smooth(i/12), w, h); VIEWS.push({ c, wide: w >= 900, p: i/12 }); }
+    }
+    const _v = new THREE.Vector3(), _u = new THREE.Vector3();
+    function vegViolation(x, z, radius, height){
+      _v.set(x, Y0 + height/2, z);
+      for (const V of VIEWS){
+        const d = _v.distanceTo(V.c.position) - Math.max(radius, height/2);
+        if (d < VEG_MIN_DIST) return `terlalu dekat kamera (${d.toFixed(1)} unit, ${V.wide ? 'desktop' : 'HP'}, p=${V.p.toFixed(2)})`;
+        const q = _u.copy(_v).project(V.c);
+        if (q.z > 1) continue;
+        const top = _u.set(x, Y0 + height, z).project(V.c).y, bot = _v.clone().setY(Y0).project(V.c).y;
+        const size = Math.abs(top - bot)/2, cx = (q.x + 1)/2, cy = (1 - q.y)/2, hw = size*.5;
+        if (cx + hw < 0 || cx - hw > 1 || cy - size/2 > 1 || cy + size/2 < 0) continue;      // di luar layar
+        if (size > VEG_MAX_SIZE) return `terlalu besar di layar (${(size*100).toFixed(0)}% tinggi, ${V.wide ? 'desktop' : 'HP'}, p=${V.p.toFixed(2)})`;
+        if (size > VEG_EDGE_SIZE && (cx - hw < .02 || cx + hw > .98)) return `menutupi tepi layar (${V.wide ? 'desktop' : 'HP'}, p=${V.p.toFixed(2)})`;
+        const T = TEXT_ZONE[V.wide ? 'wide' : 'tall'];
+        if (size > VEG_TEXT_SIZE && cx + hw > T[0] && cx - hw < T[2] && cy + size/2 > T[1] && cy - size/2 < T[3]) return `menimpa area teks (${V.wide ? 'desktop' : 'HP'}, p=${V.p.toFixed(2)})`;
+      }
+      return null;
+    }
+    const onPlatform = (x, z) => Math.abs(x) < PX - 1 && z > PZ0 + 1 && z < PZ1 - 1 && !(Math.abs(x) < 9 && Math.abs(z) < 9) && !(x > -12.5 && x < -2.5 && z < -8.8);
+    const vegReport = [], vegetation = [];
+    function plant(kind, x, z, size, radius, height, make){
+      let why = vegViolation(x, z, radius, height), at = [x, z];
+      if (why){
+        at = null;
+        for (let r = 1.5; r <= 6 && !at; r += 1.5) for (let a = 0; a < 12 && !at; a++){
+          const nx = x + Math.cos(a/12*Math.PI*2)*r, nz = z + Math.sin(a/12*Math.PI*2)*r;
+          if (onPlatform(nx, nz) && !vegViolation(nx, nz, radius, height)) at = [nx, nz];
+        }
+        vegReport.push({ jenis: kind, posisi: `${x}, ${z}`, alasan: why, tindakan: at ? `dipindah ke ${at[0].toFixed(1)}, ${at[1].toFixed(1)}` : 'dihapus' });
+        if (!at) return null;
+      }
+      const o = make(at[0], at[1], size); vegetation.push({ o, base: o.scale.clone() }); return o;
+    }
+
+    /* ---------- pohon zaitun & cemara (lewat plant(), jadi mematuhi zona larangan) ---------- */
     const leaf = std({ color: 0x4b7352, roughness: .85, flatShading: true }), leafD = std({ color: 0x24432f, roughness: .9, flatShading: true }), bark = std({ color: 0x5b4634, roughness: 1 });
     const blobG = new THREE.IcosahedronGeometry(1, 1), trunkG = new THREE.CylinderGeometry(.14, .24, 1.3, 7);
+    const rv = mulberry32(21);
     const oliveTree = (x, z, s) => {
-      const g = new THREE.Group(); g.position.set(x, Y0, z); g.scale.setScalar(s); g.rotation.y = Math.random()*6; scene.add(g);
+      const g = new THREE.Group(); g.position.set(x, Y0, z); g.scale.setScalar(s); g.rotation.y = rv()*6; scene.add(g);
       add(g, trunkG, bark, 0, .65).rotation.z = .15;
       [[0, 1.7, 0, .9], [.6, 1.5, .2, .7], [-.6, 1.55, -.1, .72], [.1, 2.15, -.3, .65], [-.2, 1.4, .5, .6]].forEach(b => add(g, blobG, leaf, b[0], b[1], b[2]).scale.setScalar(b[3]));
+      return g;
     };
     const cypG = new THREE.SphereGeometry(.5, 10, 12);
-    const cypress = (x, z, h) => add(scene, cypG, leafD, x, Y0 + h*.5, z).scale.set(1, h, 1);
-    [[-13, 6, 1.2], [12, 7, 1.1], [-15, -9, 1.2], [16.5, 9, 1.25], [9, -12, 1.1], [-16, -16, 1.0], [11.5, -4, .9], [-12, 1, .95], [14, -17, 1.05], [4.5, -16, .95]].forEach(o => oliveTree(...o));
-    [[-18.5, 12], [-17.2, 12.6], [18.6, -13], [17.4, -13.5], [10, 13.5], [-6.5, 13.6], [18.7, 4], [-18.7, -6], [18.6, -19], [-18.6, -19.5]].forEach(o => cypress(o[0], o[1], 3.2 + Math.random()));
+    const cypress = (x, z, h) => { const m = add(scene, cypG, leafD, x, Y0 + h*.5, z); m.scale.set(1, h, 1); return m; };
+    [[-13, 6, 1.2], [12, 7, 1.1], [-15, -9, 1.2], [16.5, 9, 1.25], [9, -12, 1.1], [-16, -16, 1.0], [11.5, -4, .9], [-12, 1, .95], [14, -17, 1.05], [4.5, -16, .95]]
+      .forEach(([x, z, s]) => plant('zaitun', x, z, s, 1.3*s, 2.9*s, oliveTree));
+    [[-18.5, 12], [-17.2, 12.6], [18.6, -13], [17.4, -13.5], [10, 13.5], [-6.5, 13.6], [18.7, 4], [-18.7, -6], [18.6, -19], [-18.6, -19.5]]
+      .forEach(([x, z]) => { const h = 3.2 + rv(); plant('cemara', x, z, h, .55, h, cypress); });
+    if (new URL(location.href).searchParams.has('debug-veg')){ window.__vegReport = vegReport; console.table(vegReport.length ? vegReport : [{ hasil: 'semua vegetasi aman' }]); }
 
     /* ---------- kota tua di sekeliling: rumah batu + kubah kecil di atap (instanced) ---------- */
     const cityGeo = new THREE.BoxGeometry(1, 1, 1); cityGeo.translate(0, .5, 0);
@@ -535,8 +604,6 @@ export default {
     };
 
     /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ---------- */
-    const KEYS = new THREE.CatmullRomCurve3([new THREE.Vector3(-.62, .33, 58), new THREE.Vector3(-.12, .22, 43), new THREE.Vector3(.36, .13, 35)]);
-    const LOOK = new THREE.CatmullRomCurve3([new THREE.Vector3(0, 3.4, 1), new THREE.Vector3(0, 3.9, 0), new THREE.Vector3(0, 4.6, -1.5)]);
     const endAz = .36, vd = new THREE.Vector3(-Math.sin(endAz), 0, -Math.cos(endAz)), rgt = new THREE.Vector3(Math.cos(endAz), 0, -Math.sin(endAz));
     const sunH = new THREE.Vector3();   // matahari terbit di latar, sedikit ke kanan (di HP hampir tengah)
     const az0 = KEYS.points[0].x, vd0 = new THREE.Vector3(-Math.sin(az0), 0, -Math.cos(az0)), rgt0 = new THREE.Vector3(Math.cos(az0), 0, -Math.sin(az0));
@@ -544,7 +611,7 @@ export default {
     moon.position.copy(moonLightDir).multiplyScalar(90);
     const cam = { p: state.p };
     const toCam = gsap && !state.reduce ? gsap.quickTo(cam, 'p', { duration: .9, ease: 'power3.out' }) : null;
-    const k3 = new THREE.Vector3(), lk = new THREE.Vector3(), sd = new THREE.Vector3(), tmpC = new THREE.Color();
+    const sd = new THREE.Vector3(), tmpC = new THREE.Color();
     let lastTarget = -1;
 
     /* ---------- kualitas otomatis: fps < 40 pada 2 detik pertama → pindah ke Lentera HD;
@@ -575,11 +642,7 @@ export default {
       renderer.setSize(w, h, false); composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h);
       bloom.resolution.set(w*Math.max(t.bloom, .25), h*Math.max(t.bloom, .25));
       renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%';
-      camera.aspect = w/h;
-      /* teks di kiri-bawah: desktop → kubah di kanan; HP → kubah di tengah, di atas teks */
-      const wide = w >= 900;
-      camera.setViewOffset(wide ? w*1.34 : w, h*(wide ? 1.1 : 1.5), 0, h*(wide ? .06 : .3), w, h);
-      camera.updateProjectionMatrix();
+      framing(camera, w, h);
       lU.uScale.value = h*renderer.getPixelRatio()/2; starU.uPx.value = renderer.getPixelRatio();
     }
     applyTier();
@@ -590,11 +653,14 @@ export default {
       if (toCam){ if (p !== lastTarget){ toCam(p); lastTarget = p; } } else cam.p = p;
 
       /* kamera */
-      const cp = smooth(cam.p), aspect = st.w/st.h, far = aspect < 1 ? 1 + (1 - aspect)*1.25 : 1;
-      KEYS.getPoint(cp, k3); LOOK.getPoint(cp, lk);
-      const az = k3.x, el = k3.y, rad = k3.z*far;
-      camera.position.set(Math.sin(az)*Math.cos(el)*rad, Math.sin(el)*rad + 1.5, Math.cos(az)*Math.cos(el)*rad);
-      camera.lookAt(lk);
+      const aspect = st.w/st.h;
+      pose(camera, smooth(cam.p), st.w, st.h);
+
+      /* cadangan: vegetasi yang tetap terlalu dekat kamera mengecil halus (tidak pernah menyambar layar) */
+      for (const v of vegetation){
+        const d = v.o.position.distanceTo(camera.position), k = smooth((d - VEG_FADE[0])/(VEG_FADE[1] - VEG_FADE[0]));
+        v.o.scale.copy(v.base).multiplyScalar(Math.max(k, .001)); v.o.visible = k > .01;
+      }
 
       /* cahaya kursor mengikuti titik di lantai pelataran */
       cursorAmt += ((st.pointer.active ? 1 : 0) - cursorAmt)*(st.reduce ? 1 : .08);

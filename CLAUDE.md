@@ -37,6 +37,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Kubah & Qibli dari `assets/models/optimized/*.glb` (TRELLIS.2, Meshopt; `-mobile` untuk HP), dimuat malas; bangunan
   prosedural = layar sementara & cadangan bila gagal. Lentera dari `hero/lights3d.json` (editor `?hero=diorama&edit-lights`).
   Anggaran aset 3D: desktop ≤ 3 MB (sekarang 2,98 MB), HP 1,77 MB. HP lemah tidak membuka 3D dari preferensi tersimpan.
+  **Vegetasi wajib lewat `plant()`** (zona larangan): ditolak bila ≤ 12 unit dari jalur kamera (semua babak, 4 ukuran
+  layar), terlalu besar di layar, menutupi tepi layar, atau menimpa area teks; dicoba dipindah dulu, kalau gagal dibuang.
+  Cadangan: vegetasi yang < 15 unit dari kamera mengecil halus (hilang di 9). Laporan: `?hero=diorama&debug-veg`.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 
