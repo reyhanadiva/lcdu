@@ -22,8 +22,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
 - `hero/lentera-hd.js` — varian **default**: foto malam/fajar asli (`assets/hero/build/`, dari `tools/build-hero-images.py`),
   titik cahaya di `hero/spots.json` (editor: `?hero=lentera-hd&edit-spots`). Teks ditaruh di langit (`text: 'top'`).
+  Cahaya babak 2 harus **masuk akal** (keputusan pemilik): hanya di sumber nyata — jendela/pintu (w), lentera arkade (a),
+  tiang lampu/lentera tembok (l), lentera di tanah (g), lampu kota jauh (c) — dengan genangan cahaya di tanah, menyala
+  bergelombang dari Kubah ke luar. Jangan kembali ke titik acak yang melayang.
   `supports()` → false bila aset orientasi layar belum ada; `hero.js` lalu memakai Lentera lama (sekarang: landscape).
-- `hero/lentera.js` + `hero/scene2d.js` — varian 2D (canvas): ilustrasi Al-Aqsa malam & fajar, cahaya kontribusi.
+- `hero/lentera.js` + `hero/scene2d.js` — varian 2D lama: **tanpa tombol** (dihapus pemilik); hanya cadangan diam-diam di
+  layar melebar sampai foto HD wide siap, lalu boleh dihapus total.
 - `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`, `prep-model-textures.py`;
   Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,

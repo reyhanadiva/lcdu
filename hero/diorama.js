@@ -215,15 +215,15 @@ export default {
           float az = max(dot(normalize(vD.xz), normalize(sd.xz)), 0.);
           c += vec3(1., .5, .25)*pow(az, 5.)*(1. - smoothstep(-.05, .32, h))*.55*sunAmt;
           float s = max(dot(vD, sd), 0.);
-          c += vec3(1., .9, .7)*smoothstep(.9991, .9994, s)*16.*sunAmt;          // cakram
-          c += vec3(1., .62, .3)*(pow(s, 40.)*.9 + pow(s, 8.)*.14)*sunAmt;     // halo
+          c += vec3(1., .88, .66)*smoothstep(.9991, .9994, s)*11.*sunAmt;          // cakram
+          c += vec3(1., .62, .3)*(pow(s, 40.)*.55 + pow(s, 8.)*.07)*sunAmt;     // halo
           vec3 md = normalize(moonDir); float m = dot(vD, md);
           float crescent = smoothstep(.99955, .99975, m)*(1. - smoothstep(.99955, .99975, dot(vD, normalize(md + vec3(.006, .004, 0.)))));
           c += vec3(.92, .95, 1.)*crescent*3.*moonAmt + vec3(.35, .45, .8)*pow(max(m, 0.), 300.)*.35*moonAmt;   // bulan sabit + pendar
           gl_FragColor = vec4(c, 1.); }`
     }));
     scene.add(sky);
-    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#3558A8'), hex3('#D98C7E'), hex3('#F7B77C')] };
+    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#2F4C94'), hex3('#C27C78'), hex3('#E9A06E')] };   // fajar dibuat lebih dalam supaya tidak memutih
 
     /* bintang berkelip (shader titik) */
     const starN = 1600, sp = [], sph = [];
@@ -529,9 +529,9 @@ export default {
 
     /* ---------- palet waktu ---------- */
     const P = {
-      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .55],
-      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 2.1], fog: [C('#0b1236'), C('#e2a985')], fogD: [.0115, .0055],
-      ground: [C('#2c2f52'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#ffbf8a')],
+      hemiSky: [C('#3b4f9e'), C('#ffd2a8')], hemiGround: [C('#141a3a'), C('#5c4334')], hemiI: [.15, .42],
+      sunCol: [C('#8ea6ff'), C('#ffb46b')], sunI: [.05, 1.75], fog: [C('#0b1236'), C('#b98274')], fogD: [.0115, .0048],
+      ground: [C('#2c2f52'), C('#9c7d5a')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#d99a7a')],
     };
 
     /* ---------- kamera: tiga titik kunci, satu per babak, jalur pendek ---------- */
@@ -619,10 +619,10 @@ export default {
       lerpC(P.sunCol[0], P.sunCol[1], dawn, sun.color); sun.intensity = lerp(P.sunI[0], P.sunI[1], dawn);
       if (dawn < .02) sun.position.set(-30, 50, -25); else sun.position.copy(sd).setY(Math.max(sd.y, .12)).normalize().multiplyScalar(90);
       lerpC(P.fog[0], P.fog[1], dawn, scene.fog.color); scene.fog.density = lerp(P.fogD[0], P.fogD[1], dawn);
-      lerpC(P.haze[0], P.haze[1], dawn, hazeU.uCol.value); hazeU.uOp.value = .25 + dawn*.3;
+      lerpC(P.haze[0], P.haze[1], dawn, hazeU.uCol.value); hazeU.uOp.value = .25 - dawn*.08;
       lerpC(P.ground[0], P.ground[1], dawn, ground.material.color);
-      renderer.toneMappingExposure = lerp(.92, .74, dawn);
-      const envI = lerp(.12, .55, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
+      renderer.toneMappingExposure = lerp(.92, .64, dawn);
+      const envI = lerp(.12, .42, dawn) + lit*.06; mats.forEach(m => m.envMapIntensity = envI);
 
       /* jendela: sebagian sudah menyala hangat sejak awal; lentera menyala bersama babak 2, meredup saat fajar */
       const win = Math.max(.4, lit)*(1 - dawn*.8), flick = 1 + (st.reduce ? 0 : Math.sin(time*7.3)*.03 + Math.sin(time*13.1)*.02);
@@ -632,7 +632,7 @@ export default {
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
       lU.uLit.value = lit; lU.uOp.value = 1 - dawn*.6; lU.uTime.value = time;
-      bloom.strength = lerp(.62, .32, dawn); bloom.threshold = lerp(.8, .95, dawn);
+      bloom.strength = lerp(.62, .2, dawn); bloom.threshold = lerp(.8, 1.05, dawn);
 
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
     }

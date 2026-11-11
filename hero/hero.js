@@ -88,7 +88,8 @@ async function load(name, auto = false) {
   if (current) { current.destroy(); current = null; }
   holder.innerHTML = '';
   hero.dataset.text = mod.default.text || 'bottom';
-  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === name));
+  /* Lentera lama tidak punya tombol lagi; ia hanya pengganti Lentera HD di layar melebar sampai foto HD wide siap */
+  sw.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === (name === 'lentera' ? 'lentera-hd' : name)));
   current = mod.default.mount(holder, state);
   currentMod = mod.default; currentName = name;
 }
@@ -120,5 +121,6 @@ document.addEventListener('visibilitychange', () => { state.visible = !document.
 
 let first = new URL(location.href).searchParams.get('hero');
 if (!first) { try { first = localStorage.getItem('lcdu-hero'); } catch (e) {} if (first === 'diorama' && weakDevice) first = DEFAULT; }
+if (first === 'lentera') first = DEFAULT;   // pilihan lama yang tersimpan → Lentera HD
 resize(); readScroll();
 load(first || DEFAULT).then(start);

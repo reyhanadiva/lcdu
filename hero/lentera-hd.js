@@ -1,7 +1,8 @@
 /* Varian Lentera HD — foto asli malam & fajar yang sejajar (assets/hero/build, dibuat oleh tools/build-hero-images.py).
    Babak 1: malam penuh layar, bintang di foto berkelip halus.
-   Babak 2: ratusan lentera menyala bertahap (posisi di hero/spots.json); tiap lentera menyingkap foto fajar di sekitarnya
-            lewat masker lembut beresolusi rendah, plus pendar hangat bertekstur. Padam lagi saat scroll naik.
+   Babak 2: lampu menyala di sumber yang masuk akal (hero/spots.json: jendela, lentera arkade, tiang lampu, lentera jalan,
+            rumah di bukit), bergelombang dari Kubah ke luar — seperti ilmu yang menyebar. Tiap lampu menyingkap warna fajar
+            di sekitarnya lewat masker lembut beresolusi rendah dan memberi genangan cahaya di tanah. Padam lagi saat scroll naik.
    Babak 3: fajar menyapu dari arah matahari (bukan crossfade), haze hangat, sinar halus.
    Kursor/jari = cahaya lembut yang menyingkap fajar. Tanpa klik, tanpa parallax. ?edit-spots membuka editor titik cahaya. */
 
@@ -13,10 +14,20 @@ const WEBP = 'data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUA
 
 /* per orientasi (koordinat relatif gambar): titik fokus cover (kubah), matahari di foto fajar, garis cakrawala */
 const ART = {
-  tall: { focus: [.556, .3], sun: [.845, .602], horizon: .63 },
-  wide: { focus: [.72, .4], sun: [.94, .39], horizon: .45 },   // perkiraan; periksa ulang saat night-wide-v2 tersedia
+  tall: { focus: [.556, .3], sun: [.845, .602], horizon: .63, origin: [.556, .71] },
+  wide: { focus: [.72, .4], sun: [.94, .39], horizon: .45, origin: [.72, .5] },   // perkiraan; periksa ulang saat night-wide-v2 tersedia
 };
 const MASK_Q = .25;   // resolusi masker = 1/4 kanvas
+/* jenis titik cahaya (kolom ke-4 di spots.json):
+   w jendela/pintu · a lentera gantung di arkade · l tiang lampu/lentera tembok · g lentera rendah di tanah · c lampu kota jauh
+   reveal = besar area fajar yang tersingkap, pool = genangan cahaya di tanah (lebar, tinggi, jarak ke bawah) */
+const KINDS = {
+  w: { label: 'Jendela / pintu', reveal: .9, glow: [.45, .62], core: 0, pool: null, flicker: .04 },
+  a: { label: 'Lentera arkade', reveal: .7, glow: [.85, .85], core: .3, pool: [1.5, .5, .95], flicker: .14 },
+  l: { label: 'Tiang lampu / lentera tembok', reveal: .55, glow: [.8, .8], core: .28, pool: [1.7, .55, 1.05], flicker: .1 },
+  g: { label: 'Lentera di tanah', reveal: .5, glow: [.6, .6], core: .24, pool: [1.4, .5, .1], flicker: .14 },
+  c: { label: 'Lampu kota jauh', reveal: 0, glow: [.22, .22], core: 0, pool: null, flicker: .05 },
+};
 
 const smooth = t => { t = Math.min(1, Math.max(0, t)); return t*t*(3 - 2*t); };
 const orientOf = st => st.h >= st.w ? 'tall' : 'wide';
@@ -112,7 +123,12 @@ export default {
       if (dawn) dctx.drawImage(dawn, view.ox, view.oy, dw, dh);
       sun = toScreen(art.sun); horizonY = view.oy + art.horizon*dh;
       base = dw*.032;
-      spots = ((data && data[orient]) || []).map(sp => { const q = toScreen(sp); return [q[0], q[1], sp[2] || 1]; }).filter(q => q[0] > -40 && q[0] < W + 40 && q[1] > -40 && q[1] < H + 40);
+      /* urutan menyala: dari Kubah ke luar (jarak di gambar), sedikit acak supaya tidak seperti cincin sempurna */
+      const o = art.origin;
+      spots = ((data && data[orient]) || [])
+        .map((sp, i) => { const q = toScreen(sp); return [q[0], q[1], sp[2] || 1, KINDS[sp[3]] ? sp[3] : 'l', Math.hypot(sp[0] - o[0], (sp[1] - o[1])*1.4) + ((i*7919) % 97)/97*.05]; })
+        .filter(q => q[0] > -40 && q[0] < W + 40 && q[1] > -40 && q[1] < H + 40)
+        .sort((a, b) => a[4] - b[4]);
       findStars();
       /* butiran film hanya bila foto tampil lebih besar dari resolusi aslinya (layar retina) */
       grain.hidden = s*(devicePixelRatio || 1)/DPR <= 1.05;
@@ -176,8 +192,10 @@ export default {
         }
         const k = Math.ceil(lit);
         for (let i = 0; i < k && i < n; i++){
-          const s = spots[i], a = Math.min(1, lit - i), r = base*s[2]*(.55 + .45*a);
-          mctx.globalAlpha = a*(1 - dawnT*.5); mctx.drawImage(MASK, (s[0] - r)*q, (s[1] - r)*q, r*2*q, r*2*q);
+          const s = spots[i], K = KINDS[s[3]], a = Math.min(1, lit - i), b = base*s[2];
+          mctx.globalAlpha = a*(1 - dawnT*.5);
+          if (K.reveal){ const r = b*K.reveal; mctx.drawImage(MASK, (s[0] - r)*q, (s[1] - r*1.15)*q, r*2*q, r*2.3*q); }
+          if (K.pool){ const rx = b*K.pool[0], ry = b*K.pool[1], cy = s[1] + b*K.pool[2]; mctx.drawImage(MASK, (s[0] - rx)*q, (cy - ry)*q, rx*2*q, ry*2*q); }
         }
         if (pa){ const r = Math.min(W, H)*.22; mctx.globalAlpha = .85; mctx.drawImage(MASK, (lx - r)*q, (ly - r)*q, r*2*q, r*2*q); }
         mctx.globalAlpha = 1;
@@ -188,13 +206,16 @@ export default {
         }
       }
 
-      /* pendar lentera: hangat, berkedip pelan, meredup saat fajar */
+      /* cahaya lampu: pendar di sumbernya, titik terang untuk lentera, genangan hangat di tanah; meredup saat fajar */
       ctx.globalCompositeOperation = 'lighter';
       const fade = 1 - dawnT*.85, k = Math.ceil(lit);
       for (let i = 0; i < k && i < n; i++){
-        const s = spots[i], a = Math.min(1, lit - i), pop = a < 1 ? 1 + (1 - a)*.6 : 1;
-        const fl = st.reduce ? 1 : .86 + .14*Math.sin(t*(2.6 + (i % 5)*.3) + i*1.7);
-        const r = base*.55*s[2]*pop; ctx.globalAlpha = a*fade*fl*.85; ctx.drawImage(GLOW, s[0] - r, s[1] - r, r*2, r*2);
+        const s = spots[i], K = KINDS[s[3]], a = Math.min(1, lit - i), b = base*s[2];
+        const fl = st.reduce ? 1 : 1 - K.flicker + K.flicker*Math.sin(t*(2.6 + (i % 5)*.3) + i*1.7);
+        const A = a*fade*fl;
+        if (K.pool){ const rx = b*K.pool[0], ry = b*K.pool[1]; ctx.globalAlpha = A*.3; ctx.drawImage(GLOW, s[0] - rx, s[1] + b*K.pool[2] - ry, rx*2, ry*2); }
+        const gx = b*K.glow[0], gy = b*K.glow[1]; ctx.globalAlpha = A*(s[3] === 'w' ? .7 : .4); ctx.drawImage(GLOW, s[0] - gx, s[1] - gy, gx*2, gy*2);
+        if (K.core){ const c = b*K.core; ctx.globalAlpha = A; ctx.drawImage(GLOW, s[0] - c, s[1] - c, c*2, c*2); }
       }
       if (pa){ const r = Math.min(W, H)*.2; ctx.globalAlpha = .32*(1 - dawnT*.5); ctx.drawImage(GLOW, lx - r, ly - r, r*2, r*2); }
 
@@ -219,7 +240,8 @@ export default {
       document.getElementById('hero').classList.add('hd-editing');
       const layer = document.createElement('div'); layer.className = 'hd-edit-layer'; holder.appendChild(layer);
       const panel = document.createElement('div'); panel.className = 'hd-edit-panel';
-      panel.innerHTML = '<b>Editor titik cahaya</b><span class="hd-edit-info"></span><span>Klik untuk menambah titik, klik titik untuk menghapus.</span>' +
+      panel.innerHTML = '<b>Editor titik cahaya</b><span class="hd-edit-info"></span><span>Pilih jenis, lalu klik untuk menambah titik; klik titik untuk menghapus.</span>' +
+        '<label>Jenis <select class="hd-edit-kind">' + Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join('') + '</select></label>' +
         '<div><button type="button" data-a="copy">Salin JSON</button> <button type="button" data-a="reset">Kembalikan ke berkas</button></div><span class="hd-edit-msg" role="status"></span>';
       document.body.appendChild(panel);
       const msg = panel.querySelector('.hd-edit-msg'), info = panel.querySelector('.hd-edit-info');
@@ -230,7 +252,7 @@ export default {
         list().forEach((sp, i) => {
           const [x, y] = toScreen(sp), b = document.createElement('button');
           b.type = 'button'; b.className = 'hd-dot'; b.title = 'Hapus titik ' + (i + 1); b.style.left = x/DPR + 'px'; b.style.top = y/DPR + 'px';
-          b.style.setProperty('--s', sp[2] || 1);
+          b.style.setProperty('--s', sp[2] || 1); b.dataset.kind = sp[3] || 'l'; b.title = `${(KINDS[sp[3]] || KINDS.l).label} — klik untuk menghapus`;
           b.addEventListener('click', e => { e.stopPropagation(); list().splice(i, 1); changed(); });
           layer.appendChild(b);
         });
@@ -240,7 +262,7 @@ export default {
       layer.addEventListener('click', e => {
         if (!view) return;
         const r = holder.getBoundingClientRect(), x = (e.clientX - r.left)*DPR, y = (e.clientY - r.top)*DPR;
-        list().push([+((x - view.ox)/view.dw).toFixed(4), +((y - view.oy)/view.dh).toFixed(4), 1]); changed();
+        list().push([+((x - view.ox)/view.dw).toFixed(4), +((y - view.oy)/view.dh).toFixed(4), 1, panel.querySelector('.hd-edit-kind').value]); changed();
       });
       panel.addEventListener('click', async e => {
         const a = e.target.dataset && e.target.dataset.a; if (!a) return;

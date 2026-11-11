@@ -4,87 +4,57 @@
 Pemakaian:
     python3 tools/gen-spots.py tall   # dari assets/hero/night-tall.png
 
-Butuh: numpy, Pillow.  Hasilnya titik awal saja; rapikan sendiri di browser dengan ?edit-spots,
+Butuh: Pillow.  Hasilnya titik awal saja; rapikan sendiri di browser dengan ?edit-spots,
 lalu tempel JSON hasil "Salin JSON" ke hero/spots.json.
 
-Koordinat relatif terhadap gambar (0..1): [x, y, ukuran]. Ukuran 1 = lentera biasa, < 1 = lebih kecil
-(jendela jauh, lampu kota). Urutan di berkas = urutan menyala saat scroll.
-Area per gambar ditulis manual di AREAS (koordinat piksel gambar asli), lalu disaring dengan masker:
-langit dan kubah emas tidak pernah diberi titik.
+Koordinat relatif terhadap gambar (0..1): [x, y, ukuran, jenis]. Titik hanya ditaruh di sumber cahaya yang masuk
+akal (jendela, pintu, lentera arkade, tiang lampu, lentera jalan, rumah di bukit), ditulis manual di AREAS.
 """
 import json
 import os
-import random
 import sys
 
-import numpy as np
 from PIL import Image
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
-# (nama, kotak x0,y0,x1,y1 dalam piksel gambar 1024x1536, jumlah titik, ukuran, pola)
+# Jenis titik (kolom ke-4 di spots.json) menentukan cara cahaya digambar di hero/lentera-hd.js:
+#   w = jendela/pintu (pendar hangat di bukaan), a = lentera gantung di arkade (titik + genangan cahaya di bawahnya),
+#   l = tiang lampu / lentera tembok (titik + genangan di tanah), g = lentera rendah di tanah, c = lampu kota jauh (kecil)
+# Pola: ('row', (x0, y, x1), n)  deret mendatar | ('line', (x0, y0, x1, y1), n) garis | ('pts', [(x, y), ...])
+# Koordinat piksel gambar tall 1024x1536 (lihat gambar berkisi saat menyetel).
 AREAS = {
     'tall': [
-        ('jendela kubah (drum)', (468, 985, 676, 1010), 9, .55, 'row'),
-        ('jendela segi delapan', (352, 1095, 792, 1115), 16, .65, 'row'),
-        ('pintu & serambi', (480, 1130, 590, 1175), 4, .8, 'row'),
-        ('jendela Masjid Qibli', (78, 1060, 300, 1080), 8, .55, 'row'),
-        ('arkade kiri', (165, 1135, 320, 1200), 4, .8, 'row'),
-        ('arkade kanan', (828, 1135, 940, 1195), 3, .8, 'row'),
-        ('pelataran', (60, 1175, 1000, 1255), 70, 1.0, 'scatter'),
-        ('tembok', (0, 1205, 640, 1330), 45, .8, 'scatter'),
-        ('kota tua kiri', (0, 1235, 230, 1520), 40, .6, 'scatter'),
-        ('lampu kota di bukit', (0, 940, 1024, 1000), 30, .4, 'scatter'),
-        ('jalan di antara zaitun', (250, 1440, 1000, 1520), 25, .9, 'scatter'),
+        ('jendela drum', 'w', .6, ('row', (478, 1012, 668), 7)),
+        ('jendela segi delapan', 'w', .7, ('row', (352, 1100, 792), 14)),
+        ('pintu Kubah', 'w', 1.5, ('pts', [(534, 1148)])),
+        ('jendela Masjid Qibli', 'w', .6, ('row', (118, 1074, 288), 6)),
+        ('lentera arkade kiri', 'a', .9, ('pts', [(190, 1132), (232, 1132), (274, 1132)])),
+        ('lentera arkade kanan', 'a', .9, ('pts', [(862, 1132), (892, 1132), (920, 1132)])),
+        ('tiang lampu pelataran', 'l', 1.0, ('pts', [(60, 1186), (118, 1180), (352, 1240), (430, 1244), (650, 1246), (730, 1242), (962, 1190)])),
+        ('lentera puncak tembok', 'l', .75, ('line', (40, 1203, 580, 1252), 9)),
+        ('jendela kota tua', 'w', .45, ('pts', [(12, 1372), (40, 1368), (68, 1366), (18, 1452), (52, 1450), (84, 1306), (30, 1308)])),
+        ('lentera jalan zaitun', 'g', 1.0, ('pts', [(300, 1470), (470, 1502), (565, 1452), (760, 1478), (900, 1468), (995, 1452)])),
+        ('lampu rumah di bukit', 'c', .4, ('pts', [(860, 1000), (900, 992), (932, 985), (958, 978), (988, 972), (1010, 990), (760, 1004), (700, 1010), (115, 1015), (60, 1025), (300, 1018), (350, 1010)])),
     ],
 }
-
-
-def masks(img):
-    a = np.asarray(img.convert('RGB'), dtype=np.float32) / 255
-    r, g, b = a[..., 0], a[..., 1], a[..., 2]
-    gold = (r > b * 1.2) & (g > b * 1.05) & (r > .12)          # kubah emas (redup di malam hari)
-    lum = a @ np.array([.299, .587, .114], dtype=np.float32)
-    gy = np.abs(np.diff(lum, axis=0, prepend=lum[:1]))
-    # langit: dari atas sampai baris pertama yang cukup "ramai" per kolom
-    sky = np.zeros(lum.shape, bool)
-    busy = gy > .035
-    for x in range(lum.shape[1]):
-        ys = np.nonzero(busy[int(lum.shape[0] * .45):, x])[0]
-        top = int(lum.shape[0] * .45) + (ys[0] if len(ys) else lum.shape[0])
-        sky[:top, x] = True
-    return gold, sky
 
 
 def main():
     kind = sys.argv[1] if len(sys.argv) > 1 else 'tall'
     img = Image.open(os.path.join(ROOT, 'assets', 'hero', f'night-{kind}.png'))
     W, H = img.size
-    gold, sky = masks(img)
-    rnd = random.Random(7)
     spots = []
-    for name, (x0, y0, x1, y1), n, size, mode in AREAS[kind]:
-        got = []
-        tries = 0
-        while len(got) < n and tries < n * 60:
-            tries += 1
-            if mode == 'row':
-                x = x0 + (x1 - x0) * (len(got) + .5) / n
-                y = rnd.uniform(y0, y1)
-            else:
-                x, y = rnd.uniform(x0, x1), rnd.uniform(y0, y1)
-            xi, yi = int(min(W - 1, x)), int(min(H - 1, y))
-            if gold[yi, xi] or (sky[yi, xi] and 'bukit' not in name):
-                if mode == 'row':
-                    got.append(None)                       # lewati slot ini, jaga jarak antar jendela
-                continue
-            # jarak minimum supaya tidak menumpuk
-            if mode == 'scatter' and any((x - p[0]) ** 2 + (y - p[1]) ** 2 < (22 * size) ** 2 for p in got if p):
-                continue
-            got.append((x, y))
-        spots += [[round(p[0] / W, 4), round(p[1] / H, 4), size] for p in got if p]
-        print(f'{name:24} {sum(1 for p in got if p):3d} titik')
-    rnd.shuffle(spots)                                     # urutan menyala acak, merata di seluruh gambar
+    for name, kind_, size, (mode, geo, *rest) in AREAS[kind]:
+        if mode == 'pts':
+            pts = geo
+        elif mode == 'row':
+            x0, y, x1 = geo; n = rest[0]; pts = [(x0 + (x1 - x0)*(i + .5)/n, y) for i in range(n)]
+        else:
+            x0, y0, x1, y1 = geo; n = rest[0]; pts = [(x0 + (x1 - x0)*i/(n - 1), y0 + (y1 - y0)*i/(n - 1)) for i in range(n)]
+        spots += [[round(x/W, 4), round(y/H, 4), size, kind_] for x, y in pts]
+        print(f'{name:24} {len(pts):3d} titik ({kind_})')
+    # urutan menyala dihitung di browser (gelombang dari Kubah ke luar), jadi urutan di berkas tidak penting
     path = os.path.join(ROOT, 'hero', 'spots.json')
     data = json.load(open(path)) if os.path.exists(path) else {}
     data.setdefault('wide', [])

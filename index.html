@@ -186,6 +186,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hd-edit-layer{position:absolute;inset:0;cursor:crosshair}
 .hd-dot{position:absolute;width:calc(14px*var(--s,1) + 6px);aspect-ratio:1;translate:-50% -50%;border-radius:50%;border:2px solid #FFC21A;background:rgba(255,194,26,.25);padding:0;cursor:pointer}
 .hd-dot:hover{background:#FF7A6E;border-color:#fff}
+.hd-dot[data-kind="w"]{border-color:#7FC8FF}.hd-dot[data-kind="a"]{border-color:#FF9F43}.hd-dot[data-kind="g"]{border-color:#9BE15D}.hd-dot[data-kind="c"]{border-color:#C9B6FF}
+.hd-edit-panel select{font:inherit;padding:4px 6px;border-radius:8px;margin-left:6px}
 .hd-edit-panel{position:fixed;right:16px;top:16px;z-index:300;display:grid;gap:8px;max-width:280px;padding:14px 16px;border-radius:14px;background:rgba(10,14,40,.92);color:#F3F5FC;font-size:.85rem;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
 .hd-edit-panel button{border:0;border-radius:999px;padding:8px 12px;font-weight:700;background:#F2C14E;color:#2A1E00;cursor:pointer}
 .hd-edit-panel button[data-a="reset"]{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
@@ -504,7 +506,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <div class="hero-switch" id="hero-switch" role="group" aria-label="Bandingkan varian hero">
   <span>Hero</span>
   <button type="button" data-v="lentera-hd" aria-label="Lentera HD"><span class="long">Lentera </span>HD</button>
-  <button type="button" data-v="lentera">Lentera</button>
   <button type="button" data-v="diorama">3D</button>
 </div>
 
