@@ -5,10 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>LCDU · Kelas Bahasa Arab &amp; Inggris</title>
 <meta name="description" content="Kelas Bahasa Inggris dan Arab online dari LCDU. Rp100.000 per term, sisanya donasi sesuai kesanggupan.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Reem+Kufi:wght@500;700&family=Unbounded:wght@500;700;800&display=swap">
+<!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
+<link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Fraunces (judul), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab) — semua OFL, lihat fonts/README.md */
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:600 700;font-display:swap;src:url(fonts/fraunces-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/plus-jakarta-sans-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Reem Kufi';font-style:normal;font-weight:500 700;font-display:swap;src:url(fonts/reem-kufi-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Reem Kufi';font-style:normal;font-weight:500 700;font-display:swap;src:url(fonts/reem-kufi-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
+@font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 body{margin:0}
 /* Konsep "Dua Aksara": halaman bergerak di antara dua arah tulisan. Biru = Inggris (LTR), hijau = Arab (RTL). Kertas dingin sebagai ruang tenang di antaranya. */
 :root{
@@ -28,7 +35,7 @@ body{margin:0}
   --good:#0B7A57;
   --bad:#C2372B;
 
-  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-display:"Fraunces",Georgia,"Times New Roman",serif;
   --f-body:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-ar-display:"Reem Kufi","Noto Naskh Arabic","Geeza Pro",serif;
   --f-ar:"Noto Naskh Arabic","Geeza Pro","Arabic Typesetting",serif;
@@ -102,7 +109,7 @@ button{font:inherit;color:inherit}
 main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px)}
 .nav .wrap{display:flex;justify-content:center}
 .nav-bar{pointer-events:auto;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 18px;border-radius:999px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4);box-shadow:0 1px 0 var(--line) inset,0 10px 30px -12px rgba(16,26,61,.35);width:100%;max-width:880px;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:800;letter-spacing:.04em;font-size:1rem}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--f-display);font-weight:700;letter-spacing:.04em;font-size:1rem}
 .brand-mark{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(90deg,var(--lazuardi) 50%,var(--zamrud) 50%);color:#fff;font-size:.8rem}
 .nav-links{display:none;gap:2px;list-style:none;margin:0;padding:0}
 .nav-links a{display:block;padding:.55em .85em;border-radius:999px;text-decoration:none;font-weight:600;font-size:.92rem;color:var(--ink-soft);transition:color .2s,background-color .2s}
@@ -124,11 +131,11 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-copy{position:relative;height:100%;pointer-events:none}
 /* identitas tetap di pojok kiri atas hero (bukan tautan) */
 .hero-id{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 18px);margin:0;display:flex;align-items:center;gap:10px;text-shadow:0 1px 12px rgba(4,8,32,.6)}
-.hero-id b{display:block;font-family:var(--f-display);font-weight:800;letter-spacing:.06em;font-size:1rem;line-height:1.1}
+.hero-id b{display:block;font-family:var(--f-display);font-weight:700;letter-spacing:.05em;font-size:1rem;line-height:1.1}
 .hero-id small{display:block;font-size:.72rem;font-weight:600;color:var(--hero-soft);letter-spacing:.01em}
 @media (min-width:720px){.hero-id{left:max(40px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 26px)}}
 /* teks babak: memudar di tempat (tanpa geser). Dua usulan tata letak: a = kiri-bawah, b = tengah-bawah */
-.beat{--bottom:calc(env(safe-area-inset-bottom,0px) + clamp(120px,17vh,168px));position:absolute;bottom:var(--bottom);margin:0;opacity:0;font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,1.1rem + 3.4vw,4.4rem);line-height:1.02;letter-spacing:-.035em;text-shadow:0 1px 2px rgba(4,8,32,.45),0 2px 28px rgba(4,8,32,.6);text-wrap:balance;will-change:opacity}
+.beat{--bottom:calc(env(safe-area-inset-bottom,0px) + clamp(120px,17vh,168px));position:absolute;bottom:var(--bottom);margin:0;opacity:0;font-family:var(--f-display);font-weight:600;font-size:clamp(2.2rem,1.3rem + 3.8vw,4.9rem);line-height:1.04;letter-spacing:-.015em;text-shadow:0 1px 2px rgba(4,8,32,.45),0 2px 28px rgba(4,8,32,.6);text-wrap:balance;will-change:opacity}
 .beat-0{opacity:1}
 .hero[data-layout="a"] .beat{left:max(16px,env(safe-area-inset-left,0px));right:max(16px,env(safe-area-inset-right,0px))}
 @media (min-width:720px){.hero[data-layout="a"] .beat{left:max(40px,env(safe-area-inset-left,0px));right:auto;width:min(48vw,760px)}}
@@ -218,7 +225,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cost{display:grid;gap:clamp(40px,6vw,80px);align-items:center}
 @media (min-width:900px){.cost{grid-template-columns:1fr 1fr}}
 .cost-copy{display:grid;gap:20px}
-.cost-big{font-family:var(--f-display);font-weight:800;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.05em;color:var(--lazuardi)}
+.cost-big{font-family:var(--f-display);font-weight:700;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.03em;color:var(--lazuardi)}
 .cost-big small{display:block;font-size:.22em;letter-spacing:0;font-weight:600;color:var(--ink-soft);margin-top:.6em;font-family:var(--f-body)}
 .receipt-wrap{display:grid;justify-items:center}
 .printer{width:min(100%,400px);height:22px;border-radius:12px;background:var(--ink);position:relative;z-index:2;box-shadow:0 10px 20px -10px rgba(0,0,0,.5)}
@@ -256,7 +263,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (min-width:900px){.cls{grid-template-columns:1fr 1fr}.cls[data-lang="ar"] .cls-visual{order:2}}
 .cls-visual{border-radius:var(--r-lg);background:var(--c);min-height:340px;position:relative;overflow:hidden;display:grid;place-items:center;transition:background-color .6s}
 .cls-visual::before{content:"";position:absolute;inset:0;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='white' stroke-width='1.2'%3E%3Crect x='18' y='18' width='36' height='36'/%3E%3Crect x='18' y='18' width='36' height='36' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='9'/%3E%3C/g%3E%3C/svg%3E");background-size:72px}
-.cls-glyph{position:relative;font-family:var(--f-display);font-weight:800;font-size:clamp(7rem,18vw,13rem);line-height:1;color:var(--on-color)}
+.cls-glyph{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(7rem,18vw,13rem);line-height:1;color:var(--on-color)}
 .cls[data-lang="ar"] .cls-glyph{font-family:var(--f-ar-display);font-weight:700}
 .cls-photo-note{position:absolute;left:16px;bottom:16px;font-size:.78rem;color:var(--on-color-soft);background:rgba(0,0,0,.18);padding:6px 10px;border-radius:999px}
 .cls-body{display:grid;gap:22px;align-content:start;min-width:0}
@@ -306,7 +313,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .flow-step{display:grid;grid-template-columns:64px 1fr;gap:18px;padding-bottom:32px;position:relative}
 .flow-step::before{content:"";position:absolute;left:31px;top:58px;bottom:6px;width:2px;background:var(--line)}
 .flow-step:last-child::before{display:none}
-.flow-num{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.3rem;background:var(--paper);color:var(--lazuardi);box-shadow:0 0 0 2px var(--line) inset}
+.flow-num{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:1.4rem;background:var(--paper);color:var(--lazuardi);box-shadow:0 0 0 2px var(--line) inset}
 .flow-step:nth-child(even) .flow-num{color:var(--zamrud)}
 .flow-step h3{font-family:var(--f-display);font-size:var(--step-1);font-weight:700;margin-top:14px;margin-bottom:6px}
 .flow-step p{color:var(--ink-soft);max-width:44ch}
@@ -364,7 +371,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .member[data-g~="ar"] .portrait{--c:var(--zamrud)}
 .member[data-g="mgmt"] .portrait{--c:var(--ink)}
 .portrait::before{content:"";position:absolute;inset:0;opacity:.14;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='white' stroke-width='1.6'%3E%3Crect x='18' y='18' width='36' height='36'/%3E%3Crect x='18' y='18' width='36' height='36' transform='rotate(45 36 36)'/%3E%3C/g%3E%3C/svg%3E");background-size:48px}
-.portrait .ini{position:relative;font-family:var(--f-display);font-weight:800;font-size:clamp(2.4rem,5vw,3.4rem);color:var(--on-color);letter-spacing:-.04em}
+.portrait .ini{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(2.4rem,5vw,3.4rem);color:var(--on-color);letter-spacing:-.02em}
 .portrait .certs{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap;gap:6px;transform:translateY(10px);opacity:0;transition:opacity .3s,transform .3s var(--ease)}
 .portrait .certs span{background:var(--surface);color:var(--ink);font-size:.72rem;font-weight:700;padding:4px 8px;border-radius:999px}
 .member:hover .certs,.member:focus-within .certs{opacity:1;transform:none}
@@ -411,7 +418,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .foot-links a{text-decoration:none;font-weight:600}
 .foot-links a:hover{text-decoration:underline}
 .foot h4{margin:0 0 14px;font-size:var(--step--1);color:var(--ink-soft)}
-.wordmark{width:fit-content;font-family:var(--f-display);font-weight:800;font-size:clamp(4rem,22vw,18rem);line-height:.8;letter-spacing:-.06em;background:linear-gradient(90deg,var(--lazuardi) 0 50%,var(--zamrud) 50% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
+.wordmark{width:fit-content;font-family:var(--f-display);font-weight:700;font-size:clamp(4rem,22vw,18rem);line-height:.86;letter-spacing:-.04em;background:linear-gradient(90deg,var(--lazuardi) 0 50%,var(--zamrud) 50% 100%);-webkit-background-clip:text;background-clip:text;color:transparent;user-select:none}
 .legal{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;font-size:var(--step--1);color:var(--ink-soft)}
 
 /* ===== Mengambang ===== */

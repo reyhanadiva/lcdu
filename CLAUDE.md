@@ -45,9 +45,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun, motif keffiyeh × semangka di tepi bawah hero.
 - Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
 - Palet: biru Lazuardi (Inggris), hijau Zamrud (Arab), kuning Kunyit (aksi).
-- Font: woff2 di-host sendiri (subset Latin/Arab, `font-display: swap`, preload font utama), bukan CDN.
-  **Menunggu pilihan pemilik** (lihat `type-test.html`, hapus setelah dipilih): judul Latin (Fraunces / Instrument Serif /
-  Bricolage Grotesque / Unbounded), teks Plus Jakarta Sans, Arab Reem Kufi (judul) + Noto Naskh Arabic atau Amiri (teks).
+- Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
+  Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
+  preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
 - **Menunggu pilihan pemilik:** tata letak teks hero `?layout=a` (kiri-bawah) atau `?layout=b` (tengah-bawah);
   setelah dipilih, hapus parameter sementara di `hero/hero.js` dan CSS layout yang tidak dipakai.
 

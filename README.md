@@ -10,7 +10,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 - **Biru (Lazuardi)** = Bahasa Inggris
 - **Hijau (Zamrud)** = Bahasa Arab
 - **Kuning (Kunyit)** = aksi utama (daftar, cek level)
-- Font: Unbounded (display), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab)
+- Font (di-host sendiri, lihat `fonts/`): Fraunces (judul), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab)
 
 ## Section
 
