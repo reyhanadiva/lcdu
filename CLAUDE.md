@@ -40,6 +40,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   **Vegetasi wajib lewat `plant()`** (zona larangan): ditolak bila ≤ 12 unit dari jalur kamera (semua babak, 4 ukuran
   layar), terlalu besar di layar, menutupi tepi layar, atau menimpa area teks; dicoba dipindah dulu, kalau gagal dibuang.
   Cadangan: vegetasi yang < 15 unit dari kamera mengecil halus (hilang di 9). Laporan: `?hero=diorama&debug-veg`.
+  Elemen pendukung (hierarki detail: model utama > dekat kamera > jauh): zaitun (batang Tube bengkok + kartu daun
+  ter-instance), cemara (kartu tegak), rumput & semak, kota tua 6 modul InstancedMesh (jendela emissive prosedural),
+  qanatir & Kubah Rantai berkolom kapital, medan bukit ber-noise, kabut berlapis + pass grading/vignette. Semua tekstur
+  prosedural (0 KB aset). Palet dicocokkan ke `assets/models/source/extras/` (lembar acuan pemilik).
+  Anggaran: segitiga vegetasi ≤ 150 rb desktop (sekarang ±48 rb), HP ±40% (±18 rb). Draw call ±136 (dulu ±390).
+  Alat pengembang: `?debug-perf` (draw call, segitiga, waktu render; fallback otomatis mati), `?debug-cam=x,y,z,tx,ty,tz`.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 
