@@ -180,6 +180,37 @@ function archFrame(aw, ah, t, d){
   const g = new THREE.ExtrudeGeometry(s, { depth: d, bevelEnabled: false, curveSegments: 6 }); return g;
 }
 
+/* kolom klasik: alas (plinth + torus), batang sedikit mengecil, kapital (lonceng terbalik) + impost; puncak di y = h */
+function columnGeo(h, r, impostD){
+  const parts = [
+    new THREE.BoxGeometry(r*3.4, r*1.3, r*3.4).translate(0, r*.65, 0),
+    new THREE.CylinderGeometry(r*1.25, r*1.45, r*.6, 12).translate(0, r*1.6, 0),
+    new THREE.CylinderGeometry(r*.9, r, h - r*5.4, 12).translate(0, r*1.9 + (h - r*5.4)/2, 0),
+    new THREE.CylinderGeometry(r*1.15, r*.95, r*.25, 12).translate(0, h - r*3.5 + r*.125, 0),
+    new THREE.CylinderGeometry(r*1.9, r*1.05, r*1.6, 4, 1).rotateY(Math.PI/4).translate(0, h - r*2.45 - r*.4 + r*.8, 0),
+    new THREE.BoxGeometry(r*3.6, r*1.05, impostD).translate(0, h - r*.525, 0),
+  ];
+  return mergeGeometries(parts.map(g => g.toNonIndexed()));
+}
+/* lengkung runcing sebagai jalur: dari (x - a, 0) naik ke puncak (x, rise) lalu turun ke (x + a, 0) */
+function pointedCurve(path, x, a, rise, reverse){
+  if (!reverse){ path.quadraticCurveTo(x - a, rise*.92, x, rise); path.quadraticCurveTo(x + a, rise*.92, x + a, 0); }
+  else { path.quadraticCurveTo(x + a, rise*.92, x, rise); path.quadraticCurveTo(x - a, rise*.92, x - a, 0); }
+}
+/* spandrel arkade: tepi bawah = deretan lengkung runcing yang bertumpu di impost, tepi atas lurus. Bukan papan berlubang. */
+function arcadeGeo(centers, a, rise, H, depth){
+  const s = new THREE.Shape(), L = centers[0] - a - .14, R = centers[centers.length - 1] + a + .14;
+  s.moveTo(L, 0); centers.forEach(x => { s.lineTo(x - a, 0); pointedCurve(s, x, a, rise); }); s.lineTo(R, 0); s.lineTo(R, H); s.lineTo(L, H); s.lineTo(L, 0);
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: true, bevelThickness: .02, bevelSize: .02, bevelSegments: 1, curveSegments: 10 });
+  g.translate(0, 0, -depth/2); return g;
+}
+/* archivolt: cincin lengkung yang sedikit menonjol dari dinding (bingkai batu di setiap lengkung) */
+function archivoltGeo(x, a, rise, t, depth){
+  const s = new THREE.Shape(); s.moveTo(x - a - t, 0); pointedCurve(s, x, a + t, rise + t); s.lineTo(x + a, 0); pointedCurve(s, x, a, rise, true); s.lineTo(x - a - t, 0);
+  const g = new THREE.ExtrudeGeometry(s, { depth, bevelEnabled: false, curveSegments: 10 }); g.translate(0, 0, -depth/2); return g;
+}
+const nonIdx = g => g.index ? g.toNonIndexed() : g;
+
 function glowSprite(){
   const c = canvas(64, 64), g = c.getContext('2d'), rg = g.createRadialGradient(32, 32, 0, 32, 32, 32);
   rg.addColorStop(0, 'rgba(255,248,230,1)'); rg.addColorStop(.15, 'rgba(255,205,130,.95)'); rg.addColorStop(.45, 'rgba(255,160,80,.28)'); rg.addColorStop(1, 'rgba(255,140,60,0)');
@@ -444,23 +475,46 @@ export default {
     [[.16, 9.42], [.12, 9.85], [.09, 10.3]].forEach(b => add(dor, new THREE.SphereGeometry(b[0], 16, 12), goldMat, 0, b[1]));
     add(dor, new THREE.TorusGeometry(.28, .05, 8, 32, Math.PI*1.45), goldMat, 0, 10.85).rotation.z = Math.PI*.78;
 
-    /* ---------- Kubah Rantai (Qubbat al-Silsila) di timur ---------- */
+    /* ---------- Kubah Rantai (Qubbat al-Silsila) di timur: 11 kolom berkapital, lengkung tiap bentang, lis atap,
+       drum ubin segi enam, kubah timah ---------- */
     const chain = new THREE.Group(); chain.position.set(6.9, Y1, -4.2); scene.add(chain);
-    for (let i = 0; i < 11; i++){ const a = i/11*Math.PI*2; add(chain, colG, marbleMat, Math.sin(a)*1.05, .8, Math.cos(a)*1.05); }
-    add(chain, new THREE.CylinderGeometry(1.25, 1.25, .25, 11), stoneLight, 0, 1.72);
-    add(chain, new THREE.CylinderGeometry(.62, .7, .4, 6), tileMat, 0, 2.05);
-    add(chain, new THREE.SphereGeometry(.68, 32, 16, 0, Math.PI*2, 0, Math.PI/2), leadMat, 0, 2.25).scale.y = 1.1;
+    const CN = 11, CR = 1.05, chord = 2*CR*Math.sin(Math.PI/CN), CSP = 1.25;
+    add(chain, new THREE.CylinderGeometry(1.45, 1.55, .16, 22), stoneLight, 0, .08);
+    const chainCols = [], chainArch = [];
+    for (let i = 0; i < CN; i++){
+      const a = i/CN*Math.PI*2, b = (i + .5)/CN*Math.PI*2, ap = CR*Math.cos(Math.PI/CN);
+      chainCols.push(columnGeo(CSP, .065, .22).rotateY(a).translate(Math.sin(a)*CR, .16, Math.cos(a)*CR));
+      chainArch.push(nonIdx(arcadeGeo([0], chord/2 - .1, .42, .5, .2)).rotateY(b).translate(Math.sin(b)*ap, .16 + CSP, Math.cos(b)*ap));
+    }
+    add(chain, mergeGeometries(chainCols), marbleMat);
+    add(chain, mergeGeometries(chainArch), stoneLight);
+    add(chain, new THREE.CylinderGeometry(1.32, 1.24, .14, 22), stoneLight, 0, .16 + CSP + .57);
+    add(chain, new THREE.CylinderGeometry(.7, .78, .42, 6), tileMat, 0, .16 + CSP + .85);
+    add(chain, new THREE.CylinderGeometry(.82, .82, .07, 18), stoneLight, 0, .16 + CSP + 1.09);
+    add(chain, new THREE.SphereGeometry(.7, 32, 16, 0, Math.PI*2, 0, Math.PI/2), leadMat, 0, .16 + CSP + 1.12).scale.y = 1.1;
+    add(chain, new THREE.CylinderGeometry(.02, .035, .45, 6), goldMat, 0, .16 + CSP + 2.05);
 
-    /* ---------- qanatir: arkade di puncak tangga teras ---------- */
-    const qanG = archedWall(4.9, 1.25, .45, [-1.6, 0, 1.6], 1.25, 1.05, .02);
-    const qanatir = (x, z, ry, dir) => {
-      const g = new THREE.Group(); g.position.set(x, Y1, z); g.rotation.y = ry; scene.add(g);
-      for (let i = 0; i < 4; i++) add(g, colG, marbleMat, -2.4 + i*1.6, .8);
-      add(g, qanG, [stoneLight, stoneLight], 0, 1.55); add(g, boxG(5, .14, .55), stoneLight, 0, 2.86);
-      /* tangga turun ke pelataran */
-      for (let i = 0; i < 3; i++){ const top = -(i + 1)*.125; add(g, boxG(4.6, .5 + top, .45), stoneLight, 0, (top - .5)/2, dir*(.2 + (i + .5)*.45)); }
-    };
-    qanatir(0, 8.3, 0, 1); qanatir(8.3, 0, Math.PI/2, 1); qanatir(-8.3, 0, Math.PI/2, -1); qanatir(0, -8.3, 0, -1);
+    /* ---------- qanatir: arkade di puncak tangga teras ----------
+       Kolom beralas & berkapital, lengkung runcing tebal yang bertumpu tepat di impost, archivolt menonjol, ambang
+       (cornice) dua lapis, tangga 4 anak tangga dengan pipi tangga. Satu templat digambar 4 kali (InstancedMesh). */
+    const QC = [-1.6, 0, 1.6], QA = .62, QRISE = .95, QSPRING = 1.62, QAH = 1.25, QDEP = .52;
+    const qanStone = [arcadeGeo(QC, QA, QRISE, QAH, QDEP).translate(0, QSPRING, 0)];
+    QC.forEach(x => qanStone.push(archivoltGeo(x, QA, QRISE, .1, QDEP + .06).translate(0, QSPRING, 0)));
+    qanStone.push(new THREE.BoxGeometry(5.3, .1, QDEP + .14).translate(0, QSPRING + QAH + .05, 0), new THREE.BoxGeometry(5.5, .12, QDEP + .26).translate(0, QSPRING + QAH + .16, 0));
+    for (let i = 0; i < 4; i++){
+      const top = -(i + 1)*.1, z = .26 + (i + .5)*.38;
+      qanStone.push(new THREE.BoxGeometry(4.5, .5 + top, .38).translate(0, (top - .5)/2, z), new THREE.BoxGeometry(4.56, .035, .42).translate(0, top - .0175, z + .02));   // anak tangga + bibir pijakan
+    }
+    [-2.38, 2.38].forEach(x => qanStone.push(new THREE.BoxGeometry(.26, .5, 1.52).translate(x, -.25, 1.02)));   // pipi tangga
+    const qanCol = [-2.4, -.8, .8, 2.4].map(x => columnGeo(QSPRING, .1, QDEP).translate(x, 0, 0));
+    const qanStoneG = mergeGeometries(qanStone.map(nonIdx)), qanColG = mergeGeometries(qanCol);
+    const qanPose = [[0, 8.3, 0, 1], [8.3, 0, Math.PI/2, 1], [-8.3, 0, Math.PI/2, -1], [0, -8.3, 0, -1]];
+    [[qanStoneG, stoneLight], [qanColG, marbleMat]].forEach(([geo, mat]) => {
+      const im = new THREE.InstancedMesh(geo, mat, 4), o = new THREE.Object3D();
+      /* dir = -1: tangga menghadap ke arah sebaliknya (diputar 180°) */
+      qanPose.forEach(([x, z, ry, dir], i) => { o.position.set(x, Y1, z); o.rotation.set(0, ry + (dir < 0 ? Math.PI : 0), 0); o.updateMatrix(); im.setMatrixAt(i, o.matrix); });
+      im.castShadow = im.receiveShadow = true; scene.add(im);
+    });
 
     /* ---------- Masjid Qibli (selatan) ---------- */
     const qibli = new THREE.Group(); qibli.position.set(-7.5, Y0, -11.6); qibli.rotation.y = .06; scene.add(qibli);
