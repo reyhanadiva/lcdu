@@ -60,6 +60,40 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`; tombol pembanding hero disembunyikan di luar hero.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
+- `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test (`placementTest.open`; `false` → tombol
+  tes disembunyikan, tampil "Tanya admin"), tautan tes & aturan Inggris/Arab, WhatsApp admin + pesan awal per tombol,
+  AWG, rekening. HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa="umum|placement|konfirmasi"`; teks di HTML =
+  cadangan. Tim IT bisa menggantinya dengan CMS (pertahankan bentuk objek).
+
+### Sistem bersama setelah hero (fondasi, sesi "seluruh halaman setelah hero")
+- **Satu hari belajar**: `<div class="hari" id="hari">` membungkus semua section setelah hero; di dalamnya
+  `<div class="fase" data-fase="pagi|siang|sore|senja|malam">`. Tiap `[data-fase]` menimpa token `--paper --surface --ink
+  --ink-soft --line --lazuardi-ink --zamrud-ink`, jadi komponen ikut berubah. Token latar: `--pagi-bg` dst. di `:root`.
+  Fase tidak ikut mode gelap sistem (logo navbar/footer ikut fase). Navbar & benang membaca fase aktif lewat JS.
+  Sambungan = gradasi smoothstep (OKLab) di padding atas fase berikutnya (`--sambung`, malam `--sambung-malam`); teks pertama
+  mulai setelah gradasi. Alasannya: titik tengah senja → malam (#707087) hanya 3,6:1 untuk tinta gelap dan 4,2:1 untuk
+  tinta terang, jadi teks **tidak boleh** berada di atas gradasi. Karena itu latar tidak memakai lapisan fixed yang berubah.
+  Kontras (WCAG, dihitung):
+
+  | Fase | Latar | Tinta | Teks | Teks lembut | Biru | Hijau | Teks di kartu |
+  |---|---|---|---|---|---|---|---|
+  | pagi | #F7E6DC | #10163A | 14,5 | 7,5 | 8,4 | 5,6 | 17,5 / 9,1 |
+  | siang | #EEF2FB | #10163A | 15,6 | 7,1 | 9,1 | 6,1 | 17,5 / 8,0 |
+  | sore | #F5E9CF | #10163A | 14,6 | 7,1 | 8,5 | 5,7 | 17,5 / 8,6 |
+  | senja | #EADDE7 | #10163A | 13,4 | 7,3 | 7,8 | 5,9 | 17,5 / 9,5 |
+  | malam | #0B1230 | #ECF0FA | 16,1 | 8,8 | 6,9 | 8,1 | 14,5 / 7,9 |
+- **Benang keffiyeh** (`.benang`, setelah footer): desktop ≥ 900px garis zigzag tipis di gutter kiri dengan titik lentera
+  di ujung; HP garis progres 3px di atas (5px dari tepi, sengaja tidak menempel — lihat catatan iOS 26). Panjangnya dari
+  CSS scroll-driven animation (`view-timeline: --hari`, range `contain`), cadangan JS mengisi `--benang`. Muncul setelah
+  hero (`.is-on`), selesai tepat di akhir Donasi. Disembunyikan saat reduced-motion.
+- **Ornamen** (SVG sebagai `mask`, warna = `currentColor`/token, tanpa warna tertanam; data URI di token `--orn-*`):
+  `.orn-band` pita keffiyeh horizontal (daun zaitun + dua garis), `.orn-net` jaring keffiyeh untuk latar (opacity .05,
+  `position:absolute; inset:0`), `.orn-leaf` ikon daun zaitun (centang), `.orn-list` daftar berbutir daun,
+  `.orn-lentera` titik lentera (`--lentera`), `.orn-seed` biji semangka — **sangat jarang**, maksimal satu tempat.
+- **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali), `data-tergambar` (garis terbentang mengikuti scroll;
+  view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
+  `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
+  reduced-motion; tanpa `.gerak` semuanya tampil diam & utuh.
 
 ## Keputusan yang sudah dikunci (jangan diubah tanpa bertanya)
 - Hero harus jelas: kursus bahasa Arab & Inggris yang nirlaba untuk dakwah dan umat. Pesan Palestina tetap ada lewat cerita
@@ -68,8 +102,27 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   3. "Bersama, kita nyalakan harapan untuk Palestina."
 - Wordmark permanen kiri atas hero: logo + "LCDU" saja (keputusan pemilik; nama panjang hanya untuk pembaca layar, `.sr-only`).
   Identitas, bukan tombol/tautan.
-- Biaya (fakta dari pemilik): **Rp100.000 per term, 1 term = 1 semester, sudah mencakup seluruh biaya belajar; tidak gratis.**
-  Donasi **sukarela**, sesuai kesanggupan. Jangan menulis "gratis" atau "Rp0" di mana pun; angka utama selalu Rp100.000 per term.
+- Biaya (fakta dari pemilik): **Rp100.000 per term (1 term = 1 semester).** Di term pertama biaya ini disebut
+  **biaya registrasi**. Dilarang menulis "gratis", "Rp0", "sudah termasuk seluruh biaya belajar", atau "tanpa biaya
+  tambahan". Angka utama selalu Rp100.000 per term.
+- **Donasi terbuka = untuk Palestina**, sukarela, terpisah dari biaya kelas, disalurkan melalui **AWG (Aqsa Working Group)**,
+  mitra lama. Tidak ada "Donasi LCDU" terpisah di halaman.
+- **Urutan section setelah hero** (id dalam kurung): Pengantar (`pengantar`), Kenapa LCDU (`kenapa`), Pilih kelas (`kelas`),
+  Biaya (`biaya`), Cara bergabung = syarat + Placement Test + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
+  FAQ (`faq`), Donasi untuk Palestina (`donasi`), Footer. Pemetaan fase: Pengantar & Kenapa = pagi; Kelas & Biaya = siang;
+  Bergabung & Testimoni = sore; Tim & FAQ = senja; Donasi & Footer = malam. Navbar: Kelas, Biaya, Cara bergabung, Tim,
+  FAQ, Donasi + pill "Daftar" (→ `#bergabung`).
+- Section "Cek level" (kuis 3 soal) **dihapus**; diganti Placement Test resmi LCDU (tautan di `site-config.js`).
+- Aturan UI: **tidak ada tombol "langkah berikutnya"** di tiap section. Tombol hanya di titik keputusan nyata: Placement
+  Test, pill "Daftar" navbar, Tanya admin, Salin rekening & Konfirmasi transfer, CTA footer. Eyebrow maksimal 2 di seluruh
+  halaman. Hanya tiga jenis gerak: **muncul, tergambar, menyala**. Tanpa scroll-jacking, tanpa pin horizontal. Semua
+  gerak mati saat `prefers-reduced-motion`.
+- **Anti-"AI slop"**: tanpa gradasi pada teks, tanpa emoji sebagai ikon, tanpa glassmorphism (pengecualian: navbar kaca,
+  keputusan pemilik sebelumnya — perlu dikonfirmasi), tanpa tiga kartu simetris yang seragam, tanpa label kosong
+  ("✨ Baru"), tanpa kalimat generik yang bisa ditempel ke lembaga lain, tanpa bayangan berlebihan dan sudut membulat
+  penuh di mana-mana. Pakai tipografi tegas (Fraunces), garis halus, ritme tidak simetris, ruang kosong yang disengaja.
+  Setiap section wajib lolos dua uji: **uji tukar** (bisakah teks ini dipindah ke lembaga lain tanpa diubah? kalau bisa,
+  tulis ulang) dan **uji picing** (apakah hierarkinya tetap terbaca saat layar dipicingkan?).
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
   Scroll harus pendek dan jelas (tinggi hero 340vh; dinaikkan dari 290vh karena pemilik merasa transisi terlalu cepat).
@@ -115,7 +168,10 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 2. Naikkan kualitas visual varian terpilih:
    - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
-3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh).
+3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
+   (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Kenapa, Kelas, Biaya
+   (struk masih beranimasi "cetak" — jenis gerak ke-4, perlu diganti), Bergabung, Testimoni, Tim, Donasi, Footer.
+   Pengantar & FAQ masih stub.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas
@@ -127,5 +183,6 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Commit kecil dengan pesan Bahasa Indonesia yang jelas. Tanyakan sebelum push jika perubahan besar.
 
 ## Belum lengkap (lihat juga checklist di README)
-Foto asli (tim, kelas, testimoni), logo LCDU & mitra, link WhatsApp/Placement Test/formulir, ejaan 5 nama guru,
-nama yayasan di rekening, pemisahan tujuan donasi LCDU vs Palestina.
+Foto asli (tim, kelas, testimoni), logo mitra, link formulir registrasi/Instagram/alamat, ejaan 5 nama guru,
+nama yayasan di rekening. Perlu verifikasi pemilik: nomor WhatsApp admin 0819-6009-333 (dari lcdu.org), dan apakah
+rekening Bank Muamalat di section Donasi memang untuk donasi Palestina (AWG).
