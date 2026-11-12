@@ -705,28 +705,23 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @keyframes denyut{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 @media (prefers-reduced-motion: reduce){.latar-en,.latar-en-isi,.split-garis,.split-pegangan,.side-glyph,.side-foto,.side::after{transition:none!important}.split-pegangan svg{animation:none!important}}
 
-/* ===== SYARAT ===== */
-.req{display:grid;gap:clamp(32px,5vw,64px)}
-@media (min-width:960px){.req{grid-template-columns:.8fr 1.2fr;align-items:start}}
-.req-copy{display:grid;gap:20px;align-content:start}
-.req-list{display:grid;gap:12px;grid-template-columns:1fr 1fr;list-style:none;margin:0;padding:0}
-.req-item input{position:absolute;opacity:0;pointer-events:none}
-.req-item label{display:grid;align-content:start;gap:12px;height:100%;padding:22px;border-radius:var(--r-md);background:var(--surface);box-shadow:0 0 0 2px var(--line) inset;cursor:pointer;transition:box-shadow .25s,background-color .25s,transform .25s var(--ease)}
-.req-item label:hover{transform:translateY(-3px)}
-.req-item input:focus-visible+label{outline:3px solid var(--kunyit);outline-offset:3px}
-.req-check{width:34px;height:34px;border-radius:50%;box-shadow:0 0 0 2px var(--line) inset;display:grid;place-items:center;transition:background-color .25s,box-shadow .25s}
-.req-check svg{width:18px;height:18px;stroke:var(--on-color);stroke-width:3;fill:none;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .35s var(--ease) .05s}
-.req-item b{font-size:var(--step-1);line-height:1.25}
-.req-item span{font-size:var(--step--1);color:var(--ink-soft)}
-.req-item input:checked+label{box-shadow:0 0 0 2px var(--zamrud-ink) inset;background:color-mix(in srgb,var(--zamrud-ink) 10%,var(--surface))}
-.req-item input:checked+label .req-check{background:var(--zamrud);box-shadow:none}
-.req-item input:checked+label .req-check svg{stroke-dashoffset:0}
-.req-status{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;padding:20px 22px;border-radius:var(--r-md);background:var(--ink);color:var(--paper)}
-.req-meter{display:flex;gap:6px}
-.req-meter i{width:28px;height:8px;border-radius:8px;background:color-mix(in srgb,var(--paper) 22%,transparent);transition:background-color .3s}
-.req-meter i.on{background:var(--kunyit)}
-.req-status p{font-weight:600;flex:1;min-width:200px}
-@media (max-width:560px){.req-list{grid-template-columns:1fr}}
+/* ===== CARA BERGABUNG =====
+   Kepala: judul (+ syarat satu kalimat) dan pilihan bahasa "Aku mau belajar: Inggris | Arab" (radio asli = radiogroup,
+   panah kiri/kanan berfungsi). Pilihan menulis section[data-bahasa="en|ar"]; komponen di bawahnya membaca atribut itu.
+   Tanpa JS pilihan disembunyikan (tidak berfungsi) dan tampil Inggris + tautan teks ke kedua tes. */
+.gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
+.gabung-judul{display:grid;gap:12px;max-width:52ch}
+.pilih-bahasa{display:none;align-items:center;gap:6px;margin:0;padding:5px 5px 5px 16px;border:1px solid var(--ink);border-radius:999px;min-width:0}
+.js .pilih-bahasa{display:flex}
+.pilih-bahasa legend{float:left;margin-right:6px;padding:0;font-weight:600;font-size:.95rem}
+.pilih-bahasa label{position:relative;cursor:pointer}
+.pilih-bahasa input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.pilih-bahasa span{display:block;padding:.55em 1.15em;border-radius:999px;font-weight:700;transition:background-color .25s,color .25s}
+.pilih-bahasa input:checked+span{background:var(--ink);color:var(--paper)}
+.pilih-bahasa input[value="en"]:checked+span{background:var(--lazuardi);color:#fff}
+.pilih-bahasa input[value="ar"]:checked+span{background:var(--zamrud);color:#fff}
+.pilih-bahasa input:focus-visible+span{outline:3px solid var(--kunyit);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.pilih-bahasa span{transition:none}}
 
 /* ===== ALUR ===== */
 .flow{margin-top:clamp(56px,8vw,96px);display:grid;gap:28px}
@@ -1052,23 +1047,20 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div>
 
 <div class="fase" data-fase="sore">
-<!-- ============ CARA BERGABUNG: syarat + Placement Test + langkah (isi lama, belum didesain ulang) ============ -->
-<section data-lentera class="band" id="bergabung" aria-labelledby="req-h">
-  <div class="wrap req">
-    <div class="req-copy">
-      <h2 class="h2" id="req-h" data-judul>Kamu siap bergabung?</h2>
-      <p class="lede">Centang yang sudah kamu penuhi. Kalau semuanya tercentang, kamu bisa langsung ke Placement Test.</p>
+<!-- ============ CARA BERGABUNG: pilihan bahasa → kartu Placement Test → enam langkah ============
+     Pilihan bahasa (radiogroup) = kendali tunggal: tautan & status tes, nama bagian tes, arah jalur langkah.
+     Status & tautan per bahasa dari site-config.js (placement.en / placement.ar). Tanpa JS: Inggris + tautan teks ke
+     kedua tes. Checklist "Kamu siap bergabung?" dihapus (keputusan pemilik). -->
+<section data-lentera class="band gabung" id="bergabung" aria-labelledby="req-h" data-bahasa="en">
+  <div class="wrap gabung-kepala">
+    <div class="gabung-judul">
+      <h2 class="h2" id="req-h" data-judul>Cara bergabung</h2>
     </div>
-    <ul class="req-list" id="req">
-      <li class="req-item"><input type="checkbox" id="r1"><label for="r1"><span class="req-check"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Usia minimal 16 tahun</b><span>Kelas dirancang untuk remaja dan dewasa.</span></label></li>
-<li class="req-item"><input type="checkbox" id="r2"><label for="r2"><span class="req-check"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Bisa membaca Al-Qur'an</b><span>Setiap kelas dibuka dengan tilawah.</span></label></li>
-<li class="req-item"><input type="checkbox" id="r3"><label for="r3"><span class="req-check"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Punya perangkat untuk belajar</b><span>Laptop atau HP untuk Zoom dan Canvas.</span></label></li>
-<li class="req-item"><input type="checkbox" id="r4"><label for="r4"><span class="req-check"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><b>Siap konsisten sampai akhir</b><span>Hadir dan mengerjakan tugas sampai term selesai.</span></label></li>
-      <li class="req-status" aria-live="polite">
-        <div class="req-meter" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <p id="req-msg">0 dari 4 terpenuhi.</p>
-      </li>
-    </ul>
+    <fieldset class="pilih-bahasa">
+      <legend>Aku mau belajar:</legend>
+      <label><input type="radio" name="bahasa" value="en" checked><span>Inggris</span></label>
+      <label><input type="radio" name="bahasa" value="ar"><span>Arab</span></label>
+    </fieldset>
   </div>
 
   <!-- Placement Test: status & tautan dari site-config.js (placementTest.open) -->
@@ -1408,11 +1400,15 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (no) a.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
     external(a);
   });
-  var pt = $('#placement');
-  if (pt && CFG.placementTest){
-    var ptOpen = !!cfg('placementTest.open');
-    pt.dataset.open = ptOpen;
-    $('#pt-status').textContent = cfg(ptOpen ? 'placementTest.teksBuka' : 'placementTest.teksTutup') || $('#pt-status').textContent;
+  /* ---------- Cara bergabung: pilihan bahasa (kendali tunggal) → section[data-bahasa] + event "bahasa" ---------- */
+  var gabung = $('#bergabung');
+  function setBahasa(b){
+    gabung.dataset.bahasa = b;
+    gabung.dispatchEvent(new CustomEvent('bahasa', { detail: b }));
+  }
+  if (gabung){
+    $$('.pilih-bahasa input', gabung).forEach(function(r){ r.addEventListener('change', function(){ if (r.checked) setBahasa(r.value); }); });
+    var awalB = $('.pilih-bahasa input:checked', gabung); setBahasa(awalB ? awalB.value : 'en');
   }
 
   /* ---------- Kenapa LCDU: pernyataan aktif = yang melewati tengah layar ----------
@@ -1529,17 +1525,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       [[400, 58], [1150, 42], [1900, 50]].forEach(function(t, k, all){ undangan.push(setTimeout(function(){ setA(t[1]); if (k === all.length - 1) undangan = []; }, t[0])); });
     }, {threshold:.5}).observe(split);
   }
-
-  /* ---------- Syarat ---------- */
-  var boxes = $$('#req input'), meter = $$('.req-meter i'), msg = $('#req-msg');
-  function upd(){
-    var n = boxes.filter(function(b){return b.checked}).length;
-    meter.forEach(function(m,i){ m.classList.toggle('on', i < n); });
-    if (n === 4) msg.textContent = 'Semua terpenuhi. Langkah berikutnya: Placement Test.';
-    else if (n === 0) msg.textContent = '0 dari 4 terpenuhi.';
-    else msg.textContent = n + ' dari 4 terpenuhi. Ada yang belum? Tanyakan ke admin, siapa tahu masih bisa.';
-  }
-  boxes.forEach(function(b){ b.addEventListener('change', upd); });
 
   /* ---------- Cerita: tumpukan kartu ---------- */
   var stack = $('#stack');

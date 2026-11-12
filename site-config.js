@@ -4,15 +4,14 @@
    atau ubah fungsi `cfg()` di index.html agar membaca dari sumber lain. Teks di HTML tetap menjadi cadangan
    bila berkas ini gagal dimuat. */
 window.LCDU_CONFIG = {
-  /* Placement Test resmi LCDU.
-     open: true  → tombol "Mulai tes" tampil;
-     open: false → tombol tes disembunyikan, diganti tombol "Tanya admin". Tautan aturan tes tetap tampil. */
-  placementTest: {
-    open: false,
-    inggris: { tes: 'https://lcdu.org/en-placement/', aturan: 'https://lcdu.org/en-placement-rule/' },
-    arab:    { tes: 'https://lcdu.org/ar-placement/', aturan: 'https://lcdu.org/ar-placement-rule/' },
-    teksBuka:  'Pilih tes sesuai bahasa yang ingin kamu pelajari. Baca aturannya dulu sebelum mulai.',
-    teksTutup: 'Placement Test sedang ditutup. Tanyakan ke admin kapan tes dibuka lagi.'
+  /* Placement Test resmi LCDU, PER BAHASA (en = Inggris, ar = Arab).
+     open: true  → tombol "Mulai Placement Test" menuju `url` (halaman AWAL tes, "-rule"; tombol "Mulai Test" ada di
+                   akhir halaman itu);
+     open: false → tombol diganti "Tanya admin lewat WhatsApp" + kalimat bahwa tes ditutup sementara.
+     urlSoal = halaman soal langsung (disimpan sebagai data, tidak dipakai di halaman). */
+  placement: {
+    en: { open: false, url: 'https://lcdu.org/en-placement-rule/', urlSoal: 'https://lcdu.org/en-placement/' },
+    ar: { open: false, url: 'https://lcdu.org/ar-placement-rule/', urlSoal: 'https://lcdu.org/ar-placement/' }
   },
 
   /* WhatsApp admin (diambil dari lcdu.org — PERLU DIVERIFIKASI pemilik sebelum live).
