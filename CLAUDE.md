@@ -104,6 +104,13 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   panel sempit) = garis 1,2px, terisi saat aktif. Biru (`--lazuardi-ink`) panel 1–2, hijau (`--zamrud-ink`) panel 3–4.
   Reduced-motion / tanpa JS: `.why-statis` (semua terbuka, sama lebar). Kata Arab hanya yang sudah ada: مَنْهَج،
   عَنْ بُعْد، مُعَلِّم، القُرْآن.
+- **Pilih kelas** (selesai): layar terbelah penuh-lebar `#split`, `--a` (didaftarkan `@property`) = lebar sisi Inggris %.
+  Desktop ≥ 700px: grid `--a% | sisa`, pegangan `role="slider"` (30–70, panah/Home/End lompat ke snap 30/50/70, tarik
+  lalu snap), klik sisi sempit → 70%. Sisi ≥ 60% menampilkan rincian (label, strip 7 hari, slot foto); rincian berlebar
+  tetap `70vw − padding` supaya tidak mengalir ulang saat ditarik, dan selalu ada di DOM. Sisi Arab rata kanan &
+  dicerminkan (foto di kiri), urutan hari tetap Sen → Min. HP < 700px: panel atas–bawah, ketuk judul/panel untuk membuka,
+  panel lain deskripsinya dipendekkan 2 baris. Hari kelas = lentera (`--lentera`). Glyph latar Aa / أب (yang sudah ada).
+  Slot foto = `.orn-net` (komentar `SLOT FOTO KELAS` di HTML). Jadwal belum diverifikasi (README). Tanpa daftar level.
 - Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
 - **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
@@ -184,7 +191,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
-   (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Kelas, Biaya
+   (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Biaya
    (struk masih beranimasi "cetak" — jenis gerak ke-4, perlu diganti), Bergabung, Testimoni, Tim, Donasi, Footer.
    FAQ masih stub. Pengantar selesai.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.

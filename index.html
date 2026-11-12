@@ -425,37 +425,74 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .js .receipt.printing{animation:print 1.8s steps(14,end) forwards}
 @keyframes print{from{clip-path:inset(0 0 100% 0);transform:translateY(-14px)}to{clip-path:inset(0 0 -40px 0);transform:none}}
 
-/* ===== KELAS ===== */
-.cls-head{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:end;margin-bottom:clamp(32px,5vw,56px)}
-.switch{display:inline-grid;grid-template-columns:1fr 1fr;padding:6px;border-radius:999px;background:color-mix(in srgb,currentColor 8%,transparent);position:relative}
-.switch::before{content:"";position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:999px;background:var(--lazuardi);transition:transform .5s var(--ease),background-color .5s}
-.switch[data-lang="ar"]::before{transform:translateX(100%);background:var(--zamrud)}
-.switch button{position:relative;z-index:1;border:0;background:none;padding:12px 22px;font-weight:700;cursor:pointer;color:inherit;min-width:120px;transition:color .3s}
-.switch button[aria-selected="true"]{color:var(--on-color)}
-.switch button [lang="ar"]{font-family:var(--f-ar-display);font-size:1.05rem}
-.cls{display:grid;gap:clamp(28px,4vw,56px);align-items:stretch;--c:var(--lazuardi)}
-.cls[data-lang="ar"]{--c:var(--zamrud)}
-@media (min-width:900px){.cls{grid-template-columns:1fr 1fr}.cls[data-lang="ar"] .cls-visual{order:2}}
-.cls-visual{border-radius:var(--r-lg);background:var(--c);min-height:340px;position:relative;overflow:hidden;display:grid;place-items:center;transition:background-color .6s}
-.cls-visual::before{content:"";position:absolute;inset:0;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='white' stroke-width='1.2'%3E%3Crect x='18' y='18' width='36' height='36'/%3E%3Crect x='18' y='18' width='36' height='36' transform='rotate(45 36 36)'/%3E%3Ccircle cx='36' cy='36' r='9'/%3E%3C/g%3E%3C/svg%3E");background-size:72px}
-.cls-glyph{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(7rem,18vw,13rem);line-height:1;color:var(--on-color)}
-.cls[data-lang="ar"] .cls-glyph{font-family:var(--f-ar-display);font-weight:700}
-.cls-photo-note{position:absolute;left:16px;bottom:16px;font-size:.78rem;color:var(--on-color-soft);background:rgba(0,0,0,.18);padding:6px 10px;border-radius:999px}
-.cls-body{display:grid;gap:22px;align-content:start;min-width:0}
-.cls-body h3{font-family:var(--f-display);font-weight:700;font-size:var(--step-3);line-height:1}
-.cls-body p{color:var(--ink-soft);font-size:var(--step-1);line-height:1.5;max-width:52ch}
-.cls-tags{display:flex;flex-wrap:wrap;gap:8px}
-.cls-tags span{padding:6px 12px;border-radius:999px;border:1.5px solid color-mix(in srgb,currentColor 30%,transparent);font-size:.85rem;font-weight:600}
-.sched{display:grid;gap:12px}
-.track{display:grid;grid-template-columns:minmax(130px,.8fr) 1.6fr;gap:14px;align-items:center;padding:14px;border-radius:var(--r-md);background:color-mix(in srgb,currentColor 5%,transparent)}
-.track-label b{display:block;font-size:.95rem}
-.track-label span{display:block;font-size:.8rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
-.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.day{aspect-ratio:1;max-width:100%;border-radius:10px;display:grid;place-items:center;font-size:.72rem;font-weight:700;color:var(--ink-soft);background:color-mix(in srgb,currentColor 6%,transparent);transition:background-color .4s,color .4s,transform .4s var(--ease)}
-.day.on{background:var(--c);color:var(--on-color);transform:translateY(-3px)}
-.cls-anim{animation:flipin .6s var(--ease)}
-@keyframes flipin{from{opacity:0;transform:translateX(calc(var(--dir,1) * 40px))}to{opacity:1;transform:none}}
-@media (max-width:480px){.track{grid-template-columns:1fr}}
+/* ===== KELAS: layar terbelah Inggris | Arab =====
+   --a = lebar sisi Inggris dalam persen (snap 30 / 50 / 70). Sisi lebar (≥ 60%) menampilkan rincian; sisi sempit tetap
+   menampilkan judul & deskripsi. Rincian selalu ada di DOM (hanya disembunyikan secara visual), jadi terbaca pembaca layar.
+   Rincian di desktop berlebar tetap (= lebar sisi saat 70%) supaya tidak mengalir ulang selama garis ditarik. */
+@property --a{syntax:'<number>';inherits:true;initial-value:50}
+.classes .h2{margin-bottom:clamp(28px,4vw,48px)}
+.split{--pad-luar:max(16px,calc((100vw - 1240px) / 2 + 32px));--pad-dalam:clamp(16px,3vw,40px);position:relative;border-block:1px solid var(--ink)}
+.side{position:relative;overflow:hidden;min-width:0}
+.side-en{--c:var(--lazuardi-ink);background:color-mix(in srgb,var(--logo-biru) 5%,var(--fase-bg))}
+.side-ar{--c:var(--zamrud-ink);background:color-mix(in srgb,var(--logo-hijau) 10%,var(--fase-bg));text-align:right}
+/* glyph raksasa yang samar (dekoratif) */
+.side-glyph{position:absolute;bottom:-.2em;font-family:var(--f-display);font-weight:700;font-size:clamp(9rem,24vw,22rem);line-height:1;color:var(--c);opacity:.07;pointer-events:none;user-select:none;-webkit-user-select:none}
+.side-en .side-glyph{left:-.04em}
+.side-ar .side-glyph{right:-.02em;bottom:-.08em;font-family:var(--f-ar-display)}
+.side-isi{position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:18px;align-content:start;padding:clamp(28px,4vw,48px) var(--pad-dalam) clamp(28px,4vw,48px) var(--pad-luar)}
+.side-ar .side-isi{padding-left:var(--pad-dalam);padding-right:var(--pad-luar)}
+.side-judul{font-family:var(--f-display);font-weight:700;font-size:var(--step-3);line-height:1;letter-spacing:-.02em;color:var(--c)}
+.side-pilih{padding:0;border:0;background:none;font:inherit;color:inherit;letter-spacing:inherit;text-align:inherit;cursor:pointer}
+.side-desc{max-width:44ch;font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
+.side-ar .side-desc{margin-left:auto}
+.rinci-dalam{display:grid;gap:24px;align-items:start}
+.cls-tags{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.cls-tags li{padding:.35em .75em;border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:3px;font-size:.85rem;font-weight:600;color:var(--c)}
+.side-ar .cls-tags{justify-content:flex-end}
+.sched{display:grid;gap:16px}
+.track{display:grid;gap:8px}
+.track-label{font-size:.85rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.track-label b{color:var(--ink);margin-right:.35em}
+/* strip 7 hari: hari kelas menyala seperti lentera */
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,40px));gap:6px}
+.side-ar .days{justify-content:end}
+.day{aspect-ratio:1;display:grid;place-items:center;border:1px solid color-mix(in srgb,var(--ink) 18%,transparent);border-radius:4px;font-size:.7rem;font-weight:700;color:var(--ink-soft)}
+.day.on{border-color:color-mix(in srgb,var(--lentera) 60%,var(--kunyit-ink));background:var(--lentera);color:var(--kunyit-ink);
+  box-shadow:0 0 16px 2px color-mix(in srgb,var(--lentera) 55%,transparent)}
+/* slot foto kelas: jaring keffiyeh bertinta lembut sampai foto asli tersedia */
+.side-foto{position:relative;aspect-ratio:4/3;border:1px solid color-mix(in srgb,var(--c) 30%,transparent);color:var(--c);overflow:hidden}
+.side-foto .orn-net{opacity:.14}
+.split-garis,.split-pegangan{display:none}
+@media (min-width:700px){
+  .split{display:grid;grid-template-columns:calc(var(--a) * 1%) minmax(0,1fr);height:clamp(560px,76vh,720px);transition:--a .6s var(--ease)}
+  .split.is-tarik{transition:none}
+  .side{cursor:pointer}
+  .split[data-state="en"] .side-en,.split[data-state="ar"] .side-ar{cursor:auto}
+  .rinci-dalam{width:calc(70vw - var(--pad-luar) - var(--pad-dalam));grid-template-columns:minmax(0,1fr) minmax(0,.85fr)}
+  .side-ar .rinci-dalam{margin-left:auto}
+  .side-ar .side-foto{order:-1}
+  .js .side-rinci{opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s var(--ease)}
+  .js .split[data-state="en"] .side-en .side-rinci,.js .split[data-state="ar"] .side-ar .side-rinci{opacity:1;transform:none;transition-delay:.3s}
+  .split-garis{display:block;position:absolute;top:0;bottom:0;left:calc(var(--a) * 1%);width:1px;margin-left:-.5px;background:var(--ink);pointer-events:none}
+  /* pegangan: 44 px, panah kiri-kanan digambar dengan border (bukan ikon/emoji) */
+  .split-pegangan{display:block;position:absolute;z-index:2;top:50%;left:calc(var(--a) * 1%);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;
+    background:var(--fase-bg);border:1px solid var(--ink);cursor:ew-resize;touch-action:none}
+  .split-pegangan::before,.split-pegangan::after{content:"";position:absolute;top:50%;width:7px;height:7px;margin-top:-4px;border:solid var(--ink);border-width:0 0 1.5px 1.5px}
+  .split-pegangan::before{left:11px;transform:rotate(45deg)}
+  .split-pegangan::after{right:11px;transform:rotate(-135deg)}
+}
+@media (max-width:699px){
+  .side+.side{border-top:1px solid var(--ink)}
+  .side-glyph{font-size:9rem}
+  .rinci-dalam{padding-top:22px}
+  .side-foto{aspect-ratio:16/9}
+  .js .side-rinci{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
+  .js .side-rinci>.rinci-dalam{overflow:hidden;min-height:0}
+  .js .split[data-state="en"] .side-en .side-rinci,.js .split[data-state="ar"] .side-ar .side-rinci{grid-template-rows:1fr}
+  /* panel lain mengecil: deskripsinya dipendekkan ke dua baris (teks lengkap tetap di DOM) */
+  .split[data-state="en"] .side-ar .side-desc,.split[data-state="ar"] .side-en .side-desc{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+}
+@media (prefers-reduced-motion: reduce){.split,.side-rinci{transition:none!important}}
 
 /* ===== SYARAT ===== */
 .req{display:grid;gap:clamp(32px,5vw,64px)}
@@ -688,22 +725,53 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div>
 
 <div class="fase" data-fase="siang">
-<!-- ============ PILIH KELAS ============ -->
+<!-- ============ PILIH KELAS: layar terbelah Inggris | Arab, garis pembagi bisa ditarik ============
+     JADWAL BELUM DIVERIFIKASI (lihat README): Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB;
+     Weekend Sabtu 13.00–16.00 WIB. Tidak ada daftar level (datanya belum ada). -->
 <section class="band classes" id="kelas" aria-labelledby="cls-h">
-  <div class="wrap">
-    <div class="cls-head">
-      <h2 class="h2" id="cls-h" data-muncul>Pilih kelasmu</h2>
-      <div class="switch" id="switch" data-lang="en" role="tablist" aria-label="Pilih kelas">
-        <button role="tab" aria-selected="true" data-lang="en">Inggris</button>
-        <button role="tab" aria-selected="false" data-lang="ar">Arab <span lang="ar">ع</span></button>
+  <div class="wrap"><h2 class="h2" id="cls-h" data-muncul>Pilih kelasmu</h2></div>
+  <div class="split" id="split" data-state="imbang" style="--a:50">
+    <div class="side side-en" data-side="en">
+      <span class="side-glyph" aria-hidden="true">Aa</span>
+      <div class="side-isi">
+        <h3 class="side-judul"><button class="side-pilih" type="button" aria-expanded="false" aria-controls="rinci-en">Bahasa Inggris</button></h3>
+        <p class="side-desc">Belajar bersama guru profesional sesuai level kamu. Porsi terbesar untuk berbicara (speaking), dengan grammar yang tetap dibahas tuntas.</p>
+        <div class="side-rinci" id="rinci-en">
+          <div class="rinci-dalam">
+            <div>
+              <ul class="cls-tags" aria-label="Fokus belajar kelas Inggris"><li>Speaking</li><li>Grammar</li><li>Listening</li><li>Writing</li></ul>
+              <div class="sched">
+                <div class="track"><p class="track-label"><b>Weekday</b> Senin &amp; Rabu, 16.00–17.30 WIB</p><div class="days" aria-hidden="true"><span class="day on">Sen</span><span class="day">Sel</span><span class="day on">Rab</span><span class="day">Kam</span><span class="day">Jum</span><span class="day">Sab</span><span class="day">Min</span></div></div>
+                <div class="track"><p class="track-label"><b>Weekend</b> Sabtu, 13.00–16.00 WIB</p><div class="days" aria-hidden="true"><span class="day">Sen</span><span class="day">Sel</span><span class="day">Rab</span><span class="day">Kam</span><span class="day">Jum</span><span class="day on">Sab</span><span class="day">Min</span></div></div>
+              </div>
+            </div>
+            <!-- SLOT FOTO KELAS (Inggris): ganti <span class="orn-net"> dengan <img src="…" alt="…" loading="lazy"> bila foto asli tersedia -->
+            <div class="side-foto" aria-hidden="true"><span class="orn-net"></span></div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="cls" id="cls" data-lang="en">
-      <div class="cls-visual">
-        <span class="cls-glyph" id="cls-glyph">Aa</span>
-        <span class="cls-photo-note">Slot foto kelas</span>
+    <div class="split-garis" aria-hidden="true"></div>
+    <div class="split-pegangan" role="slider" tabindex="0" aria-label="Bagi layar antara kelas Inggris dan kelas Arab" aria-orientation="horizontal" aria-valuemin="30" aria-valuemax="70" aria-valuenow="50" aria-valuetext="Inggris 50%, Arab 50%"></div>
+    <div class="side side-ar" data-side="ar">
+      <span class="side-glyph" aria-hidden="true" lang="ar">أب</span>
+      <div class="side-isi">
+        <h3 class="side-judul"><button class="side-pilih" type="button" aria-expanded="false" aria-controls="rinci-ar">Bahasa Arab</button></h3>
+        <p class="side-desc">Belajar bersama guru profesional sesuai level kamu. Banyak latihan percakapan (muhadatsah), dengan kaidah bahasa (nahwu) yang tetap dipelajari.</p>
+        <div class="side-rinci" id="rinci-ar">
+          <div class="rinci-dalam">
+            <div>
+              <ul class="cls-tags" aria-label="Fokus belajar kelas Arab"><li>Muhadatsah</li><li>Nahwu</li><li>Mufradat</li><li>Qira'ah</li></ul>
+              <div class="sched">
+                <div class="track"><p class="track-label"><b>Weekday</b> Selasa &amp; Kamis, 16.00–17.30 WIB</p><div class="days" aria-hidden="true"><span class="day">Sen</span><span class="day on">Sel</span><span class="day">Rab</span><span class="day on">Kam</span><span class="day">Jum</span><span class="day">Sab</span><span class="day">Min</span></div></div>
+                <div class="track"><p class="track-label"><b>Weekend</b> Sabtu, 13.00–16.00 WIB</p><div class="days" aria-hidden="true"><span class="day">Sen</span><span class="day">Sel</span><span class="day">Rab</span><span class="day">Kam</span><span class="day">Jum</span><span class="day on">Sab</span><span class="day">Min</span></div></div>
+              </div>
+            </div>
+            <!-- SLOT FOTO KELAS (Arab): ganti <span class="orn-net"> dengan <img src="…" alt="…" loading="lazy"> bila foto asli tersedia -->
+            <div class="side-foto" aria-hidden="true"><span class="orn-net"></span></div>
+          </div>
+        </div>
       </div>
-      <div class="cls-body" id="cls-body"></div>
     </div>
   </div>
 </section>
@@ -1023,30 +1091,43 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     new IntersectionObserver(function(en, ob){ en.forEach(function(x){ if (x.isIntersecting){ rc.classList.remove('pre'); rc.classList.add('printing'); ob.disconnect(); } }); }, {threshold:.35}).observe(rc);
   }
 
-  /* ---------- Kelas ---------- */
-  var DAYS = ['Sen','Sel','Rab','Kam','Jum','Sab','Min'];
-  var C = {
-    en: {title:'Bahasa Inggris', glyph:'Aa', desc:'Belajar bersama guru profesional sesuai level kamu. Porsi terbesar untuk berbicara (speaking), dengan grammar yang tetap dibahas tuntas.', tags:['Speaking','Grammar','Listening','Writing'], wd:[0,2], wdText:'Senin & Rabu'},
-    ar: {title:'Bahasa Arab', glyph:'أب', desc:'Belajar bersama guru profesional sesuai level kamu. Banyak latihan percakapan (muhadatsah), dengan kaidah bahasa (nahwu) yang tetap dipelajari.', tags:['Muhadatsah','Nahwu','Mufradat','Qira\'ah'], wd:[1,3], wdText:'Selasa & Kamis'}
-  };
-  var cls = $('#cls'), clsBody = $('#cls-body'), glyph = $('#cls-glyph'), sw = $('#switch');
-  function days(on){ return '<div class="days">'+DAYS.map(function(d,i){ return '<span class="day'+(on.indexOf(i)>-1?' on':'')+'">'+d+'</span>'; }).join('')+'</div>'; }
-  function renderCls(l, dir){
-    var c = C[l]; cls.dataset.lang = l; sw.dataset.lang = l;
-    glyph.textContent = c.glyph; if (l === 'ar') glyph.setAttribute('lang','ar'); else glyph.removeAttribute('lang');
-    clsBody.innerHTML = '<h3>'+c.title+'</h3><p>'+c.desc+'</p><div class="cls-tags">'+c.tags.map(function(t){return '<span>'+t+'</span>';}).join('')+'</div>'+
-      '<div class="sched"><div class="track"><div class="track-label"><b>Weekday</b><span>'+c.wdText+'</span><span>16.00–17.30 WIB</span></div>'+days(c.wd)+'</div>'+
-      '<div class="track"><div class="track-label"><b>Weekend</b><span>Sabtu</span><span>13.00–16.00 WIB</span></div>'+days([5])+'</div></div>';
-    if (dir && !reduce){ cls.style.setProperty('--dir', dir); [clsBody, glyph].forEach(function(el){ el.classList.remove('cls-anim'); void el.offsetWidth; el.classList.add('cls-anim'); }); }
+  /* ---------- Pilih kelas: layar terbelah ----------
+     --a = lebar sisi Inggris (%). Desktop: tarik pegangan (30–70, dilepas → snap 30/50/70), tombol panah/Home/End,
+     atau klik sisi yang sempit. Judul sisi yang terbuka diklik lagi → kembali 50/50.
+     HP (< 700px): ketuk panel untuk membukanya; ketuk lagi untuk menutup. */
+  var split = $('#split'), pegangan = $('.split-pegangan', split), sisi = $$('.side', split), tegak = window.matchMedia('(max-width: 699px)');
+  var SNAP = [30, 50, 70], aNow = 50, tarik = null;
+  function setA(a, snap){
+    a = Math.max(30, Math.min(70, a));
+    if (snap) a = SNAP.reduce(function(b, s){ return Math.abs(s - a) < Math.abs(b - a) ? s : b; });
+    aNow = a; split.style.setProperty('--a', a);
+    var st = a >= 60 ? 'en' : a <= 40 ? 'ar' : 'imbang';
+    split.dataset.state = st;
+    pegangan.setAttribute('aria-valuenow', Math.round(a));
+    pegangan.setAttribute('aria-valuetext', 'Inggris ' + Math.round(a) + '%, Arab ' + Math.round(100 - a) + '%');
+    sisi.forEach(function(s){ $('.side-pilih', s).setAttribute('aria-expanded', s.dataset.side === st); });
   }
-  $$('button', sw).forEach(function(b){
-    b.addEventListener('click', function(){
-      if (sw.dataset.lang === b.dataset.lang) return;
-      $$('button', sw).forEach(function(x){ x.setAttribute('aria-selected', x === b ? 'true' : 'false'); });
-      renderCls(b.dataset.lang, b.dataset.lang === 'ar' ? -1 : 1);
+  sisi.forEach(function(s){
+    s.addEventListener('click', function(e){
+      if (split.dataset.state === s.dataset.side){ if (tegak.matches || e.target.closest('.side-pilih')) setA(50); return; }
+      setA(s.dataset.side === 'en' ? 70 : 30);
     });
   });
-  renderCls('en');
+  pegangan.addEventListener('pointerdown', function(e){ tarik = split.getBoundingClientRect(); split.classList.add('is-tarik'); pegangan.setPointerCapture(e.pointerId); e.preventDefault(); });
+  pegangan.addEventListener('pointermove', function(e){ if (tarik) setA((e.clientX - tarik.left) / tarik.width * 100); });
+  function lepas(){ if (!tarik) return; tarik = null; split.classList.remove('is-tarik'); setA(aNow, true); }
+  pegangan.addEventListener('pointerup', lepas);
+  pegangan.addEventListener('pointercancel', lepas);
+  pegangan.addEventListener('keydown', function(e){
+    var i = SNAP.indexOf(aNow); if (i < 0) i = 1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') setA(SNAP[Math.min(2, i + 1)]);
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') setA(SNAP[Math.max(0, i - 1)]);
+    else if (e.key === 'Home') setA(30);
+    else if (e.key === 'End') setA(70);
+    else return;
+    e.preventDefault();
+  });
+  setA(50);
 
   /* ---------- Syarat ---------- */
   var boxes = $$('#req input'), meter = $$('.req-meter i'), msg = $('#req-msg');

@@ -20,7 +20,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Pengantar | Stub, isi menyusul. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
 | Biaya | Rp100.000 per term (1 semester); di term pertama disebut biaya registrasi. Donasi untuk Palestina terpisah dan sukarela. |
-| Kelas | Toggle Inggris/Arab; layout dicerminkan untuk Arab, jadwal ditampilkan sebagai strip hari. |
+| Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (snap 30/50/70), sisi lebar menampilkan rincian & strip 7 hari. HP: panel atas–bawah, ketuk untuk membuka. |
 | Cara bergabung | Checklist syarat, Placement Test (status & tautan di `site-config.js`), 6 langkah sebagai daftar vertikal. |
 | Testimoni | Tumpukan kartu yang bisa diseret. |
 | Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
@@ -75,6 +75,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   tekstur, dan panorama hero 3D) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: formulir registrasi, Instagram, alamat (saat ini `#`). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
+- [ ] **Jadwal kelas belum diverifikasi**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; Weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
 - [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`).
