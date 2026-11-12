@@ -15,8 +15,9 @@
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-/* Fraunces (judul), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab) — semua OFL, lihat fonts/README.md */
-@font-face{font-family:'Fraunces';font-style:normal;font-weight:600 700;font-display:swap;src:url(fonts/fraunces-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+/* Fraunces (judul; variabel 300–700 + miring 600–700 untuk Pengantar), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab) — semua OFL, lihat fonts/README.md */
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:300 700;font-display:swap;src:url(fonts/fraunces-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
+@font-face{font-family:'Fraunces';font-style:italic;font-weight:600 700;font-display:swap;src:url(fonts/fraunces-italic-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Plus Jakarta Sans';font-style:normal;font-weight:400 800;font-display:swap;src:url(fonts/plus-jakarta-sans-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 @font-face{font-family:'Reem Kufi';font-style:normal;font-weight:500 700;font-display:swap;src:url(fonts/reem-kufi-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
 @font-face{font-family:'Reem Kufi';font-style:normal;font-weight:500 700;font-display:swap;src:url(fonts/reem-kufi-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
@@ -377,82 +378,84 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-loading{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;color:var(--hero-soft);font-size:.9rem;z-index:-1}
 @media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none;transform:none}}
 
-/* ===== PENGANTAR ===== */
-/* --p (0..1) = kemajuan membaca kalimat. Nilai awal 1 = semua kata penuh (reduced-motion / tanpa JS).
-   Dengan .gerak: dianimasikan oleh view timeline kalimat itu sendiri (tanpa pin), cadangan JS di skrip. */
+/* ===== PENGANTAR =====
+   Tiga fragmen berirama (teks persis dari pemilik): baris 1 ringan & besar ("Arab" hijau kulit, "Inggris" biru, tebal),
+   baris 2–3 tebal miring dan jauh lebih besar ("Nirlaba." merah). Hierarki dari ukuran & ketebalan, warna hanya penegas.
+   Kata menyala satu per satu (gerak "menyala"): --p (0..1) dianimasikan view timeline kalimat (tanpa pin), cadangan JS di
+   skrip. Nilai awal 1 = semua kata penuh (reduced-motion / tanpa JS). Seni: foto Al-Aqsa berbingkai lengkung di kanan,
+   irisan semangka menjorok dari tepi layar di belakang foto, pita keffiyeh merah di tepi bawah (= tepi atas blok Kenapa). */
 @property --p{syntax:'<number>';inherits:true;initial-value:1}
-.intro{position:relative;isolation:isolate}
-/* jaring keffiyeh sangat samar di tepi atas, memudar ke bawah (tidak ada tepi tajam) */
-.intro-jaring{inset:0 0 auto;height:min(440px,60vh);z-index:-1;opacity:.07;
-  -webkit-mask:var(--orn-net) 0 0/20px 20px repeat,linear-gradient(#000,transparent);-webkit-mask-composite:source-in;
-  mask:var(--orn-net) 0 0/20px 20px repeat,linear-gradient(#000,transparent);mask-composite:intersect}
-.intro-kalimat{font-family:var(--f-display);font-weight:600;font-size:clamp(2.1rem,1.05rem + 4.3vw,5.3rem);line-height:1.08;letter-spacing:-.02em;max-width:15.5em;text-wrap:pretty}
-/* tiap kata: --w = seberapa menyala (3 kata bertumpang tindih), --g = pendar, puncak di tengah transisi lalu memudar.
-   Redup = campuran tinta dengan latar fase, dihitung agar ≥ 3:1; penuh ≥ 4,5:1 (lihat CLAUDE.md). */
-.k{--w:clamp(0,(var(--p) * (var(--n) + 3) - var(--i)) / 3,1);--g:calc(min(var(--w),1 - var(--w)) * 2);--warna:var(--ink);--redup:52%;
+.intro{position:relative;isolation:isolate;overflow:clip;padding-bottom:0}
+.intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:clamp(64px,8vw,112px)}
+.intro-kalimat{font-family:var(--f-display);letter-spacing:-.02em}
+.intro-l1{display:block;font-weight:300;font-size:clamp(2.2rem,1.1rem + 4vw,4.9rem);line-height:1.06;max-width:10.5em;text-wrap:balance}
+.intro-l1 .k-ar,.intro-l1 .k-en{font-weight:700}
+.intro-l2,.intro-l3{display:block;font-weight:700;font-style:italic;font-size:clamp(3.4rem,1.5rem + 7.4vw,8.6rem);line-height:.92;letter-spacing:-.035em}
+.intro-l2{margin-top:.22em}
+/* tiap kata: --w = seberapa menyala (jendela 1,5 kata, lebih tegas dari sebelumnya), --g = pendar lentera, puncak di
+   tengah transisi. Redup = campuran warna kata dengan latar, ≥ 3:1 (dihitung, lihat CLAUDE.md); penuh ≥ 6:1. */
+.k{--w:clamp(0,(var(--p) * (var(--n) + 1.5) - var(--i)) / 1.5,1);--g:calc(min(var(--w),1 - var(--w)) * 2);--warna:var(--ink);--redup:48%;
   color:color-mix(in srgb,var(--warna) calc(var(--redup) + (100% - var(--redup)) * var(--w)),var(--fase-bg));
-  text-shadow:0 0 .35em color-mix(in srgb,var(--lentera) calc(var(--g) * 75%),transparent)}
-.k-en{--warna:var(--lazuardi-ink);--redup:58%}   /* biru logo #1724C0 */
-.k-ar{--warna:var(--zamrud-ink);--redup:76%}     /* hijau logo, digelapkan (hijau logo asli hanya 2,4:1 di latar pagi) */
+  text-shadow:0 0 .3em color-mix(in srgb,var(--lentera) calc(var(--g) * 95%),transparent)}
+.k-en{--warna:var(--lazuardi-ink);--redup:54%}   /* biru logo #1724C0 */
+.k-ar{--warna:var(--zamrud-ink);--redup:68%}     /* hijau kulit #1E6B3A (hijau logo asli hanya 2,8:1, tidak boleh jadi teks) */
+.k-merah{--warna:var(--semangka-tua);--redup:62%} /* merah tua #B3202E (merah semangka terang 4,0:1 < 4,5) */
 @keyframes intro-nyala{from{--p:0}to{--p:1}}
-@supports (animation-timeline: view()){.gerak .intro-kalimat{animation:intro-nyala linear both;animation-timeline:view();animation-range:cover 18% cover 52%}}
-/* pills: fakta singkat, garis 1px tinta, sudut kecil, susunan tangga yang tidak simetris */
-.intro-pills{list-style:none;margin:clamp(36px,5vw,64px) 0 0;padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;font-size:.88rem}
-.intro-pills li{display:inline-flex;align-items:center;gap:.55em;padding:.45em .8em .45em .65em;border:1px solid var(--ink);border-radius:3px;line-height:1.3;font-weight:600}
-.intro-pills li:nth-child(2){margin-left:22px}
-.intro-pills li:nth-child(3){margin-left:6px}
-.intro-pills li:nth-child(4){margin-left:34px}
+@supports (animation-timeline: view()){.gerak .intro-kalimat{animation:intro-nyala linear both;animation-timeline:view();animation-range:cover 18% cover 50%}}
+/* satu baris kecil tanpa kotak: daun zaitun + teks + garis keffiyeh tipis */
+.intro-yayasan{display:flex;align-items:center;gap:.6em;margin-top:clamp(28px,4vw,48px);font-size:var(--step--1);font-weight:600;color:var(--ink-soft)}
+.intro-yayasan .orn-band{flex:1;min-width:40px;max-width:200px;height:10px;color:var(--semangka-tua);-webkit-mask-size:20px 10px;mask-size:20px 10px}
+.intro-seni{justify-self:end;width:min(72vw,320px)}
+.intro-seni .frame-arch{color:var(--kulit)}
+/* irisan semangka: di belakang foto (grid z-index 1), menjorok keluar tepi layar */
+.intro-slice{position:absolute;z-index:0;left:0;bottom:clamp(96px,14vw,150px);--slice:min(80vw,380px);--jorok:-36%;--putar:14deg}
+.intro-pita{position:relative;z-index:1;--pita:40px}
 @media (min-width:900px){
-  .intro-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr))}
-  .intro-kalimat{grid-column:1/12}
-  .intro-pills{grid-column:4/13;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:18px 0}
-  .intro-pills li{justify-self:start;white-space:nowrap;margin:0}
-  .intro-pills li:nth-child(1){grid-column:1/5;grid-row:1}
-  .intro-pills li:nth-child(2){grid-column:5/10;grid-row:1;margin-top:26px}
-  .intro-pills li:nth-child(3){grid-column:2/6;grid-row:2}
-  .intro-pills li:nth-child(4){grid-column:6/10;grid-row:2;margin-top:12px}
+  .intro-grid{grid-template-columns:repeat(12,minmax(0,1fr));align-items:center}
+  .intro-teks{grid-column:1/9}
+  .intro-seni{grid-column:9/13;width:100%;max-width:400px}
+  .intro-slice{left:auto;right:0;bottom:clamp(90px,9vw,150px);--slice:clamp(300px,36vw,560px);--jorok:40%;--putar:-16deg}
 }
 
-/* ===== KENAPA: empat panel =====
-   HP: panel bertumpuk; teks terbuka saat panel melewati tengah layar (lalu tetap terbuka), bisa diketuk.
-   Desktop ≥ 960px: panel tinggi berjajar; panel aktif melebar 3 : 1. Kata Arab = garis tipis, terisi warna saat aktif.
-   Biru (tinta biru logo) panel 1–2, hijau (hijau logo digelapkan) panel 3–4. Tanpa .js / reduced-motion: semua terbuka. */
-.why-head{margin-bottom:clamp(32px,5vw,56px)}
-.why-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
-.why-panel{--c:var(--lazuardi-ink);position:relative;border-bottom:1px solid color-mix(in srgb,var(--ink) 22%,transparent)}
-.why-panel:nth-child(n+3){--c:var(--zamrud-ink)}
-.why-btn{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;padding:22px 0 14px;background:none;border:0;text-align:left;cursor:pointer;color:inherit}
-.why-btn:focus-visible{outline-offset:-3px}
-.why-ar{order:-1;margin-bottom:10px;font-family:var(--f-ar-display);font-weight:600;font-size:clamp(2.6rem,1.6rem + 3vw,4.2rem);line-height:1.2;direction:rtl;unicode-bidi:isolate;white-space:nowrap;
-  color:transparent;-webkit-text-stroke:1.2px var(--c);transition:color .5s var(--ease)}
-.why-num{font-size:.8rem;font-weight:700;letter-spacing:.06em;font-variant-numeric:tabular-nums;color:var(--c)}
-.why-title{font-family:var(--f-display);font-weight:700;font-size:var(--step-1);line-height:1.15}
-.why-detail p{max-width:38ch;padding-bottom:22px;color:var(--ink-soft);line-height:1.55}
-.why-panel.open .why-ar,.why-statis .why-ar{color:var(--c)}
-.js .why-list:not(.why-statis) .why-detail{display:grid;grid-template-rows:0fr;transition:grid-template-rows .5s var(--ease)}
-.js .why-list:not(.why-statis) .why-detail>div{overflow:hidden;visibility:hidden;transition:visibility 0s .5s}
-.js .why-list:not(.why-statis) .why-panel.open .why-detail{grid-template-rows:1fr}
-.js .why-list:not(.why-statis) .why-panel.open .why-detail>div{visibility:visible;transition-delay:0s}
+/* ===== KENAPA LCDU: blok hijau kulit penuh lebar, teks putih, aksen merah =====
+   Tepi atas = pita merah Pengantar; tepi bawah = pita merah di atas putih. Tanpa kotak/panel.
+   Desktop ≥ 960px: kiri = foto berbingkai lengkung yang menempel (sticky) dan berganti (crossfade) saat pernyataan di kanan
+   melewati tengah layar; kata Arab raksasa bergaris putih menumpang di tepi bawah foto (rata kiri, tidak masuk kolom
+   teks), terisi merah saat aktif.
+   HP: tiap pernyataan = foto lalu teks, bertumpuk, tanpa sticky. Reduced-motion: tanpa transisi (langsung berganti). */
+.why{position:relative;background:var(--kulit);color:var(--putih);--ink:var(--putih);--why-lembut:color-mix(in srgb,var(--putih) 88%,var(--kulit))}
+.why-wrap{padding-block:clamp(56px,8vw,112px) clamp(48px,7vw,104px)}
+.why-h{font-family:var(--f-display);font-weight:700;font-size:var(--step-4);line-height:1;letter-spacing:-.03em}
+.why-list{list-style:none;margin:clamp(24px,4vw,40px) 0 0;padding:0}
+.why-item{position:relative;padding-block:clamp(36px,6vw,56px);border-top:1px solid color-mix(in srgb,var(--putih) 24%,transparent)}
+/* aksen merah: garis pendek di atas pernyataan aktif, terbentang saat aktif */
+.why-item::before{content:"";position:absolute;left:0;top:-2px;width:64px;height:3px;background:var(--semangka);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
+.why-item.aktif::before{transform:none}
+.why-judul{font-family:var(--f-display);font-weight:700;font-size:clamp(2.25rem,1.7rem + 1.2vw,3rem);line-height:1.05;letter-spacing:-.02em}
+.why-item p{margin-top:14px;max-width:34ch;font-size:var(--step-1);line-height:1.5;color:var(--why-lembut)}
+/* kata Arab raksasa (dekor; hanya kata yang sudah ada): garis putih, terisi merah semangka saat aktif */
+.why-ar{font-family:var(--f-ar-display);font-weight:700;line-height:1;white-space:nowrap;direction:rtl;unicode-bidi:isolate;pointer-events:none;
+  color:transparent;-webkit-text-stroke:1.5px var(--putih);transition:color .6s var(--ease-menyala) .2s}
+.why-item.aktif .why-ar,.why-stage .why-ar.on{color:var(--semangka)}
+.why-media{position:relative;width:min(76vw,340px);margin-bottom:clamp(28px,6vw,40px)}
+.why-media .frame-arch{color:var(--putih)}
+.why-media .why-ar{position:absolute;right:-.12em;bottom:-.3em;font-size:clamp(4rem,19vw,6rem)}
+.why-stage{display:none}
+.why-pita{--pita:40px;background:var(--putih)}
+.why-pita>i{display:block}
 @media (min-width:960px){
-  .why-list{display:flex;height:clamp(440px,62vh,560px);border-top:0}
-  .why-panel{flex:1 1 0;min-width:0;display:flex;flex-direction:column;overflow:hidden;border-top:1px solid var(--ink);border-bottom:0;
-    border-left:1px solid color-mix(in srgb,var(--ink) 22%,transparent);transition:flex-grow .7s var(--ease)}
-  .why-panel:first-child{border-left:0}
-  .why-panel.open{flex-grow:3}
-  .why-panel::before{content:"";position:absolute;left:0;right:0;top:-1px;height:3px;background:var(--c);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
-  .why-panel.open::before,.why-statis .why-panel::before{transform:none}
-  .why-btn{flex:1;justify-content:flex-end;padding:28px 22px 10px}
-  .why-ar{margin-bottom:auto;font-size:clamp(2rem,3.6vw,4rem)}  /* "عَنْ بُعْد" harus muat di panel sempit */
-  .why-detail{padding:0 22px}
-  .why-detail p{padding-bottom:28px}
-  .js .why-list:not(.why-statis) .why-detail{display:block}
-  .js .why-list:not(.why-statis) .why-detail>div{overflow:visible}
-  /* teks tidak ikut mengalir ulang selama panel melebar: lebarnya tetap, muncul setelah panel cukup lebar */
-  .js .why-list:not(.why-statis) .why-detail p{width:34ch;max-width:none;opacity:0;transform:translateY(8px);transition:opacity .35s,transform .35s var(--ease)}
-  .js .why-list:not(.why-statis) .why-panel.open .why-detail p{opacity:1;transform:none;transition-delay:.3s}
-  .why-statis{height:auto;min-height:clamp(440px,62vh,560px)}
-  .why-statis .why-panel,.why-statis .why-panel.open{flex-grow:1}
+  .why-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(48px,6vw,104px);align-items:start}
+  .why-media{display:none}
+  .why-stage{--panggung:min(64vh,560px);display:block;position:sticky;top:calc(50vh - var(--panggung) / 2 + 24px);height:var(--panggung);
+    width:min(100%,calc(var(--panggung) * .8));margin-top:clamp(36px,6vw,56px)}
+  .why-stage .frame-arch{position:absolute;inset:0;aspect-ratio:auto;color:var(--putih);opacity:0;transition:opacity .7s var(--ease)}
+  .why-stage .frame-arch.on{opacity:1}
+  .why-stage .why-ar{position:absolute;left:-.04em;bottom:-.42em;font-size:clamp(6rem,11vw,10rem);opacity:0;transition:opacity .7s var(--ease),color .6s var(--ease-menyala) .25s}
+  .why-stage .why-ar.on{opacity:1}
+  .why-item{min-height:min(58vh,520px);display:flex;flex-direction:column;justify-content:center}
+  .why-item:last-child{min-height:min(64vh,560px)}
 }
+@media (prefers-reduced-motion: reduce){.why-item::before,.why-ar,.why-stage .frame-arch,.why-stage .why-ar{transition:none!important}}
 
 /* ===== BIAYA =====
    Struk tercetak keluar dari celah printer mengikuti scroll (gerak "tergambar"): --cetak 0..1 dianimasikan view timeline
@@ -758,37 +761,68 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <div class="hari" id="hari">
 
 <div class="fase" data-fase="pagi">
-<!-- ============ PENGANTAR: satu pernyataan yang menyala kata demi kata saat dibaca ============
-     Pembaca layar membaca kalimat utuh (.sr-only); versi per kata hanya visual (aria-hidden). --i = urutan kata, --n = jumlah kata. -->
+<!-- ============ PENGANTAR: tiga fragmen yang menyala kata demi kata saat dibaca ============
+     Pembaca layar membaca kalimat utuh (.sr-only); versi per kata hanya visual (aria-hidden). --i = urutan kata, --n = jumlah kata.
+     Foto stok SEMENTARA (assets/photos/CREDITS.md). -->
 <section class="band intro" id="pengantar" aria-labelledby="intro-h">
-  <div class="orn-net intro-jaring" aria-hidden="true"></div>
   <div class="wrap intro-grid">
-    <h2 class="intro-kalimat" id="intro-h" style="--n:21">
-      <span class="sr-only">LCDU, <span lang="en">Language Course for Da'wah &amp; Ummah</span>: kelas Bahasa Arab dan Inggris online yang nirlaba, untuk usia 16 tahun ke atas.</span>
-      <span aria-hidden="true"><span class="k" style="--i:0">LCDU,</span> <span lang="en"><span class="k" style="--i:1">Language</span> <span class="k" style="--i:2">Course</span> <span class="k" style="--i:3">for</span> <span class="k" style="--i:4">Da'wah</span> <span class="k" style="--i:5">&amp;</span> <span class="k" style="--i:6">Ummah:</span></span> <span class="k" style="--i:7">kelas</span> <span class="k" style="--i:8">Bahasa</span> <span class="k k-ar" style="--i:9">Arab</span> <span class="k" style="--i:10">dan</span> <span class="k k-en" style="--i:11">Inggris</span> <span class="k" style="--i:12">online</span> <span class="k" style="--i:13">yang</span> <span class="k" style="--i:14">nirlaba,</span> <span class="k" style="--i:15">untuk</span> <span class="k" style="--i:16">usia</span> <span class="k" style="--i:17">16</span> <span class="k" style="--i:18">tahun</span> <span class="k" style="--i:19">ke</span> <span class="k" style="--i:20">atas.</span></span>
-    </h2>
-    <ul class="intro-pills" aria-label="Sekilas tentang LCDU">
-      <li data-muncul style="--d:0ms"><i class="orn-leaf" aria-hidden="true"></i>Online · Zoom &amp; Canvas LMS</li>
-      <li data-muncul style="--d:180ms"><i class="orn-leaf" aria-hidden="true"></i>Usia 16 tahun ke atas</li>
-      <li data-muncul style="--d:360ms"><i class="orn-leaf" aria-hidden="true"></i>Rp100.000 per term (semester)</li>
-      <li data-muncul style="--d:540ms"><i class="orn-leaf" aria-hidden="true"></i>Di bawah Yayasan Taqwa Cerdas Kreatif</li>
-    </ul>
+    <div class="intro-teks">
+      <h2 class="intro-kalimat" id="intro-h" style="--n:7">
+        <span class="sr-only">Belajar Bahasa Arab dan Inggris. Online. Nirlaba.</span>
+        <span aria-hidden="true"><span class="intro-l1"><span class="k" style="--i:0">Belajar</span> <span class="k" style="--i:1">Bahasa</span> <span class="k k-ar" style="--i:2">Arab</span> <span class="k" style="--i:3">dan</span> <span class="k k-en" style="--i:4">Inggris.</span></span><span class="intro-l2"><span class="k" style="--i:5">Online.</span></span><span class="intro-l3"><span class="k k-merah" style="--i:6">Nirlaba.</span></span></span>
+      </h2>
+      <p class="intro-yayasan"><i class="orn-leaf" aria-hidden="true"></i><span>Dikelola Yayasan Taqwa Cerdas Kreatif.</span><i class="orn-band" aria-hidden="true"></i></p>
+    </div>
+    <div class="intro-seni" aria-hidden="true">
+      <figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/aqsa-480.avif 480w, assets/photos/aqsa-960.avif 960w" sizes="(min-width:900px) 400px, 72vw"><img src="assets/photos/aqsa-960.webp" srcset="assets/photos/aqsa-480.webp 480w, assets/photos/aqsa-960.webp 960w" sizes="(min-width:900px) 400px, 72vw" alt="" loading="lazy" decoding="async" style="object-position:100% 50%"></picture></figure>
+    </div>
   </div>
+  <i class="orn-slice intro-slice" aria-hidden="true"></i>
+  <div class="orn-band orn-band--tebal kain-merah intro-pita" aria-hidden="true"></div>
 </section>
 
-<!-- ============ KENAPA LCDU ============ -->
-<section class="band" id="kenapa" aria-labelledby="why-h">
-  <div class="wrap">
-    <div class="why-head">
-      <h2 class="h2" id="why-h" data-muncul>Empat hal yang membuat kelas LCDU berbeda</h2>
+<!-- ============ KENAPA LCDU: blok hijau, foto menempel di kiri (desktop) berganti mengikuti pernyataan ============
+     .why-stage (desktop) dan .why-media (HP) adalah foto dekoratif yang sama (aria-hidden); yang tidak tampil tidak diunduh
+     (loading="lazy" + display:none). Kata Arab hanya yang sudah ada. Foto stok SEMENTARA. -->
+<section class="why" id="kenapa" aria-labelledby="why-h">
+  <div class="wrap why-wrap">
+    <h2 class="why-h" id="why-h">Kenapa LCDU?</h2>
+    <div class="why-grid">
+      <div class="why-stage" aria-hidden="true">
+          <figure class="frame-arch on" data-i="0"><picture><source type="image/avif" srcset="assets/photos/menulis-480.avif 480w, assets/photos/menulis-960.avif 960w" sizes="(min-width:960px) 34vw, 1px"><img src="assets/photos/menulis-960.webp" srcset="assets/photos/menulis-480.webp 480w, assets/photos/menulis-960.webp 960w" sizes="(min-width:960px) 34vw, 1px" alt="" loading="lazy" decoding="async"></picture></figure>
+          <figure class="frame-arch" data-i="1"><picture><source type="image/avif" srcset="assets/photos/kelas-online-480.avif 480w, assets/photos/kelas-online-960.avif 960w" sizes="(min-width:960px) 34vw, 1px"><img src="assets/photos/kelas-online-960.webp" srcset="assets/photos/kelas-online-480.webp 480w, assets/photos/kelas-online-960.webp 960w" sizes="(min-width:960px) 34vw, 1px" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"></picture></figure>
+          <figure class="frame-arch" data-i="2"><picture><source type="image/avif" srcset="assets/photos/guru-papan-480.avif 480w, assets/photos/guru-papan-960.avif 960w" sizes="(min-width:960px) 34vw, 1px"><img src="assets/photos/guru-papan-960.webp" srcset="assets/photos/guru-papan-480.webp 480w, assets/photos/guru-papan-960.webp 960w" sizes="(min-width:960px) 34vw, 1px" alt="" loading="lazy" decoding="async" style="object-position:45% 70%"></picture></figure>
+          <figure class="frame-arch" data-i="3"><picture><source type="image/avif" srcset="assets/photos/quran-rehal-480.avif 480w, assets/photos/quran-rehal-960.avif 960w" sizes="(min-width:960px) 34vw, 1px"><img src="assets/photos/quran-rehal-960.webp" srcset="assets/photos/quran-rehal-480.webp 480w, assets/photos/quran-rehal-960.webp 960w" sizes="(min-width:960px) 34vw, 1px" alt="" loading="lazy" decoding="async"></picture></figure>
+          <span class="why-ar on" lang="ar" data-i="0">مَنْهَج</span>
+          <span class="why-ar" lang="ar" data-i="1">عَنْ بُعْد</span>
+          <span class="why-ar" lang="ar" data-i="2">مُعَلِّم</span>
+          <span class="why-ar" lang="ar" data-i="3">القُرْآن</span>
+      </div>
+      <ol class="why-list">
+        <li class="why-item">
+          <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/menulis-480.avif 480w, assets/photos/menulis-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/menulis-960.webp" srcset="assets/photos/menulis-480.webp 480w, assets/photos/menulis-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async"></picture></figure><span class="why-ar" lang="ar">مَنْهَج</span></div>
+          <h3 class="why-judul">Kurikulum internasional</h3>
+          <p>Materi mengikuti kurikulum internasional, disesuaikan dengan level kamu.</p>
+        </li>
+        <li class="why-item">
+          <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/kelas-online-480.avif 480w, assets/photos/kelas-online-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/kelas-online-960.webp" srcset="assets/photos/kelas-online-480.webp 480w, assets/photos/kelas-online-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"></picture></figure><span class="why-ar" lang="ar">عَنْ بُعْد</span></div>
+          <h3 class="why-judul">Kelas online yang rapi</h3>
+          <p>Tatap muka lewat Zoom. Materi, tugas, dan link kelas tersimpan rapi di Canvas LMS.</p>
+        </li>
+        <li class="why-item">
+          <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/guru-papan-480.avif 480w, assets/photos/guru-papan-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/guru-papan-960.webp" srcset="assets/photos/guru-papan-480.webp 480w, assets/photos/guru-papan-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async" style="object-position:45% 70%"></picture></figure><span class="why-ar" lang="ar">مُعَلِّم</span></div>
+          <h3 class="why-judul">Guru tersertifikasi</h3>
+          <p>Guru ramah dan bersertifikat Cambridge: TKT, CELTA, hingga DELTA.</p>
+        </li>
+        <li class="why-item">
+          <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/quran-rehal-480.avif 480w, assets/photos/quran-rehal-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/quran-rehal-960.webp" srcset="assets/photos/quran-rehal-480.webp 480w, assets/photos/quran-rehal-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async"></picture></figure><span class="why-ar" lang="ar">القُرْآن</span></div>
+          <h3 class="why-judul">Dibuka dengan Al-Qur'an</h3>
+          <p>Setiap pertemuan diawali membaca dan mendiskusikan ayat Al-Qur'an.</p>
+        </li>
+      </ol>
     </div>
-    <ul class="why-list" id="why">
-      <li class="why-panel"><button class="why-btn" type="button" aria-expanded="true" aria-controls="why-d1"><span class="why-num">01</span><span class="why-title">Kurikulum internasional</span><span class="why-ar" lang="ar">مَنْهَج</span></button><div class="why-detail" id="why-d1"><div><p>Materi mengikuti kurikulum internasional yang disesuaikan dengan kebutuhan dan level kamu.</p></div></div></li>
-      <li class="why-panel"><button class="why-btn" type="button" aria-expanded="true" aria-controls="why-d2"><span class="why-num">02</span><span class="why-title">Kelas online yang rapi</span><span class="why-ar" lang="ar">عَنْ بُعْد</span></button><div class="why-detail" id="why-d2"><div><p>Tatap muka lewat Zoom. Materi, tugas, dan link kelas tersimpan di Canvas LMS, jadi tidak tercecer di chat.</p></div></div></li>
-      <li class="why-panel"><button class="why-btn" type="button" aria-expanded="true" aria-controls="why-d3"><span class="why-num">03</span><span class="why-title">Guru tersertifikasi</span><span class="why-ar" lang="ar">مُعَلِّم</span></button><div class="why-detail" id="why-d3"><div><p>Guru yang ramah dan menyenangkan, dengan sertifikat Cambridge TKT, CELTA, sampai DELTA.</p></div></div></li>
-      <li class="why-panel"><button class="why-btn" type="button" aria-expanded="true" aria-controls="why-d4"><span class="why-num">04</span><span class="why-title">Dibuka dengan Al-Qur'an</span><span class="why-ar" lang="ar">القُرْآن</span></button><div class="why-detail" id="why-d4"><div><p>Setiap pertemuan diawali dengan membaca dan mendiskusikan ayat Al-Qur'an bersama.</p></div></div></li>
-    </ul>
   </div>
+  <div class="why-pita" aria-hidden="true"><i class="orn-band orn-band--tebal kain-merah"></i></div>
 </section>
 </div>
 
@@ -1123,37 +1157,19 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     $('#pt-status').textContent = cfg(ptOpen ? 'placementTest.teksBuka' : 'placementTest.teksTutup') || $('#pt-status').textContent;
   }
 
-  /* ---------- Kenapa LCDU: panel ----------
-     Desktop: tepat satu panel aktif (hover, fokus, klik); saat section pertama terlihat, panel menyala bergantian sekali
-     lalu berhenti (interaksi pengunjung langsung menghentikannya). HP: panel terbuka saat melewati tengah layar dan tetap
-     terbuka; ketuk untuk membuka/menutup. Reduced-motion: semua terbuka dan statis. */
-  var why = $('#why'), panels = $$('.why-panel', why), wide = window.matchMedia('(min-width: 960px)'), whyDemo = null;
-  function whySet(p, on){ p.classList.toggle('open', on); $('.why-btn', p).setAttribute('aria-expanded', on); }
-  function whyActivate(p){ panels.forEach(function(x){ whySet(x, x === p); }); }
-  function whyStop(){ if (whyDemo){ clearTimeout(whyDemo); whyDemo = null; } }
-  if (reduce){ why.classList.add('why-statis'); panels.forEach(function(p){ whySet(p, true); }); }
-  else {
-    var whyMode = function(){ whyStop(); if (wide.matches) whyActivate(panels.filter(function(p){ return p.classList.contains('open'); })[0] || panels[0]); else panels.forEach(function(p){ whySet(p, false); }); };
-    whyMode();
-    if (wide.addEventListener) wide.addEventListener('change', whyMode);
-    panels.forEach(function(p){
-      var b = $('.why-btn', p);
-      b.addEventListener('click', function(){ whyStop(); if (wide.matches) whyActivate(p); else whySet(p, !p.classList.contains('open')); });
-      b.addEventListener('focus', function(){ if (wide.matches){ whyStop(); whyActivate(p); } });
-      if (fine) p.addEventListener('pointerenter', function(){ if (wide.matches){ whyStop(); whyActivate(p); } });
-    });
-    if ('IntersectionObserver' in window){
-      /* HP: buka saat melewati tengah layar */
-      var midIO = new IntersectionObserver(function(en){ en.forEach(function(x){ if (x.isIntersecting && !wide.matches) whySet(x.target, true); }); }, {rootMargin:'-45% 0px -45% 0px'});
-      panels.forEach(function(p){ midIO.observe(p); });
-      /* desktop: urutan menyala sekali (2 → 3 → 4 → kembali ke 1) */
-      new IntersectionObserver(function(en, ob){
-        if (!en[0].isIntersecting) return; ob.disconnect();
-        if (!wide.matches) return;
-        var seq = [1, 2, 3, 0], k = 0;
-        (function next(){ whyDemo = setTimeout(function(){ whyActivate(panels[seq[k++]]); if (k < seq.length) next(); else whyDemo = null; }, 1100); })();
-      }, {threshold:.55}).observe(why);
-    }
+  /* ---------- Kenapa LCDU: pernyataan aktif = yang melewati tengah layar ----------
+     Desktop: foto & kata Arab di panggung sticky berganti (crossfade lewat CSS). HP: kata Arab pernyataan aktif terisi merah.
+     Tanpa JS: foto pertama tampil, semua teks terbaca. Reduced-motion: tetap berganti, tanpa transisi (CSS). */
+  var whyEl = $('#kenapa'), whyItems = $$('.why-item', whyEl), whyStage = $$('.why-stage [data-i]', whyEl);
+  function whyAktif(i){
+    whyItems.forEach(function(it, k){ it.classList.toggle('aktif', k === i); });
+    whyStage.forEach(function(el){ el.classList.toggle('on', +el.dataset.i === i); });
+  }
+  whyAktif(0);
+  if ('IntersectionObserver' in window){
+    var whyIO = new IntersectionObserver(function(en){ en.forEach(function(x){ if (x.isIntersecting) whyAktif(whyItems.indexOf(x.target)); }); },
+      {rootMargin:'-45% 0px -45% 0px'});
+    whyItems.forEach(function(it){ whyIO.observe(it); });
   }
 
   /* ---------- Struk biaya: cadangan JS untuk --cetak (= animation-range "cover 12% cover 48%"), hanya saat terlihat ---------- */

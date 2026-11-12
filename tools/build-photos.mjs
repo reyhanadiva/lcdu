@@ -17,6 +17,7 @@ const FOTO = {
   zaitun: {},
   aqsa: { crop: [0, 0.28, 1, 1] },           // buang cakrawala kota modern, sisakan Al-Aqsa, Kubah & tembok
   keffiyeh: {},
+  'guru-papan': {},
 };
 
 if (!SRC) { console.error('Pakai: node build-photos.mjs <folder-jpg-asli>'); process.exit(1); }

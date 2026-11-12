@@ -117,20 +117,31 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Sekarang 7 foto Pexels (±1,7 MB AVIF semua ukuran). Ganti dengan foto asli LCDU sebelum rilis.
 - `ornamen-test.html` = halaman uji **sementara** untuk persetujuan pemilik (gaya diambil dari `index.html`;
   `?bandingkan` = 1440 & 390 berdampingan). Hapus setelah disetujui.
-- **Pengantar** (selesai): satu kalimat besar (teks persis dari pemilik) yang menyala kata per kata. Tiap kata `.k` dengan
-  `--i`; `--p` (didaftarkan `@property`, awal 1 = penuh) dianimasikan view timeline kalimat (`cover 18% → 52%`, tanpa pin),
-  cadangan JS. Redup ≥ 3:1 (campuran tinta + latar, terukur 3,4:1), penuh ≥ 4,5:1; pendar `--lentera` di kata yang sedang
-  menyala. "Inggris" = `--lazuardi-ink` (= biru logo), "Arab" = `--zamrud-ink` (hijau logo asli `#7FA33F` hanya 2,4:1 di
-  latar pagi, tidak boleh jadi teks). Pembaca layar membaca kalimat utuh (`.sr-only`), versi per kata `aria-hidden`.
-  Empat pill fakta (garis 1px, sudut 3px, `.orn-leaf`) tersusun tangga tidak simetris, `data-muncul` dengan jeda `--d`.
-- **Kenapa LCDU** (selesai): empat panel `.why-panel`, tiap panel = `<button aria-expanded aria-controls>` (urutan baca:
-  nomor, judul, kata Arab; kata Arab dipindah ke atas lewat `order`). Desktop ≥ 960px: panel tinggi berjajar, tepat satu
-  aktif (hover/fokus/klik) melebar 3 : 1 (`flex-grow`), teks lebar tetap 34ch muncul setelah panel melebar; saat pertama
-  terlihat menyala 2 → 3 → 4 → 1 sekali lalu berhenti (interaksi menghentikannya). HP: panel terbuka saat melewati tengah
-  layar dan tetap terbuka, ketuk untuk membuka/menutup. Kata Arab (Reem Kufi, `white-space:nowrap`, ukuran harus muat di
-  panel sempit) = garis 1,2px, terisi saat aktif. Biru (`--lazuardi-ink`) panel 1–2, hijau (`--zamrud-ink`) panel 3–4.
-  Reduced-motion / tanpa JS: `.why-statis` (semua terbuka, sama lebar). Kata Arab hanya yang sudah ada: مَنْهَج،
-  عَنْ بُعْد، مُعَلِّم، القُرْآن.
+- **Pengantar** (selesai, revisi 2 — seni): tiga fragmen (teks persis dari pemilik): baris 1 "Belajar Bahasa Arab dan
+  Inggris." Fraunces 300 besar ("Arab" `--zamrud-ink` = hijau kulit, "Inggris" `--lazuardi-ink`, keduanya 700); baris 2
+  "Online." dan baris 3 "Nirlaba." Fraunces 700 **miring** jauh lebih besar ("Nirlaba." `--semangka-tua`; merah terang
+  4,0:1 tidak dipakai untuk teks). Hierarki dari ukuran & ketebalan. Tanpa "16 tahun ke atas", tanpa pill. Di bawahnya
+  satu baris kecil `.intro-yayasan`: `.orn-leaf` + "Dikelola Yayasan Taqwa Cerdas Kreatif." + `.orn-band` tipis merah.
+  Menyala kata per kata: `.k` dengan `--i`, `--n:7`; `--p` (`@property`, awal 1 = penuh) dianimasikan view timeline
+  (`cover 18% → 50%`, tanpa pin), cadangan JS. Lebih tegas: jendela 1,5 kata, pendar `--lentera` 95%. Redup terukur:
+  tinta 48% 3,2:1 · Arab 68% 3,2 · Inggris 54% 3,1 · merah 62% 3,1; penuh ≥ 6,2:1. Pembaca layar: `.sr-only`
+  "Belajar Bahasa Arab dan Inggris. Online. Nirlaba." Seni: foto Al-Aqsa (`.frame-arch`, garis hijau kulit,
+  `object-position:100% 50%` supaya Kubah terlihat) di kolom 9–12 (HP: di bawah teks, rata kanan), `.orn-slice` besar
+  menjorok dari tepi kanan (HP: kiri) di belakang foto, pita `.orn-band--tebal.kain-merah` di tepi bawah = tepi atas Kenapa
+  (sengaja satu pita, bukan dua bertumpuk). Font: `fonts/fraunces-latin.woff2` ternyata sudah variabel 300–700 (sama
+  persis dengan unduhan Google Fonts); ditambah `fraunces-italic-latin.woff2` (600–700, 45 KB, tidak di-preload).
+- **Kenapa LCDU** (selesai, revisi 2): blok `.why` hijau kulit penuh lebar, teks putih (6,5:1; teks lembut putih 88% 5,5:1),
+  aksen merah semangka hanya dekor (garis 64px di atas pernyataan aktif, isi kata Arab, pita). Judul "Kenapa LCDU?".
+  Tanpa kotak/panel/tombol/eyebrow. Pernyataan = `<ol>`: `h3` Fraunces 36–48px + kalimat (teks persis dari pemilik).
+  Desktop ≥ 960px: grid 5 : 7; kiri `.why-stage` sticky (tinggi `min(64vh,560px)`, rasio 4:5) berisi empat `.frame-arch`
+  bertumpuk + empat kata Arab raksasa (Reem Kufi 6–10rem, garis putih 1,5px, rata kiri di tepi bawah foto supaya tidak
+  masuk kolom teks), crossfade .7s saat pernyataan melewati tengah layar (IntersectionObserver `-45% 0px -45% 0px`, JS
+  memasang `.aktif` di item & `.on` di panggung). Kata Arab aktif terisi `--semangka`. Foto: menulis (kurikulum),
+  kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. HP: tiap item = `.why-media` (foto + kata Arab
+  menumpang di tepi bawah-kanan) lalu teks, tanpa sticky. Panggung & media = duplikat dekoratif (`aria-hidden`,
+  `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi bawah: pita merah di atas putih (`.why-pita`).
+  Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
+  atas permintaan pemilik. Kata Arab hanya yang sudah ada: مَنْهَج، عَنْ بُعْد، مُعَلِّم، القُرْآن.
 - **Pilih kelas** (selesai): layar terbelah penuh-lebar `#split`, `--a` (didaftarkan `@property`) = lebar sisi Inggris %.
   Desktop ≥ 700px: grid `--a% | sisa`, pegangan `role="slider"` (30–70, panah/Home/End lompat ke snap 30/50/70, tarik
   lalu snap), klik sisi sempit → 70%. Sisi ≥ 60% menampilkan rincian (label, strip 7 hari, slot foto); rincian berlebar
@@ -145,7 +156,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Teks struk persis dari pemilik (kepala, "Total per term", catatan biaya registrasi, penutup "Terima kasih sudah belajar
   bersama LCDU."). Catatan donasi Palestina di bawah struk. Tanpa count-up, tanpa stempel.
 - Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
-- **Gerak (hanya tiga, + ayunan semangka)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
+- **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
   reduced-motion; tanpa `.gerak` semuanya tampil diam & utuh.
@@ -231,10 +242,10 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
-   Bergabung, Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya.
-   Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) sudah ada dan **menunggu persetujuan
-   pemilik** di `ornamen-test.html`. Sesi berikutnya: blok warna kuat per section Pengantar–Biaya memakai fondasi itu
-   (isi & tata letak section belum diubah).
+   Bergabung, Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya
+   (Pengantar & Kenapa sudah memakai fondasi seni; Kelas & Biaya belum).
+   Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
+   `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas

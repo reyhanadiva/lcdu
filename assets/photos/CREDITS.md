@@ -16,6 +16,7 @@ Turunan (AVIF + WebP, lebar 480 / 960 / 1600, tidak pernah diperbesar) dibuat de
 | `zaitun-*` | Kebun zaitun saat golden hour | https://www.pexels.com/photo/serene-olive-grove-in-golden-hour-light-38928225/ | Betül Kaya | Lokasi tidak disebut (bukan Palestina) |
 | `aqsa-*` | Kompleks Al-Aqsa (Masjid Qibli & Kubah Shakhrah) dari Bukit Zaitun | https://www.pexels.com/photo/buildings-in-jerusalem-11696778/ | Yasir Gürbüz | Dipotong: cakrawala gedung modern di atas dibuang (ada benda warna-warni kecil yang tak bisa dipastikan) |
 | `keffiyeh-*` | Kain keffiyeh hitam-putih tersampir di teralis jendela batu | https://www.pexels.com/photo/stone-window-frame-with-grilled-bars-in-istanbul-38027009/ | novvaluna | Tanpa orang; kain tampak kecil (bukan close-up penuh) — foto close-up kain tanpa orang yang lulus aturan tidak ditemukan di Pexels |
+| `guru-papan-*` | Tangan menulis dengan kapur di papan tulis (lengan berbaju, tanpa wajah) | https://www.pexels.com/photo/hand-writing-mathematical-formulas-on-a-blackboard-6256258/ | Kaboompics.com | Diunduh 12 Nov 2026 (sesi Kenapa LCDU). Isi papan rumus matematika. Kandidat lain ditolak: merek spidol terbaca; lengan terbuka bertato |
 
 ## Aturan foto stok (lihat juga CLAUDE.md)
 - Hanya Unsplash (bukan Unsplash+), Pexels, atau Pixabay, berlisensi komersial gratis. Catat di tabel ini.
