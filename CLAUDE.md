@@ -66,7 +66,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   **gelap → terang**. Cerita 3 babak lewat scroll (copy persis, hanya pemilik yang mengubah):
   1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."
   3. "Bersama, kita nyalakan harapan untuk Palestina."
-- Wordmark permanen kiri atas hero: "LCDU" + "Language Course for Da'wah & Ummah" (identitas, bukan tombol/tautan).
+- Wordmark permanen kiri atas hero: logo + "LCDU" saja (keputusan pemilik; nama panjang hanya untuk pembaca layar, `.sr-only`).
+  Identitas, bukan tombol/tautan.
 - Biaya (fakta dari pemilik): **Rp100.000 per term, 1 term = 1 semester, sudah mencakup seluruh biaya belajar; tidak gratis.**
   Donasi **sukarela**, sesuai kesanggupan. Jangan menulis "gratis" atau "Rp0" di mana pun; angka utama selalu Rp100.000 per term.
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
@@ -80,9 +81,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   (kontras ≥ 6:1); babak 1–2 putih di atas gradasi lebar & lembut dari pojok kiri-atas yang memudar habis sebelum
   babak 3. Jangan pakai elips/bercak gelap di belakang teks dan jangan ada gradasi yang berhenti mendadak (pemilik menolak:
   terlihat sebagai bulatan hitam dan garis).
+- Tombol mengambang "Tanya admin" (`.fab`) tersembunyi selama hero, muncul halus setelah hero.
 - Kursor: kursor bawaan tidak disembunyikan, tidak ada kursor kustom. Di hero: cahaya hangat lembut mengikuti kursor
   (HP: mengikuti jari) dan menyingkap fajar di sekitarnya. Di luar hero: tanpa efek kursor khusus.
-- Navbar: tersembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah; muncul saat fokus
+- Navbar: kaca transparan ala Apple (isi 58%, blur 8px, saturate 1.8, garis tepi putih tipis; jangan terlalu blur).
+  Tersembunyi selama hero; setelahnya muncul, baru hilang setelah scroll ke bawah ±220 px (geser + pudar halus .7s),
+  muncul lagi saat scroll ke atas; muncul saat fokus
   keyboard; skip link "Lewati ke konten"; tanpa slide saat reduced-motion.
 - Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.
 - Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun. Motif keffiyeh × semangka **tidak di dalam
