@@ -189,9 +189,9 @@ export default {
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
       /* garis waktu (p = 0..1), berurutan dan tidak tumpang-tindih supaya tiap tahap terlihat:
          lampu menyala .04–.46 · malam → fajar biru .14–.5 · bulan, bintang & biru memudar ke subuh .5–.64 ·
-         pendar pertama di titik matahari .6–.74 · matahari terbit (sapuan keemasan) .66–.9 · sinar penuh .8–1 */
+         pendar pertama di titik matahari .58–.72 · matahari terbit (sapuan keemasan, menguat bertahap) .64–.96 · sinar penuh .82–1 */
       const lit = smooth((p - .04)/.42)*n, blue = dawn ? smooth((p - .14)/.36) : 0, pre = dawn ? smooth((p - .5)/.14) : 0;
-      const first = dawn ? smooth((p - .6)/.14) : 0, dawnT = dawn ? smooth((p - .66)/.24) : 0, full = dawn ? smooth((p - .8)/.2) : 0;
+      const first = dawn ? smooth((p - .58)/.14) : 0, dawnT = dawn ? smooth((p - .64)/.32) : 0, full = dawn ? smooth((p - .82)/.18) : 0;
       const pa = st.pointer.active;
       if (pa){ const tx = st.pointer.x*DPR, ty = st.pointer.y*DPR; lx = lx < 0 ? tx : lx + (tx - lx)*.2; ly = ly < 0 ? ty : ly + (ty - ly)*.2; }
       if (st.reduce){ const key = p.toFixed(4) + (pa ? `${lx | 0},${ly | 0}` : '-') + (dawn ? 'd' : ''); if (key === last) return; last = key; }
@@ -216,7 +216,10 @@ export default {
         if (dawnT > 0){
           /* sapuan dari matahari: lingkaran lembut yang membesar, tepinya diberi gelombang supaya tidak seperti wipe digital */
           const maxR = Math.hypot(Math.max(sun[0], W - sun[0]), Math.max(sun[1], H - sun[1]))*1.08;
-          const R = dawnT*maxR*1.1, feather = maxR*.7;           // tepi sapuan lebar & lembut
+          /* sapuan tumbuh dari kecil: tepi lembut ikut membesar, dan kekuatannya naik pelan (ramp) — tidak ada area besar
+             yang langsung terang dalam satu frame */
+          const R = dawnT*maxR*1.1, feather = maxR*(.18 + .52*dawnT), ramp = smooth(dawnT/.55);
+          mctx.globalAlpha = ramp;
           if (dawnT > .995){ mctx.fillStyle = '#000'; mctx.fillRect(0, 0, mask.width, mask.height); }
           else {
             const rg = mctx.createRadialGradient(sun[0]*q, sun[1]*q, 0, sun[0]*q, sun[1]*q, (R + feather)*q);
@@ -226,7 +229,7 @@ export default {
             for (let i = 0; i < 7; i++){                     // gelombang di tepi sapuan
               const a = Math.PI*(.75 + i*.12) + Math.sin(t*.3 + i)*.05, rr = R + feather*.35*Math.sin(i*2.3 + t*.4);
               const bx = (sun[0] + Math.cos(a)*rr)*q, by = (sun[1] + Math.sin(a)*rr)*q, br = feather*.7*q;
-              mctx.globalAlpha = .55; mctx.drawImage(MASK, bx - br, by - br, br*2, br*2);
+              mctx.globalAlpha = .55*ramp; mctx.drawImage(MASK, bx - br, by - br, br*2, br*2);
             }
             mctx.globalAlpha = 1;
           }

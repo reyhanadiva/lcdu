@@ -109,7 +109,7 @@ let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() 
 
 let raf = 0, lastT = 0;
 /* laju maksimum perubahan p (per detik): scroll yang cepat tetap memperlihatkan tiap tahap transisi, tidak melompat */
-const MAX_RATE = .6;
+const MAX_RATE = .4;
 function frame(now) {
   raf = 0;
   const dt = lastT ? Math.min(.1, (now - lastT)/1000) : 0; lastT = now;
