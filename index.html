@@ -711,6 +711,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Tanpa JS pilihan disembunyikan (tidak berfungsi) dan tampil Inggris + tautan teks ke kedua tes. */
 .gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
 .gabung-judul{display:grid;gap:12px;max-width:52ch}
+.gabung-syarat{font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
 .pilih-bahasa{display:none;align-items:center;gap:6px;margin:0;padding:5px 5px 5px 16px;border:1px solid var(--ink);border-radius:999px;min-width:0}
 .js .pilih-bahasa{display:flex}
 .pilih-bahasa legend{float:left;margin-right:6px;padding:0;font-weight:600;font-size:.95rem}
@@ -1159,6 +1160,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="wrap gabung-kepala">
     <div class="gabung-judul">
       <h2 class="h2" id="req-h" data-judul>Cara bergabung</h2>
+      <!-- (D) syarat dipadatkan: satu kalimat dari teks checklist lama (usia, Al-Qur'an, perangkat, konsisten); tanpa syarat baru -->
+      <p class="gabung-syarat">Untuk usia 16 tahun ke atas yang bisa membaca Al-Qur'an, punya laptop atau HP untuk belajar, dan siap konsisten sampai term selesai.</p>
     </div>
     <fieldset class="pilih-bahasa">
       <legend>Aku mau belajar:</legend>
