@@ -201,6 +201,14 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   reduced-motion; tanpa `.gerak` semuanya tampil diam & utuh.
 
 ## Keputusan yang sudah dikunci (jangan diubah tanpa bertanya)
+- **Judul section `[data-judul]`** (permintaan pemilik; varian "muncul" khusus judul): JS memecah h2 per KATA (span `.jk`
+  inline-block, spasi tetap teks; span berwarna & kata Arab dipertahankan, `.sr-only`/`aria-hidden` dilewati), awal
+  opacity 0 + blur(6px) + translateY(.55em), 800 ms `cubic-bezier(.2,.8,.2,1)`, jeda 75 ms/kata (maks 600 ms),
+  IntersectionObserver threshold .4 sekali. Judul yang terlihat/terlewati saat halaman dibuka (termasuk #anchor dalam
+  350 ms pertama) tampil langsung. Tanpa JS/IO/reduced-motion: utuh. Kelas `.judul-tunggu`/`.judul-jalan` dilepas
+  setelah selesai (will-change & filter bersih). Dipakai 8 judul: Kenapa, Pilih kelas, Biaya, Bergabung, Testimoni, Tim,
+  FAQ, Donasi — `data-muncul` lama pada judul itu dihapus. **Pengantar dikecualikan** (kalimatnya sudah menyala per kata
+  mengikuti scroll). Section baru: cukup tambahkan `data-judul` pada h2. `<html class="js">` dipasang di `<head>`.
 - Hero harus jelas: kursus bahasa Arab & Inggris yang nirlaba untuk dakwah dan umat. Pesan Palestina tetap ada lewat cerita
   **gelap → terang**. Cerita 3 babak lewat scroll (copy persis, hanya pemilik yang mengubah):
   1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."

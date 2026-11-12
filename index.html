@@ -12,6 +12,7 @@
 <link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-wide-v2-1280.avif" imagesrcset="assets/hero/build/night-wide-v2-1280.avif 1280w, assets/hero/build/night-wide-v2-1536.avif 1536w" imagesizes="(min-aspect-ratio: 3/2) 100vw, 150vh" media="(orientation: landscape)" fetchpriority="high">
 <meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU, untuk dakwah dan umat. Biaya Rp100.000 per term (1 semester).">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
+<script>document.documentElement.classList.add('js')</script>
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -313,6 +314,14 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 [data-tergambar]{clip-path:inset(0 calc(100% - var(--t,1) * 100%) 0 0)}
 @keyframes tergambar{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0)}}
 @supports (animation-timeline: view()){.gerak [data-tergambar]{animation:tergambar linear both;animation-timeline:view();animation-range:entry 10% cover 50%}}
+/* judul section [data-judul]: kata muncul berurutan dengan blur-in (permintaan pemilik; varian "muncul" untuk judul).
+   JS memecah judul per KATA (bukan huruf: huruf Arab bersambung) jadi span .jk inline-block, spasi tetap berupa teks.
+   Keadaan tersembunyi hanya lewat kelas .judul-tunggu yang dipasang JS pada judul yang belum terlihat saat halaman dibuka;
+   tanpa JS / tanpa IntersectionObserver / reduced-motion → judul tampil utuh. Hanya opacity, transform, filter. */
+.jk{display:inline-block}
+.judul-tunggu .jk{opacity:0;filter:blur(6px);transform:translateY(.55em)}
+.judul-jalan .jk{transition:opacity .8s cubic-bezier(.2,.8,.2,1) var(--jd,0ms),transform .8s cubic-bezier(.2,.8,.2,1) var(--jd,0ms),filter .8s cubic-bezier(.2,.8,.2,1) var(--jd,0ms);will-change:opacity,transform,filter}
+@media (prefers-reduced-motion: reduce){.judul-tunggu .jk{opacity:1;filter:none;transform:none}}
 /* menyala: cahaya hangat menyala saat terlihat, padam di luar layar */
 .menyala{position:relative}
 .menyala::after{content:"";position:absolute;inset:-60%;border-radius:50%;pointer-events:none;
@@ -889,7 +898,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
           <span class="why-ar" lang="ar" data-i="3">القُرْآن</span>
       </div>
       <div class="why-kanan">
-      <h2 class="why-h" id="why-h">Kenapa LCDU?</h2>
+      <h2 class="why-h" id="why-h" data-judul>Kenapa LCDU?</h2>
       <ol class="why-list">
         <li class="why-item">
           <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/menulis-480.avif 480w, assets/photos/menulis-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/menulis-960.webp" srcset="assets/photos/menulis-480.webp 480w, assets/photos/menulis-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async"></picture></figure><span class="why-ar" lang="ar">مَنْهَج</span></div>
@@ -927,7 +936,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
      JADWAL PERLU VERIFIKASI (lihat README): Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB;
      Weekend Sabtu 13.00–16.00 WIB. Hari ditandai kotak menyala (nama aksesibel di tiap hari kelas). Tanpa daftar level. -->
 <section class="band classes" id="kelas" aria-labelledby="cls-h">
-  <div class="wrap"><h2 class="h2" id="cls-h" data-muncul>Pilih kelasmu</h2></div>
+  <div class="wrap"><h2 class="h2" id="cls-h" data-judul>Pilih kelasmu</h2></div>
   <div class="split" id="split" data-state="imbang">
     <div class="latar latar-ar" aria-hidden="true"><i class="orn-net orn-net--kain"></i><span class="side-glyph" lang="ar">أب</span></div>
     <div class="latar latar-en" aria-hidden="true"><div class="latar-en-isi"><i class="orn-net orn-net--kain"></i><span class="side-glyph">Aa</span></div></div>
@@ -981,7 +990,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <i class="orn-seeds cost-biji kanan" aria-hidden="true"></i>
   <div class="wrap cost">
     <div class="cost-copy">
-      <h2 class="cost-label" id="cost-h" data-muncul>Berapa biayanya?</h2>
+      <h2 class="cost-label" id="cost-h" data-judul>Berapa biayanya?</h2>
       <p class="cost-besar">Tanpa <span class="cost-kunci">biaya bulanan</span>.</p>
       <p class="cost-dukung">LCDU adalah program nirlaba. Kamu cukup membayar satu kali per term (semester).</p>
     </div>
@@ -1008,7 +1017,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section class="band" id="bergabung" aria-labelledby="req-h">
   <div class="wrap req">
     <div class="req-copy">
-      <h2 class="h2" id="req-h" data-muncul>Kamu siap bergabung?</h2>
+      <h2 class="h2" id="req-h" data-judul>Kamu siap bergabung?</h2>
       <p class="lede">Centang yang sudah kamu penuhi. Kalau semuanya tercentang, kamu bisa langsung ke Placement Test.</p>
     </div>
     <ul class="req-list" id="req">
@@ -1056,7 +1065,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section class="band stories" id="testimoni" aria-labelledby="st-h">
   <div class="wrap stories-grid">
     <div style="display:grid;gap:20px">
-      <h2 class="h2" id="st-h" data-muncul>Kata mereka yang sudah belajar</h2>
+      <h2 class="h2" id="st-h" data-judul>Kata mereka yang sudah belajar</h2>
       <p class="lede">Seret kartu ke samping untuk membaca cerita berikutnya.</p>
       <div class="stack-ctrl"><button class="btn btn-ghost" id="next-story" type="button">Cerita berikutnya</button></div>
     </div>
@@ -1074,7 +1083,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section class="band" id="tim" aria-labelledby="team-h">
   <div class="wrap">
     <div class="team-head">
-      <h2 class="h2" id="team-h" data-muncul>Yang akan menemani kamu belajar</h2>
+      <h2 class="h2" id="team-h" data-judul>Yang akan menemani kamu belajar</h2>
       <div class="chips" id="chips" role="group" aria-label="Saring tim"></div>
     </div>
     <ul class="team" id="team"></ul>
@@ -1088,7 +1097,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <!-- ============ FAQ (stub: isi didesain di sesi tersendiri) ============ -->
 <section class="band" id="faq" aria-labelledby="faq-h">
   <div class="wrap">
-    <h2 class="h2" id="faq-h" data-muncul>Pertanyaan yang sering diajukan</h2>
+    <h2 class="h2" id="faq-h" data-judul>Pertanyaan yang sering diajukan</h2>
     <p class="stub-note">Isi section ini menyusul.</p>
   </div>
 </section>
@@ -1099,7 +1108,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section class="band donate" id="donasi" aria-labelledby="don-h">
   <div class="wrap donate-grid">
     <div style="display:grid;gap:20px">
-      <h2 class="h2" id="don-h" data-muncul>Donasi untuk Palestina</h2>
+      <h2 class="h2" id="don-h" data-judul>Donasi untuk Palestina</h2>
       <p class="lede">Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi disalurkan melalui <a href="https://aqsaworkinggroup.com/" data-cfg-href="donasi.url" data-cfg-text="donasi.mitra">Aqsa Working Group (AWG)</a>, mitra lama LCDU.</p>
       <p class="donate-ar" lang="ar">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ</p>
       <p class="donate-ref">QS. Al-Baqarah: 261</p>
@@ -1243,6 +1252,54 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       window.addEventListener('scroll', function(){ if (kLihat && !kTick){ kTick = true; requestAnimationFrame(nyalakan); } }, {passive:true});
     }
   }
+
+  /* ---------- Judul section [data-judul]: kata muncul berurutan dengan blur-in ----------
+     Satu utilitas untuk semua judul: tambahkan atribut data-judul pada h2 section baru. Dipecah per kata (span .jk),
+     elemen anak (span berwarna, kata Arab) dipertahankan; .sr-only/aria-hidden dilewati. Jeda 75 ms per kata, maks 600 ms.
+     Dipicu IntersectionObserver (threshold .4) sekali. Judul yang sudah terlihat saat halaman dibuka (termasuk lewat
+     #anchor / refresh di tengah halaman) tidak dianimasikan. Setelah selesai, kelas dilepas (will-change & transisi hilang). */
+  (function(){
+    var judul = $$('[data-judul]'); if (!judul.length || reduce || !('IntersectionObserver' in window)) return;
+    var t0 = performance.now();
+    function pecah(el, ctx){
+      Array.prototype.slice.call(el.childNodes).forEach(function(n){
+        if (n.nodeType === 3){
+          var bagian = n.nodeValue.split(/(\s+)/), frag = document.createDocumentFragment();
+          bagian.forEach(function(b){
+            if (!b) return;
+            if (/^\s+$/.test(b)){ frag.appendChild(document.createTextNode(b)); return; }
+            var sp = document.createElement('span'); sp.className = 'jk'; sp.style.setProperty('--jd', Math.min(ctx.i++ * 75, 600) + 'ms');
+            sp.textContent = b; frag.appendChild(sp);
+          });
+          el.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && !n.classList.contains('sr-only') && n.getAttribute('aria-hidden') !== 'true' && !n.classList.contains('jk')){
+          pecah(n, ctx);
+        }
+      });
+      return ctx.i;
+    }
+    function jalankan(h, n){
+      h.classList.add('judul-jalan');
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ h.classList.remove('judul-tunggu'); }); });
+      setTimeout(function(){ h.classList.remove('judul-jalan'); }, Math.min((n - 1) * 75, 600) + 800 + 80);
+    }
+    var io = new IntersectionObserver(function(en){
+      en.forEach(function(x){
+        if (!x.isIntersecting) return; io.unobserve(x.target);
+        /* lompatan #anchor yang terjadi sesaat setelah dibuka: tampil langsung */
+        if (performance.now() - t0 < 350){ x.target.classList.remove('judul-tunggu'); return; }
+        jalankan(x.target, +x.target.dataset.jumlahKata || 1);
+      });
+    }, {threshold:.4});
+    judul.forEach(function(h){
+      var r = h.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) return;          // sudah terlihat saat dibuka → apa adanya
+      if (r.bottom <= 0) return;                                        // sudah terlewati (refresh di tengah) → apa adanya
+      h.dataset.jumlahKata = pecah(h, {i:0});
+      h.classList.add('judul-tunggu');
+      io.observe(h);
+    });
+  })();
 
   /* ---------- Konfigurasi (site-config.js) → tautan & teks di halaman. Teks di HTML = cadangan ---------- */
   var CFG = window.LCDU_CONFIG || {};
