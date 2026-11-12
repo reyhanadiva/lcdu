@@ -272,6 +272,22 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .lentera-tanda.nyala .lt-ranting .daun,.lentera-tanda.nyala .lt-ranting .buah{transform:none}
 .gerak .lt-ranting .batang{transition:stroke-dashoffset .6s var(--ease-muncul) .1s}
 .gerak .lt-ranting .daun,.gerak .lt-ranting .buah{transition:transform .5s var(--ease-muncul) var(--td,.3s)}
+/* Garis tenun (D): di tiap pergantian section (tepat setelah sebuah section, menembus pembatas apa pun), benang
+   "menjahit" sambungannya. Desktop: dari benang keluar ke area konten ±182px lalu kembali (tinggi 38px, di zona padding
+   antar-section — tidak melintasi teks). HP: garis tenun mendatar di antara section, selebar layar − 32px. Jahitan
+   putus-putus; digambar SEKALI (mask stroke-dashoffset) saat masuk layar. Warna = warna benang di titik itu. */
+.tenun{position:absolute;z-index:2;pointer-events:none;overflow:visible;color:var(--tenun-c,#10163A)}
+footer.fase>.tenun{--tenun-c:#F3EFE8}
+.tenun .jahit{fill:none;stroke:currentColor;stroke-width:2.4;stroke-dasharray:7 5;stroke-linecap:round;opacity:.85}
+.tenun .jahit-2{stroke-width:1.2;stroke-dasharray:3 9;stroke-dashoffset:6;opacity:.6}
+.tenun mask path{fill:none;stroke:#fff;stroke-width:12;stroke-dasharray:1;stroke-dashoffset:0}
+.gerak .tenun:not(.tergambar) mask path{stroke-dashoffset:1}
+.gerak .tenun mask path{transition:stroke-dashoffset 1.2s var(--ease-menyala)}
+.tenun-d{display:none;top:4px;left:calc(var(--benang-x) + 4px);width:var(--jangkau,186px);height:40px}
+.tenun-d .jahit{vector-effect:non-scaling-stroke}
+.tenun-m{display:block;top:8px;left:16px;width:calc(100% - 32px);height:22px}
+.tenun-m .jahit{vector-effect:non-scaling-stroke}
+@media (min-width:900px){.tenun-d{display:block}.tenun-m{display:none}}
 /* HP: titik di garis progres atas, posisinya = progres saat judul section di tengah layar */
 .benang .lt-hp{display:none}
 @media (max-width:899px){
@@ -365,7 +381,7 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .gerak .batas-biji:not(.is-in) .bawah{transform:translateY(10px);opacity:0}
 /* (c) satu garis daun zaitun yang tergambar dari tengah ke tepi */
 .batas-daun{display:flex;align-items:center;justify-content:center;gap:14px;height:24px;color:var(--zamrud-ink)}
-.batas-daun svg{flex:1;max-width:min(38vw,420px);height:2px;overflow:visible}
+.batas-daun svg:not(.tenun){flex:1;max-width:min(38vw,420px);height:2px;overflow:visible}
 .batas-daun line{stroke:currentColor;stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:0}
 .batas-daun .kiri line{transform-origin:right}
 .batas-daun .orn-leaf{width:22px;height:22px}
@@ -1409,6 +1425,24 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   /* ruas benang: satu .ruas-isi per elemen aliran (anak langsung .fase di #hari + footer) */
   var kaki = $('footer.fase'), ruas = $$('.hari > .fase > *').concat(kaki ? [kaki] : []), ruasTerlihat = [];
   ruas.forEach(function(el){ var i = document.createElement('i'); i.className = 'ruas-isi'; i.setAttribute('aria-hidden', 'true'); el.appendChild(i); });
+  /* garis tenun di batas tepat setelah tiap section (elemen aliran yang didahului <section>) */
+  var TENUN_D = 'M0 2C42 2 64 13 112 16 158 19 182 22 182 27 182 33 146 38 88 38 50 38 26 36 0 38';
+  var TENUN_M = 'M0 11C60 1 120 1 180 11S300 21 360 11';
+  var tenunList = [];
+  ruas.forEach(function(el, k){
+    if (!k || ruas[k - 1].tagName !== 'SECTION') return;
+    var svg = '';
+    [['tenun-d', '0 0 186 40', TENUN_D, ' preserveAspectRatio="none" style="--jangkau:' + (140 + (tenunList.length * 53) % 81) + 'px"'], ['tenun-m', '0 0 360 22', TENUN_M, ' preserveAspectRatio="none"']].forEach(function(v){
+      svg += '<svg class="tenun ' + v[0] + '" viewBox="' + v[1] + '"' + v[3] + ' aria-hidden="true" focusable="false"><mask id="tn-' + v[0] + '-' + k + '" maskUnits="userSpaceOnUse"><path pathLength="1" d="' + v[2] + '"/></mask>'
+        + '<path class="jahit" mask="url(#tn-' + v[0] + '-' + k + ')" d="' + v[2] + '"/>' + (v[0] === 'tenun-d' ? '<path class="jahit jahit-2" mask="url(#tn-' + v[0] + '-' + k + ')" transform="translate(0 3)" d="' + v[2] + '"/>' : '') + '</svg>';
+    });
+    el.insertAdjacentHTML('beforeend', svg);
+    tenunList.push.apply(tenunList, $$('.tenun', el));
+  });
+  if ('IntersectionObserver' in window && !reduce){
+    var tenunIO = new IntersectionObserver(function(en){ en.forEach(function(x){ if (x.isIntersecting){ x.target.classList.add('tergambar'); tenunIO.unobserve(x.target); } }); }, {rootMargin:'0px 0px -15% 0px'});
+    tenunList.forEach(function(t){ tenunIO.observe(t); });
+  } else tenunList.forEach(function(t){ t.classList.add('tergambar'); });
   if (!sdaView && 'IntersectionObserver' in window){
     var ruasIO = new IntersectionObserver(function(en){ en.forEach(function(x){
       var isi = $('.ruas-isi', x.target), k = ruasTerlihat.indexOf(isi);
