@@ -128,7 +128,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   "Belajar Bahasa Arab dan Inggris. Online. Nirlaba." Seni: foto Al-Aqsa (`.frame-arch`, garis hijau kulit,
   `object-position:100% 50%` supaya Kubah terlihat) di kolom 9–12 (HP: di bawah teks, rata kanan), `.orn-slice` besar
   menjorok dari tepi kanan (HP: kiri) di belakang foto, pita `.orn-band--tebal.kain-merah` di tepi bawah = tepi atas Kenapa
-  (sengaja satu pita, bukan dua bertumpuk). Font: `fonts/fraunces-latin.woff2` ternyata sudah variabel 300–700 (sama
+  (kini diganti gradasi warna, lihat tabel pembatas). Font: `fonts/fraunces-latin.woff2` ternyata sudah variabel 300–700 (sama
   persis dengan unduhan Google Fonts); ditambah `fraunces-italic-latin.woff2` (600–700, 45 KB, tidak di-preload).
 - **Kenapa LCDU** (selesai, revisi 2): blok `.why` hijau kulit penuh lebar, teks putih (6,5:1; teks lembut putih 88% 5,5:1),
   aksen merah semangka hanya dekor (garis 64px di atas pernyataan aktif, isi kata Arab, pita). Judul "Kenapa LCDU?".
@@ -140,7 +140,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. HP: tiap item = `.why-media` (foto + kata Arab
   menumpang di tepi bawah-kanan) lalu teks, tanpa sticky. **Dimampatkan** (permintaan pemilik): pernyataan desktop
   `min(29vh,280px)`, terakhir `min(37vh,360px)` → section 1,70 layar di 1440×900 (1,65 tanpa pita); HP foto 66vw. Panggung & media = duplikat dekoratif (`aria-hidden`,
-  `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi bawah: pita merah di atas putih (`.why-pita`).
+  `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi atas: gradasi; tepi bawah: tepi mihrab.
   Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
   atas permintaan pemilik. Kata Arab hanya yang sudah ada: مَنْهَج، عَنْ بُعْد، مُعَلِّم، القُرْآن.
 - **Pilih kelas** (selesai, revisi 2): layar terbelah penuh-lebar `#split`. **Prinsip: semua informasi terlihat penuh
@@ -158,11 +158,11 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   kunyit). Desktop: klik sisi atau hover 300 ms = fokus (65/35), klik sisi yang fokus → 50/50, tarik → snap. Undangan
   sekali saat separuh section terlihat: 58 → 42 → 50; pegangan berdenyut sampai interaksi pertama, hanya saat terlihat
   (`.is-lihat`). Reduced-motion: tanpa undangan, tanpa denyut, tanpa transisi. HP < 700px: dua blok bertumpuk dengan pita
-  keffiyeh di antaranya, ketuk = garis 6px warna sisi + glyph lebih tegas; glyph di seberang foto. Tanpa tombol, tanpa
+  pembatas antar-blok = pergantian warna saja, ketuk = garis 6px warna sisi + glyph lebih tegas; glyph di seberang foto. Tanpa tombol, tanpa
   teks "Geser", tanpa daftar level. **Jadwal perlu verifikasi** (komentar HTML & README).
 - **Biaya** (selesai, revisi 2): blok `.cost-blok` merah tua `#B3202E` penuh lebar (teks putih 6,6:1; kalimat pendukung
   putih 90% 5,6:1), pita keffiyeh merah-putih di atas & bawah (`.cost-pita`), biji tersebar di tepi kiri-kanan
-  (`.orn-seeds.cost-biji`, 22%). Kiri: "Berapa biayanya?", pernyataan besar "Tanpa biaya bulanan." (Fraunces 3,2–7,6rem),
+  (`.orn-seeds.cost-biji`, 22%); tepi atas kini tepi biji `.batas-biji`, pita hanya di bawah. Kiri: "Berapa biayanya?", pernyataan besar "Tanpa biaya bulanan." (Fraunces 3,2–7,6rem),
   satu kalimat pendukung. Kanan: printer + struk putih, seluruh `.receipt-wrap` miring −1,5°; irisan semangka besar di
   belakang struk. Struk (teks persis dari pemilik): kepala "LCDU, Rincian biaya"; "Biaya bulanan — Rp0"; "Donasi untuk
   Palestina (tidak wajib) — sebebasnya"; garis putus-putus; total besar "Total per term (semester) — Rp100.000"
@@ -171,6 +171,24 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   48%`), struk hanya di-`translateY` di dalam `.struk-jendela` — teks tetap di DOM, terbaca berurutan; cadangan JS.
   Tepi bawah sobekan zigzag keffiyeh (`--orn-sobek`). Tanpa count-up, tanpa stempel, tanpa tombol, tanpa eyebrow.
 - Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
+- **Pembatas antar-section** (keputusan pemilik: bervariasi, tidak seragam; rajut maks SATU kali; tidak ada dua jenis
+  sama berurutan; CSS di blok "PEMBATAS ANTAR-SECTION"; animasi masuk sekali lewat `[data-muncul]`, tanpa scroll listener):
+
+  | Batas | Jenis | Alasan |
+  |---|---|---|
+  | Hero → Pengantar | hijau–jaring–merah `.kufiyah` | favorit pemilik, dipertahankan persis |
+  | Pengantar → Kenapa | pergeseran warna saja (gradasi OKLab putih hangat → hijau kulit, `--masuk`) | setelah motif ramai di atas, napas; blok hijau "terbit" dari kertas |
+  | Kenapa → Pilih kelas | tepi mihrab `.batas-mihrab` (SVG lengkung lancip + garis tergambar) | keluar dari blok hijau seperti melewati mihrab; menggemakan `.frame-arch` |
+  | Pilih kelas → Biaya | tepi biji semangka `.batas-biji` (biji merah di atas garis, hitam di bawah) | Biaya = blok merah semangka; biji menjembatani |
+  | Biaya → Cara bergabung | rajut: pita keffiyeh merah-putih (satu-satunya) | menutup blok merah seperti tepi kain |
+  | Cara bergabung → Testimoni | satu garis daun zaitun `.batas-daun` yang tergambar dari tengah | satu fase (sore), cukup jeda halus |
+  | Testimoni → Tim | pergeseran warna (fase sore → senja) | pergantian waktu sudah jadi pembatas |
+  | Tim → FAQ | kata Arab raksasa `.batas-kata` (مُعَلِّم, bergaris) menyeberangi batas | tipografi; "guru" menutup Tim |
+  | FAQ → Donasi | pergeseran warna panjang (senja → malam) | cerita hari menuju malam |
+  | Donasi → Footer | garis daun zaitun tipis tergambar (`.foot-band`, sudah ada) | penutup tenang |
+
+  Ornamen di dalam section (bukan pembatas) tetap: garis keffiyeh tipis di baris Yayasan & struk, pita keffiyeh tegak
+  pada pembagi Pilih kelas (diminta pemilik), benang di gutter. Pita rajut antar-blok Pilih kelas di HP dihapus.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan

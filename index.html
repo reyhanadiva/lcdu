@@ -264,6 +264,47 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .frame-arch--lancip::after{-webkit-mask-image:url(assets/ornaments/lengkung-lancip-garis.svg);mask-image:url(assets/ornaments/lengkung-lancip-garis.svg)}
 /* ORNAMEN v2 SELESAI */
 
+/* --- PEMBATAS ANTAR-SECTION: kosakata bervariasi (tabel di CLAUDE.md). Tidak ada dua jenis sama berurutan; rajut
+   (pita keffiyeh) hanya SATU kali (Biaya → Bergabung); hijau–jaring–merah (.kufiyah) hanya di bawah hero.
+   Animasi masuk sekali lewat IntersectionObserver [data-muncul] (opacity/transform/stroke-dashoffset). Tanpa .gerak
+   (reduced-motion / tanpa JS) semuanya tampil diam & utuh. --- */
+/* (a) tepi mihrab: lengkung lancip di tengah, bahu datar; warna = latar section berikutnya; garis tipis tergambar */
+/* catatan: garis memakai pathLength=1 tanpa non-scaling-stroke (non-scaling membuat dasharray dihitung dalam px layar) */
+.batas-mihrab{display:block;width:100%;height:clamp(56px,9vw,130px);margin-top:-1px}
+.batas-mihrab .isi{fill:var(--batas-isi)}
+.batas-mihrab .garis{fill:none;stroke:var(--batas-garis);stroke-width:2.6;stroke-dasharray:1;stroke-dashoffset:0}
+.gerak .batas-mihrab[data-muncul]{transform:none}
+.gerak .batas-mihrab[data-muncul]:not(.is-in){opacity:1}
+.gerak .batas-mihrab .garis{transition:stroke-dashoffset 1.6s var(--ease-menyala) .2s}
+.gerak .batas-mihrab:not(.is-in) .garis{stroke-dashoffset:1}
+/* (b) tepi biji semangka: garis batas tegas terang | merah, biji tersebar menyeberangi garis */
+.batas-biji{position:relative;height:72px;background:linear-gradient(var(--fase-bg) 50%,var(--semangka-tua) 50%)}
+.batas-biji i{position:absolute;left:0;right:0;height:36px;--orn-alpha:1}
+.batas-biji .atas{top:0;--biji:var(--semangka-tua);-webkit-mask-size:132px 132px;mask-size:132px 132px;-webkit-mask-position:0 -18px;mask-position:0 -18px}
+.batas-biji .bawah{top:36px;--biji:var(--keffiyeh);opacity:.55;-webkit-mask-size:132px 132px;mask-size:132px 132px;-webkit-mask-position:66px -70px;mask-position:66px -70px}
+.gerak .batas-biji[data-muncul]{transform:none}
+.gerak .batas-biji i{transition:transform .9s var(--ease-muncul),opacity .9s var(--ease-muncul)}
+.gerak .batas-biji:not(.is-in) .atas{transform:translateY(-10px);opacity:0}
+.gerak .batas-biji:not(.is-in) .bawah{transform:translateY(10px);opacity:0}
+/* (c) satu garis daun zaitun yang tergambar dari tengah ke tepi */
+.batas-daun{display:flex;align-items:center;justify-content:center;gap:14px;height:24px;color:var(--zamrud-ink)}
+.batas-daun svg{flex:1;max-width:min(38vw,420px);height:2px;overflow:visible}
+.batas-daun line{stroke:currentColor;stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:0}
+.batas-daun .kiri line{transform-origin:right}
+.batas-daun .orn-leaf{width:22px;height:22px}
+.gerak .batas-daun[data-muncul]{transform:none}
+.gerak .batas-daun line{transition:stroke-dashoffset 1.2s var(--ease-menyala) .25s}
+.gerak .batas-daun:not(.is-in) line{stroke-dashoffset:1}
+/* (d) kata Arab raksasa yang menyeberangi batas dua section (tipografi sebagai pembatas; dekoratif) */
+.batas-kata{position:relative;height:clamp(64px,10vw,150px);overflow:visible;pointer-events:none}
+.batas-kata span{position:absolute;left:50%;top:50%;translate:-50% -54%;font-family:var(--f-ar-display);font-weight:700;font-size:clamp(5.5rem,17vw,13rem);
+  line-height:1;white-space:nowrap;color:transparent;-webkit-text-stroke:1.5px color-mix(in srgb,var(--zamrud-ink) 55%,transparent);
+  user-select:none;-webkit-user-select:none}
+.gerak .batas-kata span{transition:opacity 1s var(--ease-muncul),scale 1s var(--ease-muncul)}
+.gerak .batas-kata[data-muncul]{transform:none}
+.gerak .batas-kata[data-muncul]:not(.is-in){opacity:1}
+.gerak .batas-kata:not(.is-in) span{opacity:0;scale:.94}
+
 /* --- Primitif gerak. .gerak dipasang JS hanya bila gerak diizinkan (bukan reduced-motion) --- */
 /* muncul: memudar + naik ≤ 12px, sekali */
 .gerak [data-muncul]{transition:opacity var(--dur-muncul) var(--ease-muncul) var(--d,0s),transform var(--dur-muncul) var(--ease-muncul) var(--d,0s)}
@@ -383,7 +424,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    baris 2–3 tebal miring dan jauh lebih besar ("Nirlaba." merah). Hierarki dari ukuran & ketebalan, warna hanya penegas.
    Kata menyala satu per satu (gerak "menyala"): --p (0..1) dianimasikan view timeline kalimat (tanpa pin), cadangan JS di
    skrip. Nilai awal 1 = semua kata penuh (reduced-motion / tanpa JS). Seni: foto Al-Aqsa berbingkai lengkung di kanan,
-   irisan semangka menjorok dari tepi layar di belakang foto, pita keffiyeh merah di tepi bawah (= tepi atas blok Kenapa). */
+   irisan semangka menjorok dari tepi layar di belakang foto. Ke Kenapa: hanya pergeseran warna (gradasi di atas blok hijau). */
 @property --p{syntax:'<number>';inherits:true;initial-value:1}
 .intro{position:relative;isolation:isolate;overflow:clip;padding-bottom:0}
 .intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:clamp(64px,8vw,112px)}
@@ -409,7 +450,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .intro-seni .frame-arch{color:var(--kulit)}
 /* irisan semangka: di belakang foto (grid z-index 1), menjorok keluar tepi layar */
 .intro-slice{position:absolute;z-index:0;left:0;bottom:clamp(96px,14vw,150px);--slice:min(80vw,380px);--jorok:-36%;--putar:14deg}
-.intro-pita{position:relative;z-index:1;--pita:40px}
 @media (min-width:900px){
   .intro-grid{grid-template-columns:repeat(12,minmax(0,1fr));align-items:center}
   .intro-teks{grid-column:1/9}
@@ -418,13 +458,16 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 
 /* ===== KENAPA LCDU: blok hijau kulit penuh lebar, teks putih, aksen merah =====
-   Tepi atas = pita merah Pengantar; tepi bawah = pita merah di atas putih. Tanpa kotak/panel.
+   Tepi atas = gradasi dari putih hangat (tanpa ornamen); tepi bawah = tepi mihrab ke Pilih kelas. Tanpa kotak/panel.
    Desktop ≥ 960px: kiri = foto berbingkai lengkung yang menempel (sticky) dan berganti (crossfade) saat pernyataan di kanan
    melewati tengah layar; kata Arab raksasa bergaris putih menumpang di tepi bawah foto (rata kiri, tidak masuk kolom
    teks), terisi merah saat aktif.
    HP: tiap pernyataan = foto lalu teks, bertumpuk, tanpa sticky. Reduced-motion: tanpa transisi (langsung berganti). */
-.why{position:relative;background:var(--kulit);color:var(--putih);--ink:var(--putih);--why-lembut:color-mix(in srgb,var(--putih) 88%,var(--kulit))}
-.why-wrap{padding-block:clamp(48px,6vw,80px) clamp(48px,5.6vw,80px)}
+.why{--masuk:clamp(96px,13vw,190px);position:relative;
+  background:linear-gradient(in oklab,var(--pagi-bg) 0%,color-mix(in oklab,var(--pagi-bg) 93%,var(--kulit)) 15%,color-mix(in oklab,var(--pagi-bg) 72%,var(--kulit)) 32%,
+    color-mix(in oklab,var(--pagi-bg) 50%,var(--kulit)) 50%,color-mix(in oklab,var(--pagi-bg) 28%,var(--kulit)) 68%,color-mix(in oklab,var(--pagi-bg) 7%,var(--kulit)) 85%,var(--kulit) 100%)
+    0 0/100% var(--masuk) no-repeat,var(--kulit);color:var(--putih);--ink:var(--putih);--why-lembut:color-mix(in srgb,var(--putih) 88%,var(--kulit))}
+.why-wrap{padding-block:calc(var(--masuk) + clamp(32px,4vw,56px)) clamp(48px,5.6vw,80px)}
 .why-h{font-family:var(--f-display);font-weight:700;font-size:var(--step-4);line-height:1;letter-spacing:-.03em}
 .why-list{list-style:none;margin:clamp(20px,3vw,32px) 0 0;padding:0}
 .why-item{position:relative;padding-block:clamp(26px,4vw,40px);border-top:1px solid color-mix(in srgb,var(--putih) 24%,transparent)}
@@ -441,8 +484,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .why-media .frame-arch{color:var(--putih)}
 .why-media .why-ar{position:absolute;right:-.12em;bottom:-.22em;font-size:clamp(3.6rem,17vw,5.4rem)}
 .why-stage{display:none}
-.why-pita{--pita:40px;background:var(--putih)}
-.why-pita>i{display:block}
 @media (min-width:960px){
   .why-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(48px,6vw,104px);align-items:start}
   .why-media{display:none}
@@ -465,8 +506,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Kiri: judul, pernyataan besar, satu kalimat pendukung (putih di #B3202E 6,6:1; lembut putih 90% 5,6:1).
    Kanan: printer + struk kertas putih, miring 1,5°, keluar dari celah printer mengikuti scroll (gerak "tergambar"):
    --cetak 0..1 dianimasikan view timeline .receipt-wrap; cadangan JS di skrip. Nilai awal 1 = struk penuh
-   (reduced-motion / tanpa JS). Hanya transform, tanpa layout. Irisan semangka besar di belakang struk, biji di tepi,
-   pita keffiyeh merah-putih di atas & bawah. Tanpa count-up, tanpa stempel. */
+   (reduced-motion / tanpa JS). Hanya transform, tanpa layout. Irisan semangka besar di belakang struk, biji di tepi.
+   Tepi atas = tepi biji semangka (.batas-biji); tepi bawah = pita keffiyeh merah-putih (satu-satunya rajut). */
 @property --cetak{syntax:'<number>';inherits:true;initial-value:1}
 .cost-blok{position:relative;overflow:clip;isolation:isolate;background:var(--semangka-tua);color:var(--putih);--ink-soft:color-mix(in srgb,var(--putih) 90%,var(--semangka-tua))}
 .cost-pita{background:var(--putih);position:relative;z-index:2}
@@ -586,9 +627,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @keyframes denyut{0%,100%{scale:1}50%{scale:1.1}}
 @media (max-width:699px){
-  /* pembatas antar-blok: pita keffiyeh hitam-putih */
-  .side+.side{padding-top:24px}
-  .side+.side::after{content:"";position:absolute;top:0;left:0;right:0;height:24px;background:url(assets/ornaments/pita-sempit-hitam.svg) 0 0/24px 24px repeat-x}
   /* glyph di seberang foto supaya area di samping foto tidak kosong */
   .side-glyph{font-size:11rem}
   .side-en .side-glyph{left:auto;right:-.02em}
@@ -812,7 +850,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </div>
   </div>
   <i class="orn-slice intro-slice" aria-hidden="true"></i>
-  <div class="orn-band orn-band--tebal kain-merah intro-pita" aria-hidden="true"></div>
 </section>
 
 <!-- ============ KENAPA LCDU: blok hijau, foto menempel di kiri (desktop) berganti mengikuti pernyataan ============
@@ -858,7 +895,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       </div>
     </div>
   </div>
-  <div class="why-pita" aria-hidden="true"><i class="orn-band orn-band--tebal kain-merah"></i></div>
+  <!-- pembatas Kenapa → Pilih kelas: tepi mihrab (lengkung lancip), warna = awal latar fase siang -->
+  <svg class="batas-mihrab" data-muncul viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true" focusable="false" style="--batas-isi:var(--pagi-bg);--batas-garis:color-mix(in srgb,var(--putih) 70%,transparent)"><path class="garis" pathLength="1" d="M0 84H372C440 84 560 30 600 -8 640 30 760 84 828 84H1200"/><path class="isi" d="M0 120V100H360C430 100 560 46 600 10 640 46 770 100 840 100H1200V120Z"/></svg>
 </section>
 </div>
 
@@ -916,8 +954,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <!-- ============ BIAYA: blok merah, pernyataan besar + struk ============
      Teks persis dari pemilik. "Rp100.000" hanya di total struk. Struk = teks asli; .struk-jendela memotong kertas yang
      masih "di dalam printer" (tetap di DOM, terbaca berurutan). -->
+<!-- pembatas Pilih kelas → Biaya: tepi biji semangka -->
+<div class="batas-biji" data-muncul aria-hidden="true"><i class="orn-seeds atas"></i><i class="orn-seeds bawah"></i></div>
 <section class="cost-blok" id="biaya" aria-labelledby="cost-h">
-  <div class="cost-pita" aria-hidden="true"><i class="orn-band orn-band--tebal kain-merah"></i></div>
   <i class="orn-seeds cost-biji kiri" aria-hidden="true"></i>
   <i class="orn-seeds cost-biji kanan" aria-hidden="true"></i>
   <div class="wrap cost">
@@ -990,6 +1029,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   </div>
 </section>
 
+<!-- pembatas Cara bergabung → Testimoni: satu garis daun zaitun yang tergambar -->
+<div class="batas-daun" data-muncul aria-hidden="true"><svg class="kiri" viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="100" y1="1" x2="0" y2="1" pathLength="1"/></svg><i class="orn-leaf"></i><svg viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="0" y1="1" x2="100" y2="1" pathLength="1"/></svg></div>
+
 <!-- ============ TESTIMONI ============ -->
 <section class="band stories" id="testimoni" aria-labelledby="st-h">
   <div class="wrap stories-grid">
@@ -1019,6 +1061,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     <p class="team-note">Arahkan kursor ke kartu untuk melihat sertifikasi. Kotak warna adalah slot foto.</p>
   </div>
 </section>
+
+<!-- pembatas Tim → FAQ: kata Arab raksasa (مُعَلِّم = guru, kata yang sudah dipakai) menyeberangi batas -->
+<div class="batas-kata" data-muncul aria-hidden="true"><span lang="ar">مُعَلِّم</span></div>
 
 <!-- ============ FAQ (stub: isi didesain di sesi tersendiri) ============ -->
 <section class="band" id="faq" aria-labelledby="faq-h">
