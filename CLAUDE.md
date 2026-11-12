@@ -70,7 +70,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
   Scroll harus pendek dan jelas (tinggi hero 340vh; dinaikkan dari 290vh karena pemilik merasa transisi terlalu cepat).
 - Tiga babak = tiga suasana yang jelas berbeda (permintaan pemilik), berubah bertahap sepanjang scroll, bukan melompat:
-  Foto: malam → fajar biru + lampu menyala → matahari terbit keemasan. 3D: malam → fajar ungu-jingga → pagi cerah
+  Foto: malam → fajar biru + lampu menyala → subuh (bulan, bintang & biru memudar dulu; lapisan dari foto fajar yang
+  diredam) → matahari terbit keemasan. Laju perubahan p dibatasi (`MAX_RATE` di hero.js) supaya scroll cepat tidak melompat.
+  3D pagi = sudut matahari pagi (bukan siang), cahaya hangat & terang, kabut tipis — pemilik ingin "terik" tapi tidak pucat. 3D: malam → fajar ungu-jingga → pagi cerah
   (matahari tinggi, langit biru, kabut tipis). Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
   (kontras ≥ 6:1); babak 1–2 putih di atas gradasi lebar & lembut dari pojok kiri-atas yang memudar habis sebelum
   babak 3. Jangan pakai elips/bercak gelap di belakang teks dan jangan ada gradasi yang berhenti mendadak (pemilik menolak:

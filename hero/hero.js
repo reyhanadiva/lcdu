@@ -107,16 +107,20 @@ async function recheck() {
 function resize() { const r = holder.getBoundingClientRect(); state.w = r.width; state.h = r.height; }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); readScroll(); current && current.resize(); recheck(); }, 150); });
 
-let raf = 0;
+let raf = 0, lastT = 0;
+/* laju maksimum perubahan p (per detik): scroll yang cepat tetap memperlihatkan tiap tahap transisi, tidak melompat */
+const MAX_RATE = .6;
 function frame(now) {
   raf = 0;
-  state.p += (state.target - state.p) * (reduce ? 1 : window.lenis ? .22 : .12);   // Lenis sudah menghaluskan scroll
+  const dt = lastT ? Math.min(.1, (now - lastT)/1000) : 0; lastT = now;
+  const step = (state.target - state.p) * (reduce ? 1 : window.lenis ? .22 : .12);   // Lenis sudah menghaluskan scroll
+  state.p += reduce || !dt ? step : Math.max(-MAX_RATE*dt, Math.min(MAX_RATE*dt, step));
   if (Math.abs(state.target - state.p) < .0005) state.p = state.target;
   updateCopy(state.p);
   if (current) current.frame(state, now);
   if (state.visible) raf = requestAnimationFrame(frame);
 }
-function start() { if (!raf && state.visible) raf = requestAnimationFrame(frame); }
+function start() { if (!raf && state.visible){ lastT = 0; raf = requestAnimationFrame(frame); } }
 new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !document.hidden; start(); }, { rootMargin: '60px' }).observe(hero);
 document.addEventListener('visibilitychange', () => { state.visible = !document.hidden; start(); });
 

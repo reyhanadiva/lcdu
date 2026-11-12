@@ -397,7 +397,7 @@ export default {
     }));
     scene.add(sky);
     /* tiga suasana: malam · fajar (biru keunguan, cakrawala merah muda-jingga) · pagi cerah (biru jernih) */
-    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#25336F'), hex3('#9A6E98'), hex3('#F29A72')], s: [hex3('#2D6AD0'), hex3('#78B2EE'), hex3('#D9ECF7')] };
+    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#25336F'), hex3('#9A6E98'), hex3('#F29A72')], s: [hex3('#2A68D4'), hex3('#7DB6F0'), hex3('#EEE6D6')] };   // pagi: cakrawala sedikit hangat
 
     /* bintang berkelip (shader titik) */
     const starN = 1600, sp = [], sph = [];
@@ -1095,10 +1095,10 @@ export default {
     /* ---------- palet waktu ---------- */
     /* [malam, fajar, pagi cerah] — dicampur oleh dawn (malam→fajar) lalu day (fajar→pagi) */
     const P = {
-      hemiSky: [C('#3b4f9e'), C('#b88fb0'), C('#cfe2ff')], hemiGround: [C('#141a3a'), C('#4a3838'), C('#8f7656')], hemiI: [.15, .42, .95],
-      sunCol: [C('#8ea6ff'), C('#ff9550'), C('#fff0d6')], sunI: [.05, 1.5, 3.1], fog: [C('#0b1236'), C('#a77a8c'), C('#cfdbe6')], fogD: [.0115, .0065, .0018],
-      ground: [C('#2c2f52'), C('#8a6a54'), C('#c9aa80')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#c48b92'), C('#e4ecf2')],
-      exp: [.92, .8, .9], env: [.12, .4, .75], bloom: [.62, .34, .18],
+      hemiSky: [C('#3b4f9e'), C('#b88fb0'), C('#d4e3fa')], hemiGround: [C('#141a3a'), C('#4a3838'), C('#9a7a52')], hemiI: [.15, .42, .82],
+      sunCol: [C('#8ea6ff'), C('#ff9550'), C('#ffe4b8')], sunI: [.05, 1.5, 4.2], fog: [C('#0b1236'), C('#a77a8c'), C('#e2ddd2')], fogD: [.0115, .0065, .0016],
+      ground: [C('#2c2f52'), C('#8a6a54'), C('#d0ae7e')], glow: C('#ffb15e'), haze: [C('#1b2a6b'), C('#c48b92'), C('#efe6d6')],
+      exp: [.92, .8, 1.0], env: [.12, .4, .7], bloom: [.62, .34, .24],
     };
     const mix3 = (k, a, b, out) => out.copy(P[k][0]).lerp(P[k][1], a).lerp(P[k][2], b);
     const num3 = (k, a, b) => lerp(lerp(P[k][0], P[k][1], a), P[k][2], b);
@@ -1160,7 +1160,7 @@ export default {
     const DEBUG_PERF = new URL(location.href).searchParams.has('debug-perf');
     /* ?debug-cam=x,y,z,tx,ty,tz: kamera bebas untuk memeriksa detail (hanya pengembangan) */
     const DEBUG_CAM = (new URL(location.href).searchParams.get('debug-cam') || '').split(',').map(Number).filter(n => !isNaN(n)).length === 6 ? new URL(location.href).searchParams.get('debug-cam').split(',').map(Number) : null;
-    if (DEBUG_PERF){ renderer.info.autoReset = false; window.__dioramaPerf = { frames: [] }; window.__dio = { bloom, grade, skyU, sun, scene, renderer, camera }; }
+    if (DEBUG_PERF){ renderer.info.autoReset = false; window.__dioramaPerf = { frames: [] }; window.__dio = { bloom, grade, skyU, sun, scene, renderer, camera, composer }; }
 
     function frame(st, now){
       watchFps(now);
@@ -1194,7 +1194,7 @@ export default {
       for (let i = 0; i < 3; i++){ const k = ['top', 'mid', 'hor'][i]; skyU[k].value.copy(SKY.n[i]).lerp(SKY.d[i], dawn).lerp(SKY.s[i], day); }
       skyU.hor.value.addScalar(lit*.035*(1 - dawn)); skyU.uDay.value = day;
       sunH.copy(vd).addScaledVector(rgt, aspect >= 1 ? .2 : .06).normalize();
-      const sunEl = lerp(-.08, .04, smooth((p - .4)/.25)) + day*.5;   // terbit di cakrawala saat fajar, lalu naik tinggi
+      const sunEl = lerp(-.08, .04, smooth((p - .4)/.25)) + day*.38;   // terbit di cakrawala saat fajar, lalu naik — sudut pagi (bayangan masih panjang & hangat), bukan siang bolong
       sd.copy(sunH).multiplyScalar(Math.cos(sunEl)); sd.y = Math.sin(sunEl);
       skyU.sunDir.value.copy(sd); skyU.sunAmt.value = smooth((p - .42)/.25);
       starU.uOp.value = 1 - smooth((p - .25)/.3); starU.uTime.value = time;
@@ -1222,7 +1222,7 @@ export default {
       warm.forEach(l => l.intensity = win*24*flick);
       cursorLight.intensity = cursorAmt*(1 - dawn*.5)*30; cursorGlow.material.opacity = cursorAmt*(.55 - dawn*.3);
       lU.uLit.value = lit; lU.uOp.value = (1 - dawn*.3)*(1 - day*.85); lU.uTime.value = time;
-      bloom.strength = num3('bloom', dawn, day); bloom.threshold = lerp(lerp(.8, .92, dawn), 1.0, day);
+      bloom.strength = num3('bloom', dawn, day); bloom.threshold = lerp(lerp(.8, .92, dawn), .95, day);
 
       if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
       if (DEBUG_PERF){

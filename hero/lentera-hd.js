@@ -86,8 +86,8 @@ export default {
   mount(holder, state){
     const cv = canvas(); cv.className = 'hd-canvas'; holder.appendChild(cv);
     const ctx = cv.getContext('2d');
-    const nightC = canvas(), dawnC = canvas(), blueC = canvas(), tmp = canvas(), mask = canvas();
-    const nctx = nightC.getContext('2d'), dctx = dawnC.getContext('2d'), bctx = blueC.getContext('2d'), tctx = tmp.getContext('2d'), mctx = mask.getContext('2d');
+    const nightC = canvas(), dawnC = canvas(), blueC = canvas(), preC = canvas(), tmp = canvas(), mask = canvas();
+    const nctx = nightC.getContext('2d'), dctx = dawnC.getContext('2d'), bctx = blueC.getContext('2d'), pctx = preC.getContext('2d'), tctx = tmp.getContext('2d'), mctx = mask.getContext('2d');
     const MASK = maskSprite(), GLOW = glowSprite(), RAYS = raySprite();
     const grain = document.createElement('div'); grain.className = 'hd-grain'; grain.style.backgroundImage = `url(${grainURL()})`; holder.appendChild(grain);
 
@@ -116,7 +116,7 @@ export default {
       if (!night) return;
       DPR = Math.min(devicePixelRatio || 1, state.w > 1200 ? 1.25 : 1.5);
       W = Math.max(1, Math.round(state.w*DPR)); H = Math.max(1, Math.round(state.h*DPR));
-      for (const c of [cv, nightC, dawnC, blueC, tmp]){ c.width = W; c.height = H; }
+      for (const c of [cv, nightC, dawnC, blueC, preC, tmp]){ c.width = W; c.height = H; }
       mask.width = Math.ceil(W*MASK_Q); mask.height = Math.ceil(H*MASK_Q);
       const art = ART[orient], iw = night.naturalWidth, ih = night.naturalHeight;
       const s = Math.max(W/iw, H/ih), dw = iw*s, dh = ih*s;
@@ -124,7 +124,7 @@ export default {
       nctx.drawImage(night, view.ox, view.oy, dw, dh);
       if (dawn) dctx.drawImage(dawn, view.ox, view.oy, dw, dh);
       sun = toScreen(art.sun); horizonY = view.oy + art.horizon*dh;
-      if (dawn) blueHour();
+      if (dawn){ blueHour(); preDawn(); }
       base = dw*.032;
       /* urutan menyala: dari Kubah ke luar (jarak di gambar), sedikit acak supaya tidak seperti cincin sempurna */
       const o = art.origin;
@@ -152,6 +152,22 @@ export default {
       g.fillStyle = hz; g.fillRect(0, 0, W, H);
       g.globalCompositeOperation = 'source-over';
     }
+    /* subuh (antara babak 2 dan 3): dibuat dari foto fajar yang diredam — kelabu kebiruan, redup, tanpa bulan & bintang,
+       dengan semburat terang lembut di titik matahari akan terbit. Malam → subuh = bulan & bintang memudar dulu,
+       baru kemudian cahaya keemasan dan matahari muncul. */
+    function preDawn(){
+      const g = pctx; g.globalCompositeOperation = 'source-over'; g.globalAlpha = 1; g.drawImage(dawnC, 0, 0);
+      g.globalCompositeOperation = 'color'; g.fillStyle = 'rgba(78,84,140,.82)'; g.fillRect(0, 0, W, H);   // warna jadi kelabu kebiruan, terang-gelap tetap
+      g.globalCompositeOperation = 'multiply';
+      const dk = g.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], Math.max(W, H)*.35);   // cakram matahari diredam (belum terbit)
+      dk.addColorStop(0, 'rgb(95,95,125)'); dk.addColorStop(1, 'rgb(150,150,180)');
+      g.fillStyle = dk; g.fillRect(0, 0, W, H);
+      g.globalCompositeOperation = 'screen';
+      const hz = g.createRadialGradient(sun[0], sun[1], 0, sun[0], sun[1], Math.max(W, H)*.7);
+      hz.addColorStop(0, 'rgba(255,170,150,.34)'); hz.addColorStop(.45, 'rgba(220,150,170,.14)'); hz.addColorStop(1, 'rgba(200,150,180,0)');
+      g.fillStyle = hz; g.fillRect(0, 0, W, H);
+      g.globalCompositeOperation = 'source-over';
+    }
     const toScreen = ([x, y]) => [view.ox + x*view.dw, view.oy + y*view.dh];
 
     /* bintang = titik terang kecil di langit foto malam; berkelip dengan menambah cahaya tipis di atasnya */
@@ -171,11 +187,11 @@ export default {
     function frame(st, now){
       if (!night) return;
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
-      /* garis waktu (p = 0..1), tiap perubahan berjalan sepanjang scroll, tidak melompat:
-         lampu menyala .04–.46 · malam → fajar biru .14–.5 · pendar matahari di cakrawala .44–.66 ·
-         matahari terbit (sapuan keemasan) .58–.96 · sinar & cahaya penuh .72–1 */
-      const lit = smooth((p - .04)/.42)*n, blue = dawn ? smooth((p - .14)/.36) : 0, first = dawn ? smooth((p - .44)/.22) : 0;
-      const dawnT = dawn ? smooth((p - .58)/.38) : 0, full = dawn ? smooth((p - .72)/.28) : 0;
+      /* garis waktu (p = 0..1), berurutan dan tidak tumpang-tindih supaya tiap tahap terlihat:
+         lampu menyala .04–.46 · malam → fajar biru .14–.5 · bulan, bintang & biru memudar ke subuh .5–.64 ·
+         pendar pertama di titik matahari .6–.74 · matahari terbit (sapuan keemasan) .66–.9 · sinar penuh .8–1 */
+      const lit = smooth((p - .04)/.42)*n, blue = dawn ? smooth((p - .14)/.36) : 0, pre = dawn ? smooth((p - .5)/.14) : 0;
+      const first = dawn ? smooth((p - .6)/.14) : 0, dawnT = dawn ? smooth((p - .66)/.24) : 0, full = dawn ? smooth((p - .8)/.2) : 0;
       const pa = st.pointer.active;
       if (pa){ const tx = st.pointer.x*DPR, ty = st.pointer.y*DPR; lx = lx < 0 ? tx : lx + (tx - lx)*.2; ly = ly < 0 ? ty : ly + (ty - ly)*.2; }
       if (st.reduce){ const key = p.toFixed(4) + (pa ? `${lx | 0},${ly | 0}` : '-') + (dawn ? 'd' : ''); if (key === last) return; last = key; }
@@ -184,14 +200,15 @@ export default {
       ctx.drawImage(nightC, 0, 0);
 
       /* bintang berkelip (memudar menjelang fajar) */
-      const starA = 1 - smooth((p - .16)/.4);
+      const starA = 1 - smooth((p - .2)/.4);
       if (starA > 0 && stars.length){
         ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = '#dfe8ff';
         for (const s of stars){ ctx.globalAlpha = starA*(.18 + .22*Math.sin(t*(.7 + s[3]) + s[2]))*s[3]; const r = 1.2*DPR*s[3]; ctx.fillRect(s[0] - r/2, s[1] - r/2, r, r); }
         ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
       }
 
-      if (blue > 0){ ctx.globalAlpha = blue; ctx.drawImage(blueC, 0, 0); ctx.globalAlpha = 1; }   // malam → fajar biru
+      if (blue > 0 && pre < 1){ ctx.globalAlpha = blue; ctx.drawImage(blueC, 0, 0); ctx.globalAlpha = 1; }   // malam → fajar biru
+      if (pre > 0){ ctx.globalAlpha = pre; ctx.drawImage(preC, 0, 0); ctx.globalAlpha = 1; }                 // → subuh (bulan & bintang hilang)
 
       if (dawn){
         /* masker: area mana yang sudah "fajar" */
