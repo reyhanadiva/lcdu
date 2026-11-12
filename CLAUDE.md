@@ -92,7 +92,19 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Benang keffiyeh** (`.benang`, setelah footer): desktop ≥ 900px garis zigzag tipis di gutter kiri dengan titik lentera
   di ujung; HP garis progres 3px di atas (5px dari tepi, sengaja tidak menempel — lihat catatan iOS 26). Panjangnya dari
   CSS scroll-driven animation (`view-timeline: --hari`, range `entry 50% contain 100%`), cadangan JS mengisi `--benang`.
-  Mulai terlihat saat Pengantar mencapai tengah layar (`.is-on`), selesai tepat di akhir Donasi. Disembunyikan saat reduced-motion.
+  Mulai terlihat saat Pengantar mencapai tengah layar (`.is-on`), selesai tepat di akhir Donasi. Reduced-motion: benang
+  tampil diam & utuh (tanpa bulat kuning; `.is-on` lewat IntersectionObserver, bukan scroll listener).
+- **Lentera di benang** (`[data-lentera]` pada section; "Setiap ilmu yang kita pelajari menyalakan satu cahaya"): JS membuat
+  satu penanda per section — desktop ≥ 900px: `.lentera-tanda` absolut di section, x = garis benang, y = tengah baris
+  pertama judul (dihitung sekali saat muat/load/resize, ditulis sebagai transform), isi: `.lt-cahaya` (radial-gradient
+  kunyit, radius 14px, opacity), `.lt-titik` (cincin redup → isi lentera lewat opacity), SVG 2 daun zaitun (scale 0→1 dari
+  pangkal, ≤ .55s, sisi kanan/kiri bergantian); HP: `.lt-hp` titik di garis progres atas pada posisi progres judul
+  (tanpa daun). Satu IntersectionObserver untuk semua judul → `.nyala` sekali; menyalakan juga semua lentera sebelumnya
+  (lompatan #anchor). Hanya opacity & transform, tanpa rAF/scroll listener baru, aria-hidden, pointer-events:none, di
+  bawah navbar. 6 elemen per penanda + 1 titik HP (8 section → 56 elemen). Celah aman: ujung cahaya/daun berhenti 3px
+  sebelum teks (1440 & 1024). Dipakai: Pengantar, Kenapa, Pilih kelas, Biaya, Bergabung, Testimoni, Tim, FAQ.
+  `data-lentera="zaitun"` = ranting zaitun berbuah (7 elemen) untuk ujung perjalanan — **gaya siap, Donasi belum memakainya**.
+  Diukur (CPU 4x, scroll cepat atas→bawah): 0 long task > 50 ms (1440 & 390); tanpa lentera 2 (decode gambar).
 - **Ornamen** (SVG sebagai `mask`, warna = `currentColor`/token, tanpa warna tertanam; data URI di token `--orn-*`):
   `.orn-band` pita keffiyeh horizontal (daun zaitun + dua garis), `.orn-net` jaring keffiyeh untuk latar (opacity .05,
   `position:absolute; inset:0`), `.orn-leaf` ikon daun zaitun (centang), `.orn-list` daftar berbutir daun,
