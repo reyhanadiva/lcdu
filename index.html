@@ -288,11 +288,14 @@ footer.fase>.tenun{--tenun-c:#F3EFE8}
 .tenun-m{display:block;top:8px;left:16px;width:calc(100% - 32px);height:22px}
 .tenun-m .jahit{vector-effect:non-scaling-stroke}
 @media (min-width:900px){.tenun-d{display:block}.tenun-m{display:none}}
+/* HP: di Tim → FAQ kata Arab raksasa sudah menjadi pembatas; tenun mendatar akan melintasi hurufnya */
+.batas-kata>.tenun-m{display:none}
 /* HP: titik di garis progres atas, posisinya = progres saat judul section di tengah layar */
 .benang .lt-hp{display:none}
 @media (max-width:899px){
-  .benang .lt-hp{display:block;top:50%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:var(--paper);border:1.5px solid color-mix(in srgb,currentColor 55%,transparent)}
-  .benang .lt-hp::after{content:"";position:absolute;inset:-1.5px;border-radius:50%;background:var(--lentera);opacity:0}
+  /* HP: titik lentera 11px di garis progres atas (cincin gelap → isi kunyit saat menyala) */
+  .benang .lt-hp{display:block;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;background:var(--paper);border:2px solid color-mix(in srgb,currentColor 75%,transparent)}
+  .benang .lt-hp::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--kunyit);opacity:0}
   .benang .lt-hp.nyala::after{opacity:1}
   .gerak .benang .lt-hp::after{transition:opacity .7s var(--ease-menyala)}
 }
@@ -1532,7 +1535,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         if (!x.isIntersecting && x.boundingClientRect.top > window.innerHeight * .52) return;   // belum dilewati
         nyalakan(tanda.map(function(q){ return q.t; }).indexOf(x.target));
       });
-    }, {rootMargin:'0px 0px -48% 0px'});   // area pemicu = dari atas layar sampai garis picu (tidak bisa terlewati)
+    }, {rootMargin:'100000px 0px -48% 0px'});   // area pemicu = semua yang di atas garis picu (juga saat melompat jauh)
     tanda.forEach(function(o){ ltIO.observe(o.t); });
   })();
 
