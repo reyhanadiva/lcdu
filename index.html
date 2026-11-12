@@ -868,7 +868,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section class="band intro" id="pengantar" aria-labelledby="intro-h">
   <div class="wrap intro-grid">
     <div class="intro-teks">
-      <h2 class="intro-kalimat" id="intro-h" style="--n:7">
+      <h2 class="intro-kalimat" id="intro-h" style="--n:7" data-judul=".k">
         <span class="sr-only">Belajar Bahasa Arab dan Inggris. Online. Nirlaba.</span>
         <span aria-hidden="true"><span class="intro-l1"><span class="k" style="--i:0">Belajar</span> <span class="k" style="--i:1">Bahasa</span> <span class="k k-ar" style="--i:2">Arab</span> <span class="k" style="--i:3">dan</span> <span class="k k-en" style="--i:4">Inggris.</span></span><span class="intro-l2"><span class="k" style="--i:5">Online.</span></span><span class="intro-l3"><span class="k k-merah" style="--i:6">Nirlaba.</span></span></span>
       </h2>
@@ -1256,6 +1256,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   /* ---------- Judul section [data-judul]: kata muncul berurutan dengan blur-in ----------
      Satu utilitas untuk semua judul: tambahkan atribut data-judul pada h2 section baru. Dipecah per kata (span .jk),
      elemen anak (span berwarna, kata Arab) dipertahankan; .sr-only/aria-hidden dilewati. Jeda 75 ms per kata, maks 600 ms.
+     data-judul=".k" (Pengantar) = pakai span kata yang sudah ada; efek menyala per kata (warna, scroll) tetap berjalan.
      Dipicu IntersectionObserver (threshold .4) sekali. Judul yang sudah terlihat saat halaman dibuka (termasuk lewat
      #anchor / refresh di tengah halaman) tidak dianimasikan. Setelah selesai, kelas dilepas (will-change & transisi hilang). */
   (function(){
@@ -1295,7 +1296,14 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       var r = h.getBoundingClientRect();
       if (r.top < window.innerHeight && r.bottom > 0) return;          // sudah terlihat saat dibuka → apa adanya
       if (r.bottom <= 0) return;                                        // sudah terlewati (refresh di tengah) → apa adanya
-      h.dataset.jumlahKata = pecah(h, {i:0});
+      /* data-judul="<selector>": judul yang sudah punya span per kata (mis. Pengantar: .k di versi aria-hidden) memakai
+         span itu langsung, tidak dipecah ulang */
+      var sel = h.getAttribute('data-judul');
+      if (sel){
+        var kata = $$(sel, h);
+        kata.forEach(function(k, i){ k.classList.add('jk'); k.style.setProperty('--jd', Math.min(i * 75, 600) + 'ms'); });
+        h.dataset.jumlahKata = kata.length;
+      } else h.dataset.jumlahKata = pecah(h, {i:0});
       h.classList.add('judul-tunggu');
       io.observe(h);
     });
