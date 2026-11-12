@@ -457,28 +457,42 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @media (prefers-reduced-motion: reduce){.why-item::before,.why-ar,.why-stage .frame-arch,.why-stage .why-ar{transition:none!important}}
 
-/* ===== BIAYA =====
-   Struk tercetak keluar dari celah printer mengikuti scroll (gerak "tergambar"): --cetak 0..1 dianimasikan view timeline
-   .receipt-wrap; cadangan JS di skrip. Nilai awal 1 = struk penuh (reduced-motion / tanpa JS). Hanya transform, tanpa layout. */
+/* ===== BIAYA: blok merah tua penuh lebar =====
+   Teks persis dari pemilik. "Rp100.000" HANYA di total struk (selain langkah 4 & FAQ bila perlu, lihat CLAUDE.md).
+   Kiri: judul, pernyataan besar, satu kalimat pendukung (putih di #B3202E 6,6:1; lembut putih 90% 5,6:1).
+   Kanan: printer + struk kertas putih, miring 1,5°, keluar dari celah printer mengikuti scroll (gerak "tergambar"):
+   --cetak 0..1 dianimasikan view timeline .receipt-wrap; cadangan JS di skrip. Nilai awal 1 = struk penuh
+   (reduced-motion / tanpa JS). Hanya transform, tanpa layout. Irisan semangka besar di belakang struk, biji di tepi,
+   pita keffiyeh merah-putih di atas & bawah. Tanpa count-up, tanpa stempel. */
 @property --cetak{syntax:'<number>';inherits:true;initial-value:1}
-.cost{display:grid;gap:clamp(48px,8vw,128px);align-items:start}
+.cost-blok{position:relative;overflow:clip;isolation:isolate;background:var(--semangka-tua);color:var(--putih);--ink-soft:color-mix(in srgb,var(--putih) 90%,var(--semangka-tua))}
+.cost-pita{background:var(--putih);position:relative;z-index:2}
+.cost-pita>i{display:block;--pita:40px}
+.cost{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,96px);align-items:center;padding-block:clamp(64px,8vw,120px)}
 @media (min-width:900px){.cost{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
-.cost-copy{display:grid;gap:clamp(20px,2.4vw,32px);align-content:start}
-.cost-big{font-family:var(--f-display);font-weight:700;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.03em;color:var(--lazuardi-ink);font-variant-numeric:tabular-nums}
-.cost-big small{display:block;font-size:max(.95rem,.18em);line-height:1.4;max-width:34ch;letter-spacing:0;font-weight:600;color:var(--ink-soft);margin-top:.7em;font-family:var(--f-body)}
-.cost .lede{max-width:46ch}
-.receipt-wrap{display:grid;justify-items:center;padding-top:clamp(0px,4vw,48px)}
-/* printer: celah tipis, tanpa bayangan tebal */
-.printer{width:min(100%,400px);height:18px;border-radius:9px;background:var(--ink);position:relative;z-index:2}
-.printer::after{content:"";position:absolute;left:22px;right:22px;top:8px;height:2px;border-radius:2px;background:color-mix(in srgb,var(--paper) 30%,var(--ink))}
-.struk-jendela{width:min(calc(100% - 32px),380px);margin-top:-9px;overflow:hidden}
-.receipt{background:var(--surface);color:var(--ink);padding:34px 26px 44px;font-variant-numeric:tabular-nums;position:relative;
+.cost-copy{display:grid;gap:clamp(16px,2vw,28px);align-content:center}
+.cost-copy .h2{color:var(--putih)}
+.cost-besar{font-family:var(--f-display);font-weight:700;font-size:clamp(3.2rem,1.4rem + 6.4vw,7.6rem);line-height:.95;letter-spacing:-.035em;text-wrap:balance}
+.cost-dukung{max-width:52ch;font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
+/* biji semangka tersebar halus di tepi kiri & kanan */
+.cost-biji{position:absolute;z-index:0;top:0;bottom:0;width:clamp(56px,11vw,170px);--biji:var(--keffiyeh);--orn-alpha:.22}
+.cost-biji.kiri{left:0;right:auto}
+.cost-biji.kanan{right:0;left:auto;-webkit-mask-position:80px 40px;mask-position:80px 40px}
+.receipt-wrap{position:relative;display:grid;justify-items:center;rotate:-1.5deg}
+/* irisan semangka di belakang struk */
+.cost-slice{position:absolute;z-index:-1;right:-36%;top:44%;--slice:clamp(300px,40vw,580px);--putar:-18deg}
+/* printer: celah gelap tipis, tanpa bayangan tebal */
+.printer{width:min(100%,400px);height:18px;border-radius:9px;background:var(--keffiyeh);position:relative;z-index:2}
+.printer::after{content:"";position:absolute;left:22px;right:22px;top:8px;height:2px;border-radius:2px;background:#3A3A3A}
+.struk-jendela{width:min(calc(100% - 32px),380px);margin-top:-9px;overflow:hidden;position:relative;z-index:1}
+.receipt{background:var(--putih);color:var(--ink);padding:34px 26px 44px;font-variant-numeric:tabular-nums;position:relative;
   transform:translateY(calc((var(--cetak) - 1) * 100%));will-change:transform;
   /* tekstur kertas: garis horizontal sangat halus */
   background-image:repeating-linear-gradient(0deg,color-mix(in srgb,var(--ink) 3.5%,transparent) 0 1px,transparent 1px 5px);
-  box-shadow:inset 1px 0 0 var(--line),inset -1px 0 0 var(--line);
+  /* tepi bawah: sobekan zigzag keffiyeh */
   -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 10px) no-repeat,var(--orn-sobek) left bottom/16px 10px repeat-x;
   mask:linear-gradient(#000 0 0) top/100% calc(100% - 10px) no-repeat,var(--orn-sobek) left bottom/16px 10px repeat-x}
+.receipt{--ink:#10163A;--ink-soft:#4B4F63}
 .receipt-head{text-align:center;display:grid;gap:4px;padding-bottom:18px;border-bottom:1px dashed color-mix(in srgb,var(--ink) 35%,transparent)}
 .receipt-head b{font-family:var(--f-display);letter-spacing:.12em;font-size:1.1rem}
 .receipt-head>span{font-size:var(--step--1);color:var(--ink-soft)}
@@ -486,15 +500,17 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .rline::before{content:"";grid-column:2;grid-row:1;border-bottom:1px dotted color-mix(in srgb,var(--ink) 45%,transparent);transform:translateY(-4px)}
 .rline span:first-child{grid-column:1;grid-row:1}
 .rline span:last-child{grid-column:3;grid-row:1;font-weight:700;text-align:right}
-.rtotal{border-top:1px dashed color-mix(in srgb,var(--ink) 35%,transparent);margin-top:6px;padding-top:16px;font-size:1.1rem}
-.rtotal span:last-child{color:var(--lazuardi-ink);font-family:var(--f-display);font-size:1.25rem}
-.receipt-catat{font-size:.8rem;color:var(--ink-soft)}
+.rline-donasi span:first-child{max-width:20ch}
+/* total besar: label di atas, angka besar */
+.rtotal{display:grid;gap:2px;border-top:1px dashed color-mix(in srgb,var(--ink) 45%,transparent);margin-top:10px;padding-top:18px}
+.rtotal span:first-child{font-weight:700;font-size:.95rem}
+.rtotal span:last-child{font-family:var(--f-display);font-weight:700;font-size:clamp(2.4rem,1.8rem + 2vw,3.2rem);line-height:1;letter-spacing:-.02em;color:var(--semangka-tua)}
 .receipt-foot{margin-top:22px;padding-top:16px;text-align:center;font-size:var(--step--1);color:var(--ink-soft)}
 .receipt-foot .orn-band{height:10px;margin:0 auto 14px;color:color-mix(in srgb,var(--ink) 30%,transparent);-webkit-mask-size:20px 10px;mask-size:20px 10px}
 .receipt-foot [lang="ar"]{display:block;font-family:var(--f-ar);font-size:1.2rem;color:var(--zamrud-ink);margin-bottom:4px}
-.cost-note{margin-top:20px;max-width:36ch;text-align:center;font-size:var(--step--1);color:var(--ink-soft)}
 @keyframes cetak{from{--cetak:0}to{--cetak:1}}
 @supports (animation-timeline: view()){.gerak .receipt-wrap{animation:cetak linear both;animation-timeline:view();animation-range:cover 12% cover 48%}}
+@media (max-width:899px){.cost-slice{right:-30%;top:52%;--slice:min(90vw,420px)}}
 
 /* ===== PILIH KELAS: layar terbelah Inggris | Arab =====
    Prinsip: SEMUA informasi (judul, deskripsi, fokus belajar, jadwal) terlihat penuh pada 50/50, dan tetap terlihat di
@@ -892,29 +908,34 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   </div>
 </section>
 
-<!-- ============ BIAYA ============ -->
-<section class="band" id="biaya" aria-labelledby="cost-h">
+<!-- ============ BIAYA: blok merah, pernyataan besar + struk ============
+     Teks persis dari pemilik. "Rp100.000" hanya di total struk. Struk = teks asli; .struk-jendela memotong kertas yang
+     masih "di dalam printer" (tetap di DOM, terbaca berurutan). -->
+<section class="cost-blok" id="biaya" aria-labelledby="cost-h">
+  <div class="cost-pita" aria-hidden="true"><i class="orn-band orn-band--tebal kain-merah"></i></div>
+  <i class="orn-seeds cost-biji kiri" aria-hidden="true"></i>
+  <i class="orn-seeds cost-biji kanan" aria-hidden="true"></i>
   <div class="wrap cost">
     <div class="cost-copy">
       <h2 class="h2" id="cost-h" data-muncul>Berapa biayanya?</h2>
-      <p class="cost-big">Rp100.000<small>per term (1 semester)</small></p>
-      <p class="lede">LCDU adalah organisasi nirlaba, sehingga tidak menetapkan biaya kursus setiap bulan. Biaya yang perlu dibayar adalah Rp100.000 per term (1 semester). Di term pertama, biaya ini disebut biaya registrasi.</p>
+      <p class="cost-besar">Tanpa biaya bulanan.</p>
+      <p class="cost-dukung">LCDU adalah program nirlaba. Kamu cukup membayar satu kali per term (semester).</p>
     </div>
     <div class="receipt-wrap">
+      <i class="orn-slice cost-slice" aria-hidden="true"></i>
       <div class="printer" aria-hidden="true"></div>
-      <!-- struk = teks asli; .struk-jendela memotong kertas yang masih "di dalam printer" (tetap di DOM, terbaca berurutan) -->
       <div class="struk-jendela">
         <div class="receipt" id="receipt">
-          <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian biaya per term (semester)</span></div>
-          <div class="rline"><span>Biaya per term (semester)</span><span>Rp100.000</span></div>
-          <div class="rline rtotal"><span>Total per term</span><span>Rp100.000</span></div>
-          <p class="receipt-catat">Di term pertama disebut biaya registrasi.</p>
+          <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian biaya</span></div>
+          <div class="rline"><span>Biaya bulanan</span><span>Rp0</span></div>
+          <div class="rline rline-donasi"><span>Donasi untuk Palestina (tidak wajib)</span><span>sebebasnya</span></div>
+          <div class="rtotal"><span>Total per term (semester)</span><span>Rp100.000</span></div>
           <p class="receipt-foot"><i class="orn-band" aria-hidden="true"></i><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah belajar bersama LCDU.</p>
         </div>
       </div>
-      <p class="cost-note">Donasi untuk Palestina bersifat sukarela dan terpisah dari biaya ini.</p>
     </div>
   </div>
+  <div class="cost-pita" aria-hidden="true"><i class="orn-band orn-band--tebal kain-merah"></i></div>
 </section>
 </div>
 
@@ -957,7 +978,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <li class="flow-step"><span class="flow-num">1</span><div><h3>Kerjakan Placement Test</h3><p>Untuk mengetahui level yang pas buat kamu.</p></div></li>
 <li class="flow-step"><span class="flow-num">2</span><div><h3>Kirim hasilnya</h3><p>Screenshot hasil tes, lalu kirim ke Admin LCDU (Mr. Syahril).</p></div></li>
 <li class="flow-step"><span class="flow-num">3</span><div><h3>Dapatkan kelas</h3><p>Admin memberi tahu kelas yang tersedia untuk kamu.</p></div></li>
-<li class="flow-step"><span class="flow-num">4</span><div><h3>Registrasi</h3><p>Isi formulir registrasi dan bayar biaya registrasi (term pertama) Rp100.000.</p></div></li>
+<li class="flow-step"><span class="flow-num">4</span><div><h3>Registrasi</h3><p>Isi formulir registrasi dan bayar biaya term pertama.</p></div></li>
 <li class="flow-step"><span class="flow-num">5</span><div><h3>Masuk grup dan Canvas</h3><p>Kamu masuk grup WhatsApp kelas dan mengaktifkan akun Canvas LMS.</p></div></li>
 <li class="flow-step"><span class="flow-num">6</span><div><h3>Mulai belajar</h3><p>Materi dan link Zoom tersedia di Canvas. Sampai jumpa di kelas.</p></div></li>
     </ol>

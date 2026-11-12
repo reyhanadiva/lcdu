@@ -159,12 +159,16 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   (`.is-lihat`). Reduced-motion: tanpa undangan, tanpa denyut, tanpa transisi. HP < 700px: dua blok bertumpuk dengan pita
   keffiyeh di antaranya, ketuk = garis 6px warna sisi + glyph lebih tegas; glyph di seberang foto. Tanpa tombol, tanpa
   teks "Geser", tanpa daftar level. **Jadwal perlu verifikasi** (komentar HTML & README).
-- **Biaya** (selesai): angka besar + paragraf di kiri, struk di kanan (HP: di bawah). Struk keluar dari celah printer
-  mengikuti scroll: `--cetak` (`@property`, awal 1 = penuh) dianimasikan view timeline `.receipt-wrap` (`cover 12% → 48%`),
-  struk hanya di-`translateY` di dalam `.struk-jendela` (overflow hidden) — teks tetap di DOM dan terbaca berurutan.
-  Kertas bertekstur garis halus, tanpa bayangan; tepi bawah sobekan zigzag keffiyeh (`--orn-sobek` sebagai masker).
-  Teks struk persis dari pemilik (kepala, "Total per term", catatan biaya registrasi, penutup "Terima kasih sudah belajar
-  bersama LCDU."). Catatan donasi Palestina di bawah struk. Tanpa count-up, tanpa stempel.
+- **Biaya** (selesai, revisi 2): blok `.cost-blok` merah tua `#B3202E` penuh lebar (teks putih 6,6:1; kalimat pendukung
+  putih 90% 5,6:1), pita keffiyeh merah-putih di atas & bawah (`.cost-pita`), biji tersebar di tepi kiri-kanan
+  (`.orn-seeds.cost-biji`, 22%). Kiri: "Berapa biayanya?", pernyataan besar "Tanpa biaya bulanan." (Fraunces 3,2–7,6rem),
+  satu kalimat pendukung. Kanan: printer + struk putih, seluruh `.receipt-wrap` miring −1,5°; irisan semangka besar di
+  belakang struk. Struk (teks persis dari pemilik): kepala "LCDU, Rincian biaya"; "Biaya bulanan — Rp0"; "Donasi untuk
+  Palestina (tidak wajib) — sebebasnya"; garis putus-putus; total besar "Total per term (semester) — Rp100.000"
+  (`--semangka-tua` di putih 6,6:1); penutup جَزَاكُمُ اللّٰهُ خَيْرًا + "Terima kasih sudah belajar bersama LCDU.".
+  Gerak "tergambar": `--cetak` (`@property`, awal 1 = penuh) dianimasikan view timeline `.receipt-wrap` (`cover 12% →
+  48%`), struk hanya di-`translateY` di dalam `.struk-jendela` — teks tetap di DOM, terbaca berurutan; cadangan JS.
+  Tepi bawah sobekan zigzag keffiyeh (`--orn-sobek`). Tanpa count-up, tanpa stempel, tanpa tombol, tanpa eyebrow.
 - Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
@@ -179,8 +183,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Wordmark permanen kiri atas hero: logo + "LCDU" saja (keputusan pemilik; nama panjang hanya untuk pembaca layar, `.sr-only`).
   Identitas, bukan tombol/tautan.
 - Biaya (fakta dari pemilik): **Rp100.000 per term (1 term = 1 semester).** Di term pertama biaya ini disebut
-  **biaya registrasi**. Dilarang menulis "gratis", "Rp0", "sudah termasuk seluruh biaya belajar", atau "tanpa biaya
-  tambahan". Angka utama selalu Rp100.000 per term.
+  biaya registrasi (fakta; tidak lagi ditulis di halaman atas permintaan pemilik). **"Rp100.000" hanya di total struk
+  Biaya**; boleh di maksimal dua tempat lain (langkah 4 Cara bergabung, FAQ) — sekarang langkah 4 berbunyi "Isi formulir
+  registrasi dan bayar biaya term pertama." tanpa angka. Meta description tetap memuat angka (keputusan pemilik; tidak
+  terlihat di halaman). Dilarang menulis "gratis", "sudah termasuk seluruh biaya belajar", atau "tanpa biaya tambahan".
+  **"Rp0" hanya boleh** di baris struk "Biaya bulanan" (keputusan pemilik, sesi Biaya revisi 2), selalu bersama total
+  Rp100.000 yang paling menonjol. Pernyataan besar Biaya: "Tanpa biaya bulanan."
 - **Donasi terbuka = untuk Palestina**, sukarela, terpisah dari biaya kelas, disalurkan melalui **AWG (Aqsa Working Group)**,
   mitra lama. Tidak ada "Donasi LCDU" terpisah di halaman.
 - **Urutan section setelah hero** (id dalam kurung): Pengantar (`pengantar`), Kenapa LCDU (`kenapa`), Pilih kelas (`kelas`),
@@ -253,7 +261,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
    Bergabung, Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya
-   (Pengantar & Kenapa sudah memakai fondasi seni; Kelas & Biaya belum).
+   (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
