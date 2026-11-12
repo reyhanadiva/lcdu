@@ -209,10 +209,14 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   tulis ulang) dan **uji picing** (apakah hierarkinya tetap terbaca saat layar dipicingkan?).
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
-  Scroll harus pendek dan jelas (tinggi hero 340vh; dinaikkan dari 290vh karena pemilik merasa transisi terlalu cepat).
+  Scroll harus pendek dan jelas: tinggi hero **220vh** (permintaan pemilik; dulu 340vh). Agar tetap mulus, `state.p`
+  mengikuti target lewat pegas teredam kritis (`K=70`) dengan batas kecepatan `MAX_RATE=.45`/detik yang naik perlahan
+  bila tertinggal > .25 (maks 1). Peta babak (`CENTERS`, jendela pudar) tidak diubah. Diukur dengan simulasi rumus yang
+  sama (Lenis lerp .12; usapan = scroll native + momentum), 390×844: lonjakan maks per frame (Δ²p) roda 100px
+  .0012 → .0005, usapan .0027 → .0013; Δp maks per frame roda .0030 → .0035, usapan .0067 → .0075–.0101.
 - Tiga babak = tiga suasana yang jelas berbeda (permintaan pemilik), berubah bertahap sepanjang scroll, bukan melompat:
   Foto: malam → fajar biru + lampu menyala → subuh (bulan, bintang & biru memudar dulu; lapisan dari foto fajar yang
-  diredam) → matahari terbit keemasan. Laju perubahan p dibatasi (`MAX_RATE` di hero.js) supaya scroll cepat tidak melompat.
+  diredam) → matahari terbit keemasan. Laju perubahan p dibatasi (pegas + `MAX_RATE` di hero.js) supaya scroll cepat tidak melompat.
   3D pagi = sudut matahari pagi (bukan siang), cahaya hangat & terang, kabut tipis — pemilik ingin "terik" tapi tidak pucat. 3D: malam → fajar ungu-jingga → pagi cerah
   (matahari tinggi, langit biru, kabut tipis). Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
   (kontras ≥ 6:1); babak 1–2 putih di atas gradasi lebar & lembut dari pojok kiri-atas yang memudar habis sebelum

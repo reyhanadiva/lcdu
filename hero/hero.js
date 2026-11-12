@@ -107,20 +107,28 @@ async function recheck() {
 function resize() { const r = holder.getBoundingClientRect(); state.w = r.width; state.h = r.height; }
 let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { resize(); readScroll(); current && current.resize(); recheck(); }, 150); });
 
-let raf = 0, lastT = 0;
-/* laju maksimum perubahan p (per detik): scroll yang cepat tetap memperlihatkan tiap tahap transisi, tidak melompat */
-const MAX_RATE = .4;
+let raf = 0, lastT = 0, vel = 0;
+/* p mengikuti target lewat pegas teredam kritis (K) dengan batas kecepatan MAX_RATE (per detik): percepatan & perlambatan
+   halus, tanpa lonjakan per frame saat satu putaran roda atau satu usapan. Bila tertinggal jauh (> .25, mis. usapan
+   panjang di hero 220vh), batas kecepatan naik perlahan (kontinu, maks 1/detik) supaya tidak tertinggal di akhir hero.
+   Angka diukur dengan simulasi (lihat CLAUDE.md): lonjakan maks per frame roda 100px .0005, usapan .0013 di 390×844. */
+const K = 70, DAMP = 2 * Math.sqrt(K), MAX_RATE = .45;
 function frame(now) {
   raf = 0;
   const dt = lastT ? Math.min(.1, (now - lastT)/1000) : 0; lastT = now;
-  const step = (state.target - state.p) * (reduce ? 1 : window.lenis ? .22 : .12);   // Lenis sudah menghaluskan scroll
-  state.p += reduce || !dt ? step : Math.max(-MAX_RATE*dt, Math.min(MAX_RATE*dt, step));
-  if (Math.abs(state.target - state.p) < .0005) state.p = state.target;
+  const lag = state.target - state.p;
+  if (reduce || !dt) { state.p += reduce ? lag : 0; vel = 0; }
+  else {
+    const vmax = Math.min(1, MAX_RATE + Math.max(0, Math.abs(lag) - .25) * 1.6);
+    vel = Math.max(-vmax, Math.min(vmax, vel + (K * lag - DAMP * vel) * dt));
+    state.p += vel * dt;
+  }
+  if (Math.abs(state.target - state.p) < .0005 && Math.abs(vel) < .01) { state.p = state.target; vel = 0; }
   updateCopy(state.p);
   if (current) current.frame(state, now);
   if (state.visible) raf = requestAnimationFrame(frame);
 }
-function start() { if (!raf && state.visible){ lastT = 0; raf = requestAnimationFrame(frame); } }
+function start() { if (!raf && state.visible){ lastT = 0; vel = 0; raf = requestAnimationFrame(frame); } }
 new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !document.hidden; start(); sw.classList.toggle('is-away', !en[0].isIntersecting); }, { rootMargin: '60px' }).observe(hero);
 document.addEventListener('visibilitychange', () => { state.visible = !document.hidden; start(); });
 
