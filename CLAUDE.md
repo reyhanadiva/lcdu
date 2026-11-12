@@ -96,6 +96,15 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   menyala. "Inggris" = `--lazuardi-ink` (= biru logo), "Arab" = `--zamrud-ink` (hijau logo asli `#7FA33F` hanya 2,4:1 di
   latar pagi, tidak boleh jadi teks). Pembaca layar membaca kalimat utuh (`.sr-only`), versi per kata `aria-hidden`.
   Empat pill fakta (garis 1px, sudut 3px, `.orn-leaf`) tersusun tangga tidak simetris, `data-muncul` dengan jeda `--d`.
+- **Kenapa LCDU** (selesai): empat panel `.why-panel`, tiap panel = `<button aria-expanded aria-controls>` (urutan baca:
+  nomor, judul, kata Arab; kata Arab dipindah ke atas lewat `order`). Desktop ≥ 960px: panel tinggi berjajar, tepat satu
+  aktif (hover/fokus/klik) melebar 3 : 1 (`flex-grow`), teks lebar tetap 34ch muncul setelah panel melebar; saat pertama
+  terlihat menyala 2 → 3 → 4 → 1 sekali lalu berhenti (interaksi menghentikannya). HP: panel terbuka saat melewati tengah
+  layar dan tetap terbuka, ketuk untuk membuka/menutup. Kata Arab (Reem Kufi, `white-space:nowrap`, ukuran harus muat di
+  panel sempit) = garis 1,2px, terisi saat aktif. Biru (`--lazuardi-ink`) panel 1–2, hijau (`--zamrud-ink`) panel 3–4.
+  Reduced-motion / tanpa JS: `.why-statis` (semua terbuka, sama lebar). Kata Arab hanya yang sudah ada: مَنْهَج،
+  عَنْ بُعْد، مُعَلِّم، القُرْآن.
+- Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
 - **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
@@ -175,7 +184,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
-   (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Kenapa, Kelas, Biaya
+   (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Kelas, Biaya
    (struk masih beranimasi "cetak" — jenis gerak ke-4, perlu diganti), Bergabung, Testimoni, Tim, Donasi, Footer.
    FAQ masih stub. Pengantar selesai.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
