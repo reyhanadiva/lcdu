@@ -73,6 +73,12 @@ for (const [nama, f] of Object.entries(POLA)) {
   }
 }
 
+// pita tegak (untuk garis pembagi vertikal): pita sempit dicerminkan terhadap diagonal (x ↔ y), ubin tetap 24×24
+{
+  const isi = pitaSempit().replace(/^<svg[^>]*>|<\/svg>\n$/g, '');
+  fs.writeFileSync(OUT + 'pita-sempit-tegak.svg', svg(24, 24, `<g transform="matrix(0 1 1 0 0 0)">${isi}</g>`));
+}
+
 // ---------- semangka ----------
 // biji = tetesan (ujung lancip ke arah pusat irisan)
 const biji = (x, y, rot, k = 1) =>

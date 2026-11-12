@@ -142,13 +142,23 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi bawah: pita merah di atas putih (`.why-pita`).
   Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
   atas permintaan pemilik. Kata Arab hanya yang sudah ada: مَنْهَج، عَنْ بُعْد، مُعَلِّم، القُرْآن.
-- **Pilih kelas** (selesai): layar terbelah penuh-lebar `#split`, `--a` (didaftarkan `@property`) = lebar sisi Inggris %.
-  Desktop ≥ 700px: grid `--a% | sisa`, pegangan `role="slider"` (30–70, panah/Home/End lompat ke snap 30/50/70, tarik
-  lalu snap), klik sisi sempit → 70%. Sisi ≥ 60% menampilkan rincian (label, strip 7 hari, slot foto); rincian berlebar
-  tetap `70vw − padding` supaya tidak mengalir ulang saat ditarik, dan selalu ada di DOM. Sisi Arab rata kanan &
-  dicerminkan (foto di kiri), urutan hari tetap Sen → Min. HP < 700px: panel atas–bawah, ketuk judul/panel untuk membuka,
-  panel lain deskripsinya dipendekkan 2 baris. Hari kelas = lentera (`--lentera`). Glyph latar Aa / أب (yang sudah ada).
-  Slot foto = `.orn-net` (komentar `SLOT FOTO KELAS` di HTML). Jadwal belum diverifikasi (README). Tanpa daftar level.
+- **Pilih kelas** (selesai, revisi 2): layar terbelah penuh-lebar `#split`. **Prinsip: semua informasi terlihat penuh
+  pada 50/50 dan tetap terlihat di 35/65 & di HP; geser/ketuk/hover hanya memberi penekanan, tidak membuka apa pun.**
+  `--a` (`@property`) = lebar sisi Inggris %, snap 35/50/65, transisi .6s. Isi tiap sisi: judul (biru / hijau kulit; Arab
+  rata kanan & dicerminkan), deskripsi, fokus belajar `.orn-list.cls-fokus` berbutir daun (Speaking, Grammar, Listening,
+  Writing / Muhadatsah, Nahwu, Mufradat, Qira'ah — bukan pill), strip 7 hari (Weekday + Weekend, hari kelas = lentera,
+  urutan Sen → Min juga di Arab), foto `.frame-arch` (Inggris: kelas-online, Arab: kaligrafi; sementara). Container query
+  pada `.side-isi` (lebar isi setelah padding): ≥ 450px foto di samping info (Arab: foto di kiri), lebih sempit → foto
+  disembunyikan (seni, bukan informasi). Tinggi desktop tetap `min-height:clamp(600px,82vh,760px)` dan isi muat di
+  35/50/65 (diukur 738px di 1440×900), jadi tidak melompat saat ditarik. Latar sisi jenuh: Inggris `#C9D1F8` (judul 6,8:1,
+  tinta 11,7, teks lembut `#3E4256` 6,6), Arab `#D2E6C6` (judul 4,9, tinta 13,3, lembut 7,5); `.orn-net--kain` 10% warna
+  sisi; glyph Aa / أب opacity .16 (fokus .26). Pembagi: pita keffiyeh tegak 28px (`pita-sempit-tegak.svg`, hitam di atas
+  putih) + pegangan 72px irisan semangka bundar berpanah (SVG inline), `role="slider"` (35–65, panah/Home/End, fokus
+  kunyit). Desktop: klik sisi atau hover 300 ms = fokus (65/35), klik sisi yang fokus → 50/50, tarik → snap. Undangan
+  sekali saat separuh section terlihat: 58 → 42 → 50; pegangan berdenyut sampai interaksi pertama, hanya saat terlihat
+  (`.is-lihat`). Reduced-motion: tanpa undangan, tanpa denyut, tanpa transisi. HP < 700px: dua blok bertumpuk dengan pita
+  keffiyeh di antaranya, ketuk = garis 6px warna sisi + glyph lebih tegas; glyph di seberang foto. Tanpa tombol, tanpa
+  teks "Geser", tanpa daftar level. **Jadwal perlu verifikasi** (komentar HTML & README).
 - **Biaya** (selesai): angka besar + paragraf di kiri, struk di kanan (HP: di bawah). Struk keluar dari celah printer
   mengikuti scroll: `--cetak` (`@property`, awal 1 = penuh) dianimasikan view timeline `.receipt-wrap` (`cover 12% → 48%`),
   struk hanya di-`translateY` di dalam `.struk-jendela` (overflow hidden) — teks tetap di DOM dan terbaca berurutan.
