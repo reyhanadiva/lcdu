@@ -19,7 +19,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Hero | Cerita scroll 3 babak: malam → lampu menyala dari Kubah ke luar → fajar. Dua varian lewat tombol di kiri bawah (atau `?hero=lentera-hd|diorama`): **Foto** (default; foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu) dan **3D** (model Kubah & Qibli). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Pengantar | Stub, isi menyusul. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
-| Biaya | Rp100.000 per term (1 semester); di term pertama disebut biaya registrasi. Donasi untuk Palestina terpisah dan sukarela. |
+| Biaya | Rp100.000 per term (1 semester); di term pertama disebut biaya registrasi. Struk tercetak keluar dari printer mengikuti scroll. Donasi untuk Palestina terpisah dan sukarela. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (snap 30/50/70), sisi lebar menampilkan rincian & strip 7 hari. HP: panel atas–bawah, ketuk untuk membuka. |
 | Cara bergabung | Checklist syarat, Placement Test (status & tautan di `site-config.js`), 6 langkah sebagai daftar vertikal. |
 | Testimoni | Tumpukan kartu yang bisa diseret. |
@@ -75,6 +75,8 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   tekstur, dan panorama hero 3D) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: formulir registrasi, Instagram, alamat (saat ini `#`). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
+- [ ] **Arti "term"**: halaman menulis 1 term = 1 semester (Rp100.000 per term). Pastikan sesuai kebijakan LCDU.
+- [ ] **Nomor WhatsApp admin** 0819-6009-333 (diambil dari lcdu.org; ada di `site-config.js`).
 - [ ] **Jadwal kelas belum diverifikasi**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; Weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.

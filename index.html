@@ -83,6 +83,8 @@ body{margin:0}
   --orn-benang-x:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3E%3Cpath d='M0 3L3 .6 6 3 9 5.4 12 3' fill='none' stroke='%23000' stroke-width='1.3'/%3E%3C/svg%3E");
   --orn-leaf:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill-rule='evenodd' d='M4.5 19.5C4.5 10.5 10.5 4.5 20 4 19.5 13.5 13.5 19.5 4.5 19.5ZM6.6 18.1L15.4 9.3 16 9.9 7.2 18.7Z'/%3E%3Cpath d='M2.5 21.5L5 19' stroke='%23000' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
   --orn-lentera:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3CradialGradient id='g'%3E%3Cstop offset='0'/%3E%3Cstop offset='.3' stop-opacity='.75'/%3E%3Cstop offset='1' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='12' cy='12' r='12' fill='url(%23g)'/%3E%3Ccircle cx='12' cy='12' r='3.2'/%3E%3C/svg%3E");
+  /* tepi sobekan struk: gigi zigzag keffiyeh (acuan .orn-band), dipakai sebagai masker di tepi bawah */
+  --orn-sobek:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M0 0H12V2L9 8 6 2 3 8 0 2Z'/%3E%3C/svg%3E");
   --orn-seed:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 16'%3E%3Cpath d='M6 1C9 4.5 10.5 8 10.5 10.7A4.5 4.5 0 0 1 1.5 10.7C1.5 8 3 4.5 6 1Z'/%3E%3C/svg%3E");
 }
 @media (prefers-color-scheme: dark){
@@ -396,34 +398,44 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .why-statis .why-panel,.why-statis .why-panel.open{flex-grow:1}
 }
 
-/* ===== BIAYA ===== */
-.cost{display:grid;gap:clamp(40px,6vw,80px);align-items:center}
-@media (min-width:900px){.cost{grid-template-columns:1fr 1fr}}
-.cost-copy{display:grid;gap:20px}
-.cost-big{font-family:var(--f-display);font-weight:700;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.03em;color:var(--lazuardi-ink)}
-.cost-note{font-size:var(--step--1);color:var(--ink-soft);max-width:52ch}
+/* ===== BIAYA =====
+   Struk tercetak keluar dari celah printer mengikuti scroll (gerak "tergambar"): --cetak 0..1 dianimasikan view timeline
+   .receipt-wrap; cadangan JS di skrip. Nilai awal 1 = struk penuh (reduced-motion / tanpa JS). Hanya transform, tanpa layout. */
+@property --cetak{syntax:'<number>';inherits:true;initial-value:1}
+.cost{display:grid;gap:clamp(48px,8vw,128px);align-items:start}
+@media (min-width:900px){.cost{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
+.cost-copy{display:grid;gap:clamp(20px,2.4vw,32px);align-content:start}
+.cost-big{font-family:var(--f-display);font-weight:700;font-size:clamp(3.4rem,10vw,7.5rem);line-height:.9;letter-spacing:-.03em;color:var(--lazuardi-ink);font-variant-numeric:tabular-nums}
 .cost-big small{display:block;font-size:max(.95rem,.18em);line-height:1.4;max-width:34ch;letter-spacing:0;font-weight:600;color:var(--ink-soft);margin-top:.7em;font-family:var(--f-body)}
-.receipt-wrap{display:grid;justify-items:center}
-.printer{width:min(100%,400px);height:22px;border-radius:12px;background:var(--ink);position:relative;z-index:2;box-shadow:0 10px 20px -10px rgba(0,0,0,.5)}
-.printer::after{content:"";position:absolute;left:24px;right:24px;top:9px;height:4px;border-radius:4px;background:color-mix(in srgb,var(--paper) 25%,var(--ink))}
-.receipt{width:min(calc(100% - 32px),360px);margin-top:-10px;background:var(--surface);color:var(--ink);padding:34px 26px 40px;font-variant-numeric:tabular-nums;position:relative;
-  -webkit-mask:radial-gradient(circle 8px at 50% 100%,transparent 98%,#000) 0 0/22px 100% repeat-x;mask:radial-gradient(circle 8px at 50% 100%,transparent 98%,#000) 0 0/22px 100% repeat-x;
-  filter:drop-shadow(0 20px 30px rgba(16,26,61,.18));transform-origin:top}
-.receipt-head{text-align:center;display:grid;gap:4px;padding-bottom:18px;border-bottom:2px dashed var(--line)}
+.cost .lede{max-width:46ch}
+.receipt-wrap{display:grid;justify-items:center;padding-top:clamp(0px,4vw,48px)}
+/* printer: celah tipis, tanpa bayangan tebal */
+.printer{width:min(100%,400px);height:18px;border-radius:9px;background:var(--ink);position:relative;z-index:2}
+.printer::after{content:"";position:absolute;left:22px;right:22px;top:8px;height:2px;border-radius:2px;background:color-mix(in srgb,var(--paper) 30%,var(--ink))}
+.struk-jendela{width:min(calc(100% - 32px),380px);margin-top:-9px;overflow:hidden}
+.receipt{background:var(--surface);color:var(--ink);padding:34px 26px 44px;font-variant-numeric:tabular-nums;position:relative;
+  transform:translateY(calc((var(--cetak) - 1) * 100%));will-change:transform;
+  /* tekstur kertas: garis horizontal sangat halus */
+  background-image:repeating-linear-gradient(0deg,color-mix(in srgb,var(--ink) 3.5%,transparent) 0 1px,transparent 1px 5px);
+  box-shadow:inset 1px 0 0 var(--line),inset -1px 0 0 var(--line);
+  -webkit-mask:linear-gradient(#000 0 0) top/100% calc(100% - 10px) no-repeat,var(--orn-sobek) left bottom/16px 10px repeat-x;
+  mask:linear-gradient(#000 0 0) top/100% calc(100% - 10px) no-repeat,var(--orn-sobek) left bottom/16px 10px repeat-x}
+.receipt-head{text-align:center;display:grid;gap:4px;padding-bottom:18px;border-bottom:1px dashed color-mix(in srgb,var(--ink) 35%,transparent)}
 .receipt-head b{font-family:var(--f-display);letter-spacing:.12em;font-size:1.1rem}
-.receipt-head span{font-size:var(--step--1);color:var(--ink-soft)}
+.receipt-head>span{font-size:var(--step--1);color:var(--ink-soft)}
 .rline{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:baseline;padding:12px 0;font-size:.95rem}
-.rline::before{content:"";grid-column:2;grid-row:1;border-bottom:2px dotted var(--line);transform:translateY(-4px)}
+.rline::before{content:"";grid-column:2;grid-row:1;border-bottom:1px dotted color-mix(in srgb,var(--ink) 45%,transparent);transform:translateY(-4px)}
 .rline span:first-child{grid-column:1;grid-row:1}
 .rline span:last-child{grid-column:3;grid-row:1;font-weight:700;text-align:right}
-.rline s{color:var(--ink-soft)}
-.rtotal{border-top:2px dashed var(--line);margin-top:6px;padding-top:16px;font-size:1.1rem}
+.rtotal{border-top:1px dashed color-mix(in srgb,var(--ink) 35%,transparent);margin-top:6px;padding-top:16px;font-size:1.1rem}
 .rtotal span:last-child{color:var(--lazuardi-ink);font-family:var(--f-display);font-size:1.25rem}
-.receipt-foot{margin-top:18px;text-align:center;font-size:var(--step--1);color:var(--ink-soft)}
+.receipt-catat{font-size:.8rem;color:var(--ink-soft)}
+.receipt-foot{margin-top:22px;padding-top:16px;text-align:center;font-size:var(--step--1);color:var(--ink-soft)}
+.receipt-foot .orn-band{height:10px;margin:0 auto 14px;color:color-mix(in srgb,var(--ink) 30%,transparent);-webkit-mask-size:20px 10px;mask-size:20px 10px}
 .receipt-foot [lang="ar"]{display:block;font-family:var(--f-ar);font-size:1.2rem;color:var(--zamrud-ink);margin-bottom:4px}
-.js .receipt.pre{clip-path:inset(0 0 100% 0)}
-.js .receipt.printing{animation:print 1.8s steps(14,end) forwards}
-@keyframes print{from{clip-path:inset(0 0 100% 0);transform:translateY(-14px)}to{clip-path:inset(0 0 -40px 0);transform:none}}
+.cost-note{margin-top:20px;max-width:36ch;text-align:center;font-size:var(--step--1);color:var(--ink-soft)}
+@keyframes cetak{from{--cetak:0}to{--cetak:1}}
+@supports (animation-timeline: view()){.gerak .receipt-wrap{animation:cetak linear both;animation-timeline:view();animation-range:cover 12% cover 48%}}
 
 /* ===== KELAS: layar terbelah Inggris | Arab =====
    --a = lebar sisi Inggris dalam persen (snap 30 / 50 / 70). Sisi lebar (≥ 60%) menampilkan rincian; sisi sempit tetap
@@ -783,16 +795,20 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <h2 class="h2" id="cost-h" data-muncul>Berapa biayanya?</h2>
       <p class="cost-big">Rp100.000<small>per term (1 semester)</small></p>
       <p class="lede">LCDU adalah organisasi nirlaba, sehingga tidak menetapkan biaya kursus setiap bulan. Biaya yang perlu dibayar adalah Rp100.000 per term (1 semester). Di term pertama, biaya ini disebut biaya registrasi.</p>
-      <p class="cost-note">Donasi untuk Palestina bersifat sukarela dan terpisah dari biaya ini.</p>
     </div>
     <div class="receipt-wrap">
       <div class="printer" aria-hidden="true"></div>
-      <div class="receipt" id="receipt">
-        <div class="receipt-head"><b>LCDU</b><span>Rincian biaya per term (1 semester)</span></div>
-        <div class="rline"><span>Biaya per term (semester)</span><span>Rp100.000</span></div>
-        <div class="rline rtotal"><span>Wajib dibayar</span><span>Rp100.000</span></div>
-        <p class="receipt-foot"><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah ikut menjaga kelas ini tetap terbuka.</p>
+      <!-- struk = teks asli; .struk-jendela memotong kertas yang masih "di dalam printer" (tetap di DOM, terbaca berurutan) -->
+      <div class="struk-jendela">
+        <div class="receipt" id="receipt">
+          <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian biaya per term (semester)</span></div>
+          <div class="rline"><span>Biaya per term (semester)</span><span>Rp100.000</span></div>
+          <div class="rline rtotal"><span>Total per term</span><span>Rp100.000</span></div>
+          <p class="receipt-catat">Di term pertama disebut biaya registrasi.</p>
+          <p class="receipt-foot"><i class="orn-band" aria-hidden="true"></i><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah belajar bersama LCDU.</p>
+        </div>
       </div>
+      <p class="cost-note">Donasi untuk Palestina bersifat sukarela dan terpisah dari biaya ini.</p>
     </div>
   </div>
 </section>
@@ -1084,11 +1100,17 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     }
   }
 
-  /* ---------- Struk biaya ---------- */
-  var rc = $('#receipt');
-  if (!reduce && 'IntersectionObserver' in window && rc.getBoundingClientRect().top > window.innerHeight){
-    rc.classList.add('pre');
-    new IntersectionObserver(function(en, ob){ en.forEach(function(x){ if (x.isIntersecting){ rc.classList.remove('pre'); rc.classList.add('printing'); ob.disconnect(); } }); }, {threshold:.35}).observe(rc);
+  /* ---------- Struk biaya: cadangan JS untuk --cetak (= animation-range "cover 12% cover 48%"), hanya saat terlihat ---------- */
+  var struk = $('.receipt-wrap');
+  if (!reduce && 'IntersectionObserver' in window && !(window.CSS && CSS.supports('animation-timeline: view()'))){
+    var sLihat = false, sTick = false;
+    var cetak = function(){
+      sTick = false;
+      var r = struk.getBoundingClientRect(), vh = window.innerHeight, cover = (vh - r.top) / (vh + r.height);
+      struk.style.setProperty('--cetak', Math.min(1, Math.max(0, (cover - .12) / .36)));
+    };
+    new IntersectionObserver(function(en){ sLihat = en[0].isIntersecting; cetak(); }).observe(struk);
+    window.addEventListener('scroll', function(){ if (sLihat && !sTick){ sTick = true; requestAnimationFrame(cetak); } }, {passive:true});
   }
 
   /* ---------- Pilih kelas: layar terbelah ----------
