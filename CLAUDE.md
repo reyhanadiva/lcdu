@@ -133,12 +133,13 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Kenapa LCDU** (selesai, revisi 2): blok `.why` hijau kulit penuh lebar, teks putih (6,5:1; teks lembut putih 88% 5,5:1),
   aksen merah semangka hanya dekor (garis 64px di atas pernyataan aktif, isi kata Arab, pita). Judul "Kenapa LCDU?".
   Tanpa kotak/panel/tombol/eyebrow. Pernyataan = `<ol>`: `h3` Fraunces 36–48px + kalimat (teks persis dari pemilik).
-  Desktop ≥ 960px: grid 5 : 7; kiri `.why-stage` sticky (tinggi `min(64vh,560px)`, rasio 4:5) berisi empat `.frame-arch`
-  bertumpuk + empat kata Arab raksasa (Reem Kufi 6–10rem, garis putih 1,5px, rata kiri di tepi bawah foto supaya tidak
+  Desktop ≥ 960px: grid 5 : 7; judul di atas kolom kanan (`.why-kanan`); kiri `.why-stage` sticky (tinggi `min(54vh,480px)`, rasio 4:5) berisi empat `.frame-arch`
+  bertumpuk + empat kata Arab raksasa (Reem Kufi 5,4–8,8rem, garis putih 1,5px, rata kiri di tepi bawah foto supaya tidak
   masuk kolom teks), crossfade .7s saat pernyataan melewati tengah layar (IntersectionObserver `-45% 0px -45% 0px`, JS
   memasang `.aktif` di item & `.on` di panggung). Kata Arab aktif terisi `--semangka`. Foto: menulis (kurikulum),
   kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. HP: tiap item = `.why-media` (foto + kata Arab
-  menumpang di tepi bawah-kanan) lalu teks, tanpa sticky. Panggung & media = duplikat dekoratif (`aria-hidden`,
+  menumpang di tepi bawah-kanan) lalu teks, tanpa sticky. **Dimampatkan** (permintaan pemilik): pernyataan desktop
+  `min(29vh,280px)`, terakhir `min(37vh,360px)` → section 1,70 layar di 1440×900 (1,65 tanpa pita); HP foto 66vw. Panggung & media = duplikat dekoratif (`aria-hidden`,
   `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi bawah: pita merah di atas putih (`.why-pita`).
   Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
   atas permintaan pemilik. Kata Arab hanya yang sudah ada: مَنْهَج، عَنْ بُعْد، مُعَلِّم، القُرْآن.
