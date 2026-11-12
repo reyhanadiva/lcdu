@@ -445,6 +445,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @supports (animation-timeline: view()){.gerak .intro-kalimat{animation:intro-nyala linear both;animation-timeline:view();animation-range:cover 18% cover 50%}}
 /* satu baris kecil tanpa kotak: daun zaitun + teks + garis keffiyeh tipis */
 .intro-yayasan{display:flex;align-items:center;gap:.6em;margin-top:clamp(28px,4vw,48px);font-size:var(--step--1);font-weight:600;color:var(--ink-soft)}
+/* tautan Yayasan (Pengantar & footer): garis bawah jelas, fokus keyboard kunyit (global :focus-visible) */
+.tautan-yayasan{color:var(--ink);text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:.22em;text-decoration-color:color-mix(in srgb,currentColor 70%,transparent)}
+.tautan-yayasan:hover{text-decoration-thickness:2.5px;text-decoration-color:currentColor}
 .intro-yayasan .orn-band{flex:1;min-width:40px;max-width:200px;height:10px;color:var(--semangka-tua);-webkit-mask-size:20px 10px;mask-size:20px 10px}
 .intro-seni{justify-self:end;width:min(72vw,320px)}
 .intro-seni .frame-arch{color:var(--kulit)}
@@ -843,7 +846,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <span class="sr-only">Belajar Bahasa Arab dan Inggris. Online. Nirlaba.</span>
         <span aria-hidden="true"><span class="intro-l1"><span class="k" style="--i:0">Belajar</span> <span class="k" style="--i:1">Bahasa</span> <span class="k k-ar" style="--i:2">Arab</span> <span class="k" style="--i:3">dan</span> <span class="k k-en" style="--i:4">Inggris.</span></span><span class="intro-l2"><span class="k" style="--i:5">Online.</span></span><span class="intro-l3"><span class="k k-merah" style="--i:6">Nirlaba.</span></span></span>
       </h2>
-      <p class="intro-yayasan"><i class="orn-leaf" aria-hidden="true"></i><span>Dikelola Yayasan Taqwa Cerdas Kreatif.</span><i class="orn-band" aria-hidden="true"></i></p>
+      <p class="intro-yayasan"><i class="orn-leaf" aria-hidden="true"></i><span>Dikelola <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a>.</span><i class="orn-band" aria-hidden="true"></i></p>
     </div>
     <div class="intro-seni" aria-hidden="true">
       <figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/aqsa-480.avif 480w, assets/photos/aqsa-960.avif 960w" sizes="(min-width:900px) 400px, 72vw"><img src="assets/photos/aqsa-960.webp" srcset="assets/photos/aqsa-480.webp 480w, assets/photos/aqsa-960.webp 960w" sizes="(min-width:900px) 400px, 72vw" alt="" loading="lazy" decoding="async" style="object-position:100% 50%"></picture></figure>
@@ -1126,7 +1129,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     <div class="logos"><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span></div>
   </div>
   <div class="wordmark"><img class="logo-light" src="assets/brand/web/lcdu-logo-color.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"><img class="logo-dark" src="assets/brand/web/lcdu-logo-white.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"></div>
-  <div class="legal"><span>© 2026 LCDU, Yayasan Taqwa Cerdas Kreatif</span><span>Bandung, Jawa Barat</span></div>
+  <div class="legal"><span>© 2026 LCDU, <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a></span><span>Bandung, Jawa Barat</span></div>
   </div>
 </footer>
 

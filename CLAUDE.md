@@ -62,7 +62,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   supaya `scroll-margin-top` dihormati.
 - `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test (`placementTest.open`; `false` → tombol
   tes disembunyikan, tampil "Tanya admin"), tautan tes & aturan Inggris/Arab, WhatsApp admin + pesan awal per tombol,
-  AWG, rekening. HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa="umum|placement|konfirmasi"`; teks di HTML =
+  AWG, rekening, tautan Yayasan (`yayasan.url` → https://alfacentauri.sch.id/yayasan/, dipakai `.tautan-yayasan` di
+  Pengantar & footer; nama aksesibel "… (buka di tab baru)"; nama di rekening Donasi tetap teks biasa). HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa="umum|placement|konfirmasi"`; teks di HTML =
   cadangan. Tim IT bisa menggantinya dengan CMS (pertahankan bentuk objek).
 
 ### Sistem bersama setelah hero (fondasi, sesi "seluruh halaman setelah hero")

@@ -28,6 +28,12 @@ window.LCDU_CONFIG = {
     }
   },
 
+  /* Yayasan pengelola LCDU: tautan dari Pengantar ("Dikelola Yayasan …") dan footer. Nama di rekening tetap teks biasa. */
+  yayasan: {
+    nama: 'Yayasan Taqwa Cerdas Kreatif',
+    url: 'https://alfacentauri.sch.id/yayasan/'
+  },
+
   /* Donasi terbuka = untuk Palestina, disalurkan melalui AWG (mitra lama LCDU). */
   donasi: {
     mitra: 'Aqsa Working Group (AWG)',
