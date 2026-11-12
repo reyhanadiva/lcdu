@@ -163,8 +163,11 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   teks "Geser", tanpa daftar level. **Jadwal perlu verifikasi** (komentar HTML & README).
 - **Biaya** (selesai, revisi 2): blok `.cost-blok` merah tua `#B3202E` penuh lebar (teks putih 6,6:1; kalimat pendukung
   putih 90% 5,6:1), pita keffiyeh merah-putih di atas & bawah (`.cost-pita`), biji tersebar di tepi kiri-kanan
-  (`.orn-seeds.cost-biji`, 22%); tepi atas kini tepi biji `.batas-biji`, pita hanya di bawah. Kiri: "Berapa biayanya?", pernyataan besar "Tanpa biaya bulanan." (Fraunces 3,2–7,6rem),
-  satu kalimat pendukung. Kanan: printer + struk putih, seluruh `.receipt-wrap` miring −1,5°; irisan semangka besar di
+  (`.orn-seeds.cost-biji`, 22%); tepi atas kini tepi biji `.batas-biji`, pita hanya di bawah. Kiri: label kecil
+  `.cost-label` "Berapa biayanya?" (h2; Plus Jakarta 500, 1,1–1,3rem, krem `#F5DEC1` 5,1:1, jarak tegas), pernyataan raksasa
+  "Tanpa biaya bulanan." (Fraunces 700 3,2–7,6rem, putih 6,6:1) dengan aksen kunyit sebagai **garis bawah tebal** pada
+  "biaya bulanan" (`.cost-kunci`; teks tetap putih — varian teks kunyit 4,1:1 ditolak: kurang terbaca dan menonjolkan
+  kata "biaya", bukan "Tanpa"; label Fraunces 300 ditolak: terlalu tipis di merah), satu kalimat pendukung. Kanan: printer + struk putih, seluruh `.receipt-wrap` miring −1,5°; irisan semangka besar di
   belakang struk. Struk (teks persis dari pemilik): kepala "LCDU, Rincian biaya"; "Biaya bulanan — Rp0"; "Donasi untuk
   Palestina (tidak wajib) — sebebasnya"; garis putus-putus; total besar "Total per term (semester) — Rp100.000"
   (`--semangka-tua` di putih 6,6:1); penutup جَزَاكُمُ اللّٰهُ خَيْرًا + "Terima kasih sudah belajar bersama LCDU.".
@@ -262,7 +265,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   hitam keffiyeh `#111111` (`--keffiyeh`), putih (`--putih`), kunyit `#FFC21A` (tidak berubah). Latar dasar putih hangat
   `#FCF9F4`. **Peran**: hijau = Bahasa Arab & identitas LCDU (teks Arab = `--kulit`, keputusan pemilik; di malam = hijau
   logo), biru = Bahasa Inggris, merah = aksen hangat & blok besar (blok ber-teks selalu merah tua), hitam + putih = pola
-  keffiyeh, kunyit = **hanya** tombol aksi. Nama token lama dipertahankan supaya komponen tidak berubah:
+  keffiyeh, kunyit = **hanya** tombol aksi (satu pengecualian dari pemilik: garis bawah frasa kunci di Biaya). Nama token lama dipertahankan supaya komponen tidak berubah:
   `--zamrud`/`--zamrud-ink` = `--kulit`. `--lazuardi`/`--zamrud` = **isi** (latar dengan teks putih);
   `--lazuardi-ink`/`--zamrud-ink` = **tinta** (teks, garis indikator; lebih terang di malam/mode gelap).
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
