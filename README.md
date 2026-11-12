@@ -9,7 +9,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 - **Biru (Lazuardi)** = Bahasa Inggris
 - **Hijau (Zamrud)** = Bahasa Arab
-- **Kuning (Kunyit)** = aksi utama (daftar, cek level)
+- **Kuning (Kunyit)** = aksi utama (daftar, Placement Test)
 - Font (di-host sendiri, lihat `fonts/`): Fraunces (judul), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab)
 
 ## Section
@@ -17,16 +17,15 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Section | Interaksi |
 |---|---|
 | Hero | Cerita scroll 3 babak: malam → lampu menyala dari Kubah ke luar → fajar. Dua varian lewat tombol di kiri bawah (atau `?hero=lentera-hd|diorama`): **Foto** (default; foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu) dan **3D** (model Kubah & Qibli). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
-| Ticker | Keunggulan LCDU berjalan, bergantian Indonesia–Arab. |
-| Cek level | Kuis 3 soal (Inggris / Arab) dengan pembahasan langsung dan perkiraan level. |
+| Pengantar | Stub, isi menyusul. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
-| Biaya | Rp100.000 per term (1 semester), sudah termasuk seluruh biaya belajar; donasi sukarela. Struk "tercetak" saat masuk layar. |
+| Biaya | Rp100.000 per term (1 semester); di term pertama disebut biaya registrasi. Donasi untuk Palestina terpisah dan sukarela. |
 | Kelas | Toggle Inggris/Arab; layout dicerminkan untuk Arab, jadwal ditampilkan sebagai strip hari. |
-| Syarat | Checklist interaktif; CTA berubah sesuai jumlah syarat yang terpenuhi. |
-| Cara daftar | Desktop: scroll vertikal menggerakkan 6 langkah secara horizontal. HP: daftar vertikal. |
+| Cara bergabung | Checklist syarat, Placement Test (status & tautan di `site-config.js`), 6 langkah sebagai daftar vertikal. |
 | Testimoni | Tumpukan kartu yang bisa diseret. |
 | Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
-| Donasi | Nomor rekening + tombol salin. |
+| FAQ | Stub, isi menyusul. |
+| Donasi untuk Palestina | Disalurkan melalui AWG. Nomor rekening + tombol salin + konfirmasi transfer (WhatsApp). |
 | Footer | Kosakata hari ini (Inggris + Arab), berganti tiap hari. |
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
@@ -75,7 +74,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 - [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D, gambar hero Foto, serta sprite,
   tekstur, dan panorama hero 3D) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
-- [ ] **Link**: Placement Test, formulir registrasi, WhatsApp admin, Instagram, alamat (saat ini `#`).
+- [ ] **Link**: formulir registrasi, Instagram, alamat (saat ini `#`). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
 - [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`).
