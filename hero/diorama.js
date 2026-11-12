@@ -336,9 +336,11 @@ function foliageMaterial(map, windU, sway, under){
 
 /* ================= tingkat kualitas ================= */
 const TIERS = [
-  { dpr: 1, shadow: 0, bloom: 0, msaa: 0 },        // darurat: tanpa bayangan & bloom
-  { dpr: 1.25, shadow: 1024, bloom: .5, msaa: 2 }, // HP: bloom setengah resolusi
-  { dpr: 1.5, shadow: 2048, bloom: 1, msaa: 4 },   // laptop (MSAA 4× sudah menghaluskan tepi; DPR > 1.5 terlalu berat)
+  /* semua tingkat tetap memakai bayangan, bloom, dan color grading (tanpa itu adegan tampak datar & "polos");
+     yang diturunkan hanya resolusi (DPR, dibatasi jumlah piksel) dan anti-aliasing */
+  { dpr: 1, maxPx: 1.3e6, shadow: 1024, bloom: .5, msaa: 0 },    // ringan
+  { dpr: 1.25, maxPx: 2e6, shadow: 1024, bloom: .5, msaa: 2 },   // HP
+  { dpr: 1.5, maxPx: 2.8e6, shadow: 2048, bloom: 1, msaa: 4 },   // laptop (layar besar dibatasi ±2,8 jt piksel)
 ];
 
 export default {
@@ -397,7 +399,7 @@ export default {
     }));
     scene.add(sky);
     /* tiga suasana: malam · fajar (biru keunguan, cakrawala merah muda-jingga) · pagi cerah (biru jernih) */
-    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#25336F'), hex3('#9A6E98'), hex3('#F29A72')], s: [hex3('#2A68D4'), hex3('#7DB6F0'), hex3('#EEE6D6')] };   // pagi: cakrawala sedikit hangat
+    const SKY = { n: [hex3('#030716'), hex3('#0A1442'), hex3('#16225E')], d: [hex3('#25336F'), hex3('#9A6E98'), hex3('#F29A72')], s: [hex3('#5582C2'), hex3('#A3BFDD'), hex3('#F0E2CC')] };   // pagi: biru lembut berdebu, cakrawala hangat (bukan biru jenuh)
 
     /* bintang berkelip (shader titik) */
     const starN = 1600, sp = [], sph = [];
@@ -1116,10 +1118,11 @@ export default {
 
     /* ---------- kualitas otomatis: fps rendah menurunkan MSAA/bayangan/bloom/DPR bertahap; baru pindah ke Lentera HD bila
        di tingkat terendah pun fps < 24 (perangkat benar-benar tidak sanggup) ---------- */
-    const TOP = mobile ? 1 : 2; let tier = TOP, raised = 0, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 20, gaveUp = false, firstCheck = true;
+    /* ?tier=0|1|2 memaksa tingkat kualitas (alat pengembang; penyesuaian otomatis mati) */
+    const FORCE_TIER = new URL(location.href).searchParams.get('tier');
+    const TOP = mobile ? 1 : 2; let tier = FORCE_TIER !== null ? Math.max(0, Math.min(2, +FORCE_TIER || 0)) : TOP, raised = 0, fpsN = 0, fpsT = 0, lastNow = 0, warmup = 60, gaveUp = false, firstCheck = true;
     function applyTier(){
       const t = TIERS[tier];
-      renderer.setPixelRatio(Math.min(devicePixelRatio || 1, t.dpr));
       for (const rt of [composer.renderTarget1, composer.renderTarget2]) if (rt.samples !== t.msaa){ rt.samples = t.msaa; rt.dispose(); }
       sun.castShadow = t.shadow > 0;
       if (t.shadow){ sun.shadow.mapSize.set(t.shadow, t.shadow); if (sun.shadow.map){ sun.shadow.map.dispose(); sun.shadow.map = null; } }
@@ -1127,7 +1130,7 @@ export default {
       resize();
     }
     function watchFps(now){
-      if (state.reduce || gaveUp) return;
+      if (state.reduce || gaveUp || FORCE_TIER !== null) return;
       const dt = now - lastNow; lastNow = now;
       if (dt <= 0 || dt > 250) return;                       // tab tersembunyi / baru kembali
       if (warmup > 0){ warmup--; return; }
@@ -1148,6 +1151,7 @@ export default {
 
     function resize(){
       const w = state.w, h = state.h, t = TIERS[tier];
+      renderer.setPixelRatio(Math.max(.75, Math.min(devicePixelRatio || 1, t.dpr, Math.sqrt(t.maxPx/Math.max(1, w*h)))));
       renderer.setSize(w, h, false); composer.setPixelRatio(renderer.getPixelRatio()); composer.setSize(w, h);
       bloom.resolution.set(w*Math.max(t.bloom, .25), h*Math.max(t.bloom, .25));
       renderer.domElement.style.width = '100%'; renderer.domElement.style.height = '100%';
@@ -1224,7 +1228,7 @@ export default {
       lU.uLit.value = lit; lU.uOp.value = (1 - dawn*.3)*(1 - day*.85); lU.uTime.value = time;
       bloom.strength = num3('bloom', dawn, day); bloom.threshold = lerp(lerp(.8, .92, dawn), .95, day);
 
-      if (TIERS[tier].bloom) composer.render(); else renderer.render(scene, camera);
+      composer.render();
       if (DEBUG_PERF){
         renderer.getContext().finish();
         const f = window.__dioramaPerf.frames; f.push(performance.now() - t0); if (f.length > 120) f.shift();

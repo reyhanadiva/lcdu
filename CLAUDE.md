@@ -33,7 +33,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
 - `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
   GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
-  jendela hangat sejak awal). Fallback: WebGL gagal → `lentera-hd`. Fps rendah menurunkan kualitas dulu (MSAA/bayangan/bloom/DPR, bisa naik lagi
+  jendela hangat sejak awal). Fallback: WebGL gagal → `lentera-hd`. Semua tingkat kualitas tetap memakai bayangan, bloom & grading (tanpa itu adegan
+  tampak datar — pernah terjadi di laptop pemilik); yang turun hanya DPR (dibatasi jumlah piksel) & MSAA. `?tier=0|1|2` memaksa tingkat. Fps rendah menurunkan kualitas dulu (MSAA/bayangan/bloom/DPR, bisa naik lagi
   bila lancar); baru pindah ke `lentera-hd` bila di tingkat terendah fps < 24 (dulu langsung pindah → pemilik tidak bisa memakai 3D).
   Anti-aliasing: composer memakai render target MSAA (4× desktop, 2× HP) + alpha-to-coverage untuk daun/sprite; shader
   yang memakai `pow`/`normalize` pada varying wajib di-clamp (dengan MSAA nilai bisa sedikit di luar rentang → NaN → blok
@@ -55,6 +56,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   panorama Bukit Zaitun di busur ke arah matahari terbit (malam dibirukan lewat shader, medan 3D di situ direndahkan);
   tembok/pelataran/tanah/plester bertekstur foto mulus. Semua lewat `plant()`; dimuat malas, prosedural = cadangan.
   Anggaran aset: desktop ±1,06 MB, HP ±0,29 MB (target ≤ 1,5 MB / ≈ 700 KB).
+- iOS 26 Safari: elemen `position:fixed` yang menempel di tepi layar membuat Safari mengisi area status bar/toolbar dengan
+  blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`; tombol pembanding hero disembunyikan di luar hero.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 

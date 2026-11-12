@@ -121,7 +121,7 @@ function frame(now) {
   if (state.visible) raf = requestAnimationFrame(frame);
 }
 function start() { if (!raf && state.visible){ lastT = 0; raf = requestAnimationFrame(frame); } }
-new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !document.hidden; start(); }, { rootMargin: '60px' }).observe(hero);
+new IntersectionObserver(en => { state.visible = en[0].isIntersecting && !document.hidden; start(); sw.classList.toggle('is-away', !en[0].isIntersecting); }, { rootMargin: '60px' }).observe(hero);
 document.addEventListener('visibilitychange', () => { state.visible = !document.hidden; start(); });
 
 let first = new URL(location.href).searchParams.get('hero');

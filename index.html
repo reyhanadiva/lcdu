@@ -83,7 +83,8 @@ html.lenis,html.lenis body{height:auto}
 .lenis.lenis-stopped{overflow:clip}
 .lenis.lenis-smooth iframe{pointer-events:none}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--step-0);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--paper)}
+/* tanpa strip warna di area status bar: di iOS 26 elemen fixed yang menempel di tepi layar membuat Safari mengisi area
+   status bar / toolbar dengan blok warna solid (tidak immersive) */
 h1,h2,h3{margin:0;text-wrap:balance}
 p{margin:0}
 a{color:inherit}
@@ -174,6 +175,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-switch span{padding:0 8px 0 10px;font-weight:600;opacity:.7}
 .hero-switch button{border:0;background:transparent;color:inherit;font-weight:700;padding:8px 12px;border-radius:999px;cursor:pointer;min-height:36px}
 .hero-switch button[aria-pressed="true"]{background:#F2C14E;color:#2A1E00}
+/* pembanding hanya relevan selama hero; di luar hero disembunyikan (juga mengurangi elemen fixed di tepi bawah) */
+.hero-switch{transition:opacity .3s,visibility .3s}.hero-switch.is-away{opacity:0;visibility:hidden;pointer-events:none}
 @media (max-width:520px){.hero-switch span{display:none}.hero-switch button{padding:8px 10px}.hero-switch .long{display:none}}
 /* ===== Lentera HD: foto malam/fajar. Teks di area langit (atas): HP di 8–45% tinggi layar, desktop kiri-atas ===== */
 .hd-grain{position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-size:160px}
