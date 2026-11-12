@@ -144,23 +144,25 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi atas: gradasi; tepi bawah: tepi mihrab.
   Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
   atas permintaan pemilik. Kata Arab hanya yang sudah ada: مَنْهَج، عَنْ بُعْد، مُعَلِّم، القُرْآن.
-- **Pilih kelas** (selesai, revisi 2): layar terbelah penuh-lebar `#split`. **Prinsip: semua informasi terlihat penuh
-  pada 50/50 dan tetap terlihat di 35/65 & di HP; geser/ketuk/hover hanya memberi penekanan, tidak membuka apa pun.**
-  `--a` (`@property`) = lebar sisi Inggris %, snap 35/50/65, transisi .6s. Isi tiap sisi: judul (biru / hijau kulit; Arab
-  rata kanan & dicerminkan), deskripsi, fokus belajar `.orn-list.cls-fokus` berbutir daun (Speaking, Grammar, Listening,
-  Writing / Muhadatsah, Nahwu, Mufradat, Qira'ah — bukan pill), strip 7 hari (Weekday + Weekend, hari kelas = lentera,
-  urutan Sen → Min juga di Arab), foto `.frame-arch` (Inggris: kelas-online, Arab: kaligrafi; sementara). Container query
-  pada `.side-isi` (lebar isi setelah padding): ≥ 450px foto di samping info (Arab: foto di kiri), lebih sempit → foto
-  disembunyikan (seni, bukan informasi). Tinggi desktop tetap `min-height:clamp(600px,82vh,760px)` dan isi muat di
-  35/50/65 (diukur 738px di 1440×900), jadi tidak melompat saat ditarik. Latar sisi jenuh: Inggris `#C9D1F8` (judul 6,8:1,
-  tinta 11,7, teks lembut `#3E4256` 6,6), Arab `#D2E6C6` (judul 4,9, tinta 13,3, lembut 7,5); `.orn-net--kain` 10% warna
-  sisi; glyph Aa / أب opacity .16 (fokus .26). Pembagi: pita keffiyeh tegak 28px (`pita-sempit-tegak.svg`, hitam di atas
-  putih) + pegangan 72px irisan semangka bundar berpanah (SVG inline), `role="slider"` (35–65, panah/Home/End, fokus
-  kunyit). Desktop: klik sisi atau hover 300 ms = fokus (65/35), klik sisi yang fokus → 50/50, tarik → snap. Undangan
-  sekali saat separuh section terlihat: 58 → 42 → 50; pegangan berdenyut sampai interaksi pertama, hanya saat terlihat
-  (`.is-lihat`). Reduced-motion: tanpa undangan, tanpa denyut, tanpa transisi. HP < 700px: dua blok bertumpuk dengan pita
-  pembatas antar-blok = pergantian warna saja, ketuk = garis 6px warna sisi + glyph lebih tegas; glyph di seberang foto. Tanpa tombol, tanpa
-  teks "Geser", tanpa daftar level. **Jadwal perlu verifikasi** (komentar HTML & README).
+- **Pilih kelas** (selesai, revisi 3 — performa): layar terbelah `#split`. **Prinsip: semua informasi terlihat penuh
+  tanpa interaksi; geser/ketuk/hover hanya memberi penekanan.** **Aturan performa (keputusan pemilik): yang dianimasikan
+  HANYA transform & opacity** — tidak ada grid-template-columns/width/left yang berubah, tidak ada `@property`, tidak ada
+  variabel CSS yang diwariskan untuk posisi (memicu hitung ulang gaya & paint seluruh isi tiap frame). Desktop ≥ 1000px:
+  kolom tetap 50/50; isi tiap sisi = kolom teks berlebar tetap `--isi` (`clamp(280px,25vw,340px)`) di tepi luar
+  (`--pad-luar`, min 32px) + foto di sisi dalam (lebar sisa, maks 230px). Latar: `.latar-ar` hijau penuh di bawah,
+  `.latar-en` biru digeser `translateX(d − 50%)` dengan isi (warna, jaring, glyph Aa) digeser balik → batas "terpotong"
+  oleh compositor. JS menulis transform langsung di `.latar-en`, `.latar-en-isi`, `.split-garis`, `.split-pegangan`.
+  Rentang `[MIN, 100−MIN]` dihitung JS dari tepi kolom teks (35–65 di 1024 & 1440), snap MIN/50/100−MIN, `aria-valuemin/max`
+  ikut. Sisi yang menyempit (< 49%): foto memudar (opacity) supaya tidak tertabrak; sisi yang ditekankan: foto skala 1,12
+  ke arah pita, glyph .26. Tarik: pointer capture, posisi di rAF, `.is-tarik` = tanpa transisi + `will-change:transform`
+  (hanya selama menarik), `touch-action:pan-y`. Undangan sekali 58 → 42 → 50 (dihentikan & kembali 50 bila section keluar
+  layar), denyut = scale pada SVG pegangan hanya saat `.is-lihat` & belum ada interaksi. Diukur (Chrome, CPU 4x, tracing):
+  menarik → 0 layout di tengah gerakan (hanya ±1 ms saat tekan & lepas), 60 fps, frame terpanjang 16,8 ms (1440);
+  undangan → layout 174/detik → 6/detik. < 1000px: dua blok bertumpuk (latar per sisi), tanpa tarik; ketuk = garis tepi
+  6px (pseudo, scaleY) + glyph lebih tegas (box-shadow inset dihapus). Isi: judul (biru / hijau kulit; Arab rata kanan &
+  dicerminkan), deskripsi, fokus belajar berbutir daun, label jadwal **hanya jam** ("Weekday 16.00–17.30 WIB",
+  "Weekend 13.00–16.00 WIB"), strip 7 hari `<ul>`: hari kelas menyala + teks tersembunyi "Senin, kelas Inggris" dst.,
+  hari lain `aria-hidden`. Latar sisi `#C9D1F8` / `#D2E6C6` (kontras sama seperti sebelumnya). **Jadwal perlu verifikasi.**
 - **Biaya** (selesai, revisi 2): blok `.cost-blok` merah tua `#B3202E` penuh lebar (teks putih 6,6:1; kalimat pendukung
   putih 90% 5,6:1), pita keffiyeh merah-putih di atas & bawah (`.cost-pita`), biji tersebar di tepi kiri-kanan
   (`.orn-seeds.cost-biji`, 22%); tepi atas kini tepi biji `.batas-biji`, pita hanya di bawah. Kiri: label kecil
@@ -294,6 +296,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas
+- **Animasi hanya transform & opacity** (clip-path bila perlu). Jangan menganimasikan properti tata letak (width, left,
+  grid-template-columns, margin) — juga tidak lewat `@property` — dan jangan menggerakkan elemen lewat variabel CSS yang
+  diwariskan ke banyak turunan. Ukur dengan CPU throttling 4x.
 - Wajib menghormati `prefers-reduced-motion`, fokus keyboard terlihat, kontras teks cukup, tidak ada scroll horizontal di 390px.
 - Animasi berhenti saat tidak terlihat (IntersectionObserver). Cek performa di HP kelas menengah, bukan hanya laptop.
 - Uji di 1440×900 dan 390×844 sebelum push.
