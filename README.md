@@ -54,6 +54,18 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   `tools/make-extras.py` (latar abu dihapus dengan kunci warna, tekstur dibuat mulus, panorama dipotong ke pita bukit +
   kota jauh). Tidak ada gambar yang diperbesar; berkas asli tidak ditimpa. Ukuran: ±1,06 MB desktop, ±0,29 MB HP.
 
+## Foto stok (SEMENTARA — ganti dengan foto asli)
+
+- 7 foto Pexels (Pexels License, gratis komersial) di `assets/photos/`: menulis, kelas online, Al-Qur'an di rehal,
+  kaligrafi, kebun zaitun, Al-Aqsa dari jauh, keffiyeh. Sumber, fotografer, lisensi & tanggal unduh di
+  `assets/photos/CREDITS.md`. **Semuanya sementara, ganti dengan foto asli LCDU.**
+- Turunan AVIF + WebP (480 / 960 / 1600, tidak diperbesar) dibuat dengan `node tools/build-photos.mjs <folder-jpg>`.
+
+## Ornamen (keffiyeh & semangka)
+
+- SVG di `assets/ornaments/`, dibuat ulang dengan `node tools/make-ornaments.mjs`. Pola satu warna = masker CSS
+  (warnanya dari token); versi `-hitam/-merah/-hijau` = siap pakai untuk desainer. Kelas & aturan di CLAUDE.md.
+
 ## Logo
 
 - Sumber: `assets/brand/lcdu-logo-wide.png` (PNG resmi, latar sudah transparan, 4461×1767) dan `lcdu-logo-square.png`
@@ -71,6 +83,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 ## Perlu dilengkapi / diverifikasi sebelum live
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
+- [ ] **Foto stok sementara** di `assets/photos/` (lihat `CREDITS.md`): ganti dengan foto asli LCDU. Isi tulisan foto kaligrafi perlu dicek guru Arab.
 - [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D, gambar hero Foto, serta sprite,
   tekstur, dan panorama hero 3D) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).

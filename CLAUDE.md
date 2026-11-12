@@ -71,17 +71,23 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   --ink-soft --line --lazuardi-ink --zamrud-ink`, jadi komponen ikut berubah. Token latar: `--pagi-bg` dst. di `:root`.
   Fase tidak ikut mode gelap sistem (logo navbar/footer ikut fase). Navbar & benang membaca fase aktif lewat JS.
   Sambungan = gradasi smoothstep (OKLab) di padding atas fase berikutnya (`--sambung`, malam `--sambung-malam`); teks pertama
-  mulai setelah gradasi. Alasannya: titik tengah senja → malam (#707087) hanya 3,6:1 untuk tinta gelap dan 4,2:1 untuk
-  tinta terang, jadi teks **tidak boleh** berada di atas gradasi. Karena itu latar tidak memakai lapisan fixed yang berubah.
-  Kontras (WCAG, dihitung):
+  mulai setelah gradasi. Alasannya: di titik tengah senja → malam tidak ada tinta yang cukup kontras untuk keduanya
+  (terang → hampir hitam), jadi teks **tidak boleh** berada di atas gradasi. Karena itu latar tidak memakai lapisan fixed yang berubah.
+  Sejak palet semangka-keffiyeh, fase **sangat halus** (semua putih hangat dengan rona tipis); warna kuat datang dari
+  blok warna per section (sesi berikutnya). Malam tetap gelap: hampir hitam keffiyeh yang hangat. Kontras (WCAG, dihitung):
 
-  | Fase | Latar | Tinta | Teks | Teks lembut | Biru | Hijau | Teks di kartu |
-  |---|---|---|---|---|---|---|---|
-  | pagi | #F7E6DC | #10163A | 14,5 | 7,5 | 8,4 | 5,6 | 17,5 / 9,1 |
-  | siang | #EEF2FB | #10163A | 15,6 | 7,1 | 9,1 | 6,1 | 17,5 / 8,0 |
-  | sore | #F5E9CF | #10163A | 14,6 | 7,1 | 8,5 | 5,7 | 17,5 / 8,6 |
-  | senja | #EADDE7 | #10163A | 13,4 | 7,3 | 7,8 | 5,9 | 17,5 / 9,5 |
-  | malam | #0B1230 | #ECF0FA | 16,1 | 8,8 | 6,9 | 8,1 | 14,5 / 7,9 |
+  | Fase | Latar | Tinta | Teks | Teks lembut | Biru | Hijau (Arab) | Merah tua | Teks di kartu |
+  |---|---|---|---|---|---|---|---|---|
+  | pagi | #FDF8F1 | #10163A | 16,6 | 7,7 (#4B4F63) | 9,7 | 6,2 (#1E6B3A) | 6,3 | 17,5 / 8,1 |
+  | siang | #FAFAF7 | #10163A | 16,8 | 7,7 | 9,8 | 6,2 | 6,3 | 17,5 / 8,1 |
+  | sore | #FCF5EA | #10163A | 16,2 | 7,5 | 9,5 | 6,0 | 6,1 | 17,5 / 8,1 |
+  | senja | #FAF3F1 | #10163A | 16,0 | 7,4 | 9,3 | 5,9 | 6,1 | 17,5 / 8,1 |
+  | malam | #14120F | #F3EFE8 | 16,3 | 8,9 (#B9B2A6) | 7,0 (#8F97F3) | 6,4 (#7FA33F) | 7,4 (#FF7A82) | 15,1 / 8,2 |
+
+  Blok warna (teks di atas isi): putih/merah tua `#B3202E` 6,6 · putih/hijau kulit `#1E6B3A` 6,5 · putih/biru 10,2 ·
+  putih/hitam 18,9 · kunyit/hitam 11,7 · tinta kunyit/kunyit 10,1. **Gagal untuk teks biasa** (hanya dekor atau judul
+  ≥ 24px tebal): putih/merah terang `#E23B4A` 4,2 · hijau logo `#7FA33F` di latar terang 2,8 · putih/hijau logo 2,9 ·
+  kunyit/merah tua 4,1. Kata redup Pengantar (≥ 3:1): tinta 3,6 · biru 3,5 · Arab 3,7.
 - **Benang keffiyeh** (`.benang`, setelah footer): desktop ≥ 900px garis zigzag tipis di gutter kiri dengan titik lentera
   di ujung; HP garis progres 3px di atas (5px dari tepi, sengaja tidak menempel — lihat catatan iOS 26). Panjangnya dari
   CSS scroll-driven animation (`view-timeline: --hari`, range `entry 50% contain 100%`), cadangan JS mengisi `--benang`.
@@ -90,6 +96,27 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   `.orn-band` pita keffiyeh horizontal (daun zaitun + dua garis), `.orn-net` jaring keffiyeh untuk latar (opacity .05,
   `position:absolute; inset:0`), `.orn-leaf` ikon daun zaitun (centang), `.orn-list` daftar berbutir daun,
   `.orn-lentera` titik lentera (`--lentera`), `.orn-seed` biji semangka — **sangat jarang**, maksimal satu tempat.
+- **Ornamen v2** (blok `ORNAMEN v2` di `index.html`; berkas `assets/ornaments/`, dibuat `tools/make-ornaments.mjs`, 108 KB):
+  pola satu warna dipakai sebagai masker (warna dari token); versi `-hitam/-merah/-hijau` = berkas siap pakai.
+  Warna kain: `.kain-hitam` (bawaan) `.kain-merah` (`--semangka-tua`) `.kain-hijau` (`--kulit`); latar kain `--kain-dasar`.
+  `.orn-kain` bidang kain keffiyeh (jaring/fishnet, ubin `--kain-ubin` 24px), `.orn-kain--kotak` houndstooth (12px).
+  `.orn-band--tebal` pita pembatas 24–48px (`--pita`, bawaan 40px: garis, ranting zaitun, gelombang, zigzag),
+  `.orn-band--sempit` 24px — dipakai bersama `.orn-band`; `.orn-band` polos (14px) tetap untuk struk & footer.
+  `.orn-net.orn-net--kain` tekstur jaring keffiyeh tipis (`--orn-alpha`, 6–12%, bawaan 8%). `.orn-bingkai` tepi bingkai
+  (border-image, warna dari berkas). Semangka (warna tertanam, datar, tanpa gradasi/wajah): `.orn-slice` irisan setengah
+  lingkaran, `.orn-slice--segitiga`, `.orn-seeds` sebaran biji (`--biji`, `--orn-alpha` 12%). Lebar `--slice`,
+  menjorok keluar layar lewat `--jorok` (translate, body sudah `overflow-x:clip`), sudut dasar `--putar`.
+  Gerak irisan **tertaut scroll** (izin pemilik, sesi fondasi seni): berayun ±8° (bawaan) atau `.orn-slice--buka` (terbuka
+  dari miring −26° & 0,88 ke tegak). Hanya bila `.gerak` + view timeline didukung; selain itu diam; mati saat reduced-motion.
+  `.frame-arch` bingkai foto lengkung bulat (arkade Al-Aqsa), `.frame-arch--lancip` mihrab; garis ganda = `currentColor`
+  (2px + 1px, tidak ikut membesar), rasio tetap 4:5; isi `<img>`/`<picture>`, atur `object-position` per foto.
+- **Foto stok** (`assets/photos/`, SEMENTARA): hanya Unsplash (bukan Unsplash+), Pexels, Pixabay dengan lisensi komersial
+  gratis; setiap foto dicatat di `assets/photos/CREDITS.md` (URL, fotografer, lisensi, tanggal). Dilarang: wajah yang bisa
+  dianggap siswa/guru/penulis testimoni LCDU, foto penderitaan, bendera/poster politik, merek/logo (potong bila perlu).
+  Jangan menyalin dari sumber tak berlisensi. AVIF + WebP 480/960/1600 lewat `tools/build-photos.mjs`, tidak diperbesar.
+  Sekarang 7 foto Pexels (±1,7 MB AVIF semua ukuran). Ganti dengan foto asli LCDU sebelum rilis.
+- `ornamen-test.html` = halaman uji **sementara** untuk persetujuan pemilik (gaya diambil dari `index.html`;
+  `?bandingkan` = 1440 & 390 berdampingan). Hapus setelah disetujui.
 - **Pengantar** (selesai): satu kalimat besar (teks persis dari pemilik) yang menyala kata per kata. Tiap kata `.k` dengan
   `--i`; `--p` (didaftarkan `@property`, awal 1 = penuh) dianimasikan view timeline kalimat (`cover 18% → 52%`, tanpa pin),
   cadangan JS. Redup ≥ 3:1 (campuran tinta + latar, terukur 3,4:1), penuh ≥ 4,5:1; pendar `--lentera` di kata yang sedang
@@ -118,7 +145,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Teks struk persis dari pemilik (kepala, "Total per term", catatan biaya registrasi, penutup "Terima kasih sudah belajar
   bersama LCDU."). Catatan donasi Palestina di bawah struk. Tanpa count-up, tanpa stempel.
 - Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
-- **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
+- **Gerak (hanya tiga, + ayunan semangka)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
   reduced-motion; tanpa `.gerak` semuanya tampil diam & utuh.
@@ -175,10 +202,16 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
 - Logo resmi: `assets/brand/` (PNG transparan; turunan web di `assets/brand/web/`, versi warna & putih). Jangan ubah bentuk,
   proporsi, atau huruf logo. Navbar/footer: warna di mode terang, putih di mode gelap; hero selalu putih.
-- Palet (diselaraskan dengan logo, disetujui pemilik): biru Lazuardi (Inggris) = biru logo `#1724C0`, hijau Zamrud (Arab)
-  `#5B752D` = hijau logo `#7FA33F` digelapkan (hue sama), kuning Kunyit `#FFC21A` (aksi, tidak berubah).
-  `--lazuardi`/`--zamrud` = **isi** (latar dengan teks putih); `--lazuardi-ink`/`--zamrud-ink` = **tinta** (teks, garis
-  indikator; lebih terang di mode gelap); `--logo-biru`/`--logo-hijau` = warna logo persis, hanya dekoratif, bukan teks.
+- Palet **semangka-keffiyeh × logo** (diminta pemilik, sesi fondasi seni; menggantikan latar krem-persik lama):
+  hijau LCDU = hijau logo persis `#7FA33F` (`--logo-hijau`, juga kulit muda semangka; dekor saja, bukan teks),
+  hijau kulit tua `#1E6B3A` (`--kulit`), biru logo `#1724C0` (`--logo-biru`/`--lazuardi`), merah semangka `#E23B4A`
+  (`--semangka`, dekor & judul sangat besar), merah tua `#B3202E` (`--semangka-tua`, teks merah & blok merah ber-teks),
+  hitam keffiyeh `#111111` (`--keffiyeh`), putih (`--putih`), kunyit `#FFC21A` (tidak berubah). Latar dasar putih hangat
+  `#FCF9F4`. **Peran**: hijau = Bahasa Arab & identitas LCDU (teks Arab = `--kulit`, keputusan pemilik; di malam = hijau
+  logo), biru = Bahasa Inggris, merah = aksen hangat & blok besar (blok ber-teks selalu merah tua), hitam + putih = pola
+  keffiyeh, kunyit = **hanya** tombol aksi. Nama token lama dipertahankan supaya komponen tidak berubah:
+  `--zamrud`/`--zamrud-ink` = `--kulit`. `--lazuardi`/`--zamrud` = **isi** (latar dengan teks putih);
+  `--lazuardi-ink`/`--zamrud-ink` = **tinta** (teks, garis indikator; lebih terang di malam/mode gelap).
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
   Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
@@ -199,6 +232,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
    Bergabung, Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya.
+   Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) sudah ada dan **menunggu persetujuan
+   pemilik** di `ornamen-test.html`. Sesi berikutnya: blok warna kuat per section Pengantar–Biaya memakai fondasi itu
+   (isi & tata letak section belum diubah).
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas

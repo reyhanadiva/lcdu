@@ -31,3 +31,10 @@ model diganti. Anggaran: desktop ≤ 3 MB total.
 3. `python3 tools/build-hero-images.py` → manifest kini berisi `wide`, dan Lentera HD otomatis aktif di layar landscape.
 4. `python3 tools/gen-spots.py wide` (tambahkan dulu area `wide` di skrip), lalu rapikan dengan `?edit-spots`.
 5. Periksa `ART.wide` (fokus kubah, posisi matahari, cakrawala) di `hero/lentera-hd.js`.
+
+## Foto stok & ornamen (Node, `npm install` di `tools/`)
+
+| Skrip | Kegunaan |
+|---|---|
+| `node build-photos.mjs <folder-jpg>` | Foto stok (`<nama>.jpg`) → `assets/photos/<nama>-{480,960,1600}.{avif,webp}` + `manifest.json`. Potongan per foto di objek `FOTO`. Tidak memperbesar. Catat sumber di `assets/photos/CREDITS.md`. |
+| `node make-ornaments.mjs` | Tulis ulang semua SVG di `assets/ornaments/` (kain keffiyeh, pita, bingkai, semangka, lengkung). |

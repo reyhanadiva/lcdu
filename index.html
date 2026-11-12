@@ -23,23 +23,30 @@
 @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
 @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 body{margin:0}
-/* Konsep "Dua Aksara": halaman bergerak di antara dua arah tulisan. Biru = Inggris (LTR), hijau = Arab (RTL). Kertas dingin sebagai ruang tenang di antaranya. */
+/* Palet "semangka-keffiyeh" × logo LCDU. Hijau = Arab & identitas LCDU, biru = Inggris, merah = aksen hangat & blok besar,
+   hitam + putih = pola keffiyeh, kunyit = HANYA tombol aksi. Latar dasar putih hangat; warna kuat datang dari blok per section. */
 :root{
-  /* Diselaraskan dengan logo (biru #1724C0, hijau #7FA33F). "isi" = latar dengan teks putih; "-ink" = warna teks/garis di latar halaman */
+  /* warna inti (kontras dihitung, tabel di CLAUDE.md). "isi" = latar dengan teks putih; "-ink" = teks/garis di latar halaman */
+  --logo-biru:#1724C0; --logo-hijau:#7FA33F;   /* warna logo persis. Hijau logo = juga kulit muda semangka; dekor saja, bukan teks (2,8:1) */
+  --kulit:#1E6B3A;         /* hijau kulit semangka tua: teks Arab & blok hijau (putih di atasnya 6,5:1) */
+  --kulit-deep:#134526;
+  --semangka:#E23B4A;      /* merah semangka terang: dekor (daging semangka, ornamen), judul sangat besar saja (4,0–4,2:1) */
+  --semangka-tua:#B3202E;  /* merah tua: teks merah & blok merah ber-teks (putih di atasnya 6,6:1) */
+  --keffiyeh:#111111;      /* hitam keffiyeh */
+  --putih:#FFFFFF;
   --lazuardi:#1724C0;      /* Inggris, isi (= biru logo; teks putih 10,2:1) */
   --lazuardi-deep:#101986;
-  --lazuardi-ink:#1724C0;  /* teks di paper 9,3:1 */
-  --zamrud:#5B752D;        /* Arab, isi (hijau logo digelapkan, hue sama; teks putih 5,2:1) */
-  --zamrud-deep:#39491C;
-  --zamrud-ink:#4C6226;    /* teks di paper 6,2:1 */
-  --logo-biru:#1724C0; --logo-hijau:#7FA33F;   /* warna logo persis: hanya logo & aksen dekoratif, bukan teks */
+  --lazuardi-ink:#1724C0;  /* teks di latar fase ≥ 9,3:1 */
+  --zamrud:var(--kulit);   /* Arab, isi (nama lama dipertahankan supaya komponen tidak berubah) */
+  --zamrud-deep:var(--kulit-deep);
+  --zamrud-ink:var(--kulit);   /* teks di latar fase ≥ 5,9:1 */
   --kunyit:#FFC21A;        /* aksi utama */
   --kunyit-ink:#2A1E00;
-  --paper:#F2F4F8;
+  --paper:#FCF9F4;         /* putih hangat */
   --surface:#FFFFFF;
-  --ink:#101A3D;
-  --ink-soft:#4A5578;
-  --line:#D5DBE8;
+  --ink:#10163A;
+  --ink-soft:#4B4F63;
+  --line:#E6DFD3;
   --on-color:#FFFFFF;
   --on-color-soft:rgba(255,255,255,.78);
   --good:#0B7A57;
@@ -60,14 +67,13 @@ body{margin:0}
   --r-sm:10px; --r-md:18px; --r-lg:28px;
   --ease:cubic-bezier(.2,.8,.2,1);
 
-  /* "Satu hari belajar": latar & tinta lembut per fase setelah hero. Turunan palet logo (biru, hijau, kunyit) dicampur
-     kertas; pagi = warna langit fajar di akhir hero (foto fajar #EBB3A1, dicerahkan). Tinta gelap #10163A (= teks babak 3
-     hero) dipakai pagi–senja; malam memakai token mode gelap. Kontras dihitung, tabel di CLAUDE.md. */
-  --pagi-bg:#F7E6DC;  --pagi-soft:#4E4460;
-  --siang-bg:#EEF2FB; --siang-soft:#46506F;
-  --sore-bg:#F5E9CF;  --sore-soft:#5A4A2C;
-  --senja-bg:#EADDE7; --senja-soft:#4B4060;
-  --malam-bg:#0B1230; --malam-soft:#A9B3D3;
+  /* "Satu hari belajar": sekarang sangat halus — semua putih hangat dengan rona tipis (pagi persik, siang netral, sore
+     gandum, senja mawar). Malam tetap gelap: hampir hitam keffiyeh yang hangat. Tinta gelap #10163A pagi–senja. */
+  --pagi-bg:#FDF8F1;  --pagi-soft:#4B4F63;
+  --siang-bg:#FAFAF7; --siang-soft:#4B4F63;
+  --sore-bg:#FCF5EA;  --sore-soft:#4B4F63;
+  --senja-bg:#FAF3F1; --senja-soft:#4B4F63;
+  --malam-bg:#14120F; --malam-soft:#B9B2A6;
   --lentera:#FFC96B;  /* cahaya hangat (titik lentera, ujung benang) */
   --sambung:clamp(140px,18vw,240px);          /* panjang gradasi antar-fase (hanya di area kosong) */
   --sambung-malam:clamp(260px,42vh,420px);    /* senja → malam lebih panjang: perubahan terang → gelap */
@@ -89,14 +95,14 @@ body{margin:0}
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --lazuardi:#1724C0; --lazuardi-deep:#101986; --lazuardi-ink:#7E87F0; --zamrud:#5B752D; --zamrud-deep:#39491C; --zamrud-ink:#91B94B;
-    --paper:#0B1230; --surface:#141C42; --ink:#ECF0FA; --ink-soft:#A9B3D3; --line:#28335F;
+    --lazuardi:#1724C0; --lazuardi-deep:#101986; --lazuardi-ink:#7E87F0; --zamrud:#1E6B3A; --zamrud-deep:#134526; --zamrud-ink:#7FA33F;
+    --paper:#14120F; --surface:#1D1A16; --ink:#F3EFE8; --ink-soft:#B9B2A6; --line:#2E2A25;
     --good:#3CC48F; --bad:#FF7A6E; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --lazuardi:#1724C0; --lazuardi-deep:#101986; --lazuardi-ink:#7E87F0; --zamrud:#5B752D; --zamrud-deep:#39491C; --zamrud-ink:#91B94B;
-  --paper:#0B1230; --surface:#141C42; --ink:#ECF0FA; --ink-soft:#A9B3D3; --line:#28335F;
+  --lazuardi:#1724C0; --lazuardi-deep:#101986; --lazuardi-ink:#7E87F0; --zamrud:#1E6B3A; --zamrud-deep:#134526; --zamrud-ink:#7FA33F;
+  --paper:#14120F; --surface:#1D1A16; --ink:#F3EFE8; --ink-soft:#B9B2A6; --line:#2E2A25;
   --good:#3CC48F; --bad:#FF7A6E; color-scheme:dark;
 }
 
@@ -139,13 +145,13 @@ button{font:inherit;color:inherit}
 /* ===== SISTEM BERSAMA (semua section setelah hero) ===== */
 /* --- Satu hari belajar: tiap [data-fase] menimpa token warna, jadi komponen lama ikut menyesuaikan --- */
 [data-fase="pagi"],[data-fase="siang"],[data-fase="sore"],[data-fase="senja"]{
-  --ink:#10163A;--surface:#FFFFFF;--lazuardi-ink:#1724C0;--zamrud-ink:#4C6226;--good:#0B7A57;--bad:#C2372B;color-scheme:light}
-[data-fase="pagi"]{--fase-bg:var(--pagi-bg);--paper:var(--pagi-bg);--ink-soft:var(--pagi-soft);--line:#E3CBBE}
-[data-fase="siang"]{--fase-bg:var(--siang-bg);--paper:var(--siang-bg);--ink-soft:var(--siang-soft);--line:#D5DBE8}
-[data-fase="sore"]{--fase-bg:var(--sore-bg);--paper:var(--sore-bg);--ink-soft:var(--sore-soft);--line:#E2D2AC}
-[data-fase="senja"]{--fase-bg:var(--senja-bg);--paper:var(--senja-bg);--ink-soft:var(--senja-soft);--line:#D5C2D2;--zamrud-ink:#45591F}
-[data-fase="malam"]{--fase-bg:var(--malam-bg);--paper:var(--malam-bg);--ink-soft:var(--malam-soft);--surface:#141C42;--ink:#ECF0FA;--line:#28335F;
-  --lazuardi-ink:#8F97F3;--zamrud-ink:#91B94B;--good:#3CC48F;--bad:#FF7A6E;color-scheme:dark}
+  --ink:#10163A;--surface:#FFFFFF;--lazuardi-ink:#1724C0;--zamrud-ink:#1E6B3A;--good:#0B7A57;--bad:#C2372B;color-scheme:light}
+[data-fase="pagi"]{--fase-bg:var(--pagi-bg);--paper:var(--pagi-bg);--ink-soft:var(--pagi-soft);--line:#EADFD0}
+[data-fase="siang"]{--fase-bg:var(--siang-bg);--paper:var(--siang-bg);--ink-soft:var(--siang-soft);--line:#E4E2DA}
+[data-fase="sore"]{--fase-bg:var(--sore-bg);--paper:var(--sore-bg);--ink-soft:var(--sore-soft);--line:#EADCC4}
+[data-fase="senja"]{--fase-bg:var(--senja-bg);--paper:var(--senja-bg);--ink-soft:var(--senja-soft);--line:#E8DAD5}
+[data-fase="malam"]{--fase-bg:var(--malam-bg);--paper:var(--malam-bg);--ink-soft:var(--malam-soft);--surface:#1D1A16;--ink:#F3EFE8;--line:#2E2A25;
+  --lazuardi-ink:#8F97F3;--zamrud-ink:#7FA33F;--good:#3CC48F;--bad:#FF7A6E;color-scheme:dark}
 .fase{position:relative;background:var(--fase-bg);color:var(--ink)}
 /* sambungan: gradasi panjang di padding atas fase berikutnya. Teks pertama mulai setelah gradasi selesai, jadi teks
    selalu berada di atas warna fase yang utuh (titik tengah senja → malam tidak cukup kontras untuk tinta mana pun). */
@@ -206,6 +212,56 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .orn-list>li::before{content:"";position:absolute;left:0;top:.3em;width:1em;height:1em;background:var(--zamrud-ink);-webkit-mask:var(--orn-leaf) center/contain no-repeat;mask:var(--orn-leaf) center/contain no-repeat}
 .orn-lentera{display:inline-block;flex:none;width:1.2em;height:1.2em;background:var(--lentera);-webkit-mask:var(--orn-lentera) center/contain no-repeat;mask:var(--orn-lentera) center/contain no-repeat}
 .orn-seed{display:inline-block;flex:none;width:.45em;height:.6em;background:currentColor;-webkit-mask:var(--orn-seed) center/contain no-repeat;mask:var(--orn-seed) center/contain no-repeat}
+/* ORNAMEN v2 MULAI — keffiyeh sungguhan, semangka, bingkai lengkung. Berkas di assets/ornaments/ (dibuat
+   tools/make-ornaments.mjs); pola satu warna dipakai sebagai masker, jadi warnanya dari token. Lihat CLAUDE.md. */
+/* warna kain: hitam (bawaan) / merah / hijau; latar kain = --kain-dasar (putih) */
+.kain-hitam{--kain:var(--keffiyeh)}
+.kain-merah{--kain:var(--semangka-tua)}
+.kain-hijau{--kain:var(--kulit)}
+/* kain: bidang berpola keffiyeh. Bawaan = jaring (fishnet); --kotak = houndstooth. Ukuran ubin lewat --kain-ubin */
+.orn-kain{position:relative;isolation:isolate;background:var(--kain-dasar,var(--putih))}
+.orn-kain::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--kain,var(--keffiyeh));
+  -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/var(--kain-ubin,24px) repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/var(--kain-ubin,24px) repeat}
+.orn-kain--kotak{--kain-ubin:12px}
+.orn-kain--kotak::before{-webkit-mask-image:url(assets/ornaments/kain-kotak.svg);mask-image:url(assets/ornaments/kain-kotak.svg)}
+/* pita tebal pembatas section (tepi kain: garis, ranting zaitun, gelombang, zigzag), berulang tanpa sambungan.
+   Tinggi 24–48px lewat --pita; --sempit = versi 24px. Warna = --kain (atau currentColor bila tanpa kelas warna) */
+.orn-band--tebal,.orn-band--sempit{height:var(--pita,40px);background:var(--kain,currentColor);
+  -webkit-mask:url(assets/ornaments/pita.svg) 0 50%/auto 100% repeat-x;mask:url(assets/ornaments/pita.svg) 0 50%/auto 100% repeat-x}
+.orn-band--sempit{--pita:24px;-webkit-mask-image:url(assets/ornaments/pita-sempit.svg);mask-image:url(assets/ornaments/pita-sempit.svg)}
+/* tekstur latar tipis (6–12%): jaring keffiyeh. Pakai bersama .orn-net (absolute, inset 0) */
+.orn-net--kain{opacity:var(--orn-alpha,.08);background:var(--kain,currentColor);
+  -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat}
+/* tepi bingkai keffiyeh (border-image 9-slice; warna dari berkas karena border-image tidak bisa currentColor) */
+.orn-bingkai{border:var(--bingkai,18px) solid transparent;border-image:url(assets/ornaments/bingkai-hitam.svg) 20 round}
+.orn-bingkai.kain-merah{border-image-source:url(assets/ornaments/bingkai-merah.svg)}
+.orn-bingkai.kain-hijau{border-image-source:url(assets/ornaments/bingkai-hijau.svg)}
+/* semangka geometris (warna tertanam, datar). Boleh menjorok keluar layar: --jorok (mis. -30%) menggeser ke samping */
+.orn-slice{display:block;width:var(--slice,clamp(160px,24vw,320px));aspect-ratio:200/104;pointer-events:none;
+  background:url(assets/ornaments/semangka-setengah.svg) center/contain no-repeat;translate:var(--jorok,0) 0;rotate:var(--putar,0deg)}
+.orn-slice--segitiga{aspect-ratio:120/140;background-image:url(assets/ornaments/semangka-segitiga.svg)}
+.orn-seeds{position:absolute;inset:0;pointer-events:none;background:var(--biji,var(--keffiyeh));opacity:var(--orn-alpha,.12);
+  -webkit-mask:url(assets/ornaments/semangka-biji.svg) 0 0/160px 160px repeat;mask:url(assets/ornaments/semangka-biji.svg) 0 0/160px 160px repeat}
+/* gerak semangka (tertaut scroll, hanya bila .gerak & browser mendukung view timeline; selain itu diam):
+   bawaan = berayun kecil ±8°; --buka = "terbuka" dari miring & sedikit mengecil ke posisi tegak */
+@keyframes slice-ayun{from{rotate:calc(var(--putar,0deg) - 8deg)}to{rotate:calc(var(--putar,0deg) + 8deg)}}
+@keyframes slice-buka{from{rotate:calc(var(--putar,0deg) - 26deg);scale:.88}to{rotate:var(--putar,0deg);scale:1}}
+@supports (animation-timeline: view()){
+  .gerak .orn-slice{animation:slice-ayun linear both;animation-timeline:view();animation-range:cover 0% cover 100%}
+  .gerak .orn-slice--buka{animation-name:slice-buka;animation-range:entry 0% cover 45%}
+}
+@media (prefers-reduced-motion: reduce){.orn-slice{animation:none!important}}
+/* bingkai lengkung foto: lengkung bulat (arkade Al-Aqsa, bawaan) atau --lancip (mihrab), garis ganda = currentColor.
+   Rasio tetap 4:5 supaya lengkung tidak terdistorsi. Isi: <img> atau <picture> */
+.frame-arch{position:relative;display:block;margin:0;aspect-ratio:4/5;color:var(--ink)}
+.frame-arch picture{display:block;height:100%}
+.frame-arch img{display:block;width:100%;height:100%;object-fit:cover;
+  -webkit-mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat;mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat}
+.frame-arch::after{content:"";position:absolute;inset:0;pointer-events:none;background:currentColor;
+  -webkit-mask:url(assets/ornaments/lengkung-bulat-garis.svg) 0 0/100% 100% no-repeat;mask:url(assets/ornaments/lengkung-bulat-garis.svg) 0 0/100% 100% no-repeat}
+.frame-arch--lancip img{-webkit-mask-image:url(assets/ornaments/lengkung-lancip-isi.svg);mask-image:url(assets/ornaments/lengkung-lancip-isi.svg)}
+.frame-arch--lancip::after{-webkit-mask-image:url(assets/ornaments/lengkung-lancip-garis.svg);mask-image:url(assets/ornaments/lengkung-lancip-garis.svg)}
+/* ORNAMEN v2 SELESAI */
 
 /* --- Primitif gerak. .gerak dipasang JS hanya bila gerak diizinkan (bukan reduced-motion) --- */
 /* muncul: memudar + naik ≤ 12px, sekali */
