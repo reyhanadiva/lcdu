@@ -257,6 +257,21 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .lt-inti::after{content:"";position:absolute;inset:1.5px;border-radius:50%;background:var(--kunyit);opacity:0}
 .lentera-tanda.nyala .lt-cahaya,.lentera-tanda.nyala .lt-inti::after{opacity:1}
 .gerak .lt-cahaya,.gerak .lt-inti::after{transition:opacity .6s var(--ease-menyala)}
+/* Ranting zaitun (C): tumbuh ke KIRI benang (ke tepi layar), tidak pernah ke kanan (area teks). Satu ruas per lentera
+   yang menyala: batang (stroke-dashoffset) + 2–5 daun lancip (scale 0→1 dari pangkal), makin ke bawah makin lebat;
+   Donasi (zaitun) berbuah. Lebar = margin kiri − 6px (maks 106px); disembunyikan bila margin < ±40px (layar < 1296px). */
+.lt-ranting{display:none;position:absolute;z-index:1;right:3px;top:-24px;width:min(106px,calc(var(--benang-x) - 6px));height:auto;overflow:visible;
+  --lt-daun:#7FA33F;--lt-batang:color-mix(in srgb,var(--lt-c) 70%,transparent)}
+@media (min-width:1296px){.lt-ranting{display:block}}
+.why .lt-ranting{--lt-daun:#A9CF6E}
+.cost-blok .lt-ranting{--lt-daun:#9CC562}
+.lt-ranting .batang{fill:none;stroke:var(--lt-batang);stroke-width:2.2;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1}
+.lt-ranting .daun{fill:var(--lt-daun);transform-box:fill-box;transform-origin:0% 50%;transform:scale(0)}
+.lt-ranting .buah{fill:#3B2A3F;stroke:#F3EFE8;stroke-width:.8;transform-box:fill-box;transform-origin:50% 0%;transform:scale(0)}
+.lentera-tanda.nyala .lt-ranting .batang{stroke-dashoffset:0}
+.lentera-tanda.nyala .lt-ranting .daun,.lentera-tanda.nyala .lt-ranting .buah{transform:none}
+.gerak .lt-ranting .batang{transition:stroke-dashoffset .6s var(--ease-muncul) .1s}
+.gerak .lt-ranting .daun,.gerak .lt-ranting .buah{transition:transform .5s var(--ease-muncul) var(--td,.3s)}
 /* HP: titik di garis progres atas, posisinya = progres saat judul section di tengah layar */
 .benang .lt-hp{display:none}
 @media (max-width:899px){
@@ -1431,16 +1446,29 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
      dibuka) → .nyala sekali, juga semua lentera sebelumnya. Tanpa IO: tidak dibuat. */
   (function(){
     var bagian = $$('[data-lentera]'); if (!bagian.length || !('IntersectionObserver' in window)) return;
+    /* ranting ke-i: batang melengkung dari benang (kanan, x=108) ke kiri; daun lancip berselang atas/bawah di sepanjang
+       batang; jumlah daun 2 → 5 makin ke bawah; varian zaitun 5 daun + 3 buah. Koordinat viewBox 0..110 × 0..70, pangkal (108,24). */
+    function ranting(i, zaitun){
+      var n = zaitun ? 5 : Math.min(5, 2 + Math.ceil(i / 2)), x3 = Math.max(10, 58 - i * 6), y3 = 30 + Math.min(i, 6) * 1.6;
+      var P = [[108, 24], [84, 22], [56, 27], [x3, y3]];
+      function titik(t){ var u = 1 - t; return [0, 1].map(function(k){ return u*u*u*P[0][k] + 3*u*u*t*P[1][k] + 3*u*t*t*P[2][k] + t*t*t*P[3][k]; }); }
+      var svg = '<svg class="lt-ranting" viewBox="0 0 110 70" aria-hidden="true" focusable="false"><path class="batang" pathLength="1" d="M108 24C84 22 56 27 ' + x3 + ' ' + y3 + '"/>';
+      for (var k = 0; k < n; k++){
+        var t = .2 + k * (.74 / Math.max(1, n - 1)), q = titik(t), atas = k % 2 === 0;
+        svg += '<g transform="translate(' + q[0].toFixed(1) + ' ' + q[1].toFixed(1) + ') rotate(' + (atas ? -148 : 152) + ')"><path class="daun" style="--td:' + (.25 + k * .1).toFixed(2) + 's" d="M0 0C7-6.2 16-6.2 25 0 16 6.2 7 6.2 0 0Z"/></g>';
+      }
+      if (zaitun) [[.42, 1], [.62, 1], [.8, 1]].forEach(function(f, k){ var q = titik(f[0]); svg += '<ellipse class="buah" style="--td:' + (.55 + k * .08).toFixed(2) + 's" cx="' + q[0].toFixed(1) + '" cy="' + (q[1] + 6).toFixed(1) + '" rx="3.8" ry="5"/>'; });
+      return svg + '</svg>';
+    }
     var tanda = bagian.map(function(sec, i){
       var t = document.createElement('span');
       t.className = 'lentera-tanda'; t.setAttribute('aria-hidden', 'true'); t.style.setProperty('--ke', i);
       if (sec.dataset.lentera === 'zaitun') t.dataset.varian = 'zaitun';
-      t.innerHTML = '<i class="lt-cahaya"></i><i class="lt-inti"></i>';
+      t.innerHTML = '<i class="lt-cahaya"></i><i class="lt-inti"></i>' + ranting(i, sec.dataset.lentera === 'zaitun');
       sec.appendChild(t);
       var d = document.createElement('i'); d.className = 'lt-hp'; benang.appendChild(d);
       return { sec: sec, h: $('h2', sec) || sec, t: t, d: d };
     });
-    window.__lentera = tanda;          // dipakai ranting (C)
     function letak(){
       var hr = hari.getBoundingClientRect(), jarak = Math.max(1, hari.offsetHeight - window.innerHeight * .52);
       tanda.forEach(function(o){
