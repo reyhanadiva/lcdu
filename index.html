@@ -188,7 +188,7 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 @supports (animation-timeline: view()) and (timeline-scope: --a){
   html{timeline-scope:--hari}
   .hari{view-timeline:--hari block}
-  .benang-garis,.benang-ujung{animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--hari;animation-range:contain 0% contain 100%}
+  .benang-garis,.benang-ujung{animation-timing-function:linear;animation-fill-mode:both;animation-timeline:--hari;animation-range:entry 50% contain 100%}
   .benang-garis{animation-name:benang-tarik}
   .benang-ujung{animation-name:benang-ujung}
   @media (max-width:899px){.benang-garis{animation-name:benang-tarik-x}}
@@ -207,7 +207,7 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 
 /* --- Primitif gerak. .gerak dipasang JS hanya bila gerak diizinkan (bukan reduced-motion) --- */
 /* muncul: memudar + naik ≤ 12px, sekali */
-.gerak [data-muncul]{transition:opacity var(--dur-muncul) var(--ease-muncul),transform var(--dur-muncul) var(--ease-muncul)}
+.gerak [data-muncul]{transition:opacity var(--dur-muncul) var(--ease-muncul) var(--d,0s),transform var(--dur-muncul) var(--ease-muncul) var(--d,0s)}
 .gerak [data-muncul]:not(.is-in){opacity:0;transform:translateY(12px)}
 /* tergambar: garis terbentang mengikuti scroll (view timeline; cadangan JS mengisi --t). Tanpa .gerak: utuh */
 [data-tergambar]{clip-path:inset(0 calc(100% - var(--t,1) * 100%) 0 0)}
@@ -318,6 +318,42 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hd-edit-panel textarea{width:100%;height:120px;font:12px/1.4 ui-monospace,monospace}
 .hero-loading{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;color:var(--hero-soft);font-size:.9rem;z-index:-1}
 @media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none;transform:none}}
+
+/* ===== PENGANTAR ===== */
+/* --p (0..1) = kemajuan membaca kalimat. Nilai awal 1 = semua kata penuh (reduced-motion / tanpa JS).
+   Dengan .gerak: dianimasikan oleh view timeline kalimat itu sendiri (tanpa pin), cadangan JS di skrip. */
+@property --p{syntax:'<number>';inherits:true;initial-value:1}
+.intro{position:relative;isolation:isolate}
+/* jaring keffiyeh sangat samar di tepi atas, memudar ke bawah (tidak ada tepi tajam) */
+.intro-jaring{inset:0 0 auto;height:min(440px,60vh);z-index:-1;opacity:.07;
+  -webkit-mask:var(--orn-net) 0 0/20px 20px repeat,linear-gradient(#000,transparent);-webkit-mask-composite:source-in;
+  mask:var(--orn-net) 0 0/20px 20px repeat,linear-gradient(#000,transparent);mask-composite:intersect}
+.intro-kalimat{font-family:var(--f-display);font-weight:600;font-size:clamp(2.1rem,1.05rem + 4.3vw,5.3rem);line-height:1.08;letter-spacing:-.02em;max-width:15.5em;text-wrap:pretty}
+/* tiap kata: --w = seberapa menyala (3 kata bertumpang tindih), --g = pendar, puncak di tengah transisi lalu memudar.
+   Redup = campuran tinta dengan latar fase, dihitung agar ≥ 3:1; penuh ≥ 4,5:1 (lihat CLAUDE.md). */
+.k{--w:clamp(0,(var(--p) * (var(--n) + 3) - var(--i)) / 3,1);--g:calc(min(var(--w),1 - var(--w)) * 2);--warna:var(--ink);--redup:52%;
+  color:color-mix(in srgb,var(--warna) calc(var(--redup) + (100% - var(--redup)) * var(--w)),var(--fase-bg));
+  text-shadow:0 0 .35em color-mix(in srgb,var(--lentera) calc(var(--g) * 75%),transparent)}
+.k-en{--warna:var(--lazuardi-ink);--redup:58%}   /* biru logo #1724C0 */
+.k-ar{--warna:var(--zamrud-ink);--redup:76%}     /* hijau logo, digelapkan (hijau logo asli hanya 2,4:1 di latar pagi) */
+@keyframes intro-nyala{from{--p:0}to{--p:1}}
+@supports (animation-timeline: view()){.gerak .intro-kalimat{animation:intro-nyala linear both;animation-timeline:view();animation-range:cover 18% cover 52%}}
+/* pills: fakta singkat, garis 1px tinta, sudut kecil, susunan tangga yang tidak simetris */
+.intro-pills{list-style:none;margin:clamp(36px,5vw,64px) 0 0;padding:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;font-size:.88rem}
+.intro-pills li{display:inline-flex;align-items:center;gap:.55em;padding:.45em .8em .45em .65em;border:1px solid var(--ink);border-radius:3px;line-height:1.3;font-weight:600}
+.intro-pills li:nth-child(2){margin-left:22px}
+.intro-pills li:nth-child(3){margin-left:6px}
+.intro-pills li:nth-child(4){margin-left:34px}
+@media (min-width:900px){
+  .intro-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr))}
+  .intro-kalimat{grid-column:1/12}
+  .intro-pills{grid-column:4/13;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));gap:18px 0}
+  .intro-pills li{justify-self:start;white-space:nowrap;margin:0}
+  .intro-pills li:nth-child(1){grid-column:1/5;grid-row:1}
+  .intro-pills li:nth-child(2){grid-column:5/10;grid-row:1;margin-top:26px}
+  .intro-pills li:nth-child(3){grid-column:2/6;grid-row:2}
+  .intro-pills li:nth-child(4){grid-column:6/10;grid-row:2;margin-top:12px}
+}
 
 /* ===== KENAPA ===== */
 .why-head{display:grid;gap:16px;margin-bottom:clamp(32px,5vw,56px)}
@@ -593,11 +629,21 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <div class="hari" id="hari">
 
 <div class="fase" data-fase="pagi">
-<!-- ============ PENGANTAR (stub: isi didesain di sesi tersendiri) ============ -->
-<section class="band" id="pengantar" aria-labelledby="intro-h">
-  <div class="wrap">
-    <h2 class="h2" id="intro-h" data-muncul>Pengantar</h2>
-    <p class="stub-note">Isi section ini menyusul.</p>
+<!-- ============ PENGANTAR: satu pernyataan yang menyala kata demi kata saat dibaca ============
+     Pembaca layar membaca kalimat utuh (.sr-only); versi per kata hanya visual (aria-hidden). --i = urutan kata, --n = jumlah kata. -->
+<section class="band intro" id="pengantar" aria-labelledby="intro-h">
+  <div class="orn-net intro-jaring" aria-hidden="true"></div>
+  <div class="wrap intro-grid">
+    <h2 class="intro-kalimat" id="intro-h" style="--n:21">
+      <span class="sr-only">LCDU, <span lang="en">Language Course for Da'wah &amp; Ummah</span>: kelas Bahasa Arab dan Inggris online yang nirlaba, untuk usia 16 tahun ke atas.</span>
+      <span aria-hidden="true"><span class="k" style="--i:0">LCDU,</span> <span lang="en"><span class="k" style="--i:1">Language</span> <span class="k" style="--i:2">Course</span> <span class="k" style="--i:3">for</span> <span class="k" style="--i:4">Da'wah</span> <span class="k" style="--i:5">&amp;</span> <span class="k" style="--i:6">Ummah:</span></span> <span class="k" style="--i:7">kelas</span> <span class="k" style="--i:8">Bahasa</span> <span class="k k-ar" style="--i:9">Arab</span> <span class="k" style="--i:10">dan</span> <span class="k k-en" style="--i:11">Inggris</span> <span class="k" style="--i:12">online</span> <span class="k" style="--i:13">yang</span> <span class="k" style="--i:14">nirlaba,</span> <span class="k" style="--i:15">untuk</span> <span class="k" style="--i:16">usia</span> <span class="k" style="--i:17">16</span> <span class="k" style="--i:18">tahun</span> <span class="k" style="--i:19">ke</span> <span class="k" style="--i:20">atas.</span></span>
+    </h2>
+    <ul class="intro-pills" aria-label="Sekilas tentang LCDU">
+      <li data-muncul style="--d:0ms"><i class="orn-leaf" aria-hidden="true"></i>Online · Zoom &amp; Canvas LMS</li>
+      <li data-muncul style="--d:180ms"><i class="orn-leaf" aria-hidden="true"></i>Usia 16 tahun ke atas</li>
+      <li data-muncul style="--d:360ms"><i class="orn-leaf" aria-hidden="true"></i>Rp100.000 per term (semester)</li>
+      <li data-muncul style="--d:540ms"><i class="orn-leaf" aria-hidden="true"></i>Di bawah Yayasan Taqwa Cerdas Kreatif</li>
+    </ul>
   </div>
 </section>
 
@@ -846,9 +892,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     var bTick = false;
     var benangUpdate = function(){
       bTick = false;
-      var r = hari.getBoundingClientRect();
-      benang.classList.toggle('is-on', r.top <= 0);
-      if (!sdaBenang) benang.style.setProperty('--benang', Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - window.innerHeight))));
+      /* mulai saat Pengantar mencapai tengah layar (= animation-range "entry 50%"), selesai di akhir Donasi */
+      var r = hari.getBoundingClientRect(), half = window.innerHeight / 2;
+      benang.classList.toggle('is-on', r.top <= half);
+      if (!sdaBenang) benang.style.setProperty('--benang', Math.min(1, Math.max(0, (half - r.top) / Math.max(1, r.height - half))));
     };
     window.addEventListener('scroll', function(){ if (!bTick){ bTick = true; requestAnimationFrame(benangUpdate); } }, {passive:true});
     window.addEventListener('resize', benangUpdate);
@@ -879,6 +926,18 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       });
       garis.forEach(function(g){ g.style.setProperty('--t', 0); tIO.observe(g); });
       window.addEventListener('scroll', function(){ if (terlihat.length && !gTick){ gTick = true; requestAnimationFrame(tergambar); } }, {passive:true});
+    }
+    /* Pengantar: cadangan JS untuk --p (= animation-range "cover 18% cover 52%"); hanya dihitung selama kalimat terlihat */
+    var kalimat = $('.intro-kalimat');
+    if (!sdaView && kalimat){
+      var kLihat = false, kTick = false;
+      var nyalakan = function(){
+        kTick = false;
+        var r = kalimat.getBoundingClientRect(), vh = window.innerHeight, cover = (vh - r.top) / (vh + r.height);
+        kalimat.style.setProperty('--p', Math.min(1, Math.max(0, (cover - .18) / .34)));
+      };
+      new IntersectionObserver(function(en){ kLihat = en[0].isIntersecting; nyalakan(); }).observe(kalimat);
+      window.addEventListener('scroll', function(){ if (kLihat && !kTick){ kTick = true; requestAnimationFrame(nyalakan); } }, {passive:true});
     }
   }
 

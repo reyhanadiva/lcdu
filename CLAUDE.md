@@ -84,13 +84,19 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   | malam | #0B1230 | #ECF0FA | 16,1 | 8,8 | 6,9 | 8,1 | 14,5 / 7,9 |
 - **Benang keffiyeh** (`.benang`, setelah footer): desktop ≥ 900px garis zigzag tipis di gutter kiri dengan titik lentera
   di ujung; HP garis progres 3px di atas (5px dari tepi, sengaja tidak menempel — lihat catatan iOS 26). Panjangnya dari
-  CSS scroll-driven animation (`view-timeline: --hari`, range `contain`), cadangan JS mengisi `--benang`. Muncul setelah
-  hero (`.is-on`), selesai tepat di akhir Donasi. Disembunyikan saat reduced-motion.
+  CSS scroll-driven animation (`view-timeline: --hari`, range `entry 50% contain 100%`), cadangan JS mengisi `--benang`.
+  Mulai terlihat saat Pengantar mencapai tengah layar (`.is-on`), selesai tepat di akhir Donasi. Disembunyikan saat reduced-motion.
 - **Ornamen** (SVG sebagai `mask`, warna = `currentColor`/token, tanpa warna tertanam; data URI di token `--orn-*`):
   `.orn-band` pita keffiyeh horizontal (daun zaitun + dua garis), `.orn-net` jaring keffiyeh untuk latar (opacity .05,
   `position:absolute; inset:0`), `.orn-leaf` ikon daun zaitun (centang), `.orn-list` daftar berbutir daun,
   `.orn-lentera` titik lentera (`--lentera`), `.orn-seed` biji semangka — **sangat jarang**, maksimal satu tempat.
-- **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali), `data-tergambar` (garis terbentang mengikuti scroll;
+- **Pengantar** (selesai): satu kalimat besar (teks persis dari pemilik) yang menyala kata per kata. Tiap kata `.k` dengan
+  `--i`; `--p` (didaftarkan `@property`, awal 1 = penuh) dianimasikan view timeline kalimat (`cover 18% → 52%`, tanpa pin),
+  cadangan JS. Redup ≥ 3:1 (campuran tinta + latar, terukur 3,4:1), penuh ≥ 4,5:1; pendar `--lentera` di kata yang sedang
+  menyala. "Inggris" = `--lazuardi-ink` (= biru logo), "Arab" = `--zamrud-ink` (hijau logo asli `#7FA33F` hanya 2,4:1 di
+  latar pagi, tidak boleh jadi teks). Pembaca layar membaca kalimat utuh (`.sr-only`), versi per kata `aria-hidden`.
+  Empat pill fakta (garis 1px, sudut 3px, `.orn-leaf`) tersusun tangga tidak simetris, `data-muncul` dengan jeda `--d`.
+- **Gerak (hanya tiga)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
   reduced-motion; tanpa `.gerak` semuanya tampil diam & utuh.
@@ -171,7 +177,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang: Kenapa, Kelas, Biaya
    (struk masih beranimasi "cetak" — jenis gerak ke-4, perlu diganti), Bergabung, Testimoni, Tim, Donasi, Footer.
-   Pengantar & FAQ masih stub.
+   FAQ masih stub. Pengantar selesai.
 4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas
