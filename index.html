@@ -735,14 +735,76 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .flow-step h3{font-family:var(--f-display);font-size:var(--step-1);font-weight:700;margin-top:14px;margin-bottom:6px}
 .flow-step p{color:var(--ink-soft);max-width:44ch}
 /* Placement Test (status dari site-config.js) */
-.pt{margin-top:clamp(56px,8vw,96px);display:grid;gap:16px;padding-top:28px;border-top:2px solid var(--ink)}
-.pt-status{color:var(--ink-soft);max-width:56ch}
-.pt-list{list-style:none;margin:0;padding:0}
-.pt-list li{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:14px 0;border-bottom:1px solid var(--line)}
-.pt-list b{flex:1;min-width:12ch;font-family:var(--f-display);font-size:var(--step-1)}
-.pt-rule{font-weight:600}
-.pt-ask{justify-self:start;margin-top:8px}
-.pt[data-open="false"] .pt-go,.pt[data-open="true"] .pt-ask{display:none}
+/* (B) Kartu Placement Test = "lembar ujian" LCDU: kertas putih bergaris halus, margin merah, strip keffiyeh houndstooth
+   hijau di atas. Komposisi = 70 titik lentera (20 biru · 20 hijau · 30 merah) yang muncul berurutan sekali; cincin waktu
+   tergambar sekali (stroke-dashoffset); "Tes suara" = nada pendek Web Audio + gelombang (statis saat reduced-motion).
+   Satu-satunya tombol kunyit di section: "Mulai Placement Test" (buka) / "Tanya admin lewat WhatsApp" (tutup). */
+.pt-kartu{position:relative;display:grid;gap:clamp(28px,4vw,56px);margin-top:clamp(32px,4vw,48px);padding:clamp(36px,4vw,52px) clamp(22px,4vw,56px) clamp(28px,3.4vw,44px) clamp(36px,5vw,72px);
+  background:#fff;color:#10163A;border:1px solid color-mix(in srgb,#10163A 14%,transparent);border-radius:4px;
+  background-image:linear-gradient(90deg,transparent clamp(20px,3vw,44px),color-mix(in srgb,var(--semangka) 55%,transparent) 0 calc(clamp(20px,3vw,44px) + 1.5px),transparent 0),
+    repeating-linear-gradient(0deg,color-mix(in srgb,var(--lazuardi) 7%,transparent) 0 1px,transparent 1px 32px)}
+.pt-kartu::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:var(--kulit);border-radius:4px 4px 0 0;
+  -webkit-mask:url(assets/ornaments/kain-kotak.svg) 0 0/10px 10px repeat;mask:url(assets/ornaments/kain-kotak.svg) 0 0/10px 10px repeat}
+@media (min-width:900px){.pt-kartu{grid-template-columns:minmax(0,1fr) auto;align-items:start}}
+.pt-isi{display:grid;gap:clamp(16px,2vw,22px);align-content:start}
+.pt-judul{font-family:var(--f-display);font-weight:700;font-size:var(--step-3);line-height:1;letter-spacing:-.02em}
+.pt-tujuan{font-size:var(--step-1);color:#3E4256}
+/* komposisi: tiga kelompok titik; hover/fokus menampilkan nama & jumlah (selalu tampil di perangkat tanpa hover) */
+.pt-komposisi{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:14px 26px}
+.pt-kel{--c:var(--lazuardi);display:grid;gap:8px;align-content:start;border-radius:6px;outline-offset:6px;transition:opacity .25s}
+.kel-2{--c:var(--kulit)}.kel-3{--c:var(--semangka-tua)}
+.pt-titik{display:grid;grid-template-columns:repeat(10,10px);gap:5px}
+.pt-titik i{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 18%,transparent)}
+.pt-label{font-size:.9rem;color:#3E4256;opacity:0;transform:translateY(-3px);transition:opacity .25s,transform .25s}
+.pt-label b{color:var(--c);margin-right:.3em}
+.pt-komposisi:hover .pt-kel:not(:hover),.pt-komposisi:focus-within .pt-kel:not(:focus-within){opacity:.35}
+.pt-kel:hover .pt-label,.pt-kel:focus-within .pt-label{opacity:1;transform:none}
+@media (hover:none){.pt-label{opacity:1;transform:none}}
+.pt-catatan{max-width:66ch;font-size:.95rem;line-height:1.6;color:#3E4256}
+.pt-aksi{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:4px}
+.pt-status{flex-basis:100%;font-weight:600;color:var(--semangka-tua)}
+.pt-kartu[data-open="true"] .pt-status,.pt-kartu[data-open="true"] .pt-tanya,.pt-kartu[data-open="false"] .pt-mulai{display:none}
+.pt-nojs{flex-basis:100%;font-size:.9rem;color:#3E4256}
+.js .pt-nojs{display:none}
+/* samping: cincin waktu + tes suara */
+.pt-samping{display:flex;flex-wrap:wrap;gap:24px;align-items:center}
+@media (min-width:900px){.pt-samping{flex-direction:column;align-items:center;text-align:center;width:200px}}
+.pt-waktu{position:relative;margin:0;width:150px;height:150px;flex:none}
+.pt-waktu svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pt-waktu circle{fill:none;stroke-width:7}
+.cincin-dasar{stroke:color-mix(in srgb,var(--lentera) 30%,transparent)}
+.cincin-isi{stroke:var(--kunyit);stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:0}
+.pt-waktu figcaption{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1}
+.pt-waktu b{font-family:var(--f-display);font-size:2.8rem}
+.pt-waktu span{font-size:.8rem;color:#3E4256;margin-top:4px}
+.pt-suara-blok{display:grid;gap:8px;max-width:30ch}
+.pt-suara{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:44px;padding:.55em 1.1em;border:1.5px solid #10163A;border-radius:999px;background:#fff;color:#10163A;font-weight:700;cursor:pointer}
+.pt-suara:hover{background:color-mix(in srgb,#10163A 6%,#fff)}
+.pt-gelombang{display:inline-flex;align-items:center;gap:3px;height:18px}
+.pt-gelombang i{width:3px;height:100%;border-radius:2px;background:var(--lazuardi);transform:scaleY(.35)}
+.pt-gelombang i:nth-child(2),.pt-gelombang i:nth-child(4){transform:scaleY(.65)}.pt-gelombang i:nth-child(3){transform:scaleY(1)}
+.pt-suara-ket{font-size:.85rem;color:#3E4256}
+@keyframes gelombang{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.gerak .pt-kartu.bunyi .pt-gelombang i{animation:gelombang .32s ease-in-out 2}
+.gerak .pt-kartu.bunyi .pt-gelombang i:nth-child(2n){animation-delay:.08s}.gerak .pt-kartu.bunyi .pt-gelombang i:nth-child(3){animation-delay:.16s}
+/* masuk layar sekali (.pt-tampil dari IntersectionObserver): titik berurutan, cincin tergambar */
+.gerak .pt-titik i{transition:opacity .35s var(--ease-muncul) calc(var(--n) * 11ms),transform .35s var(--ease-muncul) calc(var(--n) * 11ms)}
+.gerak .pt-kartu:not(.pt-tampil) .pt-titik i{opacity:0;transform:scale(.3)}
+.gerak .cincin-isi{transition:stroke-dashoffset 1.4s var(--ease-menyala) .2s}
+.gerak .pt-kartu:not(.pt-tampil) .cincin-isi{stroke-dashoffset:1}
+/* HP: titik lebih kecil (dua kelompok sebaris), cincin lebih kecil di samping tes suara, catatan sedikit lebih kecil */
+@media (max-width:699px){
+  .pt-komposisi{gap:12px 20px}
+  .pt-titik{grid-template-columns:repeat(10,7px);gap:4px}
+  .pt-titik i{width:7px;height:7px}
+  .pt-label{font-size:.82rem}
+  .pt-catatan{font-size:.9rem;line-height:1.55}
+  .pt-samping{flex-wrap:nowrap;gap:16px}
+  .pt-waktu{width:104px;height:104px}
+  .pt-waktu b{font-size:2rem}
+  .pt-waktu span{font-size:.7rem}
+}
+@media (prefers-reduced-motion: reduce){.pt-kel,.pt-label{transition:none}}
 
 /* ===== CERITA ===== */
 .stories{overflow:hidden}
@@ -1063,17 +1125,40 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </fieldset>
   </div>
 
-  <!-- Placement Test: status & tautan dari site-config.js (placementTest.open) -->
+  <!-- (B) Kartu Placement Test: "lembar ujian" LCDU. Fakta dari halaman resmi lcdu.org/en-placement-rule/ & /ar-placement-rule/
+       (diverifikasi pemilik): 20 listening, 20 reading, 30 grammar; maks. 60 menit; satu kali duduk; audio maks. 2 kali.
+       JANGAN menambah durasi per bagian, nilai kelulusan, atau hasil. Status & tautan per bahasa dari site-config.js. -->
   <div class="wrap">
-    <div class="pt" id="placement" data-open="false">
-      <h3 class="pt-title">Placement Test</h3>
-      <p class="pt-status" id="pt-status">Placement Test sedang ditutup. Tanyakan ke admin kapan tes dibuka lagi.</p>
-      <ul class="pt-list">
-        <li><b>Bahasa Inggris</b><a class="pt-rule" href="https://lcdu.org/en-placement-rule/" data-cfg-href="placementTest.inggris.aturan">Aturan tes</a><a class="btn btn-sun pt-go" href="https://lcdu.org/en-placement/" data-cfg-href="placementTest.inggris.tes">Mulai tes Bahasa Inggris</a></li>
-        <li><b>Bahasa Arab</b><a class="pt-rule" href="https://lcdu.org/ar-placement-rule/" data-cfg-href="placementTest.arab.aturan">Aturan tes</a><a class="btn btn-sun pt-go" href="https://lcdu.org/ar-placement/" data-cfg-href="placementTest.arab.tes">Mulai tes Bahasa Arab</a></li>
-      </ul>
-      <a class="btn btn-sun pt-ask" href="https://wa.me/628196009333" data-wa="placement">Tanya admin</a>
-    </div>
+    <article class="pt-kartu" id="placement" aria-labelledby="pt-h" data-open="false">
+      <div class="pt-isi">
+        <h3 class="pt-judul" id="pt-h">Placement Test</h3>
+        <p class="pt-tujuan">Tes singkat untuk menentukan kelas yang pas untukmu.</p>
+        <ul class="pt-komposisi" aria-label="Komposisi soal: 70 soal">
+          <li class="pt-kel kel-1" tabindex="0"><span class="pt-titik" aria-hidden="true"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i><i style="--n:10"></i><i style="--n:11"></i><i style="--n:12"></i><i style="--n:13"></i><i style="--n:14"></i><i style="--n:15"></i><i style="--n:16"></i><i style="--n:17"></i><i style="--n:18"></i><i style="--n:19"></i></span><span class="pt-label"><b data-en="Listening" data-ar="Istima'">Listening</b> 20 soal</span></li>
+          <li class="pt-kel kel-2" tabindex="0"><span class="pt-titik" aria-hidden="true"><i style="--n:20"></i><i style="--n:21"></i><i style="--n:22"></i><i style="--n:23"></i><i style="--n:24"></i><i style="--n:25"></i><i style="--n:26"></i><i style="--n:27"></i><i style="--n:28"></i><i style="--n:29"></i><i style="--n:30"></i><i style="--n:31"></i><i style="--n:32"></i><i style="--n:33"></i><i style="--n:34"></i><i style="--n:35"></i><i style="--n:36"></i><i style="--n:37"></i><i style="--n:38"></i><i style="--n:39"></i></span><span class="pt-label"><b data-en="Reading" data-ar="Qira'ah">Reading</b> 20 soal</span></li>
+          <li class="pt-kel kel-3" tabindex="0"><span class="pt-titik" aria-hidden="true"><i style="--n:40"></i><i style="--n:41"></i><i style="--n:42"></i><i style="--n:43"></i><i style="--n:44"></i><i style="--n:45"></i><i style="--n:46"></i><i style="--n:47"></i><i style="--n:48"></i><i style="--n:49"></i><i style="--n:50"></i><i style="--n:51"></i><i style="--n:52"></i><i style="--n:53"></i><i style="--n:54"></i><i style="--n:55"></i><i style="--n:56"></i><i style="--n:57"></i><i style="--n:58"></i><i style="--n:59"></i><i style="--n:60"></i><i style="--n:61"></i><i style="--n:62"></i><i style="--n:63"></i><i style="--n:64"></i><i style="--n:65"></i><i style="--n:66"></i><i style="--n:67"></i><i style="--n:68"></i><i style="--n:69"></i></span><span class="pt-label"><b data-en="Grammar" data-ar="Tata bahasa">Grammar</b> 30 soal</span></li>
+        </ul>
+        <p class="pt-catatan">Dikerjakan sekali duduk: jawaban tidak tersimpan bila halaman ditinggalkan sebelum selesai.
+          Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset. Tanpa auto translate, tanpa bertanya
+          kepada orang lain, tanpa membuka tab lain. Soal yang tidak kamu pahami, kosongkan saja.</p>
+        <div class="pt-aksi">
+          <p class="pt-status" id="pt-status">Placement Test <span class="pt-nama-bhs">Bahasa Inggris</span> sedang ditutup sementara. Tanyakan ke admin kapan dibuka lagi.</p>
+          <a class="btn btn-sun pt-mulai" href="https://lcdu.org/en-placement-rule/" target="_blank" rel="noopener">Mulai Placement Test<span class="sr-only"> <span class="pt-nama-bhs">Bahasa Inggris</span> (buka di tab baru)</span></a>
+          <a class="btn btn-sun pt-tanya" href="https://wa.me/628196009333" data-wa="placement">Tanya admin lewat WhatsApp</a>
+          <p class="pt-nojs">Halaman tes: <a href="https://lcdu.org/en-placement-rule/">Bahasa Inggris</a> · <a href="https://lcdu.org/ar-placement-rule/">Bahasa Arab</a></p>
+        </div>
+      </div>
+      <div class="pt-samping">
+        <figure class="pt-waktu">
+          <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false"><circle class="cincin-dasar" cx="60" cy="60" r="50"/><circle class="cincin-isi" cx="60" cy="60" r="50" pathLength="1"/></svg>
+          <figcaption><b>60</b><span>menit, maks.</span></figcaption>
+        </figure>
+        <div class="pt-suara-blok">
+          <button class="pt-suara" type="button" aria-describedby="pt-suara-ket"><span class="pt-gelombang" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Tes suara</button>
+          <p class="pt-suara-ket" id="pt-suara-ket" aria-live="polite">Putar nada pendek untuk memastikan speaker atau headset terdengar.</p>
+        </div>
+      </div>
+    </article>
   </div>
 
   <div class="wrap flow">
@@ -1408,7 +1493,32 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   }
   if (gabung){
     $$('.pilih-bahasa input', gabung).forEach(function(r){ r.addEventListener('change', function(){ if (r.checked) setBahasa(r.value); }); });
-    var awalB = $('.pilih-bahasa input:checked', gabung); setBahasa(awalB ? awalB.value : 'en');
+    var awalB = $('.pilih-bahasa input:checked', gabung);
+    /* kartu Placement Test: status, tautan & nama bagian mengikuti bahasa */
+    var ptK = $('#placement', gabung), NAMA = { en: 'Bahasa Inggris', ar: 'Bahasa Arab' };
+    gabung.addEventListener('bahasa', function(e){
+      var b = e.detail, open = !!cfg('placement.' + b + '.open'), url = cfg('placement.' + b + '.url');
+      ptK.dataset.open = open;
+      if (url) $('.pt-mulai', ptK).href = url;
+      $$('.pt-nama-bhs', ptK).forEach(function(n){ n.textContent = NAMA[b]; });
+      $$('.pt-label b', ptK).forEach(function(n){ n.textContent = n.dataset[b]; });
+    });
+    setBahasa(awalB ? awalB.value : 'en');
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ ptK.classList.add('pt-tampil'); ob.disconnect(); } }, {threshold:.35}).observe(ptK);
+    } else ptK.classList.add('pt-tampil');
+    /* Tes suara: nada pendek naik (C5–E5–G5) lewat Web Audio; tanpa berkas, tanpa mikrofon, tanpa izin */
+    var AC = window.AudioContext || window.webkitAudioContext, actx = null, suara = $('.pt-suara', ptK), ket = $('#pt-suara-ket');
+    if (!AC) suara.parentElement.hidden = true;
+    else suara.addEventListener('click', function(){
+      actx = actx || new AC(); if (actx.state === 'suspended') actx.resume();
+      var t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o.frequency.setValueAtTime(523.25, t); o.frequency.setValueAtTime(659.25, t + .18); o.frequency.setValueAtTime(783.99, t + .36);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.16, t + .03); g.gain.setValueAtTime(.16, t + .52); g.gain.linearRampToValueAtTime(0, t + .64);
+      o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .66);
+      ptK.classList.add('bunyi'); setTimeout(function(){ ptK.classList.remove('bunyi'); }, 700);
+      ket.textContent = 'Nada diputar. Terdengar jelas? Speaker atau headset kamu siap.';
+    });
   }
 
   /* ---------- Kenapa LCDU: pernyataan aktif = yang melewati tengah layar ----------
