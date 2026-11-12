@@ -60,8 +60,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`; tombol pembanding hero disembunyikan di luar hero.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
-- `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test (`placementTest.open`; `false` → tombol
-  tes disembunyikan, tampil "Tanya admin"), tautan tes & aturan Inggris/Arab, WhatsApp admin + pesan awal per tombol,
+- `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test **per bahasa** (`placement.en.open`,
+  `placement.ar.open`; `false` → "Tanya admin lewat WhatsApp" + kalimat ditutup sementara; `url` = halaman awal tes `-rule`), tautan tes & aturan Inggris/Arab, WhatsApp admin + pesan awal per tombol,
   AWG, rekening, tautan Yayasan (`yayasan.url` → https://alfacentauri.sch.id/yayasan/, dipakai `.tautan-yayasan` di
   Pengantar & footer; nama aksesibel "… (buka di tab baru)"; nama di rekening Donasi tetap teks biasa). HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa="umum|placement|konfirmasi"`; teks di HTML =
   cadangan. Tim IT bisa menggantinya dengan CMS (pertahankan bentuk objek).
@@ -207,6 +207,22 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 
   Ornamen di dalam section (bukan pembatas) tetap: garis keffiyeh tipis di baris Yayasan & struk, pita keffiyeh tegak
   pada pembagi Pilih kelas (diminta pemilik), benang di gutter. Pita rajut antar-blok Pilih kelas di HP dihapus.
+- **Cara bergabung** (selesai, revisi 2; id tetap `bergabung` karena navbar & pill "Daftar"): judul "Cara bergabung" +
+  syarat satu kalimat (dari teks checklist lama: usia 16+, bisa membaca Al-Qur'an, laptop/HP, konsisten sampai term
+  selesai) + pilihan "Aku mau belajar: Inggris | Arab" (radio asli dalam fieldset = radiogroup keyboard; menulis
+  `section[data-bahasa]` & event `bahasa`; tanpa JS disembunyikan). Checklist "Kamu siap bergabung?" **dihapus**
+  (keputusan pemilik). **Kartu Placement Test** `#placement` = "lembar ujian" (putih bergaris, margin merah, strip
+  houndstooth hijau): tujuan, komposisi 70 titik (20 biru Listening/Istima' · 20 hijau Reading/Qira'ah · 30 merah
+  Grammar/Tata bahasa; muncul berurutan sekali; hover/fokus menampilkan nama & jumlah, selalu tampil di perangkat sentuh),
+  cincin "60 menit, maks." (stroke-dashoffset sekali), "Tes suara" (nada C5–E5–G5 Web Audio + gelombang, statis saat
+  reduced-motion), catatan 4 baris, satu tombol kunyit: "Mulai Placement Test" → `placement.<bhs>.url` (halaman awal tes
+  `-rule`, keputusan pemilik: satu tujuan, tanpa tautan sekunder) atau "Tanya admin lewat WhatsApp" saat tutup. Fakta tes
+  hanya dari halaman resmi (20/20/30, maks. 60 menit, sekali duduk, audio maks. 2×, speaker/headset, tanpa auto
+  translate/bertanya/tab lain, kosongkan yang tidak dipahami) — **jangan** menambah durasi per bagian, nilai lulus, hasil.
+  Kata "aturan test" tidak dipakai. Zoom/Canvas tidak disebut di kartu. **Enam langkah** (teks lama): desktop = tali
+  lentera horizontal berombak (SVG) dengan 6 lentera menyala berurutan sekali (120 ms), ke-6 lebih besar; Arab =
+  dicerminkan kanan→kiri lewat translateX((5−2i)×100%) per kolom, DOM tetap 1→6; HP = daftar rapat + benang tegak.
+  Langkah 1 menaut ke `#placement`. Tinggi section: 2,46 → 1,74 layar (1440×900), 3,02 → 2,27 (390×844).
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
@@ -238,7 +254,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Donasi terbuka = untuk Palestina**, sukarela, terpisah dari biaya kelas, disalurkan melalui **AWG (Aqsa Working Group)**,
   mitra lama. Tidak ada "Donasi LCDU" terpisah di halaman.
 - **Urutan section setelah hero** (id dalam kurung): Pengantar (`pengantar`), Kenapa LCDU (`kenapa`), Pilih kelas (`kelas`),
-  Biaya (`biaya`), Cara bergabung = syarat + Placement Test + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
+  Biaya (`biaya`), Cara bergabung = syarat + pilihan bahasa + Placement Test + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
   FAQ (`faq`), Donasi untuk Palestina (`donasi`), Footer. Pemetaan fase: Pengantar & Kenapa = pagi; Kelas & Biaya = siang;
   Bergabung & Testimoni = sore; Tim & FAQ = senja; Donasi & Footer = malam. Navbar: Kelas, Biaya, Cara bergabung, Tim,
   FAQ, Donasi + pill "Daftar" (→ `#bergabung`).
@@ -310,7 +326,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
 3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
-   Bergabung, Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya
+   Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung
    (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.

@@ -21,7 +21,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (snap 30/50/70), sisi lebar menampilkan rincian & strip 7 hari. HP: panel atas–bawah, ketuk untuk membuka. |
-| Cara bergabung | Checklist syarat, Placement Test (status & tautan di `site-config.js`), 6 langkah sebagai daftar vertikal. |
+| Cara bergabung | Syarat satu kalimat, pilihan bahasa (Inggris/Arab), kartu Placement Test (status & tautan per bahasa di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara), 6 langkah sebagai tali lentera. |
 | Testimoni | Tumpukan kartu yang bisa diseret. |
 | Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
 | FAQ | Stub, isi menyusul. |
