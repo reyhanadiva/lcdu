@@ -170,9 +170,12 @@ button{font:inherit;color:inherit}
   background:linear-gradient(in oklab,var(--dari) 0%,color-mix(in oklab,var(--dari) 93%,var(--fase-bg)) 15%,color-mix(in oklab,var(--dari) 72%,var(--fase-bg)) 32%,
     color-mix(in oklab,var(--dari) 50%,var(--fase-bg)) 50%,color-mix(in oklab,var(--dari) 28%,var(--fase-bg)) 68%,color-mix(in oklab,var(--dari) 7%,var(--fase-bg)) 85%,var(--fase-bg) 100%)
     0 0/100% var(--sambung) no-repeat,var(--fase-bg)}
-.hari>.fase+.fase>.band:first-child{padding-top:var(--jarak-section)}
+.hari>.fase+.fase>section.band:first-of-type{padding-top:var(--jarak-section)}
 /* senja → malam: teks TIDAK boleh di atas gradasi (kontras), jadi isi pertama mulai setelah gradasi selesai */
-.hari>.fase[data-fase="malam"]>.band:first-child{padding-top:max(var(--jarak-section),calc(var(--sambung-malam) + var(--jarak-sambung)))}
+.hari>.fase[data-fase="malam"]>section.band:first-of-type{padding-top:max(var(--jarak-section),calc(var(--sambung-malam) + var(--jarak-sambung)))}
+/* desktop ≥ 900px: pita keffiyeh FAQ → Donasi sudah menjadi peralihan terang → gelap (seperti di bawah hero), jadi gradasi
+   panjang tidak dipakai. HP tetap memakai gradasi senja → malam (keputusan pemilik, jangan diubah). */
+@media (min-width:900px){:root{--sambung-malam:0px}}
 /* logo: ikut fase (warna di fase terang, putih di malam), tidak ikut mode gelap sistem */
 html:root [data-fase] .logo-light{display:block!important}
 html:root [data-fase] .logo-dark{display:none!important}
@@ -323,9 +326,19 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 /* ORNAMEN v2 SELESAI */
 
 /* --- PEMBATAS ANTAR-SECTION: kosakata bervariasi (tabel di CLAUDE.md). Tidak ada dua jenis sama berurutan; rajut
-   (pita keffiyeh) hanya SATU kali (Biaya → Bergabung); hijau–jaring–merah (.kufiyah) hanya di bawah hero.
+   (pita keffiyeh) hanya SATU kali (Biaya → Bergabung); hijau–jaring–merah (.kufiyah) TIGA kali (keputusan pemilik, sesi
+   "rapikan"): hero → Pengantar, Cara bergabung → Testimoni, FAQ → Donasi.
    Animasi masuk sekali lewat IntersectionObserver [data-muncul] (opacity/transform/stroke-dashoffset). Tanpa .gerak
    (reduced-motion / tanpa JS) semuanya tampil diam & utuh. --- */
+/* (k) PEMBATAS KEFFIYEH × SEMANGKA (.kufiyah) — satu sumber CSS, markup sama di tiga tempat:
+   <div class="kufiyah" aria-hidden="true"></div>. Kulit hijau, putih, jaring keffiyeh, daging merah berbiji; 42px; diam. */
+.kufiyah{position:relative;height:42px;
+  background:
+    radial-gradient(ellipse 1.8px 2.8px at 50% 50%,#151515 98%,transparent) 0 34px/22px 7px repeat-x,
+    linear-gradient(#149954 0 6px,#F7F7F2 6px 8px,transparent 8px 32px,#E4312B 32px),
+    repeating-linear-gradient(45deg,#151515 0 1.4px,transparent 1.4px 8px),
+    repeating-linear-gradient(-45deg,#151515 0 1.4px,transparent 1.4px 8px),
+    #F7F7F2}
 /* (a) tepi mihrab: lengkung lancip di tengah, bahu datar; warna = latar section berikutnya; garis tipis tergambar */
 /* catatan: garis memakai pathLength=1 tanpa non-scaling-stroke (non-scaling membuat dasharray dihitung dalam px layar) */
 .batas-mihrab{display:block;width:100%;height:clamp(40px,5vw,72px);margin-top:-1px}
@@ -345,14 +358,6 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .gerak .batas-biji:not(.is-in) .atas{transform:translateY(-10px);opacity:0}
 .gerak .batas-biji:not(.is-in) .bawah{transform:translateY(10px);opacity:0}
 /* (c) satu garis daun zaitun yang tergambar dari tengah ke tepi */
-.batas-daun{display:flex;align-items:center;justify-content:center;gap:14px;height:24px;color:var(--zamrud-ink)}
-.batas-daun svg{flex:1;max-width:min(38vw,420px);height:2px;overflow:visible}
-.batas-daun line{stroke:currentColor;stroke-width:1.5;stroke-dasharray:1;stroke-dashoffset:0}
-.batas-daun .kiri line{transform-origin:right}
-.batas-daun .orn-leaf{width:22px;height:22px}
-.gerak .batas-daun[data-muncul]{transform:none}
-.gerak .batas-daun line{transition:stroke-dashoffset 1.2s var(--ease-menyala) .25s}
-.gerak .batas-daun:not(.is-in) line{stroke-dashoffset:1}
 /* (d) kata Arab raksasa yang menyeberangi batas dua section (tipografi sebagai pembatas; dekoratif) */
 .batas-kata{position:relative;height:clamp(64px,10vw,150px);overflow:visible;pointer-events:none}
 .batas-kata span{position:absolute;left:50%;top:50%;translate:-50% -54%;font-family:var(--f-ar-display);font-weight:700;font-size:clamp(5.5rem,17vw,13rem);
@@ -465,14 +470,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-meter{position:absolute;right:max(16px,env(safe-area-inset-right,0px));top:50%;translate:0 -50%;width:3px;height:min(34vh,260px);border-radius:3px;background:rgba(243,245,252,.18);overflow:hidden}
 .hero-meter::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--sun),#FFE7B0);transform:scaleY(var(--p,0));transform-origin:bottom}
 @media (min-width:720px){.hero-meter{right:max(28px,env(safe-area-inset-right,0px))}}
-/* keffiyeh × semangka: kulit hijau, putih, jaring keffiyeh, daging merah berbiji */
-.kufiyah{position:relative;height:42px;
-  background:
-    radial-gradient(ellipse 1.8px 2.8px at 50% 50%,#151515 98%,transparent) 0 34px/22px 7px repeat-x,
-    linear-gradient(#149954 0 6px,#F7F7F2 6px 8px,transparent 8px 32px,#E4312B 32px),
-    repeating-linear-gradient(45deg,#151515 0 1.4px,transparent 1.4px 8px),
-    repeating-linear-gradient(-45deg,#151515 0 1.4px,transparent 1.4px 8px),
-    #F7F7F2}
 /* ===== Lentera HD: foto malam/fajar. Teks di area langit (atas): HP di 8–45% tinggi layar, desktop kiri-atas ===== */
 .hd-grain{position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-size:160px}
 .hd-grain[hidden]{display:none}
@@ -779,6 +776,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 /* ===== CARA BERGABUNG =====
    Kepala: judul + syarat satu kalimat (empat frasa kunci tebal bertinta, tanpa ikon/chip). Pilihan bahasa dihapus
    (keputusan pemilik): kartu Placement Test menampilkan tombol per bahasa. */
+.gabung{padding-bottom:calc(var(--jarak-section) * .6)}
 .gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
 .gabung-judul{display:grid;gap:12px;max-width:52ch}
 .gabung-syarat{font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
@@ -1539,8 +1537,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   </div>
 </section>
 
-<!-- pembatas Cara bergabung → Testimoni: satu garis daun zaitun yang tergambar -->
-<div class="batas-daun" data-muncul aria-hidden="true"><svg class="kiri" viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="100" y1="1" x2="0" y2="1" pathLength="1"/></svg><i class="orn-leaf"></i><svg viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="0" y1="1" x2="100" y2="1" pathLength="1"/></svg></div>
+<!-- pembatas Cara bergabung → Testimoni: keffiyeh × semangka (komponen .kufiyah, 2 dari 3) -->
+<div class="kufiyah" aria-hidden="true"></div>
 
 <!-- ============ TESTIMONI ============
      Diisi JS dari array CERITA (satu tempat). Kutipan asli situs lama; potret hanya foto asli yang disetujui. -->
@@ -1592,6 +1590,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div>
 
 <div class="fase" data-fase="malam">
+<!-- pembatas FAQ → Donasi: keffiyeh × semangka (komponen .kufiyah, 3 dari 3); gradasi senja → malam mulai di bawahnya -->
+<div class="kufiyah" aria-hidden="true"></div>
 <!-- ============ DONASI UNTUK PALESTINA (melalui AWG; data dari site-config.js) ============
      Sensitif: tanpa gambar penderitaan, angka dampak, urgensi, target, nominal, atau logo AWG. Hanya teks yang sudah ada. -->
 <section data-lentera="zaitun" class="band donate" id="donasi" aria-labelledby="don-h">
