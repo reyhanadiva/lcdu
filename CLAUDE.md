@@ -78,12 +78,17 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   slide `flex: 0 0 86%` + `contain: layout paint`, tinggi sama (flex stretch). Penanda lewat IntersectionObserver (root =
   jalur, threshold .6), tanpa scroll listener/rAF. Isyarat sekali (slide translateX −28px lalu kembali) saat pertama
   terlihat, tidak saat reduced-motion. Tanpa JS / di atas breakpoint: tata letak asli. Desktop tidak berubah.
-- **Skala jarak vertikal** (sesi "jarak"; dulu `.band` `clamp(72px,10vw,140px)` → ±280px kosong antar isi di 1440):
-  satu token `--jarak-section: clamp(44px,6.5vw,88px)` (HP 44px, desktop 88px) untuk `.band`, bawah Pengantar, Kenapa
-  (`.why-wrap`), Biaya (`.cost`), footer; `--jarak-sambung: clamp(20px,2vw,28px)` = jeda teks setelah gradasi
-  (fase baru, masuk blok hijau). `--sambung` 140–240 → `clamp(96px,11vw,160px)`; `.why --masuk` 96–190 →
-  `clamp(72px,9vw,130px)`. `--sambung-malam` (senja → malam) **tidak diubah**. Tinggi halaman: 1440×900 12.763 → 11.870 px,
-  390×844 21.627 → 21.083 px. Jarak dalam komponen (kartu, grid, pembatas) tetap angka setempat.
+- **Skala jarak vertikal** (sesi "jarak", lalu dimampatkan LAGI di sesi "rapikan" atas permintaan pemilik): satu token
+  `--jarak-section: clamp(24px,3.6vw,52px)` (HP 24px, desktop 52px) untuk `.band`, Kenapa (`.why-wrap` bawah ½), Biaya
+  (`.cost`), footer; Pengantar bawah ×0,6, Pilih kelas bawah ½, Cara bergabung bawah ×0,6. `--jarak-sambung: clamp(16px,
+  1.6vw,24px)`. Gradasi terang → terang `--sambung: clamp(48px,5vw,72px)` — teks BOLEH di ujungnya (warna fase hampir sama,
+  kontras tak berubah); fase baru mulai `padding-top: var(--jarak-section)` (`section.band:first-of-type`). `.why --masuk`
+  `clamp(48px,6vw,88px)`; item Kenapa terakhir tanpa tinggi minimum (tetap aktif, diuji); mihrab 40–72px. Senja → malam:
+  isi mulai SETELAH gradasi; HP `--sambung-malam` tetap (keputusan pemilik), desktop ≥ 900px `--sambung-malam: 0` karena
+  pita `.kufiyah` menjadi peralihan. Ruang kosong antar isi (sebelum → sesudah), desktop 1440×900: Pengantar→Kenapa
+  246→141, Kenapa→Kelas 504→149, Kelas→Biaya 242→143, Biaya→Bergabung 308→137, Langkah→Testimoni 200→125,
+  Testimoni→Tim 274→104, FAQ→Donasi 494→146; HP 390×844: 136→78, 241→75, 160→108, 195→83, 112→80, 160→48, 418→436
+  (gradasi HP terkunci + pita). Tinggi halaman: desktop 12.763 → 11.156 px; HP 14.474 → 10.714 px.
 - **Benang + lentera + ranting** (sesi "aliran", lalu dikembalikan sebagian atas keputusan pemilik):
   - **Benang** = versi sebelum "aliran": `.benang` `position:fixed` di gutter kiri (`--benang-x`), jahitan tipis yang
     tergambar mengikuti scroll (view timeline `--hari`, cadangan JS `--benang`) dengan bulat kuning `.benang-ujung` yang
@@ -187,7 +192,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Gerak "tergambar": `--cetak` (`@property`, awal 1 = penuh) dianimasikan view timeline `.receipt-wrap` (`cover 12% →
   48%`), struk hanya di-`translateY` di dalam `.struk-jendela` — teks tetap di DOM, terbaca berurutan; cadangan JS.
   Tepi bawah sobekan zigzag keffiyeh (`--orn-sobek`). Tanpa count-up, tanpa stempel, tanpa tombol, tanpa eyebrow.
-- Pita setelah hero: hanya `.kufiyah` (keffiyeh × semangka, tanpa teks, keputusan terkunci). Ticker berteks sudah dihapus.
+- Pita `.kufiyah` (keffiyeh × semangka, tanpa teks) = komponen dipakai ulang, TIGA tempat saja (keputusan pemilik, sesi
+  "rapikan"): hero → Pengantar, Cara bergabung → Testimoni, FAQ → Donasi. Ticker berteks sudah dihapus.
 - **Pembatas antar-section** (keputusan pemilik: bervariasi, tidak seragam; rajut maks SATU kali; tidak ada dua jenis
   sama berurutan; CSS di blok "PEMBATAS ANTAR-SECTION"; animasi masuk sekali lewat `[data-muncul]`, tanpa scroll listener):
 
@@ -198,10 +204,10 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   | Kenapa → Pilih kelas | tepi mihrab `.batas-mihrab` (SVG lengkung lancip + garis tergambar) | keluar dari blok hijau seperti melewati mihrab; menggemakan `.frame-arch` |
   | Pilih kelas → Biaya | tepi biji semangka `.batas-biji` (biji merah di atas garis, hitam di bawah) | Biaya = blok merah semangka; biji menjembatani |
   | Biaya → Cara bergabung | rajut: pita keffiyeh merah-putih (satu-satunya) | menutup blok merah seperti tepi kain |
-  | Cara bergabung → Testimoni | satu garis daun zaitun `.batas-daun` yang tergambar dari tengah | satu fase (sore), cukup jeda halus |
+  | Cara bergabung → Testimoni | hijau–jaring–merah `.kufiyah` (2/3) | permintaan pemilik; `.batas-daun` dihapus |
   | Testimoni → Tim | pergeseran warna (fase sore → senja) | pergantian waktu sudah jadi pembatas |
   | Tim → FAQ | kata Arab raksasa `.batas-kata` (مُعَلِّم, bergaris) menyeberangi batas | tipografi; "guru" menutup Tim |
-  | FAQ → Donasi | pergeseran warna panjang (senja → malam) | cerita hari menuju malam |
+  | FAQ → Donasi | `.kufiyah` (3/3); HP + gradasi senja → malam di bawahnya | pergeseran besar ke tujuan berbeda (pemilik) |
   | Donasi → Footer | garis daun zaitun tipis tergambar (`.foot-band`, sudah ada) | penutup tenang |
 
   Ornamen di dalam section (bukan pembatas) tetap: garis keffiyeh tipis di baris Yayasan & struk, pita keffiyeh tegak
@@ -268,6 +274,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Pita langit = foto malam hero dengan srcset sama (cache), 9 lentera menyala sekali, "Bahasa untuk umat." (teks dari
   pemilik), logo putih resmi (560px, tidak diperbesar) terpotong di bawah, pita keffiyeh hitam-putih (`.orn-band--tebal`
   `.kain-hitam` di atas putih; bukan `.kufiyah`), "Ke atas". HP 800 px (0,95 layar), CLS 0.
+- **Sesi "rapikan" (file E)**: kepanjangan "Language Course for Da'wah dan Ummah" dari `lcdu.namaLengkap` (site-config.js)
+  di Pengantar ("LCDU (…) dikelola Yayasan …", frasa `lang="en"`), `<title>`, meta description; ejaan resmi menunggu pemilik.
+  Kenapa: bar merah `.why-item::before` selebar garis pemisah, scaleX 0→1 .6s saat AKTIF; yang dilewati kembali tipis.
+  Pilih kelas: judul menimpa tepi atas panel ≥ 700px (`margin-bottom:-.52em`, z-index), HP judul + penanda satu kelompok.
+  Enam langkah: tali tergambar (clip-path) → lentera 1–6 digantung (keyframes `gantung`, jeda 150ms) → cahaya → teks naik;
+  lentera 6 `denyut-sekali`; `.jalur-selesai` (JS 3,8s) membuka hover/fokus `ayun`; HP baris `.tampil` + segmen benang.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
