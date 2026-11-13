@@ -53,11 +53,23 @@ window.LCDU_CONFIG = {
   },
 
   /* Kontak tambahan di footer. KOSONG = tidak ditampilkan (jangan mengarang akun/alamat).
-     instagram: URL profil lengkap (https://instagram.com/…); alamat: teks alamat sekretariat. */
+     email: alamat email; instagram: URL profil lengkap (https://instagram.com/…); alamat: teks alamat sekretariat. */
   kontak: {
+    email: '',
     instagram: '',
     alamat: ''
   },
+
+  /* Jaringan pendidikan (footer, tautan keluar). Hanya entri yang URL-nya TERISI yang tampil. JANGAN menebak URL:
+     isi dari pemilik. Yayasan memakai URL yang sama dengan yayasan.url. */
+  jaringan: [
+    { nama: 'Yayasan Taqwa Cerdas Kreatif', url: 'https://alfacentauri.sch.id/yayasan/' },
+    { nama: 'SD Alfa Centauri', url: '' },
+    { nama: 'SMP Alfa Centauri', url: '' },
+    { nama: 'SMA Alfa Centauri', url: '' },
+    { nama: 'TK Alfa Centauri', url: '' },
+    { nama: 'English Now', url: '' }
+  ],
 
   /* Mitra di footer: [{ nama: 'Nama mitra', url: 'https://…', logo: 'assets/partners/nama.svg' }].
      KOSONG = baris mitra disembunyikan. Pasang logo hanya dengan izin pemiliknya. */

@@ -28,7 +28,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Tim | Daftar nama editorial tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + kata مُعَلِّم kecil), peran & sertifikasi sebaris. HP: satu kelompok per slide geser. Data di array `TEAM`; foto kecil hanya bila ada lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
 | Donasi untuk Palestina | Kalimat pembuka, panel AWG besar (foto ilustrasi kebun zaitun + fakta dari aqsaworkinggroup.com + "Kunjungi situs AWG"), alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
-| Footer | Langit malam Al-Aqsa (foto hero yang sama) dengan sembilan lentera, "Bahasa untuk umat.", kosakata hari ini, tautan, logo resmi besar, pita keffiyeh. Instagram, alamat & mitra hanya tampil bila diisi di `site-config.js`. |
+| Footer | Langit malam Al-Aqsa (foto hero yang sama) + sembilan lentera + "Bahasa untuk umat.", lalu empat kolom gaya situs saudara: Identitas (logo kecil, kepanjangan, deskripsi, "For a Better Ummah"), Jelajahi, Hubungi kami (WhatsApp; email/Instagram/alamat bila diisi), Jaringan pendidikan (`jaringan[]`, hanya yang ber-URL); garis + baris legal; pita keffiyeh. |
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
 
@@ -119,7 +119,10 @@ Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik member
 - [ ] **Logo dan foto resmi AWG beserta izin tertulis**: logo → `donasi.logo` di `site-config.js` (kosong = tidak tampil). Panel AWG sekarang memakai foto stok ilustrasi (kebun zaitun, Pexels, SEMENTARA) berketerangan "Foto ilustrasi".
 
 **Footer**
+- [ ] **Email** → `kontak.email` di `site-config.js`.
 - [ ] **Instagram** → `kontak.instagram` (URL lengkap) di `site-config.js`.
+- [ ] **URL Jaringan pendidikan** → `jaringan[]` di `site-config.js` (kosong = tidak tampil): SD Alfa Centauri, SMP Alfa
+  Centauri, SMA Alfa Centauri, TK Alfa Centauri, English Now. (Yayasan Taqwa Cerdas Kreatif sudah: https://alfacentauri.sch.id/yayasan/.)
 - [ ] **Alamat sekretariat** → `kontak.alamat`.
 - [ ] **Logo mitra** (dengan izin) → `mitra: [{ nama, url, logo }]`; kosong = baris mitra tersembunyi.
 
