@@ -37,7 +37,13 @@ window.LCDU_CONFIG = {
   /* Donasi terbuka = untuk Palestina, disalurkan melalui AWG (mitra lama LCDU). */
   donasi: {
     mitra: 'Aqsa Working Group (AWG)',
-    url: 'https://aqsaworkinggroup.com/'
+    url: 'https://aqsaworkinggroup.com/',
+    /* siapTayang: false → lembar rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin".
+       Ubah ke false bila Yayasan belum mengonfirmasi izin penghimpunan donasi (PUB) dan nama rekening. */
+    siapTayang: true,
+    /* Terjemah resmi QS. Al-Baqarah: 261 (potongan yang tampil). Kosong = tidak ditampilkan. Tempel HANYA dari
+       quran.kemenag.go.id, jangan dari ingatan. */
+    terjemahAyat: ''
   },
 
   /* Rekening (data yang sudah ada di halaman). PERLU DIVERIFIKASI: apakah rekening ini dipakai untuk donasi

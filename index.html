@@ -1075,16 +1075,78 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   -webkit-mask:var(--orn-net) 0 0/24px 24px repeat,linear-gradient(transparent var(--sambung),#000 calc(var(--sambung) + 240px));-webkit-mask-composite:source-in;
   mask:var(--orn-net) 0 0/24px 24px repeat,linear-gradient(transparent var(--sambung),#000 calc(var(--sambung) + 240px));mask-composite:intersect}
 .donate .wrap{position:relative}
-.donate-grid{display:grid;gap:clamp(32px,5vw,64px);align-items:center}
-@media (min-width:900px){.donate-grid{grid-template-columns:1fr 1fr}}
-.donate-ar{font-family:var(--f-ar);font-size:var(--step-2);line-height:1.6;color:inherit;direction:rtl;text-align:right;opacity:.9}
-.donate-ref{font-size:var(--step--1);color:var(--ink-soft)}
-.acct{background:var(--surface);color:var(--ink);border-radius:var(--r-lg);padding:clamp(24px,4vw,36px);display:grid;gap:18px}
-.acct small{font-size:var(--step--1);color:var(--ink-soft);font-weight:600}
-.acct-num{font-family:var(--f-display);font-weight:700;font-size:clamp(1.6rem,1.2rem + 2vw,2.4rem);letter-spacing:.02em;font-variant-numeric:tabular-nums;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
-.acct-row{display:flex;flex-wrap:wrap;gap:12px}
-.acct .btn-ghost{color:var(--ink)}
-.copied{font-weight:700;color:var(--good);font-size:var(--step--1);align-self:center}
+/* Donasi (sensitif): tanpa gambar penderitaan, tanpa angka dampak, tanpa urgensi/target/nominal, tanpa logo AWG.
+   (A) alur empat simpul pada benang: lentera yang sama dengan sistem benang (.lentera-tanda/.lt-inti/.lt-cahaya), menyala
+   berurutan SEKALI saat terlihat (IO); benang = jahitan --orn-benang(-x) yang terbuka (clip-path). Desktop horizontal, HP
+   vertikal pendek. Simpul terakhir bertunas daun zaitun (.orn-leaf). (B) ayat Naskh besar, potongan → elipsis, terjemah
+   hanya dari site-config.js. (C) lembar setoran: kertas krem, tepi kiri zigzag, kolom isian bergaris titik — beda dari
+   struk Biaya (struk putih tegak bersobek bawah). donasi.siapTayang = false → lembar diganti satu kalimat + WhatsApp. */
+.donate-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,4vw,48px)}
+.donate-kepala{display:grid;gap:16px;max-width:60ch}
+.alur{--alur-c:color-mix(in srgb,var(--ink) 55%,transparent);position:relative;list-style:none;margin:0;padding:0;display:grid;gap:14px}
+.alur::before{content:"";position:absolute;left:8px;top:10px;bottom:10px;width:6px;background:var(--alur-c);
+  -webkit-mask:var(--orn-benang) 0 0/6px 12px repeat-y;mask:var(--orn-benang) 0 0/6px 12px repeat-y}
+.alur-simpul{position:relative;display:flex;align-items:center;gap:16px;min-height:22px;font-weight:700;font-size:var(--step-0)}
+.alur-simpul .lentera-tanda{position:relative;flex:none;left:auto;top:auto;width:22px;height:22px;display:grid;place-items:center}
+.alur-simpul .lt-cahaya,.alur-simpul .lt-inti{display:block;left:2px;top:2px}
+.alur-simpul .lt-cahaya{left:-29px;top:-29px}
+.alur-simpul:last-child .orn-leaf{display:inline-block;vertical-align:-3px;width:18px;height:18px;color:var(--logo-hijau);transform:scale(0);transform-origin:0 100%}
+.alur.nyala .alur-simpul:last-child .orn-leaf{transform:none}
+.gerak .alur .lt-cahaya,.gerak .alur .lt-inti::after{transition:opacity .6s var(--ease-menyala) calc(var(--i) * 260ms)}
+.gerak .alur-simpul:last-child .orn-leaf{transition:transform .5s var(--ease-muncul) 1s}
+.gerak .alur::before{clip-path:inset(0 0 100% 0);transition:clip-path 1.1s var(--ease-menyala)}
+.gerak .alur.nyala::before{clip-path:inset(0)}
+@media (min-width:900px){
+  .alur{grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+  .alur::before{left:11px;right:calc(25% - 11px);top:8px;bottom:auto;width:auto;height:6px;-webkit-mask:var(--orn-benang-x) 0 0/12px 6px repeat-x;mask:var(--orn-benang-x) 0 0/12px 6px repeat-x}
+  .gerak .alur::before{clip-path:inset(0 100% 0 0)}
+  .gerak .alur.nyala::before{clip-path:inset(0)}
+  .alur-simpul{flex-direction:column;align-items:flex-start;gap:12px}
+}
+/* ayat */
+.ayat{margin:0;display:grid;gap:10px}
+.ayat-ar{font-family:var(--f-ar);font-size:clamp(1.65rem,1.1rem + 2.2vw,2.7rem);line-height:1.9;direction:rtl;text-align:right;color:var(--ink);text-wrap:balance}
+.ayat figcaption{font-size:var(--step--1);color:var(--ink-soft);text-align:right}
+.ayat-terjemah{font-size:var(--step-0);line-height:1.6;color:var(--ink-soft);text-align:right}
+@media (min-width:900px){.donate-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:clamp(40px,5vw,80px)}}
+.donate-grid{display:grid;gap:clamp(28px,4vw,48px)}
+/* lembar setoran */
+.setoran{--ink:#10163A;--ink-soft:#4B4F63;--paper:#F4ECDD;position:relative;margin-left:12px;padding:clamp(22px,3vw,30px) clamp(20px,3vw,32px) clamp(22px,3vw,28px) clamp(24px,3vw,36px);
+  background:var(--paper);color:var(--ink);border-radius:0 3px 3px 0;box-shadow:0 22px 40px -24px rgba(0,0,0,.7);display:grid;gap:18px}
+.setoran::before{content:"";position:absolute;right:100%;top:0;bottom:0;width:10px;background:var(--paper);
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='14' viewBox='0 0 10 14'%3E%3Cpath d='M10 0V14L0 10.5 6 7 0 3.5Z'/%3E%3C/svg%3E") 0 0/10px 14px repeat-y;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='14' viewBox='0 0 10 14'%3E%3Cpath d='M10 0V14L0 10.5 6 7 0 3.5Z'/%3E%3C/svg%3E") 0 0/10px 14px repeat-y}
+/* garis perforasi di dalam tepi zigzag + jaring keffiyeh tipis di pojok */
+.setoran::after{content:"";position:absolute;left:12px;top:14px;bottom:14px;border-left:1.5px dashed color-mix(in srgb,var(--ink) 30%,transparent);pointer-events:none}
+.setoran-kepala{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;padding-bottom:12px;border-bottom:1.5px solid var(--ink)}
+.setoran-kepala b{font-family:var(--f-display);font-weight:700;font-size:var(--step-1)}
+.setoran-kepala span{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--semangka-tua)}
+.setoran dl{margin:0;display:grid;gap:14px}
+.setoran dl div{display:grid;gap:2px}
+.setoran dt{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
+.setoran dd{margin:0;padding-bottom:4px;border-bottom:1.5px dotted color-mix(in srgb,var(--ink) 40%,transparent);font-weight:600}
+.acct-num{font-family:var(--f-display);font-weight:700;font-size:clamp(1.7rem,1.2rem + 2vw,2.5rem);letter-spacing:.03em;font-variant-numeric:tabular-nums;user-select:all;-webkit-user-select:all;overflow-wrap:anywhere}
+.acct-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.setoran .btn-ghost{color:var(--ink)}
+.copied{flex-basis:100%;min-height:1.4em;margin:0;font-weight:700;color:#0B7A57;font-size:var(--step--1)}
+.donate-tunda{font-size:var(--step-1);line-height:1.5}
+.donate-tunda a{font-weight:700;color:var(--ink)}
+.copied:empty{min-height:0}
+/* HP: alur rapat, ayat & lembar setoran lebih ringkas (gradasi senja → malam di atas section tetap, terkunci) */
+@media (max-width:899px){
+  .donate-wrap,.donate-grid{gap:22px}
+  .donate-kepala{gap:12px}
+  .alur{gap:8px}
+  .alur-simpul{font-size:.95rem}
+  .ayat-ar{font-size:1.45rem;line-height:1.8}
+  .setoran{gap:12px;padding:18px 16px 16px 26px}
+  .setoran-kepala{padding-bottom:8px}
+  .setoran dl{gap:9px}
+  .acct-num{font-size:1.6rem}
+  .acct-row{gap:8px}
+  .acct-row .btn{min-height:44px;padding:.6em 1.05em;font-size:.95rem}
+}
+@media (prefers-reduced-motion: reduce){.alur::before,.alur .lt-cahaya,.alur .lt-inti::after,.alur .orn-leaf{transition:none!important}}
 
 /* ===== MITRA ===== */
 .partners{padding-bottom:40px;border-bottom:1px solid var(--line)}
@@ -1453,24 +1515,41 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div>
 
 <div class="fase" data-fase="malam">
-<!-- ============ DONASI UNTUK PALESTINA (melalui AWG; data dari site-config.js) ============ -->
+<!-- ============ DONASI UNTUK PALESTINA (melalui AWG; data dari site-config.js) ============
+     Sensitif: tanpa gambar penderitaan, angka dampak, urgensi, target, nominal, atau logo AWG. Hanya teks yang sudah ada. -->
 <section data-lentera="zaitun" class="band donate" id="donasi" aria-labelledby="don-h">
-  <div class="wrap donate-grid">
-    <div style="display:grid;gap:20px">
+  <div class="wrap donate-wrap">
+    <div class="donate-kepala">
       <h2 class="h2" id="don-h" data-judul>Donasi untuk Palestina</h2>
       <p class="lede">Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi disalurkan melalui <a href="https://aqsaworkinggroup.com/" data-cfg-href="donasi.url" data-cfg-text="donasi.mitra">Aqsa Working Group (AWG)</a>, mitra lama LCDU.</p>
-      <p class="donate-ar" lang="ar">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ</p>
-      <p class="donate-ref">QS. Al-Baqarah: 261</p>
     </div>
-    <div class="acct">
-      <small data-cfg-text="rekening.bank">Bank Muamalat</small>
-      <p class="acct-num" id="acct" data-cfg-text="rekening.nomor">10.10.11.83.94</p>
-      <small>a.n. <span data-cfg-text="rekening.atasNama">Yayasan Taqwa Cerdas Kreatif</span></small>
-      <div class="acct-row">
-        <button class="btn btn-ink" id="copy" type="button">Salin nomor rekening</button>
-        <a class="btn btn-ghost" href="https://wa.me/628196009333" data-wa="konfirmasi">Konfirmasi transfer</a>
-        <span class="copied" id="copied" hidden>Nomor tersalin</span>
+    <ol class="alur" id="alur" aria-label="Alur donasi">
+      <li class="alur-simpul" style="--i:0"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span>Donatur</li>
+      <li class="alur-simpul" style="--i:1"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span>Rekening Yayasan</li>
+      <li class="alur-simpul" style="--i:2"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span>disalurkan melalui AWG</li>
+      <li class="alur-simpul" style="--i:3"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span><span>untuk Palestina <i class="orn-leaf" aria-hidden="true"></i></span></li>
+    </ol>
+    <div class="donate-grid">
+      <!-- QS. Al-Baqarah: 261, POTONGAN AWAL (teks tidak diubah). Verifikasi di quran.kemenag.go.id. Terjemah hanya dari
+           site-config.js (donasi.terjemahAyat), tidak ditulis dari ingatan. -->
+      <figure class="ayat">
+        <blockquote class="ayat-ar" lang="ar" dir="rtl">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ …</blockquote>
+        <figcaption>QS. Al-Baqarah: 261, potongan awal ayat</figcaption>
+      </figure>
+      <div class="setoran" id="setoran">
+        <div class="setoran-kepala"><b>Lembar setoran</b><span>Donasi untuk Palestina</span></div>
+        <dl>
+          <div><dt>Bank</dt><dd data-cfg-text="rekening.bank">Bank Muamalat</dd></div>
+          <div><dt>Nomor rekening</dt><dd class="acct-num" id="acct" data-cfg-text="rekening.nomor">10.10.11.83.94</dd></div>
+          <div><dt>Atas nama</dt><dd data-cfg-text="rekening.atasNama">Yayasan Taqwa Cerdas Kreatif</dd></div>
+        </dl>
+        <div class="acct-row">
+          <button class="btn btn-ink" id="copy" type="button">Salin nomor rekening</button>
+          <a class="btn btn-ghost" href="https://wa.me/628196009333" data-wa="konfirmasi">Konfirmasi transfer</a>
+          <p class="copied" id="copied" role="status" aria-live="polite"></p>
+        </div>
       </div>
+      <p class="donate-tunda" id="donate-tunda" hidden>Donasi akan segera dibuka. <a href="https://wa.me/628196009333" data-wa="umum">Hubungi admin</a></p>
     </div>
   </div>
 </section>
@@ -2142,13 +2221,22 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     });
   }
 
-  /* ---------- Salin rekening ---------- */
-  var copyBtn = $('#copy'), copied = $('#copied'), acct = $('#acct');
+  /* ---------- Donasi: siap tayang, terjemah ayat (hanya dari config), alur menyala sekali, salin rekening ---------- */
+  if (cfg('donasi.siapTayang') === false){ $('#setoran').hidden = true; $('#donate-tunda').hidden = false; }
+  var terj = cfg('donasi.terjemahAyat');
+  if (terj){ var tp = document.createElement('p'); tp.className = 'ayat-terjemah'; tp.textContent = terj; $('.ayat').appendChild(tp); }
+  var alur = $('#alur');
+  if (alur){
+    var nyalakanAlur = function(){ alur.classList.add('nyala'); $$('.lentera-tanda', alur).forEach(function(t){ t.classList.add('nyala'); }); };
+    if ('IntersectionObserver' in window && !reduce) new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ nyalakanAlur(); ob.disconnect(); } }, {threshold:.6}).observe(alur);
+    else nyalakanAlur();
+  }
+  var copyBtn = $('#copy'), copied = $('#copied'), acct = $('#acct'), copiedT;
   copyBtn.addEventListener('click', function(){
-    var digits = acct.textContent.replace(/\D/g,'');
-    function ok(){ copied.hidden = false; setTimeout(function(){ copied.hidden = true; }, 2200); }
-    function fallback(){ var sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(acct); sel.removeAllRanges(); sel.addRange(rg); copied.textContent = 'Nomor terpilih, tekan salin'; ok(); }
-    try { navigator.clipboard.writeText(digits).then(function(){ copied.textContent = 'Nomor tersalin'; ok(); }, fallback); } catch(err){ fallback(); }
+    var digits = acct.textContent.replace(/\D/g,'');   // tanpa titik pemisah (format perlu diverifikasi pemilik, lihat README)
+    function tampil(t){ copied.textContent = t; clearTimeout(copiedT); copiedT = setTimeout(function(){ copied.textContent = ''; }, 4000); }
+    function fallback(){ var sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(acct); sel.removeAllRanges(); sel.addRange(rg); tampil('Nomor sudah dipilih. Salin dengan Ctrl+C (Cmd+C di Mac) atau tekan lama lalu Salin.'); }
+    try { if (!navigator.clipboard) throw 0; navigator.clipboard.writeText(digits).then(function(){ tampil('Nomor tersalin: ' + digits); }, fallback); } catch(err){ fallback(); }
   });
 
   /* ---------- Kosakata hari ini ---------- */
