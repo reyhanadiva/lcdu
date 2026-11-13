@@ -206,7 +206,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   | Biaya → Cara bergabung | rajut: pita keffiyeh merah-putih (satu-satunya) | menutup blok merah seperti tepi kain |
   | Cara bergabung → Testimoni | hijau–jaring–merah `.kufiyah` (2/3) | permintaan pemilik; `.batas-daun` dihapus |
   | Testimoni → Tim | pergeseran warna (fase sore → senja) | pergantian waktu sudah jadi pembatas |
-  | Tim → FAQ | kata Arab raksasa `.batas-kata` (مُعَلِّم, bergaris) menyeberangi batas | tipografi; "guru" menutup Tim |
+  | Tim → FAQ | tanpa pembatas (satu fase senja; jarak saja) | `.batas-kata` dihapus (pemilik); مُعَلِّم pindah ke label Tim |
   | FAQ → Donasi | `.kufiyah` (3/3); HP + gradasi senja → malam di bawahnya | pergeseran besar ke tujuan berbeda (pemilik) |
   | Donasi → Footer | garis daun zaitun tipis tergambar (`.foot-band`, sudah ada) | penutup tenang |
 
@@ -231,32 +231,20 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   desktop = tali lentera horizontal berombak (SVG) dengan 6 lentera menyala berurutan sekali (120 ms), ke-6 lebih besar;
   **selalu kiri→kanan 1→6** untuk bahasa apa pun (pencerminan Arab dihapus); HP = daftar rapat + benang tegak.
   Langkah 1 menaut ke `#placement`. Tinggi section 390×844: 1.835 → 1.766 px.
-- **Testimoni** (selesai, sesi testimoni-tim; id `testimoni`): data di SATU array `CERITA` di JS (nama, kelas, kutipan,
-  foto = slug). Dua kutipan = teks asli situs lama — **jangan diubah, jangan mengarang** kutipan/nama/foto. Potret hanya
-  foto ASLI penulis yang disetujui: `node tools/build-photos.mjs --potret <folder-jpg> stories` → `assets/stories/<slug>-480`
-  (4:5, ≤ 60 KB) + `manifest.json`; halaman menukar penampung dengan foto hanya untuk slug di manifest (tanpa request
-  404), alt "Foto <nama>". **Dilarang foto stok sebagai wajah.** Penampung = `.frame-arch` + `.potret-kosong` (bidang
-  lengkung hijau kulit / biru / merah tua bergantian, jaring keffiyeh 9%, inisial Fraunces putih). Desktop ≥ 900px:
-  semua terlihat, asimetris (potret 3 kolom kiri + kutipan 8 kolom; cerita berikutnya kutipan kiri + potret 2 kolom
-  kanan), kutipan Fraunces 500 besar dengan tanda kutip merah semangka (dekor), nama & kelas kecil; penutup editorial
-  "Cerita berikutnya bisa datang dari kamu." (Fraunces miring merah tua, tanpa kotak/tombol). HP: `.geser` bila > 1
-  cerita. Tumpukan kartu seret, "Seret kartu…", tombol "Cerita berikutnya" & JS-nya dihapus. Tinggi 1440×900: 596 →
-  1.209 px (potret ditambahkan); 390×844: 777 → 768 px.
-- **Tim = rak buku kaca** (selesai, sesi testimoni-tim; id `tim`, judul & `data-lentera`/`data-judul` tetap): array `TEAM`
-  tidak diubah (ejaan 5 nama guru masih menunggu verifikasi). Tiga rak: Pengelola (5), Guru Bahasa Inggris (8), Guru Bahasa
-  Arab (2); rak = kelompok pertama di TEAM, jadi pengelola yang juga guru (`'mgmt en'`) di rak Pengelola dengan **pembatas
-  buku** biru (Inggris) / hijau (Arab). Buku = `<button>` "Nama, peran", `aria-pressed`, roving tabindex per rak (panah,
-  Home/End, Esc menutup). Punggung: nama vertikal Fraunces, tinggi/lebar bervariasi tetap (tinggi minimum dihitung dari
-  panjang nama supaya utuh), warna hijau kulit/biru/merah tua/krem bergantian. Hover (pointer halus), fokus, ketuk →
-  `.buka`: buku translateY(−16px), punggung rotateY(−90°) memudar, sampul rotateY ke 0 (paruh kanan rak membuka ke kiri,
-  `.ke-kiri`) berisi penampung foto lengkung (inisial; foto opsional `assets/team/<slug>-480` lewat manifest), nama, peran,
-  karabiner perak SVG + gantungan sertifikasi. Satu buku terbuka. Panel `.rak-rincian` (aria-live, tinggi tetap 104px)
-  menulis nama, peran, sertifikasi. Kaca = gradient + border + bayangan + pantulan (tanpa backdrop-filter). Hiasan SVG inline:
-  sandaran buku ranting zaitun (Pengelola), tumpukan 3 buku mendatar + lentera kecil (Arab). Desktop ≥ 900px: ketiga rak
-  sebaris dalam satu lemari (dipilih karena paling ringkas: semua orang terlihat tanpa interaksi, tinggi 864px vs tab yang
-  menyembunyikan dua rak). HP: `.geser` satu rak per slide, penanda "Pengelola | Inggris | Arab" teks bergaris bawah, 8 buku
-  muat sebaris di 390px. Chip filter & catatan "Kotak warna adalah slot foto" dihapus. Tinggi: 1440×900 1.554 → 864 px;
-  390×844 8.230 → 724 px. Biaya hover (tanpa throttling): median 0,5 ms, p95 0,8 ms, maks. 1,9 ms per perpindahan buku.
+- **Testimoni = "Rak cerita"** (sesi F; id `testimoni`): data di SATU array `CERITA` (nama, kelas, kutipan, foto = slug,
+  bahasa 'en'|'ar'|'' — isi hanya bila pasti). Dua kutipan = teks asli situs lama — **jangan diubah/dikarang**. Satu rak kaca
+  (komponen bersama `bukuHTML()`/`rakPilih()`, CSS blok "RAK BUKU KACA"): satu buku per cerita + buku kosong **"Ceritamu"**
+  (tanpa nama/foto; panelnya "Cerita berikutnya bisa datang dari kamu."). Buku pertama terpilih bawaan; klik/ketuk/fokus/
+  hover/panah memilih satu: buku keluar & miring, sampul = potret lengkung (foto ASLI via `assets/stories/manifest.json`,
+  selain itu penampung berinisial; **dilarang foto stok sebagai wajah**), nama, karabiner + gantungan nama kelas, pembatas
+  buku = bahasa. Tiap buku punya slot selebar sampul (`--slot`) supaya tidak saling menutup. Panel kutipan (aria-live, tinggi
+  tetap). Tinggi: desktop 499 px (rak + panel 312), HP 652 px. > 4 cerita kelak: bungkus rak dengan `.geser`.
+- **Tim = daftar nama editorial** (sesi F; rak buku dipindah ke Testimoni atas keputusan pemilik): tiga kelompok dari
+  `TEAM` (data & ejaan tidak diubah) — Pengelola (kelompok pertama, jadi pengelola yang juga guru ada di sini), Guru Bahasa
+  Inggris, Guru Bahasa Arab + kata Arab kecil مُعَلِّم (Naskh, dekor, `aria-hidden`; dipindah dari pembatas raksasa
+  `.batas-kata` yang dihapus). Nama Fraunces satu baris; peran (bila beda dari kelompok) & sertifikasi kecil sebaris, selalu
+  terlihat; tanpa kotak/pill/chip. Foto bulat kecil HANYA bila ada di `assets/team/manifest.json`. Desktop tiga kolom
+  (559 px); HP `.geser` satu kelompok per slide + penanda teks bergaris bawah (598 px).
 - **FAQ** (selesai, sesi FAQ-donasi-footer; judul "Yang sering ditanyakan"): **hanya fakta yang sudah ada** di halaman/README/
   site-config.js — satu array `FAQ` (id, topik, tanya, jawab) + JSON-LD FAQPage dari array & teks yang SAMA (diuji identik).
   9 pertanyaan: biaya (satu-satunya "Rp100.000" selain struk, bersama "tanpa biaya bulanan"), syarat, cara daftar, Placement
@@ -264,12 +252,13 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   jawaban resmi (sertifikat, rekaman, lama term, level, metode bayar, berhenti) **tidak tampil** → README "Menunggu dari
   pemilik". Akordeon satu terbuka (grid-template-rows 0fr→1fr), cari langsung + `<mark>`, topik teks bergaris bawah, "Tidak
   ada yang cocok" + WhatsApp admin, aria-live jumlah hasil, `#faq-<id>` membuka & menggulir. HP tertutup 763 px.
-- **Donasi** (selesai): alur empat simpul memakai lentera sistem benang (`.lentera-tanda/.lt-inti/.lt-cahaya`, menyala sekali
-  berurutan) + daun `.orn-leaf`; ayat Naskh besar, potongan ditandai "…" + "potongan awal ayat"; terjemah HANYA dari
-  `donasi.terjemahAyat`. Lembar setoran (kertas krem, tepi kiri zigzag, perforasi, isian bergaris titik) ≠ struk Biaya.
-  `donasi.siapTayang` (bawaan true; false → kalimat + WhatsApp). Tanpa angka dampak, target, nominal, urgensi, logo AWG.
-  Transisi FAQ → Donasi tetap gradasi senja → malam (terkunci; `.kufiyah` tidak dipakai lagi). HP: 1,30 layar tanpa
-  gradasi, 1,69 layar termasuk gradasi `--sambung-malam` (terkunci; **pemilik memutuskan gradasi tetap, tidak dipendekkan di HP**).
+- **Donasi** (sesi F): kalimat pembuka (tanpa "mitra lama LCDU") → **panel AWG** (foto stok ilustrasi kebun zaitun +
+  scrim malam + keterangan "Foto ilustrasi"; nama besar; satu kalimat HANYA dari fakta di aqsaworkinggroup.com: berdiri
+  21 Agustus 2008 di Jakarta, mewadahi upaya kaum muslimin untuk pembebasan Masjid Al-Aqsa & kemerdekaan Palestina, fokus
+  sosial/edukasi/kemanusiaan — dicek 13 Nov 2026; "Kunjungi situs AWG"; logo hanya bila `donasi.logo`) → alur empat lentera
+  (sistem benang, menyala sekali) → lembar setoran (kertas krem bertepi zigzag ≠ struk Biaya; salin tanpa titik;
+  `donasi.siapTayang`). **Ayat QS. Al-Baqarah: 261 dihapus** (README "Ditunda"). Tanpa angka dampak, target, nominal,
+  urgensi, bendera/poster, logo/foto resmi AWG tanpa izin. HP: 1,35 layar tanpa gradasi, 1,76 dengan gradasi terkunci.
 - **Footer** (selesai): tanpa penampung kosong — Instagram/alamat/mitra hanya dari `kontak.*`/`mitra[]` di site-config.js.
   Pita langit = foto malam hero dengan srcset sama (cache), 9 lentera menyala sekali, "Bahasa untuk umat." (teks dari
   pemilik), logo putih resmi (560px, tidak diperbesar) terpotong di bawah, pita keffiyeh hitam-putih (`.orn-band--tebal`
@@ -309,7 +298,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   **"Rp0" hanya boleh** di baris struk "Biaya bulanan" (keputusan pemilik, sesi Biaya revisi 2), selalu bersama total
   Rp100.000 yang paling menonjol. Pernyataan besar Biaya: "Tanpa biaya bulanan."
 - **Donasi terbuka = untuk Palestina**, sukarela, terpisah dari biaya kelas, disalurkan melalui **AWG (Aqsa Working Group)**,
-  mitra lama. Tidak ada "Donasi LCDU" terpisah di halaman.
+  tanpa frasa "mitra lama" di halaman (sesi F). Tidak ada "Donasi LCDU" terpisah di halaman.
 - **Urutan section setelah hero** (id dalam kurung): Pengantar (`pengantar`), Kenapa LCDU (`kenapa`), Pilih kelas (`kelas`),
   Biaya (`biaya`), Cara bergabung = syarat + Placement Test (tombol per bahasa) + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
   FAQ (`faq`), Donasi untuk Palestina (`donasi`), Footer. Pemetaan fase: Pengantar & Kenapa = pagi; Kelas & Biaya = siang;
