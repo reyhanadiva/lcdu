@@ -77,7 +77,11 @@ body{margin:0}
   --senja-bg:#FAF3F1; --senja-soft:#4B4F63;
   --malam-bg:#14120F; --malam-soft:#B9B2A6;
   --lentera:#FFC96B;  /* cahaya hangat (titik lentera, ujung benang) */
-  --sambung:clamp(140px,18vw,240px);          /* panjang gradasi antar-fase (hanya di area kosong) */
+  /* skala jarak vertikal (satu sumber): --jarak-section = ruang atas/bawah isi tiap section & blok warna
+     (44px di HP → 88px di desktop ≥ 1354px); --jarak-sambung = jeda teks setelah gradasi antar-fase */
+  --jarak-section:clamp(44px,6.5vw,88px);
+  --jarak-sambung:clamp(20px,2vw,28px);
+  --sambung:clamp(96px,11vw,160px);           /* panjang gradasi antar-fase (hanya di area kosong) */
   --sambung-malam:clamp(260px,42vh,420px);    /* senja → malam lebih panjang: perubahan terang → gelap */
 
   /* gerak: hanya tiga jenis (muncul, tergambar, menyala) */
@@ -130,7 +134,7 @@ button{font:inherit;color:inherit}
 
 .wrap{width:100%;max-width:1240px;margin-inline:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 @media (min-width:720px){.wrap{padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px))}}
-.band{padding-block:clamp(72px,10vw,140px)}
+.band{padding-block:var(--jarak-section)}
 .h2{font-family:var(--f-display);font-weight:700;font-size:var(--step-3);line-height:1.05;letter-spacing:-.02em}
 .lede{color:var(--ink-soft);max-width:56ch;font-size:var(--step-1);line-height:1.55}
 
@@ -166,7 +170,7 @@ button{font:inherit;color:inherit}
   background:linear-gradient(in oklab,var(--dari) 0%,color-mix(in oklab,var(--dari) 93%,var(--fase-bg)) 15%,color-mix(in oklab,var(--dari) 72%,var(--fase-bg)) 32%,
     color-mix(in oklab,var(--dari) 50%,var(--fase-bg)) 50%,color-mix(in oklab,var(--dari) 28%,var(--fase-bg)) 68%,color-mix(in oklab,var(--dari) 7%,var(--fase-bg)) 85%,var(--fase-bg) 100%)
     0 0/100% var(--sambung) no-repeat,var(--fase-bg)}
-.hari>.fase+.fase>.band:first-child{padding-top:max(clamp(72px,10vw,140px),calc(var(--sambung) + 32px))}
+.hari>.fase+.fase>.band:first-child{padding-top:max(var(--jarak-section),calc(var(--sambung) + var(--jarak-sambung)))}
 /* logo: ikut fase (warna di fase terang, putih di malam), tidak ikut mode gelap sistem */
 html:root [data-fase] .logo-light{display:block!important}
 html:root [data-fase] .logo-dark{display:none!important}
@@ -479,7 +483,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    irisan semangka menjorok dari tepi layar di belakang foto. Ke Kenapa: hanya pergeseran warna (gradasi di atas blok hijau). */
 @property --p{syntax:'<number>';inherits:true;initial-value:1}
 .intro{position:relative;isolation:isolate;overflow:clip;padding-bottom:0}
-.intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:clamp(64px,8vw,112px)}
+.intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:var(--jarak-section)}
 .intro-kalimat{font-family:var(--f-display);letter-spacing:-.02em}
 .intro-l1{display:block;font-weight:300;font-size:clamp(2.2rem,1.1rem + 4vw,4.9rem);line-height:1.06;max-width:10.5em;text-wrap:balance}
 .intro-l1 .k-ar,.intro-l1 .k-en{font-weight:700}
@@ -518,11 +522,11 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    melewati tengah layar; kata Arab raksasa bergaris putih menumpang di tepi bawah foto (rata kiri, tidak masuk kolom
    teks), terisi merah saat aktif.
    HP: tiap pernyataan = foto lalu teks, bertumpuk, tanpa sticky. Reduced-motion: tanpa transisi (langsung berganti). */
-.why{--masuk:clamp(96px,13vw,190px);position:relative;
+.why{--masuk:clamp(72px,9vw,130px);position:relative;
   background:linear-gradient(in oklab,var(--pagi-bg) 0%,color-mix(in oklab,var(--pagi-bg) 93%,var(--kulit)) 15%,color-mix(in oklab,var(--pagi-bg) 72%,var(--kulit)) 32%,
     color-mix(in oklab,var(--pagi-bg) 50%,var(--kulit)) 50%,color-mix(in oklab,var(--pagi-bg) 28%,var(--kulit)) 68%,color-mix(in oklab,var(--pagi-bg) 7%,var(--kulit)) 85%,var(--kulit) 100%)
     0 0/100% var(--masuk) no-repeat,var(--kulit);color:var(--putih);--ink:var(--putih);--why-lembut:color-mix(in srgb,var(--putih) 88%,var(--kulit))}
-.why-wrap{padding-block:calc(var(--masuk) + clamp(32px,4vw,56px)) clamp(48px,5.6vw,80px)}
+.why-wrap{padding-block:calc(var(--masuk) + var(--jarak-sambung)) var(--jarak-section)}
 .why-h{font-family:var(--f-display);font-weight:700;font-size:var(--step-4);line-height:1;letter-spacing:-.03em}
 .why-list{list-style:none;margin:clamp(20px,3vw,32px) 0 0;padding:0}
 .why-item{position:relative;padding-block:clamp(26px,4vw,40px);border-top:1px solid color-mix(in srgb,var(--putih) 24%,transparent)}
@@ -567,7 +571,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cost-blok{position:relative;overflow:clip;isolation:isolate;background:var(--semangka-tua);color:var(--putih);--ink-soft:color-mix(in srgb,var(--putih) 90%,var(--semangka-tua))}
 .cost-pita{background:var(--putih);position:relative;z-index:2}
 .cost-pita>i{display:block;--pita:40px}
-.cost{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,96px);align-items:center;padding-block:clamp(64px,8vw,120px)}
+.cost{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,96px);align-items:center;padding-block:var(--jarak-section)}
 @media (min-width:900px){.cost{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}}
 .cost-copy{display:grid;gap:clamp(16px,2vw,28px);align-content:center}
 /* label kecil (bukan judul besar): krem lembut #F5DEC1 di merah tua 5,1:1; jarak tegas ke pernyataan */
@@ -921,7 +925,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .logo-slot{width:120px;height:52px;border-radius:12px;box-shadow:0 0 0 1.5px var(--line) inset;display:grid;place-items:center;font-size:.72rem;color:var(--ink-soft)}
 
 /* ===== FOOTER ===== */
-.foot{padding-block:clamp(56px,8vw,96px) 40px;display:grid;gap:48px}
+.foot{padding-block:var(--jarak-section) 40px;display:grid;gap:48px}
 .foot-grid{display:grid;gap:32px}
 @media (min-width:900px){.foot-grid{grid-template-columns:1.2fr 1fr 1fr}}
 .wotd{background:var(--surface);border-radius:var(--r-lg);padding:24px;display:grid;gap:14px;box-shadow:0 0 0 1px var(--line) inset}

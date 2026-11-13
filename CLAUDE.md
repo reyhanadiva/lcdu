@@ -69,6 +69,12 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   putih/hitam 18,9 · kunyit/hitam 11,7 · tinta kunyit/kunyit 10,1. **Gagal untuk teks biasa** (hanya dekor atau judul
   ≥ 24px tebal): putih/merah terang `#E23B4A` 4,2 · hijau logo `#7FA33F` di latar terang 2,8 · putih/hijau logo 2,9 ·
   kunyit/merah tua 4,1. Kata redup Pengantar (≥ 3:1): tinta 3,6 · biru 3,5 · Arab 3,7.
+- **Skala jarak vertikal** (sesi "jarak"; dulu `.band` `clamp(72px,10vw,140px)` → ±280px kosong antar isi di 1440):
+  satu token `--jarak-section: clamp(44px,6.5vw,88px)` (HP 44px, desktop 88px) untuk `.band`, bawah Pengantar, Kenapa
+  (`.why-wrap`), Biaya (`.cost`), footer; `--jarak-sambung: clamp(20px,2vw,28px)` = jeda teks setelah gradasi
+  (fase baru, masuk blok hijau). `--sambung` 140–240 → `clamp(96px,11vw,160px)`; `.why --masuk` 96–190 →
+  `clamp(72px,9vw,130px)`. `--sambung-malam` (senja → malam) **tidak diubah**. Tinggi halaman: 1440×900 12.763 → 11.870 px,
+  390×844 21.627 → 21.083 px. Jarak dalam komponen (kartu, grid, pembatas) tetap angka setempat.
 - **Benang + lentera + ranting** (sesi "aliran", lalu dikembalikan sebagian atas keputusan pemilik):
   - **Benang** = versi sebelum "aliran": `.benang` `position:fixed` di gutter kiri (`--benang-x`), jahitan tipis yang
     tergambar mengikuti scroll (view timeline `--hari`, cadangan JS `--benang`) dengan bulat kuning `.benang-ujung` yang
