@@ -1,7 +1,9 @@
 # LCDU Landing Page
 
 Prototipe landing page LCDU (kelas Bahasa Inggris & Arab, Yayasan Taqwa Cerdas Kreatif).
-Situs statis tanpa build step: `index.html`, modul hero di `hero/`, dan three.js (MIT) di `vendor/three/` yang hanya dimuat untuk varian 3D. Bisa langsung di-deploy ke Vercel.
+Situs statis tanpa build step: `index.html`, modul hero di `hero/`, Lenis (MIT) di `vendor/lenis/`. Bisa langsung di-deploy ke Vercel.
+
+Hero 3D (Kubah & Qibli, three.js) **diarsipkan** di [reyhanadiva/lcdu-3d](https://github.com/reyhanadiva/lcdu-3d) dan tidak lagi ada di repo ini.
 
 ## Konsep: "Dua Aksara"
 
@@ -16,7 +18,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 
 | Section | Interaksi |
 |---|---|
-| Hero | Cerita scroll 3 babak: malam → lampu menyala dari Kubah ke luar → fajar. Dua varian lewat tombol di kiri bawah (atau `?hero=lentera-hd|diorama`): **Foto** (default; foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu) dan **3D** (model Kubah & Qibli). Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
+| Hero | Cerita scroll 3 babak (tinggi 190vh, 13vh terakhir "tahan fajar"): malam → lampu menyala dari Kubah ke luar → fajar. Hero **Foto**: foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu. Geser kencang tetap berakhir di fajar penuh. Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Pengantar | Stub, isi menyusul. |
 | Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
@@ -37,22 +39,13 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
   tidak sejajar dan tidak dipakai.
 - Turunan web di `assets/hero/build/` (AVIF → WebP → JPG; tall 750 & 1024, wide 1280 & 1536), dibuat ulang dengan
   `python3 tools/build-hero-images.py`. Lihat `tools/README.md`.
-- Titik cahaya: `hero/spots.json`, atur di browser dengan `?hero=lentera-hd&edit-spots` lalu "Salin JSON".
+- Titik cahaya: `hero/spots.json`, atur di browser dengan `?edit-spots` lalu "Salin JSON".
 
-## Sumber aset 3D
+## Hero 3D (diarsipkan)
 
-- `assets/models/dome.glb` (Kubah Shakhrah) dan `qibli.glb` (Masjid Qibli) **dibuat dari gambar yang dihasilkan ChatGPT**
-  (`assets/models/source/*.png`), lalu **diubah ke 3D dengan TRELLIS.2 (lisensi MIT)**. Meshy tidak dipakai.
-- Versi web di `assets/models/optimized/` dibuat dengan `tools/prep-model-textures.py` lalu `npm run models` di `tools/`
-  (gltf-transform, meshoptimizer, sharp). Berkas asli tidak ditimpa.
-- Penyesuaian: color grade seragam, pita "kaligrafi" buatan AI di Kubah diganti ornamen polos tanpa huruf, bercak biru
-  di batu Qibli dinetralkan, masker jendela sebagai lapisan emissive terpisah.
-- Catatan akurasi: serambi Qibli hanya 3 lengkung (mengikuti gambar acuan; aslinya 7), sisi belakang Qibli "ditebak"
-  generator (menghadap selatan, tidak terlihat kamera).
-- **Sprite dan tekstur dibuat dari gambar yang dihasilkan ChatGPT** (`assets/models/source/extras/`: lembar zaitun,
-  cemara, gugus rumah, tekstur batu/tanah, panorama fajar). Hasil di `assets/models/extras/` dibuat dengan
-  `tools/make-extras.py` (latar abu dihapus dengan kunci warna, tekstur dibuat mulus, panorama dipotong ke pita bukit +
-  kota jauh). Tidak ada gambar yang diperbesar; berkas asli tidak ditimpa. Ukuran: ±1,06 MB desktop, ±0,29 MB HP.
+Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/diorama.js`, three.js, GSAP, dan alat
+`optimize-models.mjs` / `prep-model-textures.py` / `make-extras.py` dipindahkan ke
+[reyhanadiva/lcdu-3d](https://github.com/reyhanadiva/lcdu-3d) (snapshot commit `b6e428e`). Catatan sumber aset ada di sana.
 
 ## Foto stok (SEMENTARA — ganti dengan foto asli)
 
@@ -84,8 +77,7 @@ Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di
 
 - [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
 - [ ] **Foto stok sementara** di `assets/photos/` (lihat `CREDITS.md`): ganti dengan foto asli LCDU. Isi tulisan foto kaligrafi perlu dicek guru Arab.
-- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (sumber model 3D, gambar hero Foto, serta sprite,
-  tekstur, dan panorama hero 3D) — perlu diverifikasi.
+- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (gambar hero Foto; juga aset hero 3D di arsip `lcdu-3d`) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
 - [ ] **Link**: formulir registrasi, Instagram, alamat (saat ini `#`). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
 - [ ] **PERLU VERIFIKASI — Jadwal kelas** (section Pilih kelas): Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; Weekend Sabtu 13.00–16.00 WIB (keduanya).

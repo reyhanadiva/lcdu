@@ -13,51 +13,31 @@ Pemilik: Bapak Reyhan (non-developer, berpikir sebagai desainer). Kode akhirnya 
 
 ## Menjalankan lokal
 Situs statis. Modul ES butuh server (bukan `file://`):
-`python3 -m http.server 8000` atau `npx serve .` → buka `http://localhost:8000/?hero=lentera` atau `?hero=diorama`.
+`python3 -m http.server 8000` atau `npx serve .` → buka `http://localhost:8000/`.
 Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); jika masih basi, buka lewat `127.0.0.1`.
 
 ## Struktur
 - `index.html` — seluruh halaman (CSS & JS section non-hero inline). Token warna/font di `:root` paling atas.
-- `hero/hero.js` — pengendali hero: scroll → progres `p` (0..1), kursor, teks per babak, pemuat varian, tombol pembanding.
-  Varian = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
-- `hero/lentera-hd.js` — hero **Foto** (tombol "Foto", default; id varian tetap `lentera-hd`): foto malam/fajar dari
+- `hero/hero.js` — pengendali hero: scroll → progres `p` (0..1), kursor, teks per babak; langsung memuat hero Foto
+  (tanpa pemuat varian, tanpa `?hero=`, tanpa tombol pembanding — sejak sesi "Hero Foto saja").
+  Visual = modul `export default { mount(container, state) → { frame(state, now), resize(), destroy() } }`.
+- `hero/lentera-hd.js` — hero **Foto** (satu-satunya hero; nama berkas tetap `lentera-hd`): foto malam/fajar dari
   ChatGPT (`assets/hero/build/`, dari `tools/build-hero-images.py`), pasangan tall & wide sudah lulus `check-align.py`,
-  titik cahaya di `hero/spots.json` (editor: `?hero=lentera-hd&edit-spots`). Teks ditaruh di langit (`text: 'top'`).
+  titik cahaya di `hero/spots.json` (editor: `?edit-spots`; titik awal dari `tools/gen-spots.py`). Teks ditaruh di langit
+  (`data-text="top"` statis di `<section class="hero">`).
   Cahaya babak 2 harus **masuk akal** (keputusan pemilik): hanya di sumber nyata — jendela/pintu (w), lentera arkade (a),
   tiang lampu/lentera tembok (l), lentera di tanah (g), lampu kota jauh (c) — dengan genangan cahaya di tanah, menyala
   bergelombang dari Kubah ke luar. Jangan kembali ke titik acak yang melayang.
   `supports()` → false bila aset orientasi layar belum ada.
-- Hero ilustrasi kanvas lama (`lentera.js`, `scene2d.js`) **sudah dihapus** atas permintaan pemilik. Pembanding hanya
-  "Foto" dan "3D".
-- `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`, `prep-model-textures.py`;
-  Node (`npm install` di `tools/`): `optimize-models.mjs`. Lihat `tools/README.md`.
-- `hero/diorama.js` — varian 3D (three.js r160, di-vendor di `vendor/three/`, lewat importmap di `index.html`), bloom,
-  GSAP (lisensi standar GreenSock, bukan MIT) untuk easing kamera. Babak 1 malam tapi terbaca (bulan, rim light biru,
-  jendela hangat sejak awal). Fallback: WebGL gagal → `lentera-hd`. Semua tingkat kualitas tetap memakai bayangan, bloom & grading (tanpa itu adegan
-  tampak datar — pernah terjadi di laptop pemilik); yang turun hanya DPR (dibatasi jumlah piksel) & MSAA. `?tier=0|1|2` memaksa tingkat. Fps rendah menurunkan kualitas dulu (MSAA/bayangan/bloom/DPR, bisa naik lagi
-  bila lancar); baru pindah ke `lentera-hd` bila di tingkat terendah fps < 24 (dulu langsung pindah → pemilik tidak bisa memakai 3D).
-  Anti-aliasing: composer memakai render target MSAA (4× desktop, 2× HP) + alpha-to-coverage untuk daun/sprite; shader
-  yang memakai `pow`/`normalize` pada varying wajib di-clamp (dengan MSAA nilai bisa sedikit di luar rentang → NaN → blok
-  hitam di bloom). `?debug-perf` juga membuka `window.__dio` untuk memeriksa.
-  Kubah & Qibli dari `assets/models/optimized/*.glb` (TRELLIS.2, Meshopt; `-mobile` untuk HP), dimuat malas; bangunan
-  prosedural = layar sementara & cadangan bila gagal. Lentera dari `hero/lights3d.json` (editor `?hero=diorama&edit-lights`).
-  Anggaran aset 3D: desktop ≤ 3 MB (sekarang 2,98 MB), HP 1,77 MB. HP lemah tidak membuka 3D dari preferensi tersimpan.
-  **Vegetasi wajib lewat `plant()`** (zona larangan): ditolak bila ≤ 12 unit dari jalur kamera (semua babak, 4 ukuran
-  layar), terlalu besar di layar, menutupi tepi layar, atau menimpa area teks; dicoba dipindah dulu, kalau gagal dibuang.
-  Cadangan: vegetasi yang < 15 unit dari kamera mengecil halus (hilang di 9). Laporan: `?hero=diorama&debug-veg`.
-  Elemen pendukung (hierarki detail: model utama > dekat kamera > jauh): zaitun (batang Tube bengkok + kartu daun
-  ter-instance), cemara (kartu tegak), rumput & semak, kota tua 6 modul InstancedMesh (jendela emissive prosedural),
-  qanatir & Kubah Rantai berkolom kapital, medan bukit ber-noise, kabut berlapis + pass grading/vignette. Semua tekstur
-  prosedural (0 KB aset). Palet dicocokkan ke `assets/models/source/extras/` (lembar acuan pemilik).
-  Anggaran: segitiga vegetasi ≤ 150 rb desktop (sekarang ±48 rb), HP ±40% (±18 rb). Draw call ±136 (dulu ±390).
-  Alat pengembang: `?debug-perf` (draw call, segitiga, waktu render; fallback otomatis mati), `?debug-cam=x,y,z,tx,ty,tz`.
-  Tahap 2 (aset 2D dari `assets/models/source/extras/`, dibuat `tools/make-extras.py` → `assets/models/extras/`):
-  pohon tengah/jauh = sprite 3 bidang bersilang + blob shadow; rumah > 46 unit = sprite gugus rumah (papan reklame);
-  panorama Bukit Zaitun di busur ke arah matahari terbit (malam dibirukan lewat shader, medan 3D di situ direndahkan);
-  tembok/pelataran/tanah/plester bertekstur foto mulus. Semua lewat `plant()`; dimuat malas, prosedural = cadangan.
-  Anggaran aset: desktop ±1,06 MB, HP ±0,29 MB (target ≤ 1,5 MB / ≈ 700 KB).
+- **Hero 3D diarsipkan** (keputusan pemilik) di https://github.com/reyhanadiva/lcdu-3d (snapshot utuh dari commit
+  `b6e428e`, jalan sendiri: `/?hero=diorama`). Dihapus dari repo ini: `hero/diorama.js`, `hero/lights3d.json`,
+  `assets/models/` (glb, sumber, extras), `vendor/three/` + importmap, `vendor/gsap/` (hanya dipakai 3D),
+  `tools/optimize-models.mjs`, `tools/prep-model-textures.py`, `tools/make-extras.py`, dependensi gltf-transform &
+  meshoptimizer. Hero kanvas lama (`lentera.js`, `scene2d.js`) dan "Mozaik" juga sudah lama dihapus.
+- `tools/` — skrip Python (numpy, Pillow): `check-align.py`, `build-hero-images.py`, `gen-spots.py`;
+  Node (`npm install` di `tools/`, hanya `sharp`): `build-photos.mjs`, `make-ornaments.mjs`. Lihat `tools/README.md`.
 - iOS 26 Safari: elemen `position:fixed` yang menempel di tepi layar membuat Safari mengisi area status bar/toolbar dengan
-  blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`; tombol pembanding hero disembunyikan di luar hero.
+  blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
 - `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test **per bahasa** (`placement.en.open`,
@@ -280,16 +260,23 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   tulis ulang) dan **uji picing** (apakah hierarkinya tetap terbaca saat layar dipicingkan?).
 - Narasi: harapan & semangat, bukan kesedihan. Tidak ada gambar penderitaan, tidak ada tema Isra Mi'raj.
 - Tidak ada klik-untuk-lentera. **Tanpa parallax** di hero: teks babak hanya memudar, kamera/ilustrasi tidak mengikuti kursor.
-  Scroll harus pendek dan jelas: tinggi hero **220vh** (permintaan pemilik; dulu 340vh). Agar tetap mulus, `state.p`
-  mengikuti target lewat pegas teredam kritis (`K=70`) dengan batas kecepatan `MAX_RATE=.45`/detik yang naik perlahan
-  bila tertinggal > .25 (maks 1). Peta babak (`CENTERS`, jendela pudar) tidak diubah. Diukur dengan simulasi rumus yang
-  sama (Lenis lerp .12; usapan = scroll native + momentum), 390×844: lonjakan maks per frame (Δ²p) roda 100px
-  .0012 → .0005, usapan .0027 → .0013; Δp maks per frame roda .0030 → .0035, usapan .0067 → .0075–.0101.
+  Scroll harus pendek dan jelas: tinggi hero **190vh** (permintaan pemilik; dulu 340 → 220vh) = ±77vh peta babak
+  (`CENTERS`, jendela pudar tidak berubah) + **13vh "tahan fajar"** (`HOLD_VH`; p sudah 1, panggung masih menempel).
+  **Geser kencang tidak boleh melewatkan fajar**: p ≥ 0,98 sebelum panggung mulai terangkat, apa pun kecepatannya.
+  `state.p` mengikuti target lewat pegas teredam kritis (`K=70`, `MAX_RATE=.45`) + dua lapis di `step()` hero.js:
+  (1) *panduan* — bila scroll diperkirakan melewati titik jaminan B (60% segmen tahan; titik henti dari
+  `lenis.targetScroll` atau, scroll native, kecepatan × 0,5 s), percepatan `a = 6D/T² − 4v/T` (kontinu, mengerem
+  sendiri), (2) *lantai* — ketertinggalan maks. menyusut .45 → 0 antara s = .6 dan B (hanya mengikat pada lompatan
+  instan/roda raksasa). Scroll dibaca tiap frame (event scroll tertinggal 1 frame dari Lenis). Tanpa scroll-jacking.
+  Diukur (simulasi `Lenis lerp .12` / usapan native + momentum iOS .998/ms, dan uji nyata di browser): p saat panggung
+  terangkat — roda 3000px/100ms .05–.06 → **1,00**; usapan cepat 7000px/s .13–.14 → **1,00**; scrollTo instan .02 →
+  **1,00**; tautan #pengantar .08 → **1,00**; usapan normal (200px + 1500px/s) .67–.96 → 1,00. Lonjakan Δ²p roda 100px
+  .0005 → .0006–.0007 (browser ±.0012 termasuk derau); usapan pendek di tengah hero .0006 → .0008–.0009; usapan yang
+  melewati ujung hero .0009 → .006–.015 (fisik: p harus naik ±.5 dalam ±.3 s; dulu tidak naik sama sekali).
 - Tiga babak = tiga suasana yang jelas berbeda (permintaan pemilik), berubah bertahap sepanjang scroll, bukan melompat:
   Foto: malam → fajar biru + lampu menyala → subuh (bulan, bintang & biru memudar dulu; lapisan dari foto fajar yang
-  diredam) → matahari terbit keemasan. Laju perubahan p dibatasi (pegas + `MAX_RATE` di hero.js) supaya scroll cepat tidak melompat.
-  3D pagi = sudut matahari pagi (bukan siang), cahaya hangat & terang, kabut tipis — pemilik ingin "terik" tapi tidak pucat. 3D: malam → fajar ungu-jingga → pagi cerah
-  (matahari tinggi, langit biru, kabut tipis). Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
+  diredam) → matahari terbit keemasan. Laju perubahan p dihaluskan (pegas di hero.js), tetapi fajar selalu tercapai.
+  Teks babak 3 di Foto berwarna biru tua `#10163A` di atas langit terang
   (kontras ≥ 6:1); babak 1–2 putih di atas gradasi lebar & lembut dari pojok kiri-atas yang memudar habis sebelum
   babak 3. Jangan pakai elips/bercak gelap di belakang teks dan jangan ada gradasi yang berhenti mendadak (pemilik menolak:
   terlihat sebagai bulatan hitam dan garis).
@@ -303,7 +290,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.
 - Penanda Palestina: Kubah Shakhrah + Masjid Qibli (kompleks Al-Aqsa), pohon zaitun. Motif keffiyeh × semangka **tidak di dalam
   hero** (keputusan pemilik): tampil sebagai pembatas tepat setelah hero, di awal section berikutnya.
-- Varian "Mozaik" sudah ditolak dan dihapus. Yang masih dibandingkan: **Lentera** vs **3D**.
+- Hero = **Foto** saja (keputusan pemilik); 3D diarsipkan di `reyhanadiva/lcdu-3d`, "Mozaik" & kanvas lama dihapus.
 - Logo resmi: `assets/brand/` (PNG transparan; turunan web di `assets/brand/web/`, versi warna & putih). Jangan ubah bentuk,
   proporsi, atau huruf logo. Navbar/footer: warna di mode terang, putih di mode gelap; hero selalu putih.
 - Palet **semangka-keffiyeh × logo** (diminta pemilik, sesi fondasi seni; menggantikan latar krem-persik lama):
@@ -319,7 +306,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Font (dipilih pemilik): **Fraunces** (judul, `--f-display`), Plus Jakarta Sans (teks), Reem Kufi (judul Arab),
   Noto Naskh Arabic (teks Arab). woff2 variabel di-host sendiri di `fonts/` (subset Latin/Arab, `font-display: swap`,
   preload Fraunces + Plus Jakarta), bukan CDN. Unbounded tidak dipakai lagi.
-- Tata letak teks hero (dipilih pemilik): **kiri-bawah, rata kiri** untuk Lentera lama & 3D. **Lentera HD**: teks di area
+- Tata letak teks hero (dipilih pemilik). **Hero Foto**: teks di area
   langit — layar tegak di ±8–45% tinggi layar (kubah foto ada di 52–77%, teks tidak boleh menyentuhnya), desktop kiri-atas;
   pita gelap tipis di atas (wordmark) + bayangan elips di belakang teks babak 1–2, kontras ≥ 4.5:1 di semua babak. Petunjuk gulir di atas keffiyeh, di area pohon zaitun.
 - Aset hero Foto: pasangan **tall** (1024×1536, night-tall + dawn-tall) dan **wide** (1536×1024, night-wide-v2 +
@@ -328,18 +315,15 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   ditampilkan otomatis bila foto tampil lebih besar dari aslinya. Target unduhan hero di HP < 700 KB (sekarang ±150 KB AVIF).
 
 ## Prioritas berikutnya
-1. Pemilik memilih Lentera atau 3D (atau gabungan). Bantu dengan prototipe yang bisa dilihat di browser pane.
-   Hero Foto jalan di layar tegak dan melebar.
-2. Naikkan kualitas visual varian terpilih:
-   - 3D: sudah detail prosedural + bloom + Lenis + GSAP. Berikutnya bila perlu: model glTF berlisensi (Draco/Meshopt).
-   - Lentera: ilustrasi lebih detail (bisa SVG dari desainer), cahaya bertekstur, transisi fajar lebih sinematik.
-3. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
+1. Hero Foto (jalan di layar tegak & melebar): bila perlu foto/ilustrasi lebih detail, cahaya bertekstur, transisi fajar
+   lebih sinematik. 3D tidak dikembangkan lagi (arsip di `lcdu-3d`).
+2. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
    Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung
    (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
-4. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
+3. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
 
 ## Aturan kualitas
 - **Animasi hanya transform & opacity** (clip-path bila perlu). Jangan menganimasikan properti tata letak (width, left,

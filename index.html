@@ -451,9 +451,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .nav .btn{min-height:42px;padding:.5em 1.1em;font-size:.92rem;box-shadow:none}
 @media (min-width:900px){.nav-links{display:flex}}
 
-/* ===== HERO: gelap → terang lewat scroll. Dua varian visual (lentera, 3D) berbagi copy dan alur yang sama ===== */
+/* ===== HERO: gelap → terang lewat scroll (hero Foto, hero/lentera-hd.js). Tinggi 190vh: ±77vh peta babak + 13vh tahan fajar ===== */
 .hero{--night:#040820;--hero-fg:#F3F5FC;--hero-soft:rgba(243,245,252,.78);--sun:#F2C14E;
-  position:relative;height:220vh;background:var(--night);color:var(--hero-fg)}
+  position:relative;height:190vh;background:var(--night);color:var(--hero-fg)}
 .hero-stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;isolation:isolate}
 .hero-canvas{position:absolute;inset:0;z-index:-2}
 .hero-canvas canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -488,14 +488,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     repeating-linear-gradient(45deg,#151515 0 1.4px,transparent 1.4px 8px),
     repeating-linear-gradient(-45deg,#151515 0 1.4px,transparent 1.4px 8px),
     #F7F7F2}
-/* pembanding varian (alat review) */
-.hero-switch{position:fixed;left:max(16px,env(safe-area-inset-left,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:45;display:flex;align-items:center;gap:4px;padding:5px;border-radius:999px;background:rgba(10,14,40,.82);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#F3F5FC;box-shadow:0 10px 30px -10px rgba(0,0,0,.5);font-size:.82rem}
-.hero-switch span{padding:0 8px 0 10px;font-weight:600;opacity:.7}
-.hero-switch button{border:0;background:transparent;color:inherit;font-weight:700;padding:8px 12px;border-radius:999px;cursor:pointer;min-height:36px}
-.hero-switch button[aria-pressed="true"]{background:#F2C14E;color:#2A1E00}
-/* pembanding hanya relevan selama hero; di luar hero disembunyikan (juga mengurangi elemen fixed di tepi bawah) */
-.hero-switch{transition:opacity .3s,visibility .3s}.hero-switch.is-away{opacity:0;visibility:hidden;pointer-events:none}
-@media (max-width:520px){.hero-switch span{display:none}.hero-switch button{padding:8px 10px}.hero-switch .long{display:none}}
 /* ===== Lentera HD: foto malam/fajar. Teks di area langit (atas): HP di 8–45% tinggi layar, desktop kiri-atas ===== */
 .hd-grain{position:absolute;inset:0;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-size:160px}
 .hd-grain[hidden]{display:none}
@@ -522,7 +514,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hd-edit-panel button{border:0;border-radius:999px;padding:8px 12px;font-weight:700;background:#F2C14E;color:#2A1E00;cursor:pointer}
 .hd-edit-panel button[data-a="reset"]{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
 .hd-edit-panel textarea{width:100%;height:120px;font:12px/1.4 ui-monospace,monospace}
-.hero-loading{position:absolute;inset:0;display:grid;place-items:center;font-weight:600;color:var(--hero-soft);font-size:.9rem;z-index:-1}
 @media (prefers-reduced-motion: reduce){.scroll-cue i{animation:none;transform:none}}
 
 /* ===== PENGANTAR =====
@@ -1005,7 +996,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
 </style>
-<script type="importmap">{"imports":{"three":"./vendor/three/three.module.min.js"}}</script>
 </head>
 <body>
 <a class="skip" href="#pengantar">Lewati ke konten</a>
@@ -1030,7 +1020,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 <main id="top">
 <!-- ============ HERO: gelap menjadi terang ============ -->
-<section class="hero" id="hero" aria-label="Pembuka">
+<section class="hero" id="hero" data-text="top" aria-label="Pembuka">
   <div class="hero-stage">
     <div class="hero-canvas" id="hero-canvas" role="img" aria-label="Kompleks Masjid Al-Aqsa yang perlahan berubah dari gelap malam menjadi terang fajar"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
@@ -1044,11 +1034,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     <div class="scroll-cue" id="scroll-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
   </div>
 </section>
-<div class="hero-switch" id="hero-switch" role="group" aria-label="Bandingkan varian hero">
-  <span>Hero</span>
-  <button type="button" data-v="lentera-hd">Foto</button>
-  <button type="button" data-v="diorama">3D</button>
-</div>
 
 <!-- motif keffiyeh × semangka: pembatas di awal section setelah hero (tidak tampil di dalam hero) -->
 <div class="kufiyah" aria-hidden="true"></div>
