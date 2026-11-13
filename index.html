@@ -826,13 +826,56 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .langkah-lentera::after{content:"";position:absolute;inset:-26px;border-radius:50%;opacity:0;
     background:radial-gradient(closest-side,color-mix(in srgb,var(--kunyit) 80%,transparent) 0 22%,color-mix(in srgb,var(--lentera) 35%,transparent) 50%,transparent)}
   /* lentera ke-6 (kelas pertama) lebih besar (scale dari atas; nomor & teks tetap sebaris) */
-  .langkah:nth-child(6) .langkah-lentera{transform:scale(1.3);transform-origin:50% 0}
+  .langkah:nth-child(6) .langkah-lentera{transform:scale(1.3)}
   .jalur-nyala .langkah-lentera{border-color:color-mix(in srgb,var(--lentera) 60%,var(--kunyit-ink))}
   .jalur-nyala .langkah-lentera::after{opacity:1}
   .langkah-no{margin-top:14px;margin-bottom:10px}
   .langkah p{max-width:24ch}
 }
-.gerak .langkah-no::after,.gerak .langkah-lentera::after{transition:opacity .6s var(--ease-menyala) calc(var(--i) * 120ms)}
+.gerak .langkah-no::after,.gerak .langkah-lentera::after{transition:opacity .6s var(--ease-menyala) calc(var(--t,0s) + .45s)}
+/* (C2) Urutan SEKALI saat strip masuk layar (.jalur-nyala dari IO; hanya transform/opacity/clip-path):
+   1. tali tergambar kiri → kanan (clip-path .9s); 2. lentera 1 → 6 digantung (turun + ayunan mereda ±3°, jeda 150 ms),
+   lalu cahaya menyala; 3. nomor, judul, keterangan naik mengikuti lenteranya; 4. lentera ke-6 (lebih besar) berdenyut
+   sekali. .jalur-selesai (JS, setelah urutan) membuka hover/fokus: lentera berayun kecil & cahaya membesar.
+   HP: tiap baris muncul saat masuk layar (.tampil), segmen benang di sampingnya tergambar turun (scaleY).
+   Tanpa .gerak (reduced-motion / tanpa JS): semua tampil diam. */
+@media (min-width:900px){
+  .langkah{--t:calc(.75s + var(--i) * 150ms)}
+  .langkah-lentera{--s:1;transform-origin:50% -9px}
+  .langkah:nth-child(6) .langkah-lentera{--s:1.3}
+  .langkah-lentera::after{transition:opacity .6s var(--ease-menyala),transform .3s var(--ease)}
+  .gerak .jalur-tali{clip-path:inset(0 100% 0 0);transition:clip-path .9s var(--ease-menyala)}
+  .gerak .jalur-nyala .jalur-tali{clip-path:inset(0)}
+  .gerak .jalur:not(.jalur-nyala) .langkah-lentera{opacity:0}
+  .gerak .jalur-nyala .langkah-lentera{animation:gantung .9s var(--ease-muncul) var(--t) both}
+  .gerak .langkah-lentera::after{transition:opacity .6s var(--ease-menyala) calc(var(--t) + .45s),transform .3s var(--ease)}
+  .gerak .jalur-nyala .langkah:nth-child(6) .langkah-lentera::after{animation:denyut-sekali .9s var(--ease) calc(var(--t) + 1.05s) 1}
+  .gerak .langkah>:not(.langkah-lentera){transition:opacity .5s var(--ease-muncul) calc(var(--t) + .25s),transform .5s var(--ease-muncul) calc(var(--t) + .25s)}
+  .gerak .jalur:not(.jalur-nyala) .langkah>:not(.langkah-lentera){opacity:0;transform:translateY(10px)}
+  .gerak .jalur-selesai .langkah-lentera{animation:none;transform:scale(var(--s))}
+  .gerak .jalur-selesai .langkah:is(:hover,:focus-within) .langkah-lentera{animation:ayun .8s var(--ease) 1}
+  .jalur-selesai .langkah:is(:hover,:focus-within) .langkah-lentera::after{transform:scale(1.25);transition-delay:0s}
+}
+@keyframes gantung{
+  0%{opacity:0;transform:translateY(-16px) rotate(-3deg) scale(var(--s))}
+  35%{opacity:1;transform:translateY(2px) rotate(3deg) scale(var(--s))}
+  60%{transform:translateY(0) rotate(-2deg) scale(var(--s))}
+  80%{transform:rotate(1deg) scale(var(--s))}
+  100%{opacity:1;transform:scale(var(--s))}}
+@keyframes ayun{0%,100%{transform:scale(var(--s))}30%{transform:rotate(3deg) scale(var(--s))}65%{transform:rotate(-2deg) scale(var(--s))}}
+@keyframes denyut-sekali{0%,100%{transform:none}45%{transform:scale(1.35)}}
+@media (max-width:899px){
+  .jalur-langkah::before{display:none}
+  .langkah{position:relative}
+  .langkah::before{content:"";position:absolute;left:14px;top:30px;bottom:-14px;width:2px;background:color-mix(in srgb,var(--ink) 25%,transparent);transform-origin:top}
+  .langkah:last-child::before{display:none}
+  .gerak .langkah>*{transition:opacity .5s var(--ease-muncul),transform .5s var(--ease-muncul)}
+  .gerak .langkah:not(.tampil)>*{opacity:0;transform:translateY(10px)}
+  .gerak .langkah::before{transition:transform .6s var(--ease-menyala) .25s}
+  .gerak .langkah:not(.tampil)::before{transform:scaleY(0)}
+  .gerak .langkah:not(.tampil) .langkah-no::after{opacity:0}
+  .gerak .langkah-no::after{transition:opacity .6s var(--ease-menyala) .2s}
+}
 
 /* (B) Kartu Placement Test = "lembar ujian" LCDU: kertas putih bergaris halus, margin merah, strip keffiyeh houndstooth
    hijau di atas. Komposisi = 70 titik lentera (20 biru · 20 hijau · 30 merah) yang muncul berurutan sekali; cincin waktu
@@ -2067,8 +2110,13 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     $$('.pt-mulai', ptAksi).forEach(function(a){ var url = cfg('placement.' + a.dataset.bhs + '.url'); if (url) a.href = url; });
     /* jalur enam langkah: lentera menyala berurutan sekali saat jalur masuk layar */
     var jalur = $('#jalur', gabung);
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ jalur.classList.add('jalur-nyala'); ob.disconnect(); } }, {threshold:.4}).observe(jalur);
-    else jalur.classList.add('jalur-nyala');
+    /* desktop: urutan sekali, lalu .jalur-selesai membuka hover/fokus. HP: tiap baris .tampil saat masuk layar */
+    var jalurSelesai = function(){ jalur.classList.add('jalur-selesai'); };
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ jalur.classList.add('jalur-nyala'); ob.disconnect(); setTimeout(jalurSelesai, reduce ? 0 : 3800); } }, {threshold:.4}).observe(jalur);
+      var barisIO = new IntersectionObserver(function(en){ en.forEach(function(x){ if (x.isIntersecting){ x.target.classList.add('tampil'); barisIO.unobserve(x.target); } }); }, {rootMargin:'0px 0px -12% 0px'});
+      $$('.langkah', jalur).forEach(function(l){ barisIO.observe(l); });
+    } else { jalur.classList.add('jalur-nyala'); jalurSelesai(); $$('.langkah', jalur).forEach(function(l){ l.classList.add('tampil'); }); }
     if ('IntersectionObserver' in window){
       new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ ptK.classList.add('pt-tampil'); ob.disconnect(); } }, {threshold:.35}).observe(ptK);
     } else ptK.classList.add('pt-tampil');
