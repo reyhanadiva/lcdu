@@ -666,6 +666,15 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Nilai CSS di bawah = posisi tengah (cadangan tanpa JS). Rentang geser dihitung JS dari lebar isi (35–65 di ≥ 1024px)
    supaya sisi yang menyempit tidak bertabrakan; foto sisi yang menyempit memudar (opacity). < 1000px: dua blok bertumpuk. */
 .classes .h2{margin-bottom:clamp(28px,4vw,48px)}
+/* judul menyatu dengan panel (sesi "rapikan", opsi b): ≥ 700px judul menimpa tepi atas panel — separuh bawah huruf duduk di
+   atas latar biru, separuh atas di latar kertas. Tinta #10163A: 16:1 di kertas, ±12:1 di biru #C9D1F8 & hijau #D2E6C6.
+   Judul tidak ikut bergeser saat pembagi ditarik (pegangan & pita tetap di tempatnya). Tinggi section tidak bertambah. */
+@media (min-width:700px){
+  .classes .h2{position:relative;z-index:4;margin-bottom:-.52em;line-height:1;text-shadow:0 0 1px #FAFAF7}
+  .classes .split{padding-top:0}
+}
+/* HP: judul + penanda "Inggris | Arab" satu kelompok rapat tepat di atas slide */
+@media (max-width:699px){.classes .h2{margin-bottom:4px}}
 .classes{padding-bottom:calc(var(--jarak-section) * .5)}
 .split{--pad-luar:max(16px,calc((100vw - 1240px) / 2 + 32px));--isi:clamp(280px,25vw,340px);position:relative;isolation:isolate}
 .side{position:relative;overflow:hidden;min-width:0;contain:layout paint;color:var(--ink);--ink-soft:#3E4256}
