@@ -69,6 +69,15 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   putih/hitam 18,9 · kunyit/hitam 11,7 · tinta kunyit/kunyit 10,1. **Gagal untuk teks biasa** (hanya dekor atau judul
   ≥ 24px tebal): putih/merah terang `#E23B4A` 4,2 · hijau logo `#7FA33F` di latar terang 2,8 · putih/hijau logo 2,9 ·
   kunyit/merah tua 4,1. Kata redup Pengantar (≥ 3:1): tinta 3,6 · biru 3,5 · Arab 3,7.
+- **Geser `.geser`** (komponen dipakai ulang; kelak Testimoni & Tim): `<div class="geser" data-geser="(media query)"
+  data-geser-nama="…">` berisi jalur `[data-geser-jalur]` dengan slide `[data-geser-slide]`, opsional penanda sendiri
+  `[data-geser-penanda]` berisi `<button>` (tanpa itu: titik dibuat otomatis). Di bawah breakpoint JS memasang `.is-geser`,
+  `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4", `tabindex=0` di jalur
+  (panah kiri/kanan, Home/End), `aria-current` di penanda, event `geser` (detail = indeks, bubble). CSS: scroll-snap x
+  mandatory, `overscroll-behavior-x: contain`, scrollbar tersembunyi, jalur menjorok selebar layar (padding .wrap),
+  slide `flex: 0 0 86%` + `contain: layout paint`, tinggi sama (flex stretch). Penanda lewat IntersectionObserver (root =
+  jalur, threshold .6), tanpa scroll listener/rAF. Isyarat sekali (slide translateX −28px lalu kembali) saat pertama
+  terlihat, tidak saat reduced-motion. Tanpa JS / di atas breakpoint: tata letak asli. Desktop tidak berubah.
 - **Skala jarak vertikal** (sesi "jarak"; dulu `.band` `clamp(72px,10vw,140px)` → ±280px kosong antar isi di 1440):
   satu token `--jarak-section: clamp(44px,6.5vw,88px)` (HP 44px, desktop 88px) untuk `.band`, bawah Pengantar, Kenapa
   (`.why-wrap`), Biaya (`.cost`), footer; `--jarak-sambung: clamp(20px,2vw,28px)` = jeda teks setelah gradasi
@@ -137,8 +146,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   bertumpuk + empat kata Arab raksasa (Reem Kufi 5,4–8,8rem, garis putih 1,5px, rata kiri di tepi bawah foto supaya tidak
   masuk kolom teks), crossfade .7s saat pernyataan melewati tengah layar (IntersectionObserver `-45% 0px -45% 0px`, JS
   memasang `.aktif` di item & `.on` di panggung). Kata Arab aktif terisi `--semangka`. Foto: menulis (kurikulum),
-  kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. HP: tiap item = `.why-media` (foto + kata Arab
-  menumpang di tepi bawah-kanan) lalu teks, tanpa sticky. **Dimampatkan** (permintaan pemilik): pernyataan desktop
+  kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. **HP & tablet (< 960px): `.geser`** — tiap pernyataan = satu slide
+  (`.why-media` foto 54vw maks. 220px + kata Arab + judul + kalimat), slide yang tampil = pernyataan aktif (kata Arab
+  merah; IO vertikal diabaikan saat geser aktif). Section di 390×844: 2.543 → 784 px (≤ satu layar). **Dimampatkan** (permintaan pemilik): pernyataan desktop
   `min(29vh,280px)`, terakhir `min(37vh,360px)` → section 1,70 layar di 1440×900 (1,65 tanpa pita); HP foto 66vw. Panggung & media = duplikat dekoratif (`aria-hidden`,
   `alt=""`, lazy + display:none → yang tak tampil tidak diunduh). Tepi atas: gradasi; tepi bawah: tepi mihrab.
   Reduced-motion: tetap berganti tanpa transisi. Tanpa JS: foto pertama, semua teks terbaca. Crossfade = gerak tambahan
@@ -157,8 +167,10 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   (hanya selama menarik), `touch-action:pan-y`. Undangan sekali 58 → 42 → 50 (dihentikan & kembali 50 bila section keluar
   layar), denyut = scale pada SVG pegangan hanya saat `.is-lihat` & belum ada interaksi. Diukur (Chrome, CPU 4x, tracing):
   menarik → 0 layout di tengah gerakan (hanya ±1 ms saat tekan & lepas), 60 fps, frame terpanjang 16,8 ms (1440);
-  undangan → layout 174/detik → 6/detik. < 1000px: dua blok bertumpuk (latar per sisi), tanpa tarik; ketuk = garis tepi
-  6px (pseudo, scaleY) + glyph lebih tegas (box-shadow inset dihapus). Isi: judul (biru / hijau kulit; Arab rata kanan &
+  undangan → layout 174/detik → 6/detik. 700–999px: dua blok bertumpuk (latar per sisi), tanpa tarik; ketuk = garis tepi
+  6px (pseudo, scaleY) + glyph lebih tegas. **HP < 700px: `.geser`** dengan dua slide (Inggris, Arab), penanda
+  `.kelas-penanda` "Inggris | Arab" = teks bergaris bawah (bukan pill) tersinkron & bisa diketuk; foto sisi disembunyikan
+  di slide supaya semua info muat; tanpa ketuk-untuk-penekanan. Section di 390×844: 1.821 → 798 px. Isi: judul (biru / hijau kulit; Arab rata kanan &
   dicerminkan), deskripsi, fokus belajar berbutir daun, label jadwal **hanya jam** ("Weekday 16.00–17.30 WIB",
   "Weekend 13.00–16.00 WIB"), strip 7 hari `<ul>`: hari kelas menyala + teks tersembunyi "Senin, kelas Inggris" dst.,
   hari lain `aria-hidden`. Latar sisi `#C9D1F8` / `#D2E6C6` (kontras sama seperti sebelumnya). **Jadwal perlu verifikasi.**
@@ -248,7 +260,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Section "Cek level" (kuis 3 soal) **dihapus**; diganti Placement Test resmi LCDU (tautan di `site-config.js`).
 - Aturan UI: **tidak ada tombol "langkah berikutnya"** di tiap section. Tombol hanya di titik keputusan nyata: Placement
   Test, pill "Daftar" navbar, Tanya admin, Salin rekening & Konfirmasi transfer, CTA footer. Eyebrow maksimal 2 di seluruh
-  halaman. Hanya tiga jenis gerak: **muncul, tergambar, menyala**. Tanpa scroll-jacking, tanpa pin horizontal. Semua
+  halaman. Hanya tiga jenis gerak: **muncul, tergambar, menyala**. Tanpa scroll-jacking, tanpa pin horizontal, tanpa
+  scroll horizontal pada halaman. **Pengecualian (keputusan pemilik, sesi geser):** geser horizontal NATIVE (scroll-snap)
+  di dalam section lewat komponen `.geser` boleh. Semua
   gerak mati saat `prefers-reduced-motion`.
 - **Anti-"AI slop"**: tanpa gradasi pada teks, tanpa emoji sebagai ikon, tanpa glassmorphism (pengecualian: navbar kaca,
   keputusan pemilik sebelumnya — perlu dikonfirmasi), tanpa tiga kartu simetris yang seragam, tanpa label kosong

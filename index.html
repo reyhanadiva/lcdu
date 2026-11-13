@@ -384,6 +384,31 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
   background:radial-gradient(closest-side,color-mix(in srgb,var(--lentera) 50%,transparent),transparent);transition:opacity var(--dur-menyala) var(--ease-menyala)}
 .gerak .menyala:not(.is-lit)::after{opacity:0}
 
+/* --- Geser (.geser): carousel geser horizontal NATIVE (scroll-snap) di dalam section, dipakai ulang (Kenapa & Pilih
+   kelas di HP; kelak Testimoni & Tim). Keputusan pemilik: geser native di dalam section boleh; scroll-jacking dan scroll
+   horizontal HALAMAN tetap dilarang. Aktif hanya di bawah breakpoint data-geser="(media query)": JS memasang .is-geser,
+   ARIA (region + aria-roledescription="carousel", slide = group "1 dari 4"), tabindex & penanda posisi. Tanpa JS /
+   di atas breakpoint: tata letak asli section. Jalur selebar layar (menjorok keluar .wrap), slide 86% supaya slide
+   berikut mengintip. Penanda posisi diperbarui IntersectionObserver (root = jalur), tanpa scroll listener & rAF.
+   Isyarat sekali saat pertama terlihat (slide bergeser 28px lalu kembali; transform), tidak saat reduced-motion. --- */
+.is-geser .geser-jalur{display:flex;gap:12px;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:4px max(16px,env(safe-area-inset-left,0px));
+  overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding-inline:max(16px,env(safe-area-inset-left,0px));overscroll-behavior-x:contain;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;list-style:none}
+.is-geser .geser-jalur::-webkit-scrollbar{display:none}
+.is-geser .geser-jalur:focus-visible{outline:3px solid var(--kunyit);outline-offset:-3px;border-radius:6px}
+@media (min-width:720px){.is-geser .geser-jalur{margin-inline:calc(-1 * max(32px,env(safe-area-inset-left,0px)));padding-inline:max(32px,env(safe-area-inset-left,0px));scroll-padding-inline:max(32px,env(safe-area-inset-left,0px))}}
+.geser--penuh.is-geser .geser-jalur{margin:0}
+.is-geser .geser-slide{flex:0 0 86%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;contain:layout paint}
+.geser-titik{display:none}
+.is-geser .geser-titik{display:flex;justify-content:center;gap:2px;margin-top:14px}
+.geser-titik button{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;background:none;cursor:pointer;color:inherit}
+.geser-titik button::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.35;transition:opacity .3s,transform .3s var(--ease)}
+.geser-titik button[aria-current="true"]::before{opacity:1;transform:scale(1.25)}
+.geser-titik button:focus-visible{outline:3px solid var(--kunyit);outline-offset:-2px;border-radius:50%}
+@keyframes geser-isyarat{0%,100%{transform:none}40%{transform:translateX(-28px)}}
+.gerak .is-geser .geser-jalur.isyarat .geser-slide{animation:geser-isyarat .9s var(--ease) 1}
+@media (prefers-reduced-motion: reduce){.geser-titik button::before{transition:none}}
+
 /* ===== NAV ===== */
 .nav{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:0;right:0;z-index:50;pointer-events:none;transition:transform .7s cubic-bezier(.22,1,.36,1),opacity .5s ease}
 /* sembunyi selama hero & setelah scroll ke bawah agak jauh; tetap muncul bila menerima fokus keyboard */
@@ -558,6 +583,16 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .why-item:last-child{min-height:min(37vh,360px)}
   .why-stage{margin-top:0}
 }
+/* HP (< 960px): pernyataan = slide geser (foto lengkung + kata Arab + pernyataan); slide aktif = pernyataan aktif */
+.why-geser.is-geser{margin-top:clamp(20px,3vw,32px)}
+.why-geser.is-geser .why-list{margin-top:0}
+.why-geser.is-geser .why-item{padding:6px 0 0;border-top:0}
+.why-geser.is-geser .why-item::before{top:0}
+.why-geser.is-geser .why-media{width:min(54vw,220px);margin:14px 0 34px}
+.why-geser.is-geser .why-media .why-ar{font-size:clamp(3.2rem,14vw,4.4rem)}
+.why-geser.is-geser .why-judul{font-size:clamp(1.9rem,1.5rem + 1.6vw,2.4rem)}
+.why-geser.is-geser .why-item p{margin-top:10px}
+.why-geser .geser-titik{color:var(--putih)}
 @media (prefers-reduced-motion: reduce){.why-item::before,.why-ar,.why-stage .frame-arch,.why-stage .why-ar{transition:none!important}}
 
 /* ===== BIAYA: blok merah tua penuh lebar =====
@@ -710,6 +745,22 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   /* denyut: hanya scale pada SVG di dalam pegangan (transform pegangan sendiri dipakai untuk posisi) */
   .gerak .split.is-lihat:not(.sudah) .split-pegangan svg{animation:denyut 1.8s var(--ease) infinite}
 }
+/* HP (< 700px): dua slide geser (Inggris, Arab), semua info satu kelas dalam satu slide. Penanda "Inggris | Arab" = teks
+   bergaris bawah yang tersinkron dengan slide dan bisa diketuk. Ketuk-untuk-penekanan (garis tepi) tidak dipakai di sini. */
+.kelas-penanda{display:none}
+.kelas-geser.is-geser .kelas-penanda{display:flex;align-items:baseline;gap:12px;margin:-8px 0 14px;font-weight:700;font-size:var(--step-1);color:var(--ink-soft)}
+.kelas-penanda button{padding:6px 0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;
+  text-underline-offset:.3em;text-decoration-color:transparent;transition:color .3s,text-decoration-color .3s}
+.kelas-penanda .kp-en[aria-current="true"]{color:var(--lazuardi-ink);text-decoration-color:currentColor}
+.kelas-penanda .kp-ar[aria-current="true"]{color:var(--zamrud-ink);text-decoration-color:currentColor}
+.kelas-penanda button:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
+.kelas-geser.is-geser .side{border-radius:4px}
+.kelas-geser.is-geser .side::after{display:none}
+.kelas-geser.is-geser .side-isi{align-content:start;padding:26px 18px 24px}
+.kelas-geser.is-geser .side-foto{display:none}
+.kelas-geser.is-geser .side-glyph{font-size:8rem}
+.kelas-geser.is-geser .days{grid-template-columns:repeat(7,minmax(0,34px));gap:5px}
+@media (prefers-reduced-motion: reduce){.kelas-penanda button{transition:none}}
 @keyframes denyut{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
 @media (prefers-reduced-motion: reduce){.latar-en,.latar-en-isi,.split-garis,.split-pegangan,.side-glyph,.side-foto,.side::after{transition:none!important}.split-pegangan svg{animation:none!important}}
 
@@ -1040,28 +1091,30 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       </div>
       <div class="why-kanan">
       <h2 class="why-h" id="why-h" data-judul>Kenapa LCDU?</h2>
-      <ol class="why-list">
-        <li class="why-item">
+      <div class="geser why-geser" data-geser="(max-width: 959px)" data-geser-nama="Alasan memilih LCDU">
+      <ol class="why-list geser-jalur" data-geser-jalur>
+        <li class="why-item geser-slide" data-geser-slide>
           <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/menulis-480.avif 480w, assets/photos/menulis-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/menulis-960.webp" srcset="assets/photos/menulis-480.webp 480w, assets/photos/menulis-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async"></picture></figure><span class="why-ar" lang="ar">مَنْهَج</span></div>
           <h3 class="why-judul">Kurikulum internasional</h3>
           <p>Materi mengikuti kurikulum internasional, disesuaikan dengan level kamu.</p>
         </li>
-        <li class="why-item">
+        <li class="why-item geser-slide" data-geser-slide>
           <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/kelas-online-480.avif 480w, assets/photos/kelas-online-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/kelas-online-960.webp" srcset="assets/photos/kelas-online-480.webp 480w, assets/photos/kelas-online-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"></picture></figure><span class="why-ar" lang="ar">عَنْ بُعْد</span></div>
           <h3 class="why-judul">Kelas online yang rapi</h3>
           <p>Tatap muka lewat Zoom. Materi, tugas, dan link kelas tersimpan rapi di Canvas LMS.</p>
         </li>
-        <li class="why-item">
+        <li class="why-item geser-slide" data-geser-slide>
           <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/guru-papan-480.avif 480w, assets/photos/guru-papan-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/guru-papan-960.webp" srcset="assets/photos/guru-papan-480.webp 480w, assets/photos/guru-papan-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async" style="object-position:45% 70%"></picture></figure><span class="why-ar" lang="ar">مُعَلِّم</span></div>
           <h3 class="why-judul">Guru tersertifikasi</h3>
           <p>Guru ramah dan bersertifikat Cambridge: TKT, CELTA, hingga DELTA.</p>
         </li>
-        <li class="why-item">
+        <li class="why-item geser-slide" data-geser-slide>
           <div class="why-media" aria-hidden="true"><figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/quran-rehal-480.avif 480w, assets/photos/quran-rehal-960.avif 960w" sizes="(min-width:960px) 1px, 76vw"><img src="assets/photos/quran-rehal-960.webp" srcset="assets/photos/quran-rehal-480.webp 480w, assets/photos/quran-rehal-960.webp 960w" sizes="(min-width:960px) 1px, 76vw" alt="" loading="lazy" decoding="async"></picture></figure><span class="why-ar" lang="ar">القُرْآن</span></div>
           <h3 class="why-judul">Dibuka dengan Al-Qur'an</h3>
           <p>Setiap pertemuan diawali membaca dan mendiskusikan ayat Al-Qur'an.</p>
         </li>
       </ol>
+      </div>
       </div>
     </div>
   </div>
@@ -1078,10 +1131,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
      Weekend Sabtu 13.00–16.00 WIB. Hari ditandai kotak menyala (nama aksesibel di tiap hari kelas). Tanpa daftar level. -->
 <section data-lentera class="band classes" id="kelas" aria-labelledby="cls-h">
   <div class="wrap"><h2 class="h2" id="cls-h" data-judul>Pilih kelasmu</h2></div>
-  <div class="split" id="split" data-state="imbang">
+  <div class="geser geser--penuh kelas-geser" data-geser="(max-width: 699px)" data-geser-nama="Pilihan kelas: Inggris dan Arab">
+  <div class="wrap"><div class="kelas-penanda" data-geser-penanda><button type="button" class="kp-en">Inggris</button><span aria-hidden="true">|</span><button type="button" class="kp-ar">Arab</button></div></div>
+  <div class="split geser-jalur" id="split" data-state="imbang" data-geser-jalur>
     <div class="latar latar-ar" aria-hidden="true"><i class="orn-net orn-net--kain"></i><span class="side-glyph" lang="ar">أب</span></div>
     <div class="latar latar-en" aria-hidden="true"><div class="latar-en-isi"><i class="orn-net orn-net--kain"></i><span class="side-glyph">Aa</span></div></div>
-    <div class="side side-en" data-side="en">
+    <div class="side side-en geser-slide" data-side="en" data-geser-slide>
       <i class="orn-net orn-net--kain" aria-hidden="true"></i>
       <span class="side-glyph" aria-hidden="true">Aa</span>
       <div class="side-isi">
@@ -1102,7 +1157,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </div>
     <div class="split-garis" aria-hidden="true"></div>
     <div class="split-pegangan" role="slider" tabindex="0" aria-label="Penekanan antara kelas Inggris dan kelas Arab" aria-orientation="horizontal" aria-valuemin="35" aria-valuemax="65" aria-valuenow="50" aria-valuetext="Inggris 50%, Arab 50%"><svg viewBox="0 0 72 72" aria-hidden="true" focusable="false"><circle cx="36" cy="36" r="36" fill="#1E6B3A"/><circle cx="36" cy="36" r="31.5" fill="#7FA33F"/><circle cx="36" cy="36" r="28.5" fill="#FFFFFF"/><circle cx="36" cy="36" r="25.5" fill="#E23B4A"/><g fill="#111111"><path d="M30 15.5c1.6 2 2.2 3.6 2.2 4.8a2.2 2.2 0 0 1-4.4 0c0-1.2.6-2.8 2.2-4.8Z"/><path d="M42 15.5c1.6 2 2.2 3.6 2.2 4.8a2.2 2.2 0 0 1-4.4 0c0-1.2.6-2.8 2.2-4.8Z"/><path d="M30 56.5c-1.6-2-2.2-3.6-2.2-4.8a2.2 2.2 0 0 1 4.4 0c0 1.2-.6 2.8-2.2 4.8Z"/><path d="M42 56.5c-1.6-2-2.2-3.6-2.2-4.8a2.2 2.2 0 0 1 4.4 0c0 1.2-.6 2.8-2.2 4.8Z"/></g><path d="M24 28l-8 8 8 8M48 28l8 8-8 8" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    <div class="side side-ar" data-side="ar">
+    <div class="side side-ar geser-slide" data-side="ar" data-geser-slide>
       <i class="orn-net orn-net--kain" aria-hidden="true"></i>
       <span class="side-glyph" aria-hidden="true" lang="ar">أب</span>
       <div class="side-isi">
@@ -1121,6 +1176,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <figure class="frame-arch side-foto" aria-hidden="true"><picture><source type="image/avif" srcset="assets/photos/kaligrafi-480.avif 480w, assets/photos/kaligrafi-960.avif 960w" sizes="(min-width:1000px) 230px, 56vw"><img src="assets/photos/kaligrafi-480.webp" srcset="assets/photos/kaligrafi-480.webp 480w, assets/photos/kaligrafi-960.webp 960w" sizes="(min-width:1000px) 230px, 56vw" width="480" height="600" alt="" loading="lazy" decoding="async" style="object-position:55% 50%"></picture></figure>
       </div>
     </div>
+  </div>
   </div>
 </section>
 
@@ -1342,6 +1398,66 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   var fine = window.matchMedia('(pointer: fine)').matches;
   var $ = function(s,r){return (r||document).querySelector(s)};
   var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+  /* ---------- Geser (.geser): carousel native di bawah breakpoint (lihat CSS). Mengembalikan { aktif, ke(i), indeks }.
+     Penanda: [data-geser-penanda] berisi tombol buatan sendiri (mis. "Inggris | Arab") atau titik dibuat otomatis.
+     Event "geser" (detail = indeks) di elemen root saat slide aktif berubah. ---------- */
+  function geser(root){
+    var mq = window.matchMedia(root.dataset.geser), jalur = $('[data-geser-jalur]', root);
+    var slides = $$('[data-geser-slide]', jalur), n = slides.length, api = { aktif: false, indeks: 0 };
+    var penanda = $('[data-geser-penanda]', root), tombol;
+    if (!penanda){
+      penanda = document.createElement('div'); penanda.className = 'geser-titik';
+      slides.forEach(function(sl, i){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Ke slide ' + (i + 1) + ' dari ' + n); penanda.appendChild(b); });
+      jalur.insertAdjacentElement('afterend', penanda);
+    }
+    tombol = $$('button', penanda);
+    function tandai(i){
+      api.indeks = i;
+      tombol.forEach(function(b, k){ b.setAttribute('aria-current', k === i ? 'true' : 'false'); });
+      root.dispatchEvent(new CustomEvent('geser', { detail: i, bubbles: true }));
+    }
+    api.ke = function(i){
+      i = Math.max(0, Math.min(n - 1, i));
+      jalur.scrollTo({ left: slides[i].offsetLeft - slides[0].offsetLeft, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    tombol.forEach(function(b, k){ b.addEventListener('click', function(){ api.ke(k); }); });
+    jalur.addEventListener('keydown', function(e){
+      if (!api.aktif || e.target !== jalur) return;
+      if (e.key === 'ArrowRight') api.ke(api.indeks + 1); else if (e.key === 'ArrowLeft') api.ke(api.indeks - 1);
+      else if (e.key === 'Home') api.ke(0); else if (e.key === 'End') api.ke(n - 1); else return;
+      e.preventDefault();
+    });
+    var io = 'IntersectionObserver' in window ? new IntersectionObserver(function(en){
+      en.forEach(function(x){ if (x.isIntersecting) tandai(slides.indexOf(x.target)); });
+    }, { root: jalur, threshold: .6 }) : null;
+    var isyaratIO = (!reduce && 'IntersectionObserver' in window) ? new IntersectionObserver(function(en, ob){
+      if (!en[0].isIntersecting || !api.aktif) return; ob.disconnect();
+      if (jalur.scrollLeft > 4) return;
+      jalur.classList.add('isyarat'); setTimeout(function(){ jalur.classList.remove('isyarat'); }, 1000);
+    }, { threshold: .5 }) : null;
+    function terapkan(){
+      var on = mq.matches; api.aktif = on;
+      root.classList.toggle('is-geser', on);
+      if (on){
+        root.setAttribute('role', 'region'); root.setAttribute('aria-roledescription', 'carousel');
+        root.setAttribute('aria-label', root.dataset.geserNama || 'Carousel');
+        jalur.setAttribute('tabindex', '0');
+        slides.forEach(function(sl, i){ sl.setAttribute('role', 'group'); sl.setAttribute('aria-roledescription', 'slide'); sl.setAttribute('aria-label', (i + 1) + ' dari ' + n); if (io) io.observe(sl); });
+        if (isyaratIO) isyaratIO.observe(root);
+        tandai(0);
+      } else {
+        ['role', 'aria-roledescription', 'aria-label'].forEach(function(a){ root.removeAttribute(a); });
+        jalur.removeAttribute('tabindex'); jalur.scrollLeft = 0;
+        slides.forEach(function(sl){ ['role', 'aria-roledescription', 'aria-label'].forEach(function(a){ sl.removeAttribute(a); }); if (io) io.unobserve(sl); });
+      }
+    }
+    terapkan();
+    if (mq.addEventListener) mq.addEventListener('change', terapkan);
+    return api;
+  }
+  var geserKenapa = $('#kenapa [data-geser]') ? geser($('#kenapa [data-geser]')) : null;
+  var geserKelas = $('#kelas [data-geser]') ? geser($('#kelas [data-geser]')) : null;
 
   /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
   var nav = $('.nav'), fab = $('.fab'), heroEl = $('#hero'), lastY = window.scrollY, run = 0, grace = 0, inHero = true, nTick = false;
@@ -1605,8 +1721,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     whyStage.forEach(function(el){ el.classList.toggle('on', +el.dataset.i === i); });
   }
   whyAktif(0);
+  /* HP: slide yang tampil = pernyataan aktif (kata Arab terisi merah) */
+  if (geserKenapa) whyEl.addEventListener('geser', function(e){ whyAktif(e.detail); });
   if ('IntersectionObserver' in window){
-    var whyIO = new IntersectionObserver(function(en){ en.forEach(function(x){ if (x.isIntersecting) whyAktif(whyItems.indexOf(x.target)); }); },
+    var whyIO = new IntersectionObserver(function(en){ if (geserKenapa && geserKenapa.aktif) return; en.forEach(function(x){ if (x.isIntersecting) whyAktif(whyItems.indexOf(x.target)); }); },
       {rootMargin:'-45% 0px -45% 0px'});
     whyItems.forEach(function(it){ whyIO.observe(it); });
   }
@@ -1663,6 +1781,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   sisi.forEach(function(s){
     s.addEventListener('click', function(){
       sudah(); clearTimeout(hoverT);
+      if (geserKelas && geserKelas.aktif) return;   // HP < 700px: slide geser, tanpa ketuk-untuk-penekanan
       if (!lebarMQ.matches){ split.dataset.state = split.dataset.state === s.dataset.side ? 'imbang' : s.dataset.side; return; }
       fokus(split.dataset.state === s.dataset.side ? 'imbang' : s.dataset.side);
     });
