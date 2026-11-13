@@ -19,16 +19,16 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Section | Interaksi |
 |---|---|
 | Hero | Cerita scroll 3 babak (tinggi 190vh, 13vh terakhir "tahan fajar"): malam → lampu menyala dari Kubah ke luar → fajar. Hero **Foto**: foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu. Geser kencang tetap berakhir di fajar penuh. Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
-| Pengantar | Stub, isi menyusul. |
+| Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Nirlaba." yang menyala kata per kata, foto lengkung Al-Aqsa. |
 | Kenapa LCDU | Blok hijau, foto lengkung berganti mengikuti pernyataan (desktop); di HP tiap pernyataan = slide geser. |
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Semua cerita terlihat: potret lengkung + kutipan besar (desktop asimetris; HP slide geser), penutup "Cerita berikutnya bisa datang dari kamu." Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
 | Tim | Rak buku kaca: tiga rak (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab), satu orang = satu buku. Disorot/difokus/diketuk → buku keluar & menampilkan sampul (penampung foto, nama, peran, sertifikasi di karabiner); panel rincian teks di bawah rak. HP: satu rak per slide geser. Data di array `TEAM`; foto tim opsional lewat `node tools/build-photos.mjs --potret <folder> team`. |
-| FAQ | Stub, isi menyusul. |
-| Donasi untuk Palestina | Disalurkan melalui AWG. Nomor rekening + tombol salin + konfirmasi transfer (WhatsApp). |
-| Footer | Kosakata hari ini (Inggris + Arab), berganti tiap hari. |
+| FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
+| Donasi untuk Palestina | Alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), potongan QS. Al-Baqarah: 261, lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
+| Footer | Langit malam Al-Aqsa (foto hero yang sama) dengan sembilan lentera, "Bahasa untuk umat.", kosakata hari ini, tautan, logo resmi besar, pita keffiyeh. Instagram, alamat & mitra hanya tampil bila diisi di `site-config.js`. |
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
 
@@ -80,18 +80,41 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 - [ ] **Persetujuan orang tua/wali** untuk siswa yang berusia **di bawah 18 tahun** (sebagian siswa 16–17 tahun). Mohon konfirmasi prosedurnya dengan Yayasan.
 - [ ] **Foto stok sementara** di `assets/photos/` (lihat `CREDITS.md`): ganti dengan foto asli LCDU. Isi tulisan foto kaligrafi perlu dicek guru Arab.
 - [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (gambar hero Foto; juga aset hero 3D di arsip `lcdu-3d`) — perlu diverifikasi.
-- [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).
-- [ ] **Link**: formulir registrasi, Instagram, alamat (saat ini `#`). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
+- [ ] **Link formulir registrasi** (belum ada di halaman). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
 - [ ] **PERLU VERIFIKASI — Jadwal kelas** (section Pilih kelas): Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; Weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **PERLU VERIFIKASI — Arti "term"**: halaman menulis "per term (semester)" (1 term = 1 semester; struk Biaya, total Rp100.000). Pastikan sesuai kebijakan LCDU.
 - [ ] **PERLU VERIFIKASI — Nomor WhatsApp admin** 0819-6009-333 (diambil dari lcdu.org; ada di `site-config.js`).
 - [ ] **PERLU VERIFIKASI — Foto stok sementara** di `assets/photos/` (Pengantar, Kenapa, Pilih kelas): ganti dengan foto asli LCDU; daftar & lisensi di `CREDITS.md`.
 - [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
-- [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`).
+- [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`, tanpa titik). **Pastikan format salin tanpa titik ini benar** untuk transfer.
 - [ ] **Tujuan donasi**: situs lama mencampur "Donasi LCDU" dan "Donasi untuk Palestina" di satu rekening. Perlu dipisah/diperjelas.
 - [ ] **Teks ayat** QS. Al-Baqarah: 261 (potongan awal) dan QS. Al-Isra: 1 (potongan) — cek di quran.kemenag.go.id.
 - [ ] **Soal kuis** dan kunci jawaban — minta guru Inggris & Arab mengecek ulang.
+
+## Menunggu dari pemilik
+
+Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik memberikannya (tidak ada penampung kosong).
+
+**Pertanyaan FAQ yang belum punya jawaban resmi** (tambahkan ke array `FAQ` di `index.html` setelah dijawab):
+- [ ] Apakah ada sertifikat setelah menyelesaikan kelas?
+- [ ] Apakah kelas direkam / ada rekaman kelas?
+- [ ] Berapa lama satu term dalam bulan?
+- [ ] Apa saja level yang tersedia (daftar level)?
+- [ ] Metode pembayaran apa saja (selain yang tertulis)?
+- [ ] Bagaimana kebijakan bila siswa tidak melanjutkan / berhenti di tengah term?
+
+**Donasi**
+- [ ] **Laporan penyaluran dari AWG**: tautan/ringkasan laporan hanya ditambahkan bila ada laporan nyata dari AWG. Tidak ada angka dampak di halaman.
+- [ ] **Terjemah resmi** potongan QS. Al-Baqarah: 261 dari quran.kemenag.go.id → tempel ke `donasi.terjemahAyat` di `site-config.js` (kosong = tidak tampil). Verifikasi juga teks Arabnya.
+- [ ] **Format nomor rekening** saat disalin (sekarang angka tanpa titik: `1010118394`).
+- [ ] **Izin penghimpunan donasi (PUB) dan nama pemilik rekening** — konfirmasi Yayasan. Bila belum, ubah `donasi.siapTayang` ke `false` di `site-config.js` (rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin").
+- [ ] **Logo/izin AWG**: logo AWG tidak dipasang tanpa izin tertulis.
+
+**Footer**
+- [ ] **Instagram** → `kontak.instagram` (URL lengkap) di `site-config.js`.
+- [ ] **Alamat sekretariat** → `kontak.alamat`.
+- [ ] **Logo mitra** (dengan izin) → `mitra: [{ nama, url, logo }]`; kosong = baris mitra tersembunyi.
 
 ## Deploy
 

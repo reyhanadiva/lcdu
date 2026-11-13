@@ -251,6 +251,23 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   menyembunyikan dua rak). HP: `.geser` satu rak per slide, penanda "Pengelola | Inggris | Arab" teks bergaris bawah, 8 buku
   muat sebaris di 390px. Chip filter & catatan "Kotak warna adalah slot foto" dihapus. Tinggi: 1440×900 1.554 → 864 px;
   390×844 8.230 → 724 px. Biaya hover (tanpa throttling): median 0,5 ms, p95 0,8 ms, maks. 1,9 ms per perpindahan buku.
+- **FAQ** (selesai, sesi FAQ-donasi-footer; judul "Yang sering ditanyakan"): **hanya fakta yang sudah ada** di halaman/README/
+  site-config.js — satu array `FAQ` (id, topik, tanya, jawab) + JSON-LD FAQPage dari array & teks yang SAMA (diuji identik).
+  9 pertanyaan: biaya (satu-satunya "Rp100.000" selain struk, bersama "tanpa biaya bulanan"), syarat, cara daftar, Placement
+  Test (status dari `placement.*.open`), belajar, jadwal (persis dari Pilih kelas), kelas, donasi, pengelola. Pertanyaan tanpa
+  jawaban resmi (sertifikat, rekaman, lama term, level, metode bayar, berhenti) **tidak tampil** → README "Menunggu dari
+  pemilik". Akordeon satu terbuka (grid-template-rows 0fr→1fr), cari langsung + `<mark>`, topik teks bergaris bawah, "Tidak
+  ada yang cocok" + WhatsApp admin, aria-live jumlah hasil, `#faq-<id>` membuka & menggulir. HP tertutup 763 px.
+- **Donasi** (selesai): alur empat simpul memakai lentera sistem benang (`.lentera-tanda/.lt-inti/.lt-cahaya`, menyala sekali
+  berurutan) + daun `.orn-leaf`; ayat Naskh besar, potongan ditandai "…" + "potongan awal ayat"; terjemah HANYA dari
+  `donasi.terjemahAyat`. Lembar setoran (kertas krem, tepi kiri zigzag, perforasi, isian bergaris titik) ≠ struk Biaya.
+  `donasi.siapTayang` (bawaan true; false → kalimat + WhatsApp). Tanpa angka dampak, target, nominal, urgensi, logo AWG.
+  Transisi FAQ → Donasi tetap gradasi senja → malam (terkunci; `.kufiyah` tidak dipakai lagi). HP: 1,30 layar tanpa
+  gradasi, 1,69 layar termasuk gradasi `--sambung-malam` (terkunci).
+- **Footer** (selesai): tanpa penampung kosong — Instagram/alamat/mitra hanya dari `kontak.*`/`mitra[]` di site-config.js.
+  Pita langit = foto malam hero dengan srcset sama (cache), 9 lentera menyala sekali, "Bahasa untuk umat." (teks dari
+  pemilik), logo putih resmi (560px, tidak diperbesar) terpotong di bawah, pita keffiyeh hitam-putih (`.orn-band--tebal`
+  `.kain-hitam` di atas putih; bukan `.kufiyah`), "Ke atas". HP 800 px (0,95 layar), CLS 0.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
@@ -360,7 +377,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    lebih sinematik. 3D tidak dikembangkan lagi (arsip di `lcdu-3d`).
 2. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
-   Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung, Testimoni, Tim
+   Semua section sudah didesain ulang (Pengantar sampai Footer). Berikutnya: data dari pemilik (README "Menunggu dari
+   pemilik"), foto asli, lalu serah terima.
    (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
