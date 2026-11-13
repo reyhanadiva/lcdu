@@ -1148,32 +1148,53 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @media (prefers-reduced-motion: reduce){.alur::before,.alur .lt-cahaya,.alur .lt-inti::after,.alur .orn-leaf{transition:none!important}}
 
-/* ===== MITRA ===== */
-.partners{padding-bottom:40px;border-bottom:1px solid var(--line)}
+/* ===== FOOTER: penutup cerita =====
+   Tanpa penampung kosong: Instagram, alamat & mitra hanya tampil bila ada di site-config.js (kontak.*, mitra[]).
+   Pita langit = foto malam hero yang SAMA (srcset sama dengan pilihan hero → biasanya sudah di cache, 0 byte tambahan),
+   dipotong ke garis langit Al-Aqsa, memudar ke latar footer; tanpa parallax. Sembilan lentera (satu per section ber-
+   lentera) menyala berurutan SEKALI saat terlihat (opacity radial-gradient). Logo resmi putih besar terpotong di tepi
+   bawah, lalu pita keffiyeh hitam-putih (pustaka ornamen). .kufiyah TIDAK dipakai (terkunci: hanya di bawah hero). */
 .foot-band{color:var(--lazuardi-ink);opacity:.7}
-.partners-row{display:flex;flex-wrap:wrap;gap:16px 40px;align-items:center;justify-content:space-between}
-.partners-row p{font-weight:700}
-.logos{display:flex;flex-wrap:wrap;gap:12px}
-.logo-slot{width:120px;height:52px;border-radius:12px;box-shadow:0 0 0 1.5px var(--line) inset;display:grid;place-items:center;font-size:.72rem;color:var(--ink-soft)}
-
-/* ===== FOOTER ===== */
-.foot{padding-block:var(--jarak-section) 40px;display:grid;gap:48px}
-.foot-grid{display:grid;gap:32px}
-@media (min-width:900px){.foot-grid{grid-template-columns:1.2fr 1fr 1fr}}
-.wotd{background:var(--surface);border-radius:var(--r-lg);padding:24px;display:grid;gap:14px;box-shadow:0 0 0 1px var(--line) inset}
-.wotd h3{font-size:var(--step--1);color:var(--ink-soft);font-weight:700}
-.wotd-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.wotd-pair div{display:grid;gap:2px}
-.wotd-en{font-family:var(--f-display);font-weight:700;font-size:1.3rem;color:var(--lazuardi-ink)}
-.wotd-ar{font-family:var(--f-ar-display);font-size:1.8rem;line-height:1.2;color:var(--zamrud-ink);direction:rtl;text-align:left}
-.wotd-pair span{font-size:var(--step--1);color:var(--ink-soft)}
-.foot-links{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.kaki-langit{position:relative;height:clamp(220px,25vw,360px);overflow:hidden;isolation:isolate;margin-top:-1px}
+.kaki-langit picture,.kaki-langit img{position:absolute;inset:0;width:100%;height:100%}
+.kaki-langit img{object-fit:cover;object-position:50% 27%}
+.kaki-langit::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,var(--malam-bg) 0%,color-mix(in srgb,var(--malam-bg) 55%,transparent) 22%,transparent 42%,transparent 55%,color-mix(in srgb,var(--malam-bg) 75%,transparent) 78%,var(--malam-bg) 100%)}
+.kaki-lentera{position:absolute;inset:0;z-index:2;pointer-events:none}
+.kaki-lentera i{position:absolute;left:var(--x);top:var(--y);width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;
+  background:radial-gradient(closest-side,#FFF3C4 0 14%,color-mix(in srgb,var(--kunyit) 80%,transparent) 22%,color-mix(in srgb,var(--lentera) 30%,transparent) 55%,transparent)}
+.gerak .kaki-lentera i{opacity:0;transition:opacity .7s var(--ease-menyala) calc(var(--i) * 140ms)}
+.gerak .kaki-langit.nyala .kaki-lentera i{opacity:1}
+.kaki-penutup{position:absolute;z-index:3;left:0;right:0;bottom:clamp(14px,2.4vw,30px);margin:0;padding-inline:max(16px,calc((100vw - 1240px) / 2 + 32px));
+  font-family:var(--f-display);font-style:italic;font-weight:700;font-size:var(--step-3);line-height:1;letter-spacing:-.02em;color:var(--ink);
+  text-shadow:0 2px 18px var(--malam-bg),0 0 2px var(--malam-bg)}
+@media (max-width:699px){.kaki-langit{height:220px}.kaki-langit img{object-position:50% 71%}}
+.foot{padding-block:clamp(28px,4vw,48px) 28px;display:grid;gap:clamp(28px,4vw,40px)}
+.foot-grid{display:grid;gap:24px 32px;grid-template-columns:1fr 1fr}
+.wotd{grid-column:1/-1;display:grid;gap:8px;align-content:start}
+@media (min-width:900px){.foot-grid{grid-template-columns:1.4fr 1fr 1fr}.wotd{grid-column:auto}}
+.wotd h3,.foot h4{margin:0 0 10px;font-size:var(--step--1);font-weight:700;letter-spacing:.04em;color:var(--ink-soft)}
+.wotd h3{margin:0}
+.wotd-pair{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 28px}
+.wotd-pair div{display:flex;align-items:baseline;gap:8px}
+.wotd-en{font-family:var(--f-display);font-weight:700;font-size:1.35rem;color:var(--lazuardi-ink)}
+.wotd-ar{font-family:var(--f-ar-display);font-size:1.7rem;line-height:1.1;color:var(--zamrud-ink)}
+.wotd-pair span:not(.wotd-en):not(.wotd-ar){font-size:var(--step--1);color:var(--ink-soft)}
+.foot-links{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .foot-links a{text-decoration:none;font-weight:600}
 .foot-links a:hover{text-decoration:underline}
-.foot h4{margin:0 0 14px;font-size:var(--step--1);color:var(--ink-soft)}
-.wordmark{margin-top:clamp(40px,6vw,72px)}
-.wordmark img{display:block;width:clamp(220px,42vw,560px);height:auto}
-.legal{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;font-size:var(--step--1);color:var(--ink-soft)}
+.foot-alamat{font-size:var(--step--1);color:var(--ink-soft);font-style:normal}
+.mitra-baris[hidden]{display:none}
+.mitra-baris{display:flex;flex-wrap:wrap;align-items:center;gap:12px 32px;padding-top:20px;border-top:1px solid var(--line)}
+.mitra-baris p{font-weight:700;font-size:var(--step--1);color:var(--ink-soft)}
+.mitra-baris img{display:block;height:40px;width:auto}
+.legal{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:baseline;padding-top:18px;border-top:1px solid var(--line);font-size:var(--step--1);color:var(--ink-soft)}
+.ke-atas{font-weight:700;color:var(--ink)}
+.kaki-logo{height:clamp(110px,15vw,210px);overflow:hidden;display:flex;justify-content:center;align-items:flex-start;padding-top:clamp(8px,2vw,20px)}
+.kaki-logo img{display:block;width:min(88vw,560px);height:auto;opacity:.92}
+.kaki-pita{background:#F3EFE8}
+.kaki-pita .orn-band{--pita:28px}
+@media (prefers-reduced-motion: reduce){.kaki-lentera i{transition:none!important;opacity:1!important}}
 
 /* ===== Mengambang ===== */
 .fab{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;display:flex;align-items:center;gap:10px;padding:12px 18px 12px 14px;border-radius:999px;background:var(--zamrud);color:var(--on-color);font-weight:700;text-decoration:none;box-shadow:0 14px 30px -10px rgba(6,92,65,.6);transition:transform .25s var(--ease),opacity .5s ease,visibility .5s}
@@ -1558,33 +1579,39 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div><!-- /.hari -->
 </main>
 
-<footer class="fase" data-fase="malam">
+<footer class="fase kaki" data-fase="malam">
   <div class="orn-band foot-band" data-tergambar aria-hidden="true"></div>
+  <!-- pita langit penutup: foto malam hero yang sama (tersimpan di cache), dekoratif -->
+  <div class="kaki-langit" id="kaki-langit">
+    <picture><source media="(max-width: 699px)" type="image/avif" srcset="assets/hero/build/night-tall-750.avif 750w, assets/hero/build/night-tall-1024.avif 1024w" sizes="100vw"><source media="(max-width: 699px)" type="image/webp" srcset="assets/hero/build/night-tall-750.webp 750w, assets/hero/build/night-tall-1024.webp 1024w" sizes="100vw"><source type="image/avif" srcset="assets/hero/build/night-wide-v2-1280.avif 1280w, assets/hero/build/night-wide-v2-1536.avif 1536w" sizes="100vw"><source type="image/webp" srcset="assets/hero/build/night-wide-v2-1280.webp 1280w, assets/hero/build/night-wide-v2-1536.webp 1536w" sizes="100vw"><img src="assets/hero/build/night-wide-v2-1536.jpg" width="1536" height="1024" alt="" loading="lazy" decoding="async"></picture>
+    <div class="kaki-lentera" aria-hidden="true"><i style="--i:0;--x:6%;--y:64%"></i><i style="--i:1;--x:17%;--y:60%"></i><i style="--i:2;--x:28%;--y:66%"></i><i style="--i:3;--x:39%;--y:58%"></i><i style="--i:4;--x:50%;--y:63%"></i><i style="--i:5;--x:61%;--y:59%"></i><i style="--i:6;--x:72%;--y:65%"></i><i style="--i:7;--x:83%;--y:61%"></i><i style="--i:8;--x:94%;--y:63%"></i></div>
+    <p class="kaki-penutup">Bahasa untuk umat.</p>
+  </div>
   <div class="wrap foot">
-  <div class="foot-grid">
-    <div class="wotd" aria-live="polite">
-      <h3>Kosakata hari ini</h3>
-      <div class="wotd-pair">
-        <div><span class="wotd-en" id="w-en" lang="en">resilient</span><span id="w-en-id">tangguh, cepat bangkit</span></div>
-        <div><span class="wotd-ar" id="w-ar" lang="ar">صَبْر</span><span id="w-ar-id">sabar</span></div>
+    <div class="foot-grid">
+      <div class="wotd" aria-live="polite">
+        <h3>Kosakata hari ini</h3>
+        <div class="wotd-pair">
+          <div><span class="wotd-en" id="w-en" lang="en">resilient</span><span id="w-en-id">tangguh, cepat bangkit</span></div>
+          <div><span class="wotd-ar" id="w-ar" lang="ar">صَبْر</span><span id="w-ar-id">sabar</span></div>
+        </div>
+      </div>
+      <div>
+        <h4>Jelajahi</h4>
+        <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Biaya</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#faq">FAQ</a></li><li><a href="#donasi">Donasi</a></li></ul>
+      </div>
+      <div>
+        <h4>Hubungi kami</h4>
+        <!-- Instagram & alamat ditambah JS hanya bila ada di site-config.js (kontak.instagram, kontak.alamat) -->
+        <ul class="foot-links" id="foot-kontak"><li><a href="https://wa.me/628196009333" data-wa="umum">WhatsApp admin</a></li></ul>
       </div>
     </div>
-    <div>
-      <h4>Jelajahi</h4>
-      <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Biaya</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#faq">FAQ</a></li><li><a href="#donasi">Donasi</a></li></ul>
-    </div>
-    <div>
-      <h4>Hubungi kami</h4>
-      <ul class="foot-links"><li><a href="https://wa.me/628196009333" data-wa="umum">WhatsApp admin</a></li><li><a href="#">Instagram</a></li><li><a href="#">Alamat sekretariat</a></li></ul>
-    </div>
+    <!-- baris mitra: dibuat JS hanya bila site-config.js punya mitra[] (nama, url, logo) -->
+    <div class="mitra-baris" id="mitra" hidden></div>
+    <div class="legal"><span>© 2026 LCDU, <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a> · Bandung, Jawa Barat</span><a class="ke-atas" href="#top">Ke atas</a></div>
   </div>
-  <div class="partners partners-row" aria-label="Mitra">
-    <p>Bekerja sama dengan</p>
-    <div class="logos"><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span><span class="logo-slot">Logo mitra</span></div>
-  </div>
-  <div class="wordmark"><img class="logo-light" src="assets/brand/web/lcdu-logo-color.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"><img class="logo-dark" src="assets/brand/web/lcdu-logo-white.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"></div>
-  <div class="legal"><span>© 2026 LCDU, <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a></span><span>Bandung, Jawa Barat</span></div>
-  </div>
+  <div class="kaki-logo"><img src="assets/brand/web/lcdu-logo-white.png" width="560" height="216" alt="LCDU, For a Better Ummah" loading="lazy" decoding="async"></div>
+  <div class="kaki-pita" aria-hidden="true"><div class="orn-band orn-band--tebal kain-hitam"></div></div>
 </footer>
 
 <!-- benang keffiyeh: garis tipis di gutter kiri (desktop) / garis progres di atas (HP), tergambar mengikuti scroll -->
@@ -1917,6 +1944,22 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (no) a.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
     external(a);
   });
+  /* ---------- Footer: kontak & mitra hanya bila datanya ada; lentera penutup menyala sekali ---------- */
+  (function(){
+    var ig = cfg('kontak.instagram'), alamat = cfg('kontak.alamat'), ul = $('#foot-kontak');
+    if (ul && ig){ var li = document.createElement('li'), a = document.createElement('a'); a.href = ig; a.textContent = 'Instagram'; external(a); li.appendChild(a); ul.appendChild(li); }
+    if (ul && alamat){ var la = document.createElement('li'), ad = document.createElement('address'); ad.className = 'foot-alamat'; ad.textContent = alamat; la.appendChild(ad); ul.appendChild(la); }
+    var mitra = cfg('mitra'), baris = $('#mitra');
+    if (baris && mitra && mitra.length){
+      baris.innerHTML = '<p>Bekerja sama dengan</p>' + mitra.map(function(m){
+        return '<a href="' + m.url + '" target="_blank" rel="noopener"><img src="' + m.logo + '" alt="' + m.nama + '" loading="lazy" decoding="async"></a>'; }).join('');
+      baris.hidden = false;
+    }
+    var langit = $('#kaki-langit');
+    if (langit && 'IntersectionObserver' in window && !reduce)
+      new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ langit.classList.add('nyala'); ob.disconnect(); } }, {threshold:.5}).observe(langit);
+  })();
+
   /* ---------- FAQ: SATU array (id, topik, tanya, jawab). Jawaban hanya dari fakta yang sudah ada di halaman/README/
      site-config.js — JANGAN menambah fakta. JSON-LD FAQPage dibentuk dari array & teks yang sama. ---------- */
   (function(){

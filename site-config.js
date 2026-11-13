@@ -46,6 +46,17 @@ window.LCDU_CONFIG = {
     terjemahAyat: ''
   },
 
+  /* Kontak tambahan di footer. KOSONG = tidak ditampilkan (jangan mengarang akun/alamat).
+     instagram: URL profil lengkap (https://instagram.com/…); alamat: teks alamat sekretariat. */
+  kontak: {
+    instagram: '',
+    alamat: ''
+  },
+
+  /* Mitra di footer: [{ nama: 'Nama mitra', url: 'https://…', logo: 'assets/partners/nama.svg' }].
+     KOSONG = baris mitra disembunyikan. Pasang logo hanya dengan izin pemiliknya. */
+  mitra: [],
+
   /* Rekening (data yang sudah ada di halaman). PERLU DIVERIFIKASI: apakah rekening ini dipakai untuk donasi
      Palestina, dan apakah nama pemilik rekening persis sama dengan buku rekening. */
   rekening: {
