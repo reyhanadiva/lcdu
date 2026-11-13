@@ -27,7 +27,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Testimoni | "Rak cerita": satu rak kaca, satu buku per testimoni + buku kosong "Ceritamu"; buku terpilih (bawaan: pertama) menampilkan sampul (potret lengkung/penampung, nama, gantungan kelas) dan kutipannya di panel. Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
 | Tim | Daftar nama editorial tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + kata مُعَلِّم kecil), peran & sertifikasi sebaris. HP: satu kelompok per slide geser. Data di array `TEAM`; foto kecil hanya bila ada lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
-| Donasi untuk Palestina | Alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), potongan QS. Al-Baqarah: 261, lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
+| Donasi untuk Palestina | Kalimat pembuka, panel AWG besar (foto ilustrasi kebun zaitun + fakta dari aqsaworkinggroup.com + "Kunjungi situs AWG"), alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
 | Footer | Langit malam Al-Aqsa (foto hero yang sama) dengan sembilan lentera, "Bahasa untuk umat.", kosakata hari ini, tautan, logo resmi besar, pita keffiyeh. Instagram, alamat & mitra hanya tampil bila diisi di `site-config.js`. |
 
 Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
@@ -89,7 +89,6 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 - [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
 - [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`, tanpa titik). **Pastikan format salin tanpa titik ini benar** untuk transfer.
 - [ ] **Tujuan donasi**: situs lama mencampur "Donasi LCDU" dan "Donasi untuk Palestina" di satu rekening. Perlu dipisah/diperjelas.
-- [ ] **Teks ayat** QS. Al-Baqarah: 261 (potongan awal) dan QS. Al-Isra: 1 (potongan) — cek di quran.kemenag.go.id.
 - [ ] **Soal kuis** dan kunci jawaban — minta guru Inggris & Arab mengecek ulang.
 
 ## Menunggu dari pemilik
@@ -115,15 +114,19 @@ Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik member
 
 **Donasi**
 - [ ] **Laporan penyaluran dari AWG**: tautan/ringkasan laporan hanya ditambahkan bila ada laporan nyata dari AWG. Tidak ada angka dampak di halaman.
-- [ ] **Terjemah resmi** potongan QS. Al-Baqarah: 261 dari quran.kemenag.go.id → tempel ke `donasi.terjemahAyat` di `site-config.js` (kosong = tidak tampil). Verifikasi juga teks Arabnya.
 - [ ] **Format nomor rekening** saat disalin (sekarang angka tanpa titik: `1010118394`).
 - [ ] **Izin penghimpunan donasi (PUB) dan nama pemilik rekening** — konfirmasi Yayasan. Bila belum, ubah `donasi.siapTayang` ke `false` di `site-config.js` (rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin").
-- [ ] **Logo/izin AWG**: logo AWG tidak dipasang tanpa izin tertulis.
+- [ ] **Logo dan foto resmi AWG beserta izin tertulis**: logo → `donasi.logo` di `site-config.js` (kosong = tidak tampil). Panel AWG sekarang memakai foto stok ilustrasi (kebun zaitun, Pexels, SEMENTARA) berketerangan "Foto ilustrasi".
 
 **Footer**
 - [ ] **Instagram** → `kontak.instagram` (URL lengkap) di `site-config.js`.
 - [ ] **Alamat sekretariat** → `kontak.alamat`.
 - [ ] **Logo mitra** (dengan izin) → `mitra: [{ nama, url, logo }]`; kosong = baris mitra tersembunyi.
+
+## Ditunda
+
+- **Ayat QS. Al-Baqarah: 261** (potongan awal) dihapus dari section Donasi (sesi F). Dipertimbangkan lagi nanti setelah
+  teks Arab & terjemah resmi diverifikasi di quran.kemenag.go.id.
 
 ## Deploy
 

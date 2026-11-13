@@ -1132,8 +1132,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 /* Donasi (sensitif): tanpa gambar penderitaan, tanpa angka dampak, tanpa urgensi/target/nominal, tanpa logo AWG.
    (A) alur empat simpul pada benang: lentera yang sama dengan sistem benang (.lentera-tanda/.lt-inti/.lt-cahaya), menyala
    berurutan SEKALI saat terlihat (IO); benang = jahitan --orn-benang(-x) yang terbuka (clip-path). Desktop horizontal, HP
-   vertikal pendek. Simpul terakhir bertunas daun zaitun (.orn-leaf). (B) ayat Naskh besar, potongan → elipsis, terjemah
-   hanya dari site-config.js. (C) lembar setoran: kertas krem, tepi kiri zigzag, kolom isian bergaris titik — beda dari
+   vertikal pendek. Simpul terakhir bertunas daun zaitun (.orn-leaf). (B) panel AWG besar (foto ilustrasi + fakta dari situs AWG);
+   ayat QS. Al-Baqarah: 261 DIHAPUS (ditunda, lihat README). (C) lembar setoran: kertas krem, tepi kiri zigzag, kolom isian bergaris titik — beda dari
    struk Biaya (struk putih tegak bersobek bawah). donasi.siapTayang = false → lembar diganti satu kalimat + WhatsApp. */
 .donate-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(28px,4vw,48px)}
 .donate-kepala{display:grid;gap:16px;max-width:60ch}
@@ -1157,12 +1157,24 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .gerak .alur.nyala::before{clip-path:inset(0)}
   .alur-simpul{flex-direction:column;align-items:flex-start;gap:12px}
 }
-/* ayat */
-.ayat{margin:0;display:grid;gap:10px}
-.ayat-ar{font-family:var(--f-ar);font-size:clamp(1.65rem,1.1rem + 2.2vw,2.7rem);line-height:1.9;direction:rtl;text-align:right;color:var(--ink);text-wrap:balance}
-.ayat figcaption{font-size:var(--step--1);color:var(--ink-soft);text-align:right}
-.ayat-terjemah{font-size:var(--step-0);line-height:1.6;color:var(--ink-soft);text-align:right}
-@media (min-width:900px){.donate-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:clamp(40px,5vw,80px)}}
+/* panel AWG: blok lebar bernuansa malam; foto stok ilustrasi + scrim gelap hangat; teks putih (kontras ≥ 7:1 di atas scrim) */
+.awg-panel{position:relative;isolation:isolate;overflow:hidden;min-height:clamp(260px,26vw,340px);display:grid;align-items:end;border-radius:4px;color:#F3EFE8;
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 18%,transparent)}
+.awg-foto,.awg-foto img{position:absolute;inset:0;width:100%;height:100%}
+.awg-foto{z-index:-2}
+.awg-foto img{object-fit:cover;object-position:50% 45%}
+.awg-panel::before{content:"";position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(90deg,rgba(20,18,15,.92) 0%,rgba(20,18,15,.82) 42%,rgba(20,18,15,.35) 75%,rgba(20,18,15,.15)),linear-gradient(0deg,rgba(20,18,15,.6),transparent 60%)}
+.awg-isi{display:grid;gap:12px;max-width:560px;padding:clamp(22px,3.4vw,44px)}
+.awg-logo{display:block;height:48px;width:auto}
+.awg-logo[hidden]{display:none}
+.awg-nama{margin:0;font-family:var(--f-display);font-weight:700;font-size:var(--step-3);line-height:1.02;letter-spacing:-.02em}
+.awg-kalimat{font-size:var(--step-0);line-height:1.55;color:rgba(243,239,232,.9)}
+.awg-tautan{justify-self:start;margin-top:4px;font-weight:700;color:var(--kunyit);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.25em}
+.awg-tautan:hover{color:#FFE7B0}
+.awg-ket{position:absolute;right:12px;bottom:10px;font-size:.72rem;color:rgba(243,239,232,.8);text-shadow:0 1px 4px rgba(0,0,0,.6)}
+@media (max-width:899px){.awg-panel::before{background:linear-gradient(0deg,rgba(20,18,15,.94) 0%,rgba(20,18,15,.85) 55%,rgba(20,18,15,.45) 100%)}}
+@media (min-width:900px){.donate-grid{grid-template-columns:minmax(0,600px)}}
 .donate-grid{display:grid;gap:clamp(28px,4vw,48px)}
 /* lembar setoran */
 .setoran{--ink:#10163A;--ink-soft:#4B4F63;--paper:#F4ECDD;position:relative;margin-left:12px;padding:clamp(22px,3vw,30px) clamp(20px,3vw,32px) clamp(22px,3vw,28px) clamp(24px,3vw,36px);
@@ -1186,13 +1198,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .donate-tunda{font-size:var(--step-1);line-height:1.5}
 .donate-tunda a{font-weight:700;color:var(--ink)}
 .copied:empty{min-height:0}
-/* HP: alur rapat, ayat & lembar setoran lebih ringkas (gradasi senja → malam di atas section tetap, terkunci) */
+/* HP: alur rapat, lembar setoran lebih ringkas (gradasi senja → malam di atas section tetap, terkunci) */
 @media (max-width:899px){
   .donate-wrap,.donate-grid{gap:22px}
   .donate-kepala{gap:12px}
   .alur{gap:8px}
   .alur-simpul{font-size:.95rem}
-  .ayat-ar{font-size:1.45rem;line-height:1.8}
   .setoran{gap:12px;padding:18px 16px 16px 26px}
   .setoran-kepala{padding-bottom:8px}
   .setoran dl{gap:9px}
@@ -1594,7 +1605,21 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="wrap donate-wrap">
     <div class="donate-kepala">
       <h2 class="h2" id="don-h" data-judul>Donasi untuk Palestina</h2>
-      <p class="lede">Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi disalurkan melalui <a href="https://aqsaworkinggroup.com/" data-cfg-href="donasi.url" data-cfg-text="donasi.mitra">Aqsa Working Group (AWG)</a>, mitra lama LCDU.</p>
+      <p class="lede">Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi disalurkan melalui Aqsa Working Group (AWG).</p>
+    </div>
+    <!-- Panel AWG. Kalimat HANYA dari fakta di aqsaworkinggroup.com (Profile & pernyataan 21 Agu: berdiri 21 Agustus 2008,
+         Jakarta; mewadahi upaya kaum muslimin untuk pembebasan Masjid Al-Aqsa & kemerdekaan Palestina; fokus sosial, edukasi,
+         kemanusiaan), dicek 13 Nov 2026. Foto = stok ilustrasi (Pexels, SEMENTARA), bukan dokumentasi AWG. Logo AWG hanya
+         bila site-config.js punya donasi.logo (izin AWG). -->
+    <div class="awg-panel">
+      <picture class="awg-foto"><source type="image/avif" srcset="assets/photos/zaitun-480.avif 480w, assets/photos/zaitun-960.avif 960w, assets/photos/zaitun-1600.avif 1600w" sizes="(min-width:1240px) 1176px, 100vw"><img src="assets/photos/zaitun-960.webp" srcset="assets/photos/zaitun-480.webp 480w, assets/photos/zaitun-960.webp 960w, assets/photos/zaitun-1600.webp 1600w" sizes="(min-width:1240px) 1176px, 100vw" width="960" height="640" alt="Kebun zaitun tua dengan batang berpilin, diterpa cahaya matahari sore" loading="lazy" decoding="async"></picture>
+      <div class="awg-isi">
+        <img class="awg-logo" id="awg-logo" alt="" hidden>
+        <h3 class="awg-nama" data-cfg-text="donasi.mitra">Aqsa Working Group (AWG)</h3>
+        <p class="awg-kalimat">Menurut situs resminya, AWG didirikan pada 21 Agustus 2008 di Jakarta untuk mewadahi upaya kaum muslimin bagi pembebasan Masjid Al-Aqsa dan kemerdekaan Palestina, dengan fokus sosial, edukasi, dan kemanusiaan.</p>
+        <a class="awg-tautan" href="https://aqsaworkinggroup.com/" data-cfg-href="donasi.url">Kunjungi situs AWG<span class="sr-only"> (Aqsa Working Group, buka di tab baru)</span><span aria-hidden="true"> →</span></a>
+      </div>
+      <small class="awg-ket">Foto ilustrasi</small>
     </div>
     <ol class="alur" id="alur" aria-label="Alur donasi">
       <li class="alur-simpul" style="--i:0"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span>Donatur</li>
@@ -1603,12 +1628,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <li class="alur-simpul" style="--i:3"><span class="lentera-tanda" aria-hidden="true"><i class="lt-cahaya"></i><i class="lt-inti"></i></span><span>untuk Palestina <i class="orn-leaf" aria-hidden="true"></i></span></li>
     </ol>
     <div class="donate-grid">
-      <!-- QS. Al-Baqarah: 261, POTONGAN AWAL (teks tidak diubah). Verifikasi di quran.kemenag.go.id. Terjemah hanya dari
-           site-config.js (donasi.terjemahAyat), tidak ditulis dari ingatan. -->
-      <figure class="ayat">
-        <blockquote class="ayat-ar" lang="ar" dir="rtl">مَّثَلُ الَّذِينَ يُنفِقُونَ أَمْوَالَهُمْ فِي سَبِيلِ اللَّهِ كَمَثَلِ حَبَّةٍ أَنبَتَتْ سَبْعَ سَنَابِلَ …</blockquote>
-        <figcaption>QS. Al-Baqarah: 261, potongan awal ayat</figcaption>
-      </figure>
       <div class="setoran" id="setoran">
         <div class="setoran-kepala"><b>Lembar setoran</b><span>Donasi untuk Palestina</span></div>
         <dl>
@@ -2086,7 +2105,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       { id: 'kelas', topik: 'belajar', tanya: 'Kelas apa saja yang ada?',
         jawab: 'Dua kelas: Bahasa Inggris dan Bahasa Arab, bersama guru profesional sesuai level kamu. Lihat <a href="#kelas">Pilih kelas</a>.' },
       { id: 'donasi', topik: 'donasi', tanya: 'Apakah donasi wajib?',
-        jawab: 'Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui ' + awg + ', mitra lama LCDU.' },
+        jawab: 'Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui ' + awg + '.' },
       { id: 'pengelola', topik: 'daftar', tanya: 'Siapa yang mengelola LCDU?',
         jawab: 'LCDU adalah program nirlaba yang dikelola <a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> (buka di tab baru)</span></a>.' }
     ];
@@ -2331,10 +2350,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     pasangFoto('team', timKolom);
   }
 
-  /* ---------- Donasi: siap tayang, terjemah ayat (hanya dari config), alur menyala sekali, salin rekening ---------- */
+  /* ---------- Donasi: siap tayang, logo AWG (hanya dari config), alur menyala sekali, salin rekening ---------- */
   if (cfg('donasi.siapTayang') === false){ $('#setoran').hidden = true; $('#donate-tunda').hidden = false; }
-  var terj = cfg('donasi.terjemahAyat');
-  if (terj){ var tp = document.createElement('p'); tp.className = 'ayat-terjemah'; tp.textContent = terj; $('.ayat').appendChild(tp); }
+  var logoAwg = cfg('donasi.logo');
+  if (logoAwg){ var la = $('#awg-logo'); la.src = logoAwg; la.alt = 'Logo ' + (cfg('donasi.mitra') || 'AWG'); la.hidden = false; }
   var alur = $('#alur');
   if (alur){
     var nyalakanAlur = function(){ alur.classList.add('nyala'); $$('.lentera-tanda', alur).forEach(function(t){ t.classList.add('nyala'); }); };

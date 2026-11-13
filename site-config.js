@@ -40,16 +40,16 @@ window.LCDU_CONFIG = {
     url: 'https://alfacentauri.sch.id/yayasan/'
   },
 
-  /* Donasi terbuka = untuk Palestina, disalurkan melalui AWG (mitra lama LCDU). */
+  /* Donasi terbuka = untuk Palestina, disalurkan melalui AWG. */
   donasi: {
     mitra: 'Aqsa Working Group (AWG)',
     url: 'https://aqsaworkinggroup.com/',
     /* siapTayang: false → lembar rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin".
        Ubah ke false bila Yayasan belum mengonfirmasi izin penghimpunan donasi (PUB) dan nama rekening. */
     siapTayang: true,
-    /* Terjemah resmi QS. Al-Baqarah: 261 (potongan yang tampil). Kosong = tidak ditampilkan. Tempel HANYA dari
-       quran.kemenag.go.id, jangan dari ingatan. */
-    terjemahAyat: ''
+    /* Logo AWG di panel Donasi: path berkas (mis. 'assets/partners/awg.svg'). KOSONG = tidak tampil.
+       Pasang hanya dengan izin tertulis AWG. */
+    logo: ''
   },
 
   /* Kontak tambahan di footer. KOSONG = tidak ditampilkan (jangan mengarang akun/alamat).
