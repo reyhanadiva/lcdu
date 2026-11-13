@@ -950,42 +950,46 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @media (prefers-reduced-motion: reduce){.pt-kel,.pt-label{transition:none}}
 
-/* ===== CERITA (Testimoni) =====
-   Data di satu array JS (CERITA: nama, kelas, kutipan, foto). Kutipan = teks asli dari situs lama (jangan diubah/dikarang).
-   Potret = foto ASLI penulis yang sudah disetujui (assets/stories/<slug>-480.avif|webp, terdaftar di manifest.json dari
-   tools/build-photos.mjs --potret); tanpa foto → penampung lengkung berwarna palet dengan inisial bertipografi. DILARANG
-   foto stok sebagai wajah penulis. Desktop ≥ 900px: semua terlihat, asimetris (potret besar kiri + kutipan; berikutnya
-   kutipan kiri + potret lebih kecil di kanan), lalu satu kalimat penutup editorial. HP: .geser (satu cerita per slide). */
-.cerita-daftar{list-style:none;margin:clamp(28px,4vw,48px) 0 0;padding:0;display:grid;gap:clamp(40px,5vw,72px)}
-.cerita{margin:0;display:grid;gap:20px;align-content:start}
-.cerita-potret{width:min(44vw,180px)}
-.cerita-isi{display:grid;gap:16px;align-content:start}
-.cerita blockquote{position:relative;margin:0}
-.cerita blockquote p{font-family:var(--f-display);font-weight:500;font-size:clamp(1.3rem,1rem + 1.5vw,2.45rem);line-height:1.22;letter-spacing:-.01em;text-wrap:pretty}
-.cerita blockquote::before{content:"\201C";position:absolute;left:-.08em;top:-.5em;font-family:var(--f-display);font-weight:700;font-size:4.2rem;line-height:1;color:var(--semangka);pointer-events:none}
-.cerita blockquote p{padding-top:.6em}
-.cerita figcaption{display:grid;gap:2px;font-size:var(--step--1);color:var(--ink-soft)}
-.cerita figcaption b{font-size:var(--step-0);color:var(--ink)}
-/* penampung potret: bidang lengkung berwarna palet + inisial (dekor; nama tertulis di figcaption) */
+/* ===== CERITA (Testimoni): "Rak cerita" =====
+   Satu rak kaca (komponen rak bersama, lihat blok RAK BUKU KACA) berisi satu buku per testimoni + satu buku kosong
+   "Ceritamu" (menggantikan kalimat penutup; tanpa nama/foto). Buku terpilih (bawaan: buku pertama) tergeser keluar,
+   miring sedikit & menampilkan sampul: potret lengkung (foto ASLI yang disetujui dari assets/stories via manifest, selain
+   itu penampung berinisial), nama, karabiner + gantungan nama kelas, pembatas buku = bahasa (hanya bila diketahui).
+   Panel kutipan (aria-live) di samping rak (desktop) / di bawah (HP), tinggi tetap. Kutipan asli tidak diubah; dilarang
+   foto stok sebagai wajah. > 4 testimoni kelak: bungkus rak dengan .geser. */
 .potret-kosong{position:absolute;inset:0;display:grid;place-items:center;background:var(--pk,var(--kulit));color:var(--putih);
   -webkit-mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat;mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat}
 .potret-kosong span{font-family:var(--f-display);font-weight:700;font-size:clamp(2.6rem,8vw,4.6rem);letter-spacing:-.03em;padding-top:12%}
 .potret-kosong::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.09;
   -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat}
-.cerita-potret.frame-arch{color:var(--ink)}
-.cerita-penutup{margin-top:clamp(32px,4vw,56px);font-family:var(--f-display);font-style:italic;font-weight:700;font-size:var(--step-3);line-height:1.05;letter-spacing:-.02em;color:var(--semangka-tua);text-wrap:balance}
-@media (min-width:900px){
-  .cerita{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(16px,2vw,32px);align-items:end}
-  .cerita-potret{grid-column:1/span 3;width:auto}
-  .cerita-isi{grid-column:5/span 8;padding-bottom:clamp(8px,2vw,32px)}
-  .cerita-daftar>:nth-child(even) .cerita-potret{grid-column:10/span 2;grid-row:1}
-  .cerita-daftar>:nth-child(even) .cerita-isi{grid-column:2/span 7;grid-row:1}
-  .cerita-penutup{text-align:right;max-width:18ch;margin-left:auto}
+.cerita-rak{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,3vw,48px);margin-top:clamp(16px,2.4vw,28px);align-items:end}
+@media (min-width:900px){.cerita-rak{grid-template-columns:minmax(0,6fr) minmax(0,5fr)}}
+.rak--cerita{--slot:124px}
+.rak--cerita .rak-isi{gap:14px}
+.rak--cerita .rak-buku{gap:0}
+/* tiap buku punya slot selebar sampulnya → sampul yang terbuka tidak menutupi buku lain */
+.rak--cerita .buku{--w:58px;margin-right:calc(var(--slot) - var(--w))}
+.rak--cerita .buku-sampul{width:calc(var(--slot) - 10px);height:calc(var(--h) + 8px);grid-template-columns:1fr;justify-items:start}
+.rak--cerita .sampul-potret{width:78px}
+.rak--cerita .karabiner{position:absolute;top:-14px;right:10px;margin:0;padding:0;justify-items:end}
+.rak--cerita .karabiner svg{position:relative;left:auto;top:auto}
+.rak--cerita .gantungan{max-width:calc(var(--slot) - 34px);text-align:center;hyphens:auto}
+@media (max-width:899px){
+  .rak--cerita{--slot:104px}
+  .rak--cerita .sandaran,.rak--cerita .tumpuk{display:none}
+  .rak--cerita .rak-isi{gap:6px}
+  .rak--cerita .sampul-potret{width:58px}
+  .rak--cerita .buku-sampul{padding:12px 8px}
+  .rak--cerita .sampul-teks b{font-size:.9rem}
 }
-/* HP (.geser aktif): potret kecil, kutipan lebih kecil */
-.cerita-geser.is-geser .cerita{padding-top:28px}
-.cerita-geser.is-geser .cerita blockquote p{font-size:clamp(1.15rem,1rem + 1vw,1.4rem)}
-.cerita-geser .geser-titik{color:var(--ink)}
+.cerita-panel{margin:0;display:grid;align-content:end;gap:14px;min-height:clamp(220px,22vw,280px);padding-bottom:18px}
+.cerita-panel blockquote{position:relative;margin:0}
+.cerita-panel blockquote::before{content:"\201C";position:absolute;left:-.06em;top:-.42em;font-family:var(--f-display);font-weight:700;font-size:4rem;line-height:1;color:var(--semangka);pointer-events:none}
+.cerita-panel blockquote p{padding-top:.55em;font-family:var(--f-display);font-weight:500;font-size:clamp(1.2rem,1rem + 1.2vw,2.05rem);line-height:1.24;letter-spacing:-.01em;text-wrap:pretty}
+.cerita-panel figcaption{display:grid;gap:2px;font-size:var(--step--1);color:var(--ink-soft)}
+.cerita-panel figcaption b{font-size:var(--step-0);color:var(--ink)}
+.cerita-panel .cerita-ajak{font-family:var(--f-display);font-style:italic;font-weight:700;font-size:var(--step-3);line-height:1.05;letter-spacing:-.02em;color:var(--semangka-tua);text-wrap:balance}
+@media (max-width:899px){.cerita-panel{min-height:236px;align-content:start;padding-bottom:0}}
 
 /* ===== TIM: rak buku kaca =====
    Tiga rak kaca (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab); satu orang = satu buku. Pengelola yang juga guru
@@ -1024,8 +1028,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .buku-punggung::before{top:8px}.buku-punggung::after{bottom:8px}
 .buku-nama{writing-mode:vertical-rl;font-family:var(--f-display);font-weight:700;font-size:.8rem;line-height:1;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
 /* pembatas buku (bookmark): pengelola yang juga mengajar; warna = bahasa yang diajar */
-.buku-pembatas{position:absolute;right:7px;top:-15px;width:9px;height:26px;background:var(--pb);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);transition:opacity .25s}
-.buku[data-ajar="en"]{--pb:var(--lazuardi)}.buku[data-ajar="ar"]{--pb:var(--kulit)}
+.bookmark{position:absolute;right:7px;top:-15px;width:9px;height:26px;background:var(--pb);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);transition:opacity .25s}
+.bookmark--en{--pb:var(--lazuardi)}.bookmark--ar{--pb:var(--kulit)}
 /* sampul (terbuka): melebar ke kanan, atau ke kiri untuk buku di paruh kanan rak (.ke-kiri) */
 .buku-sampul{position:absolute;bottom:0;left:0;width:158px;height:236px;display:grid;grid-template-columns:84px 1fr;grid-template-rows:auto 1fr;gap:10px 8px;
   padding:16px 12px 14px;border-radius:3px 6px 6px 3px;background:var(--warna);color:var(--tinta,#fff);text-align:left;pointer-events:none;
@@ -1044,9 +1048,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .gantungan{position:relative;display:block;max-width:58px;padding:2px 5px;border-radius:2px;background:#F5DEC1;color:#10163A;font-size:.58rem;font-weight:800;line-height:1.2;
   box-shadow:0 1px 0 rgba(0,0,0,.2);transform:rotate(var(--r,-3deg));transform-origin:10px 0}
 /* terbuka */
-.buku.buka{z-index:5;transform:translateY(-16px)}
+.buku.buka{z-index:5;transform:translateY(-16px) rotate(-2.5deg)}
 .buku.buka .buku-punggung{transform:rotateY(-90deg);opacity:0}
-.buku.buka .buku-pembatas{opacity:0}
+.buku.buka .bookmark{opacity:0}
 .buku.buka .buku-sampul{opacity:1;transform:none}
 .buku:focus-visible{outline:none}
 .buku:focus-visible .buku-punggung,.buku:focus-visible .buku-sampul{outline:3px solid var(--kunyit);outline-offset:3px}
@@ -1079,7 +1083,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .sampul-potret{width:70px}
   .sandaran{width:30px;height:120px}
 }
-@media (prefers-reduced-motion: reduce){.buku,.buku-punggung,.buku-sampul,.buku-pembatas,.rak-penanda button{transition:none!important}}
+@media (prefers-reduced-motion: reduce){.buku,.buku-punggung,.buku-sampul,.bookmark,.rak-penanda button{transition:none!important}}
 
 /* ===== FAQ: "Yang sering ditanyakan" =====
    Isi HANYA dari fakta yang sudah ada di halaman / README / site-config.js (array FAQ di JS; JSON-LD FAQPage dibentuk dari
@@ -1545,10 +1549,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section data-lentera class="band stories" id="testimoni" aria-labelledby="st-h">
   <div class="wrap">
     <h2 class="h2" id="st-h" data-judul>Kata mereka yang sudah belajar</h2>
-    <div class="geser cerita-geser" data-geser="(max-width: 899px)" data-geser-nama="Cerita siswa LCDU">
-      <ul class="cerita-daftar geser-jalur" id="cerita" data-geser-jalur></ul>
+    <div class="cerita-rak">
+      <div class="rak rak--cerita"><div class="rak-isi"><svg class="rak-hias sandaran" viewBox="0 0 38 150" aria-hidden="true" focusable="false"><path d="M4 150V22a4 4 0 0 1 4-4h6v132z" fill="#F5DEC1" stroke="currentColor" stroke-opacity=".35"/><rect x="0" y="144" width="38" height="6" rx="1.5" fill="#E7CDA9"/><path d="M9 112c4-18 6-40 4-68" fill="none" stroke="#5B4A2E" stroke-width="1.3" stroke-linecap="round"/><g fill="#7FA33F"><path d="M12 54c-6-2-9-7-9-12 6 1 9 6 9 12z"/><path d="M13 70c6-3 10-8 10-14-6 2-10 7-10 14z"/><path d="M12 86c-6-2-9-7-9-12 6 1 9 6 9 12z"/><path d="M12 101c6-3 9-8 9-13-6 2-9 7-9 13z"/></g><ellipse cx="17" cy="80" rx="2.6" ry="3.4" fill="#3B2A3F"/></svg><div class="rak-buku" id="cerita-buku" role="group" aria-label="Rak cerita siswa"></div><div class="rak-hias tumpuk" aria-hidden="true"><i style="width:96px;--wt:#B3202E"></i><i style="width:112px;--wt:#F5DEC1"></i><i style="width:104px;--wt:#1E6B3A"></i></div><svg class="rak-hias rak-lentera" viewBox="0 0 30 52" aria-hidden="true" focusable="false"><path d="M15 0v6" stroke="currentColor" stroke-opacity=".5" stroke-width="1.5"/><path d="M9 6h12l-2 6H11z" fill="#B08A3C"/><rect x="7" y="12" width="16" height="30" rx="4" fill="#FFE7B0" stroke="#B08A3C" stroke-width="1.5"/><path d="M15 14v26M7 27h16" stroke="#B08A3C" stroke-width="1"/><ellipse cx="15" cy="27" rx="4" ry="6" fill="#FFC21A" opacity=".85"/><path d="M8 42h14l-1.5 6h-11z" fill="#B08A3C"/></svg></div><div class="rak-papan" aria-hidden="true"></div></div>
+      <figure class="cerita-panel" id="cerita-panel" aria-live="polite"></figure>
     </div>
-    <p class="cerita-penutup">Cerita berikutnya bisa datang dari kamu.</p>
   </div>
 </section>
 </div>
@@ -1706,22 +1710,73 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     }).catch(function(){});
   }
 
-  /* ---------- Testimoni: SATU array untuk ditambah (nama, kelas, kutipan, foto = slug di assets/stories/) ---------- */
+  /* ---------- Rak buku kaca (komponen bersama): bukuHTML() membuat satu buku; rakPilih() = pilih satu buku
+     (klik / ketuk / fokus / hover pointer halus), roving tabindex, panah kiri/kanan, Home/End. ---------- */
+  var nPerak = 0;
+  function karabinerHTML(gantungan){
+    var id = 'perak' + (nPerak++);
+    return '<span class="karabiner"><svg viewBox="0 0 20 34"><defs><linearGradient id="' + id + '" x1="0" x2="1"><stop offset="0" stop-color="#F2F4F7"/><stop offset=".5" stop-color="#AEB5BF"/><stop offset="1" stop-color="#E3E6EB"/></linearGradient></defs><rect x="2" y="1" width="16" height="32" rx="8" fill="none" stroke="url(#' + id + ')" stroke-width="3"/><path d="M15 8v13" stroke="#8C949F" stroke-width="2" stroke-linecap="round"/></svg>'
+      + gantungan.map(function(c, j){ return '<span class="gantungan" style="--r:' + [-4, 3, -2, 4][j % 4] + 'deg">' + c + '</span>'; }).join('') + '</span>';
+  }
+  /* o: punggung, label (nama aksesibel), warna [isi, tinta], h, w, kiri, bookmark ('en'|'ar'|''), gantungan [],
+        potret (HTML isi bingkai lengkung) + slug/nama untuk foto asli, judul & sub sampul, data (atribut tambahan) */
+  function bukuHTML(o){
+    return '<button class="buku' + (o.kiri ? ' ke-kiri' : '') + '" type="button" tabindex="-1" aria-pressed="false" aria-label="' + o.label + '"' + (o.data || '')
+      + ' style="--warna:' + o.warna[0] + ';--tinta:' + o.warna[1] + ';--h:' + o.h + 'px;--w:' + o.w + 'px">'
+      + '<span class="buku-punggung" aria-hidden="true"><span class="buku-nama">' + o.punggung + '</span></span>'
+      + (o.bookmark ? '<span class="bookmark bookmark--' + o.bookmark + '" aria-hidden="true"></span>' : '')
+      + '<span class="buku-sampul" aria-hidden="true"><span class="frame-arch sampul-potret"' + (o.slug ? ' data-potret="' + o.slug + '" data-nama="' + o.judul + '"' : '') + '>' + (o.potret || '') + '</span>'
+      + (o.gantungan && o.gantungan.length ? karabinerHTML(o.gantungan) : '')
+      + '<span class="sampul-teks"><b>' + o.judul + '</b>' + (o.sub ? '<small>' + o.sub + '</small>' : '') + '</span></span></button>';
+  }
+  function rakPilih(wadah, onPilih){
+    var buku = $$('.buku', wadah), sel = null;
+    function pilih(b){
+      if (!b || sel === b) return;
+      if (sel){ sel.classList.remove('buka'); sel.setAttribute('aria-pressed', 'false'); }
+      sel = b; b.classList.add('buka'); b.setAttribute('aria-pressed', 'true');
+      buku.forEach(function(x){ x.tabIndex = x === b ? 0 : -1; });
+      onPilih(b, buku.indexOf(b));
+    }
+    buku.forEach(function(b, i){
+      b.addEventListener('click', function(){ pilih(b); });
+      b.addEventListener('focus', function(){ pilih(b); });
+      if (fine) b.addEventListener('pointerenter', function(){ pilih(b); });
+      b.addEventListener('keydown', function(e){
+        var j = i;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = Math.min(buku.length - 1, i + 1);
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = Math.max(0, i - 1);
+        else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = buku.length - 1;
+        else return;
+        e.preventDefault(); if (j !== i){ pilih(buku[j]); buku[j].focus(); }
+      });
+    });
+    return { pilih: pilih, buku: buku };
+  }
+
+  /* ---------- Testimoni: SATU array (nama, kelas, kutipan, foto = slug di assets/stories/, bahasa = 'en'|'ar'|'' —
+     isi bahasa HANYA bila pasti; kosong = tanpa pembatas buku). Kutipan asli situs lama, jangan diubah. ---------- */
   var CERITA = [
-    { nama: 'Aninda Salma', kelas: 'Siswa Pre-Intermediate', foto: 'aninda-salma',
+    { nama: 'Aninda Salma', kelas: 'Siswa Pre-Intermediate', foto: 'aninda-salma', bahasa: 'en',
       kutipan: 'LCDU adalah kursus yang luar biasa bagi seseorang yang ingin belajar atau meningkatkan kemampuan bahasa Inggris mereka.' },
-    { nama: 'Fitriza Rahma', kelas: 'Siswa Elementary', foto: 'fitriza-rahma',
+    { nama: 'Fitriza Rahma', kelas: 'Siswa Elementary', foto: 'fitriza-rahma', bahasa: '',
       kutipan: 'Gaya belajarnya dikembangkan lebih lanjut agar siswa lebih cepat memahami materi. Program ini sangat baik. Terima kasih banyak, guru.' }
   ];
-  var ceritaEl = $('#cerita');
-  if (ceritaEl){
-    ceritaEl.innerHTML = CERITA.map(function(c, k){
-      return '<li class="geser-slide" data-geser-slide><figure class="cerita">'
-        + '<div class="frame-arch cerita-potret" data-potret="' + (c.foto || slugDari(c.nama)) + '" data-nama="' + c.nama + '">' + penampung(c.nama, k) + '</div>'
-        + '<div class="cerita-isi"><blockquote><p>' + c.kutipan + '</p></blockquote>'
-        + '<figcaption><b>' + c.nama + '</b><span>' + c.kelas + '</span></figcaption></div></figure></li>';
-    }).join('');
-    pasangFoto('stories', ceritaEl);
+  var ceritaBuku = $('#cerita-buku'), ceritaPanel = $('#cerita-panel');
+  if (ceritaBuku){
+    var WARNA_CERITA = [['#1E6B3A', '#FFFFFF'], ['#1724C0', '#FFFFFF'], ['#B3202E', '#FFFFFF']];
+    ceritaBuku.innerHTML = CERITA.map(function(c, k){
+      return bukuHTML({ punggung: c.nama, label: c.nama + ', ' + c.kelas, warna: WARNA_CERITA[k % 3], h: [232, 216, 240][k % 3], w: 58,
+        bookmark: c.bahasa, gantungan: [c.kelas.replace(/^Siswa\s+/, '')], potret: penampung(c.nama, k), slug: c.foto || slugDari(c.nama),
+        judul: c.nama, sub: c.kelas, data: ' data-c="' + k + '"' });
+    }).join('') + bukuHTML({ punggung: 'Ceritamu', label: 'Ceritamu: cerita berikutnya bisa datang dari kamu', warna: ['#F5DEC1', '#10163A'],
+      h: 224, w: 58, judul: 'Ceritamu', sub: 'halaman ini masih kosong', data: ' data-c="baru"' });
+    pasangFoto('stories', ceritaBuku);
+    rakPilih(ceritaBuku, function(b){
+      var c = CERITA[+b.dataset.c];
+      ceritaPanel.innerHTML = c ? '<blockquote><p>' + c.kutipan + '</p></blockquote><figcaption><b>' + c.nama + '</b><span>' + c.kelas + '</span></figcaption>'
+        : '<p class="cerita-ajak">Cerita berikutnya bisa datang dari kamu.</p>';
+    }).pilih($('.buku', ceritaBuku));
   }
 
   /* ---------- Geser (.geser): carousel native di bawah breakpoint (lihat CSS). Mengembalikan { aktif, ke(i), indeks }.
@@ -1783,8 +1838,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   }
   var geserKenapa = $('#kenapa [data-geser]') ? geser($('#kenapa [data-geser]')) : null;
   var geserKelas = $('#kelas [data-geser]') ? geser($('#kelas [data-geser]')) : null;
-  /* HP: geser hanya bila ceritanya lebih dari satu */
-  if (CERITA.length > 1 && $('#testimoni [data-geser]')) geser($('#testimoni [data-geser]'));
   if ($('#tim [data-geser]')) geser($('#tim [data-geser]'));
 
   /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
@@ -2284,10 +2337,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         var g = m[2].split(' '), ajar = g[0] === 'mgmt' && g[1] ? g[1] : '', w = WARNA_BUKU[(k + ri) % 4], n = (k + ri * 3) % 8;
         var tinggi = Math.max(TINGGI[n], Math.ceil(m[0].length * 8.4 + 36));   // nama panjang tetap utuh di punggung
         return '<button class="buku' + (k >= Math.ceil(isi.length / 2) && isi.length > 2 ? ' ke-kiri' : '') + '" type="button" tabindex="' + (k ? -1 : 0) + '" aria-pressed="false"'
-          + ' aria-label="' + m[0] + ', ' + m[1] + '" data-t="' + TEAM.indexOf(m) + '"' + (ajar ? ' data-ajar="' + ajar + '"' : '')
+          + ' aria-label="' + m[0] + ', ' + m[1] + '" data-t="' + TEAM.indexOf(m) + '"'
           + ' style="--warna:' + w[0] + ';--tinta:' + w[1] + ';--h:' + tinggi + 'px;--w:' + LEBAR[n] + 'px">'
           + '<span class="buku-punggung" aria-hidden="true"><span class="buku-nama">' + m[0] + '</span></span>'
-          + (ajar ? '<span class="buku-pembatas" aria-hidden="true"></span>' : '')
+          + (ajar ? '<span class="bookmark bookmark--' + ajar + '" aria-hidden="true"></span>' : '')
           + '<span class="buku-sampul" aria-hidden="true"><span class="frame-arch sampul-potret" data-potret="' + slugDari(m[0]) + '" data-nama="' + m[0] + '">' + penampung(m[0], k) + '</span>'
           + (m[3].length ? '<span class="karabiner"><svg viewBox="0 0 20 34"><defs><linearGradient id="perak' + TEAM.indexOf(m) + '" x1="0" x2="1"><stop offset="0" stop-color="#F2F4F7"/><stop offset=".5" stop-color="#AEB5BF"/><stop offset="1" stop-color="#E3E6EB"/></linearGradient></defs><rect x="2" y="1" width="16" height="32" rx="8" fill="none" stroke="url(#perak' + TEAM.indexOf(m) + ')" stroke-width="3"/><path d="M15 8v13" stroke="#8C949F" stroke-width="2" stroke-linecap="round"/></svg>'
             + m[3].map(function(c, j){ return '<span class="gantungan" style="--r:' + [-4, 3, -2, 4][j % 4] + 'deg">' + c + '</span>'; }).join('') + '</span>' : '')

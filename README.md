@@ -24,7 +24,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
-| Testimoni | Semua cerita terlihat: potret lengkung + kutipan besar (desktop asimetris; HP slide geser), penutup "Cerita berikutnya bisa datang dari kamu." Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
+| Testimoni | "Rak cerita": satu rak kaca, satu buku per testimoni + buku kosong "Ceritamu"; buku terpilih (bawaan: pertama) menampilkan sampul (potret lengkung/penampung, nama, gantungan kelas) dan kutipannya di panel. Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
 | Tim | Rak buku kaca: tiga rak (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab), satu orang = satu buku. Disorot/difokus/diketuk → buku keluar & menampilkan sampul (penampung foto, nama, peran, sertifikasi di karabiner); panel rincian teks di bawah rak. HP: satu rak per slide geser. Data di array `TEAM`; foto tim opsional lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
 | Donasi untuk Palestina | Alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), potongan QS. Al-Baqarah: 261, lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
@@ -100,6 +100,10 @@ Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik member
 - [ ] **Ejaan resmi kepanjangan**: halaman memakai "Language Course for Da'wah dan Ummah" (`lcdu.namaLengkap` di
   `site-config.js`, juga `<title>` dan meta description). Situs-situs saudara berbeda ("dan" / "&"; teks pembaca layar di
   hero masih "&"). Tentukan SATU ejaan, lalu samakan di semua tempat.
+
+**Testimoni**
+- [ ] **Bahasa kelas Fitriza Rahma** (Siswa Elementary): Inggris atau Arab? Isi `bahasa` di array `CERITA` supaya bukunya
+  diberi pembatas berwarna (Aninda Salma = Inggris, karena kutipannya menyebut bahasa Inggris).
 
 **Pertanyaan FAQ yang belum punya jawaban resmi** (tambahkan ke array `FAQ` di `index.html` setelah dijawab):
 - [ ] Apakah ada sertifikat setelah menyelesaikan kelas?
