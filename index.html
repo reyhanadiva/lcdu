@@ -77,11 +77,11 @@ body{margin:0}
   --senja-bg:#FAF3F1; --senja-soft:#4B4F63;
   --malam-bg:#14120F; --malam-soft:#B9B2A6;
   --lentera:#FFC96B;  /* cahaya hangat (titik lentera, ujung benang) */
-  /* skala jarak vertikal (satu sumber): --jarak-section = ruang atas/bawah isi tiap section & blok warna
-     (44px di HP → 88px di desktop ≥ 1354px); --jarak-sambung = jeda teks setelah gradasi antar-fase */
-  --jarak-section:clamp(44px,6.5vw,88px);
-  --jarak-sambung:clamp(20px,2vw,28px);
-  --sambung:clamp(96px,11vw,160px);           /* panjang gradasi antar-fase (hanya di area kosong) */
+  /* skala jarak vertikal (satu sumber; dimampatkan lagi, sesi "rapikan"): --jarak-section = ruang atas/bawah isi tiap
+     section & blok warna (24px di HP → 52px di desktop ≥ 1444px); --jarak-sambung = jeda teks setelah gradasi */
+  --jarak-section:clamp(24px,3.6vw,52px);
+  --jarak-sambung:clamp(16px,1.6vw,24px);
+  --sambung:clamp(48px,5vw,72px);             /* gradasi antar-fase terang → terang (warna hampir sama; teks boleh di ujungnya) */
   --sambung-malam:clamp(260px,42vh,420px);    /* senja → malam lebih panjang: perubahan terang → gelap */
 
   /* gerak: hanya tiga jenis (muncul, tergambar, menyala) */
@@ -170,7 +170,9 @@ button{font:inherit;color:inherit}
   background:linear-gradient(in oklab,var(--dari) 0%,color-mix(in oklab,var(--dari) 93%,var(--fase-bg)) 15%,color-mix(in oklab,var(--dari) 72%,var(--fase-bg)) 32%,
     color-mix(in oklab,var(--dari) 50%,var(--fase-bg)) 50%,color-mix(in oklab,var(--dari) 28%,var(--fase-bg)) 68%,color-mix(in oklab,var(--dari) 7%,var(--fase-bg)) 85%,var(--fase-bg) 100%)
     0 0/100% var(--sambung) no-repeat,var(--fase-bg)}
-.hari>.fase+.fase>.band:first-child{padding-top:max(var(--jarak-section),calc(var(--sambung) + var(--jarak-sambung)))}
+.hari>.fase+.fase>.band:first-child{padding-top:var(--jarak-section)}
+/* senja → malam: teks TIDAK boleh di atas gradasi (kontras), jadi isi pertama mulai setelah gradasi selesai */
+.hari>.fase[data-fase="malam"]>.band:first-child{padding-top:max(var(--jarak-section),calc(var(--sambung-malam) + var(--jarak-sambung)))}
 /* logo: ikut fase (warna di fase terang, putih di malam), tidak ikut mode gelap sistem */
 html:root [data-fase] .logo-light{display:block!important}
 html:root [data-fase] .logo-dark{display:none!important}
@@ -326,7 +328,7 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
    (reduced-motion / tanpa JS) semuanya tampil diam & utuh. --- */
 /* (a) tepi mihrab: lengkung lancip di tengah, bahu datar; warna = latar section berikutnya; garis tipis tergambar */
 /* catatan: garis memakai pathLength=1 tanpa non-scaling-stroke (non-scaling membuat dasharray dihitung dalam px layar) */
-.batas-mihrab{display:block;width:100%;height:clamp(56px,9vw,130px);margin-top:-1px}
+.batas-mihrab{display:block;width:100%;height:clamp(40px,5vw,72px);margin-top:-1px}
 .batas-mihrab .isi{fill:var(--batas-isi)}
 .batas-mihrab .garis{fill:none;stroke:var(--batas-garis);stroke-width:2.6;stroke-dasharray:1;stroke-dashoffset:0}
 .gerak .batas-mihrab[data-muncul]{transform:none}
@@ -507,7 +509,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    irisan semangka menjorok dari tepi layar di belakang foto. Ke Kenapa: hanya pergeseran warna (gradasi di atas blok hijau). */
 @property --p{syntax:'<number>';inherits:true;initial-value:1}
 .intro{position:relative;isolation:isolate;overflow:clip;padding-bottom:0}
-.intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:var(--jarak-section)}
+.intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:calc(var(--jarak-section) * .6)}
 .intro-kalimat{font-family:var(--f-display);letter-spacing:-.02em}
 .intro-l1{display:block;font-weight:300;font-size:clamp(2.2rem,1.1rem + 4vw,4.9rem);line-height:1.06;max-width:10.5em;text-wrap:balance}
 .intro-l1 .k-ar,.intro-l1 .k-en{font-weight:700}
@@ -546,11 +548,11 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    melewati tengah layar; kata Arab raksasa bergaris putih menumpang di tepi bawah foto (rata kiri, tidak masuk kolom
    teks), terisi merah saat aktif.
    HP: tiap pernyataan = foto lalu teks, bertumpuk, tanpa sticky. Reduced-motion: tanpa transisi (langsung berganti). */
-.why{--masuk:clamp(72px,9vw,130px);position:relative;
+.why{--masuk:clamp(48px,6vw,88px);position:relative;
   background:linear-gradient(in oklab,var(--pagi-bg) 0%,color-mix(in oklab,var(--pagi-bg) 93%,var(--kulit)) 15%,color-mix(in oklab,var(--pagi-bg) 72%,var(--kulit)) 32%,
     color-mix(in oklab,var(--pagi-bg) 50%,var(--kulit)) 50%,color-mix(in oklab,var(--pagi-bg) 28%,var(--kulit)) 68%,color-mix(in oklab,var(--pagi-bg) 7%,var(--kulit)) 85%,var(--kulit) 100%)
     0 0/100% var(--masuk) no-repeat,var(--kulit);color:var(--putih);--ink:var(--putih);--why-lembut:color-mix(in srgb,var(--putih) 88%,var(--kulit))}
-.why-wrap{padding-block:calc(var(--masuk) + var(--jarak-sambung)) var(--jarak-section)}
+.why-wrap{padding-block:calc(var(--masuk) + var(--jarak-sambung)) calc(var(--jarak-section) * .5)}
 .why-h{font-family:var(--f-display);font-weight:700;font-size:var(--step-4);line-height:1;letter-spacing:-.03em}
 .why-list{list-style:none;margin:clamp(20px,3vw,32px) 0 0;padding:0}
 .why-item{position:relative;padding-block:clamp(26px,4vw,40px);border-top:1px solid color-mix(in srgb,var(--putih) 24%,transparent)}
@@ -579,7 +581,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   /* dimampatkan (permintaan pemilik): ±29vh per pernyataan, terakhir ±37vh; judul pindah ke atas kolom kanan supaya
      panggung mulai sejajar judul. Total section ≈ 1,6 layar di 1440×900 */
   .why-item{min-height:min(29vh,280px);display:flex;flex-direction:column;justify-content:center}
-  .why-item:last-child{min-height:min(37vh,360px)}
+  .why-item:last-child{min-height:0;padding-bottom:0}
   .why-stage{margin-top:0}
 }
 /* HP (< 960px): pernyataan = slide geser (foto lengkung + kata Arab + pernyataan); slide aktif = pernyataan aktif */
@@ -663,6 +665,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Nilai CSS di bawah = posisi tengah (cadangan tanpa JS). Rentang geser dihitung JS dari lebar isi (35–65 di ≥ 1024px)
    supaya sisi yang menyempit tidak bertabrakan; foto sisi yang menyempit memudar (opacity). < 1000px: dua blok bertumpuk. */
 .classes .h2{margin-bottom:clamp(28px,4vw,48px)}
+.classes{padding-bottom:calc(var(--jarak-section) * .5)}
 .split{--pad-luar:max(16px,calc((100vw - 1240px) / 2 + 32px));--isi:clamp(280px,25vw,340px);position:relative;isolation:isolate}
 .side{position:relative;overflow:hidden;min-width:0;contain:layout paint;color:var(--ink);--ink-soft:#3E4256}
 .side-en{--c:var(--lazuardi-ink);background:#C9D1F8}
