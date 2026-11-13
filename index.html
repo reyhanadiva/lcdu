@@ -176,7 +176,6 @@ html:root [data-fase] .logo-light{display:block!important}
 html:root [data-fase] .logo-dark{display:none!important}
 html:root [data-fase="malam"] .logo-light{display:none!important}
 html:root [data-fase="malam"] .logo-dark{display:block!important}
-.stub-note{margin-top:16px;padding-left:12px;border-left:2px solid var(--line);color:var(--ink-soft);font-size:var(--step--1)}
 
 /* --- Benang keffiyeh: desktop = garis di gutter kiri, HP = garis progres di atas. Tergambar mengikuti scroll
    (CSS scroll-driven animation; cadangan JS mengisi --benang). Muncul setelah hero (.is-on dari JS). Bulat kuning bergerak
@@ -1028,6 +1027,47 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @media (prefers-reduced-motion: reduce){.buku,.buku-punggung,.buku-sampul,.buku-pembatas,.rak-penanda button{transition:none!important}}
 
+/* ===== FAQ: "Yang sering ditanyakan" =====
+   Isi HANYA dari fakta yang sudah ada di halaman / README / site-config.js (array FAQ di JS; JSON-LD FAQPage dibentuk dari
+   array yang sama). Pertanyaan tanpa jawaban resmi TIDAK tampil (lihat README "Menunggu dari pemilik").
+   Akordeon ringkas: satu terbuka (paling ringkas di HP); jawaban = grid-template-rows 0fr → 1fr (tanpa JS menghitung
+   tinggi). Kotak cari menyaring langsung + menyorot (<mark>), topik = teks bergaris bawah. #faq-<id> membuka & menggulir. */
+.faq-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(14px,2vw,24px);max-width:880px}
+.faq-alat{display:grid;gap:8px}
+.faq-cari{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:4px 2px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 96px)}
+.faq-cari svg{flex:none;width:20px;height:20px;color:var(--ink-soft)}
+.faq-cari input{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:var(--step-1);color:var(--ink);padding:8px 0}
+.faq-cari input::placeholder{color:var(--ink-soft);opacity:1}
+.faq-cari input:focus{outline:none}
+.faq-cari:focus-within{box-shadow:0 3px 0 -1px var(--kunyit)}
+.faq-cari input::-webkit-search-cancel-button{cursor:pointer}
+.faq-topik{display:flex;flex-wrap:wrap;gap:4px 16px;font-weight:700;font-size:.95rem;color:var(--ink-soft)}
+.faq-topik button{padding:6px 0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:transparent;transition:color .25s,text-decoration-color .25s}
+.faq-topik button[aria-pressed="true"]{color:var(--ink);text-decoration-color:var(--semangka-tua)}
+.faq-topik button:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
+.faq-info{min-height:1.4em;font-size:var(--step--1);color:var(--ink-soft)}
+.faq-daftar{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line);scroll-margin-top:calc(env(safe-area-inset-top,0px) + 96px)}
+.faq-item[hidden]{display:none}
+.faq-h3{margin:0}
+.faq-tanya{width:100%;display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:13px 0;border:0;background:none;color:inherit;text-align:left;cursor:pointer;
+  font-family:var(--f-display);font-weight:600;font-size:clamp(1.12rem,1rem + .6vw,1.45rem);line-height:1.25}
+.faq-tanya:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;border-radius:4px}
+.faq-tanda{flex:none;position:relative;width:14px;height:14px;align-self:center}
+.faq-tanda::before,.faq-tanda::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:var(--semangka-tua);transition:transform .3s var(--ease)}
+.faq-tanda::after{transform:rotate(90deg)}
+.faq-item.buka .faq-tanda::after{transform:rotate(0deg)}
+.faq-jawab{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .32s var(--ease),visibility 0s .32s}
+.faq-item.buka .faq-jawab{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .32s var(--ease),visibility 0s}
+.faq-jawab>div{overflow:hidden}
+.faq-jawab p{max-width:62ch;padding-bottom:18px;font-size:var(--step-0);line-height:1.6;color:var(--ink-soft)}
+.faq-jawab a{color:var(--ink);text-decoration-thickness:1.5px;text-underline-offset:.2em}
+.faq-tautan{display:inline-block;margin-left:.4em;font-size:.85rem;font-weight:600;color:var(--ink-soft)!important}
+.faq mark{background:color-mix(in srgb,var(--kunyit) 55%,transparent);color:inherit;border-radius:2px;padding:0 1px}
+.faq-kosong{padding:18px 0;font-size:var(--step-0);color:var(--ink-soft)}
+.faq-kosong a{color:var(--ink);font-weight:700}
+@media (prefers-reduced-motion: reduce){.faq-jawab,.faq-item.buka .faq-jawab,.faq-tanda::before,.faq-tanda::after,.faq-topik button{transition:none!important}}
+
 /* ===== DONASI ===== */
 .donate{position:relative;overflow:hidden}
 /* jaring keffiyeh sangat tipis; memudar masuk setelah sambungan senja → malam (tanpa tepi tajam) */
@@ -1397,11 +1437,17 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <!-- pembatas Tim → FAQ: kata Arab raksasa (مُعَلِّم = guru, kata yang sudah dipakai) menyeberangi batas -->
 <div class="batas-kata" data-muncul aria-hidden="true"><span lang="ar">مُعَلِّم</span></div>
 
-<!-- ============ FAQ (stub: isi didesain di sesi tersendiri) ============ -->
-<section data-lentera class="band" id="faq" aria-labelledby="faq-h">
-  <div class="wrap">
-    <h2 class="h2" id="faq-h" data-judul>Pertanyaan yang sering diajukan</h2>
-    <p class="stub-note">Isi section ini menyusul.</p>
+<!-- ============ FAQ: diisi JS dari array FAQ (satu tempat; hanya fakta yang sudah ada) ============ -->
+<section data-lentera class="band faq" id="faq" aria-labelledby="faq-h">
+  <div class="wrap faq-wrap">
+    <h2 class="h2" id="faq-h" data-judul>Yang sering ditanyakan</h2>
+    <div class="faq-alat">
+      <label class="faq-cari"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Cari pertanyaan</span><input type="search" id="faq-q" placeholder="Cari, mis. biaya, jadwal, tes" autocomplete="off" enterkeyhint="search"></label>
+      <div class="faq-topik" role="group" aria-label="Topik pertanyaan" id="faq-topik"></div>
+      <p class="faq-info" id="faq-info" aria-live="polite"></p>
+    </div>
+    <ul class="faq-daftar" id="faq-daftar"></ul>
+    <p class="faq-kosong" id="faq-kosong" hidden>Tidak ada yang cocok. <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya admin lewat WhatsApp</a></p>
   </div>
 </section>
 </div>
@@ -1792,6 +1838,92 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (no) a.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
     external(a);
   });
+  /* ---------- FAQ: SATU array (id, topik, tanya, jawab). Jawaban hanya dari fakta yang sudah ada di halaman/README/
+     site-config.js — JANGAN menambah fakta. JSON-LD FAQPage dibentuk dari array & teks yang sama. ---------- */
+  (function(){
+    var daftar = $('#faq-daftar'); if (!daftar) return;
+    var buka_ = ['en', 'ar'].filter(function(b){ return !!cfg('placement.' + b + '.open'); });
+    var statusTes = !buka_.length ? 'Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke admin kapan dibuka lagi.'
+      : buka_.length === 2 ? 'Saat ini tes Inggris dan Arab sudah dibuka.' : 'Saat ini tes ' + (buka_[0] === 'en' ? 'Inggris' : 'Arab') + ' sudah dibuka; tes ' + (buka_[0] === 'en' ? 'Arab' : 'Inggris') + ' tutup sementara.';
+    var yUrl = cfg('yayasan.url') || 'https://alfacentauri.sch.id/yayasan/', yNama = cfg('yayasan.nama') || 'Yayasan Taqwa Cerdas Kreatif';
+    var awg = cfg('donasi.mitra') || 'Aqsa Working Group (AWG)';
+    var FAQ = [
+      { id: 'biaya', topik: 'biaya', tanya: 'Berapa biayanya?',
+        jawab: 'Rp100.000 per term (semester), tanpa biaya bulanan.' },
+      { id: 'syarat', topik: 'daftar', tanya: 'Siapa yang boleh ikut?',
+        jawab: 'Cukup empat hal: usia 16+, bisa membaca Al-Qur\'an, punya laptop atau HP, dan siap konsisten sampai term selesai.' },
+      { id: 'daftar', topik: 'daftar', tanya: 'Bagaimana cara daftar?',
+        jawab: 'Dalam enam langkah: kerjakan Placement Test, kirim screenshot hasilnya ke Admin LCDU (Mr. Syahril), tunggu admin memberi tahu kelas yang tersedia, isi formulir registrasi dan bayar biaya term pertama, masuk grup WhatsApp kelas dan aktifkan akun Canvas LMS, lalu mulai belajar. Rinciannya ada di <a href="#bergabung">Cara bergabung</a>.' },
+      { id: 'tes', topik: 'tes', tanya: 'Apa itu Placement Test?',
+        jawab: 'Tes singkat untuk menentukan kelas yang pas untukmu: 20 soal listening, 20 soal reading, dan 30 soal grammar, maksimal 60 menit, dikerjakan sekali duduk. Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset. ' + statusTes },
+      { id: 'belajar', topik: 'belajar', tanya: 'Belajarnya bagaimana?',
+        jawab: 'Online. Tatap muka lewat Zoom; materi, tugas, dan link Zoom tersimpan di Canvas LMS.' },
+      { id: 'jadwal', topik: 'belajar', tanya: 'Kapan jadwal kelasnya?',
+        jawab: 'Kelas Inggris: Senin dan Rabu, 16.00–17.30 WIB. Kelas Arab: Selasa dan Kamis, 16.00–17.30 WIB. Kelas weekend untuk keduanya: Sabtu, 13.00–16.00 WIB.' },
+      { id: 'kelas', topik: 'belajar', tanya: 'Kelas apa saja yang ada?',
+        jawab: 'Dua kelas: Bahasa Inggris dan Bahasa Arab, bersama guru profesional sesuai level kamu. Lihat <a href="#kelas">Pilih kelas</a>.' },
+      { id: 'donasi', topik: 'donasi', tanya: 'Apakah donasi wajib?',
+        jawab: 'Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui ' + awg + ', mitra lama LCDU.' },
+      { id: 'pengelola', topik: 'daftar', tanya: 'Siapa yang mengelola LCDU?',
+        jawab: 'LCDU adalah program nirlaba yang dikelola <a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> (buka di tab baru)</span></a>.' }
+    ];
+    var TOPIK = [['semua', 'Semua'], ['biaya', 'Biaya'], ['daftar', 'Daftar'], ['tes', 'Tes'], ['belajar', 'Belajar'], ['donasi', 'Donasi']];
+    daftar.innerHTML = FAQ.map(function(f){
+      return '<li class="faq-item" id="faq-' + f.id + '" data-topik="' + f.topik + '"><h3 class="faq-h3">'
+        + '<button class="faq-tanya" type="button" aria-expanded="false" aria-controls="faq-' + f.id + '-j"><span class="faq-t">' + f.tanya + '</span><span class="faq-tanda" aria-hidden="true"></span></button></h3>'
+        + '<div class="faq-jawab" id="faq-' + f.id + '-j" role="region" aria-labelledby="faq-' + f.id + '"><div><p><span class="faq-j">' + f.jawab + '</span>'
+        + '<a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a></p></div></div></li>';
+    }).join('');
+    /* JSON-LD dari array yang sama (teks jawaban tanpa tag) */
+    var tmp = document.createElement('div');
+    function teks(h){ tmp.innerHTML = h; $$('.sr-only', tmp).forEach(function(x){ x.remove(); }); return tmp.textContent; }
+    var ld = document.createElement('script'); ld.type = 'application/ld+json';
+    ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map(function(f){
+      return { '@type': 'Question', name: f.tanya, acceptedAnswer: { '@type': 'Answer', text: teks(f.jawab) } }; }) });
+    document.head.appendChild(ld);
+    var items = $$('.faq-item', daftar), q = $('#faq-q'), info = $('#faq-info'), kosong = $('#faq-kosong'), topikEl = $('#faq-topik'), topik = 'semua';
+    var wa = $('a', kosong), no = cfg('whatsappAdmin.nomor'), pesan = cfg('whatsappAdmin.pesan.umum');
+    if (no) wa.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+    var asli = items.map(function(it){ return [$('.faq-t', it).innerHTML, $('.faq-j', it).innerHTML]; });
+    function setBuka(it, on){ it.classList.toggle('buka', on); $('.faq-tanya', it).setAttribute('aria-expanded', on ? 'true' : 'false'); }
+    items.forEach(function(it){ $('.faq-tanya', it).addEventListener('click', function(){ var on = !it.classList.contains('buka'); items.forEach(function(x){ setBuka(x, false); }); setBuka(it, on); }); });
+    topikEl.innerHTML = TOPIK.map(function(t){ return '<button type="button" data-t="' + t[0] + '" aria-pressed="' + (t[0] === 'semua') + '">' + t[1] + '</button>'; }).join('');
+    /* sorot: bungkus kata yang cocok dengan <mark> hanya di simpul teks (tautan & struktur tetap) */
+    function sorot(el, kata){
+      if (!kata) return;
+      var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n, simpul = [], re = new RegExp('(' + kata.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+      while ((n = w.nextNode())) if (re.test(n.nodeValue)) simpul.push(n);
+      simpul.forEach(function(t){ var s = document.createElement('span'); s.innerHTML = t.nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(re, '<mark>$1</mark>'); t.replaceWith.apply(t, Array.prototype.slice.call(s.childNodes)); });
+    }
+    function saring(){
+      var kata = q.value.trim(), kk = kata.toLowerCase(), n = 0;
+      items.forEach(function(it, k){
+        $('.faq-t', it).innerHTML = asli[k][0]; $('.faq-j', it).innerHTML = asli[k][1];
+        var cocokT = topik === 'semua' || it.dataset.topik === topik;
+        var cocokK = !kk || (teks(asli[k][0]) + ' ' + teks(asli[k][1])).toLowerCase().indexOf(kk) > -1;
+        it.hidden = !(cocokT && cocokK); if (!it.hidden){ n++; sorot($('.faq-t', it), kata); sorot($('.faq-j', it), kata); }
+      });
+      kosong.hidden = n > 0;
+      info.textContent = (kata || topik !== 'semua') ? (n ? n + ' pertanyaan cocok' : 'Tidak ada pertanyaan yang cocok') : '';
+      /* kata cari mengenai satu pertanyaan saja → buka langsung */
+      if (kk && n === 1) items.forEach(function(it){ setBuka(it, !it.hidden); });
+    }
+    q.addEventListener('input', saring);
+    $$('button', topikEl).forEach(function(b){ b.addEventListener('click', function(){
+      topik = b.dataset.t; $$('button', topikEl).forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); saring();
+    }); });
+    /* tautan langsung #faq-<id>: buka & gulir (saat dibuka, saat klik tautan, saat hash berubah) */
+    function keHash(gulir){
+      var m = /^#faq-([a-z]+)$/.exec(location.hash), it = m && $('#faq-' + m[1]); if (!it || !it.classList.contains('faq-item')) return;
+      topik = 'semua'; q.value = ''; $$('button', topikEl).forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.t === 'semua' ? 'true' : 'false'); }); saring();
+      items.forEach(function(x){ setBuka(x, x === it); });
+      if (gulir) setTimeout(function(){ if (window.lenis) window.lenis.scrollTo(it, { offset: -(parseFloat(getComputedStyle(it).scrollMarginTop) || 0), immediate: true }); else it.scrollIntoView(); }, 60);
+    }
+    keHash(true);
+    window.addEventListener('hashchange', function(){ keHash(true); });
+    daftar.addEventListener('click', function(e){ var a = e.target.closest('a.faq-tautan'); if (a) setTimeout(function(){ keHash(false); }, 0); });
+  })();
+
   /* ---------- Cara bergabung: kartu Placement Test → tombol per bahasa dari site-config.js (placement.en / .ar) ---------- */
   var gabung = $('#bergabung');
   if (gabung){
