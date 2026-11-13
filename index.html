@@ -897,24 +897,42 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 }
 @media (prefers-reduced-motion: reduce){.pt-kel,.pt-label{transition:none}}
 
-/* ===== CERITA ===== */
-.stories{overflow:hidden}
-.stories-grid{display:grid;gap:clamp(40px,6vw,80px);align-items:center}
-@media (min-width:900px){.stories-grid{grid-template-columns:.9fr 1.1fr}}
-.stack{position:relative;height:420px;max-width:520px;width:100%;justify-self:center}
-.card{position:absolute;inset:0;border-radius:var(--r-lg);background:var(--surface);color:var(--ink);padding:clamp(24px,4vw,40px);display:grid;grid-template-rows:auto 1fr auto;gap:20px;box-shadow:0 30px 60px -30px rgba(0,0,0,.5);touch-action:pan-y;user-select:none;-webkit-user-select:none;transition:transform .5s var(--ease)}
-.card.dragging{transition:none;cursor:grabbing}
-.card:first-child{cursor:grab}
-.card-quote{font-size:clamp(1.15rem,1rem + .8vw,1.55rem);font-weight:600;line-height:1.4}
-.card-mark{font-family:var(--f-display);font-size:3.5rem;line-height:.6;color:var(--lazuardi-ink)}
-.card-who{display:flex;gap:14px;align-items:center}
-.avatar{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:var(--zamrud);color:var(--on-color);flex:none}
-.card-who b{display:block}
-.card-who span{font-size:var(--step--1);color:var(--ink-soft)}
-.card.you{background:var(--kunyit);color:var(--kunyit-ink)}
-.card.you .card-mark{color:var(--kunyit-ink)}
-.card.you .card-who span{color:var(--kunyit-ink)}
-.stack-ctrl{display:flex;gap:12px;align-items:center;margin-top:8px}
+/* ===== CERITA (Testimoni) =====
+   Data di satu array JS (CERITA: nama, kelas, kutipan, foto). Kutipan = teks asli dari situs lama (jangan diubah/dikarang).
+   Potret = foto ASLI penulis yang sudah disetujui (assets/stories/<slug>-480.avif|webp, terdaftar di manifest.json dari
+   tools/build-photos.mjs --potret); tanpa foto → penampung lengkung berwarna palet dengan inisial bertipografi. DILARANG
+   foto stok sebagai wajah penulis. Desktop ≥ 900px: semua terlihat, asimetris (potret besar kiri + kutipan; berikutnya
+   kutipan kiri + potret lebih kecil di kanan), lalu satu kalimat penutup editorial. HP: .geser (satu cerita per slide). */
+.cerita-daftar{list-style:none;margin:clamp(28px,4vw,48px) 0 0;padding:0;display:grid;gap:clamp(40px,5vw,72px)}
+.cerita{margin:0;display:grid;gap:20px;align-content:start}
+.cerita-potret{width:min(44vw,180px)}
+.cerita-isi{display:grid;gap:16px;align-content:start}
+.cerita blockquote{position:relative;margin:0}
+.cerita blockquote p{font-family:var(--f-display);font-weight:500;font-size:clamp(1.3rem,1rem + 1.5vw,2.45rem);line-height:1.22;letter-spacing:-.01em;text-wrap:pretty}
+.cerita blockquote::before{content:"\201C";position:absolute;left:-.08em;top:-.5em;font-family:var(--f-display);font-weight:700;font-size:4.2rem;line-height:1;color:var(--semangka);pointer-events:none}
+.cerita blockquote p{padding-top:.6em}
+.cerita figcaption{display:grid;gap:2px;font-size:var(--step--1);color:var(--ink-soft)}
+.cerita figcaption b{font-size:var(--step-0);color:var(--ink)}
+/* penampung potret: bidang lengkung berwarna palet + inisial (dekor; nama tertulis di figcaption) */
+.potret-kosong{position:absolute;inset:0;display:grid;place-items:center;background:var(--pk,var(--kulit));color:var(--putih);
+  -webkit-mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat;mask:url(assets/ornaments/lengkung-bulat-isi.svg) 0 0/100% 100% no-repeat}
+.potret-kosong span{font-family:var(--f-display);font-weight:700;font-size:clamp(2.6rem,8vw,4.6rem);letter-spacing:-.03em;padding-top:12%}
+.potret-kosong::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.09;
+  -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/24px 24px repeat}
+.cerita-potret.frame-arch{color:var(--ink)}
+.cerita-penutup{margin-top:clamp(32px,4vw,56px);font-family:var(--f-display);font-style:italic;font-weight:700;font-size:var(--step-3);line-height:1.05;letter-spacing:-.02em;color:var(--semangka-tua);text-wrap:balance}
+@media (min-width:900px){
+  .cerita{grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(16px,2vw,32px);align-items:end}
+  .cerita-potret{grid-column:1/span 3;width:auto}
+  .cerita-isi{grid-column:5/span 8;padding-bottom:clamp(8px,2vw,32px)}
+  .cerita-daftar>:nth-child(even) .cerita-potret{grid-column:10/span 2;grid-row:1}
+  .cerita-daftar>:nth-child(even) .cerita-isi{grid-column:2/span 7;grid-row:1}
+  .cerita-penutup{text-align:right;max-width:18ch;margin-left:auto}
+}
+/* HP (.geser aktif): potret kecil, kutipan lebih kecil */
+.cerita-geser.is-geser .cerita{padding-top:28px}
+.cerita-geser.is-geser .cerita blockquote p{font-size:clamp(1.15rem,1rem + 1vw,1.4rem)}
+.cerita-geser .geser-titik{color:var(--ink)}
 
 /* ===== TIM ===== */
 .team-head{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:end;margin-bottom:clamp(28px,4vw,48px)}
@@ -1273,19 +1291,15 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <!-- pembatas Cara bergabung → Testimoni: satu garis daun zaitun yang tergambar -->
 <div class="batas-daun" data-muncul aria-hidden="true"><svg class="kiri" viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="100" y1="1" x2="0" y2="1" pathLength="1"/></svg><i class="orn-leaf"></i><svg viewBox="0 0 100 2" preserveAspectRatio="none"><line x1="0" y1="1" x2="100" y2="1" pathLength="1"/></svg></div>
 
-<!-- ============ TESTIMONI ============ -->
+<!-- ============ TESTIMONI ============
+     Diisi JS dari array CERITA (satu tempat). Kutipan asli situs lama; potret hanya foto asli yang disetujui. -->
 <section data-lentera class="band stories" id="testimoni" aria-labelledby="st-h">
-  <div class="wrap stories-grid">
-    <div style="display:grid;gap:20px">
-      <h2 class="h2" id="st-h" data-judul>Kata mereka yang sudah belajar</h2>
-      <p class="lede">Seret kartu ke samping untuk membaca cerita berikutnya.</p>
-      <div class="stack-ctrl"><button class="btn btn-ghost" id="next-story" type="button">Cerita berikutnya</button></div>
+  <div class="wrap">
+    <h2 class="h2" id="st-h" data-judul>Kata mereka yang sudah belajar</h2>
+    <div class="geser cerita-geser" data-geser="(max-width: 899px)" data-geser-nama="Cerita siswa LCDU">
+      <ul class="cerita-daftar geser-jalur" id="cerita" data-geser-jalur></ul>
     </div>
-    <div class="stack" id="stack">
-      <article class="card"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">LCDU adalah kursus yang luar biasa bagi seseorang yang ingin belajar atau meningkatkan kemampuan bahasa Inggris mereka.</p><div class="card-who"><span class="avatar">AS</span><div><b>Aninda Salma</b><span>Siswa Pre-Intermediate</span></div></div></article>
-<article class="card"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">Gaya belajarnya dikembangkan lebih lanjut agar siswa lebih cepat memahami materi. Program ini sangat baik. Terima kasih banyak, guru.</p><div class="card-who"><span class="avatar">FR</span><div><b>Fitriza Rahma</b><span>Siswa Elementary</span></div></div></article>
-      <article class="card you"><div class="card-mark" aria-hidden="true">“</div><p class="card-quote">Cerita berikutnya bisa datang dari kamu.</p></article>
-    </div>
+    <p class="cerita-penutup">Cerita berikutnya bisa datang dari kamu.</p>
   </div>
 </section>
 </div>
@@ -1386,6 +1400,45 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   var $ = function(s,r){return (r||document).querySelector(s)};
   var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 
+  /* ---------- Potret (Testimoni & Tim): foto asli bila terdaftar di manifest folder, selain itu penampung ----------
+     Manifest dibuat tools/build-photos.mjs --potret (berisi slug yang sudah diproses). Penampung = lengkung berwarna palet
+     + inisial. Foto hanya ditukar setelah manifest terbaca; tanpa manifest/JS gagal → penampung tetap. */
+  var WARNA_PENAMPUNG = ['var(--kulit)', 'var(--lazuardi)', 'var(--semangka-tua)'];
+  function inisial(n){ return n.replace(/\./g,'').split(' ').filter(Boolean).slice(0,2).map(function(w){return w[0]}).join('').toUpperCase(); }
+  function slugDari(n){ return n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function penampung(nama, k){ return '<span class="potret-kosong" style="--pk:' + WARNA_PENAMPUNG[k % 3] + '" aria-hidden="true"><span>' + inisial(nama) + '</span></span>'; }
+  function fotoAsli(folder, slug, nama, w){
+    var b = 'assets/' + folder + '/' + slug + '-';
+    return '<picture><source type="image/avif" srcset="' + b + w + '.avif"><img src="' + b + w + '.webp" alt="Foto ' + nama + '" loading="lazy" decoding="async"></picture>';
+  }
+  function pasangFoto(folder, akar){
+    if (!window.fetch) return;
+    fetch('assets/' + folder + '/manifest.json').then(function(r){ return r.ok ? r.json() : {}; }).then(function(m){
+      $$('[data-potret]', akar).forEach(function(el){
+        var info = m[el.dataset.potret]; if (!info || !info.widths || !info.widths.length) return;
+        el.innerHTML = fotoAsli(folder, el.dataset.potret, el.dataset.nama, info.widths[0]);
+      });
+    }).catch(function(){});
+  }
+
+  /* ---------- Testimoni: SATU array untuk ditambah (nama, kelas, kutipan, foto = slug di assets/stories/) ---------- */
+  var CERITA = [
+    { nama: 'Aninda Salma', kelas: 'Siswa Pre-Intermediate', foto: 'aninda-salma',
+      kutipan: 'LCDU adalah kursus yang luar biasa bagi seseorang yang ingin belajar atau meningkatkan kemampuan bahasa Inggris mereka.' },
+    { nama: 'Fitriza Rahma', kelas: 'Siswa Elementary', foto: 'fitriza-rahma',
+      kutipan: 'Gaya belajarnya dikembangkan lebih lanjut agar siswa lebih cepat memahami materi. Program ini sangat baik. Terima kasih banyak, guru.' }
+  ];
+  var ceritaEl = $('#cerita');
+  if (ceritaEl){
+    ceritaEl.innerHTML = CERITA.map(function(c, k){
+      return '<li class="geser-slide" data-geser-slide><figure class="cerita">'
+        + '<div class="frame-arch cerita-potret" data-potret="' + (c.foto || slugDari(c.nama)) + '" data-nama="' + c.nama + '">' + penampung(c.nama, k) + '</div>'
+        + '<div class="cerita-isi"><blockquote><p>' + c.kutipan + '</p></blockquote>'
+        + '<figcaption><b>' + c.nama + '</b><span>' + c.kelas + '</span></figcaption></div></figure></li>';
+    }).join('');
+    pasangFoto('stories', ceritaEl);
+  }
+
   /* ---------- Geser (.geser): carousel native di bawah breakpoint (lihat CSS). Mengembalikan { aktif, ke(i), indeks }.
      Penanda: [data-geser-penanda] berisi tombol buatan sendiri (mis. "Inggris | Arab") atau titik dibuat otomatis.
      Event "geser" (detail = indeks) di elemen root saat slide aktif berubah. ---------- */
@@ -1445,6 +1498,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   }
   var geserKenapa = $('#kenapa [data-geser]') ? geser($('#kenapa [data-geser]')) : null;
   var geserKelas = $('#kelas [data-geser]') ? geser($('#kelas [data-geser]')) : null;
+  /* HP: geser hanya bila ceritanya lebih dari satu */
+  if (CERITA.length > 1 && $('#testimoni [data-geser]')) geser($('#testimoni [data-geser]'));
 
   /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
   var nav = $('.nav'), fab = $('.fab'), heroEl = $('#hero'), lastY = window.scrollY, run = 0, grace = 0, inHero = true, nTick = false;
@@ -1803,32 +1858,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       [[400, 58], [1150, 42], [1900, 50]].forEach(function(t, k, all){ undangan.push(setTimeout(function(){ setA(t[1]); if (k === all.length - 1) undangan = []; }, t[0])); });
     }, {threshold:.5}).observe(split);
   }
-
-  /* ---------- Cerita: tumpukan kartu ---------- */
-  var stack = $('#stack');
-  function arrange(){
-    $$('.card', stack).forEach(function(c,i){
-      c.style.zIndex = 10 - i;
-      c.style.transform = 'translate(' + (i*14) + 'px,' + (i*14) + 'px) rotate(' + (i===0?-1.5:i*2.5) + 'deg)';
-      c.setAttribute('aria-hidden', i === 0 ? 'false' : 'true');
-    });
-  }
-  function cycle(dx){
-    var top = $('.card', stack); if (!top) return;
-    var dir = dx < 0 ? -1 : 1;
-    top.style.transform = 'translate(' + (dir*120) + '%,-20px) rotate(' + (dir*18) + 'deg)';
-    setTimeout(function(){ stack.appendChild(top); arrange(); }, reduce ? 0 : 280);
-  }
-  arrange();
-  $('#next-story').addEventListener('click', function(){ cycle(1); });
-  var sx = 0, dx = 0, active = null;
-  stack.addEventListener('pointerdown', function(e){
-    var top = $('.card', stack); if (e.target.closest('a') || !top.contains(e.target)) return;
-    active = top; sx = e.clientX; dx = 0; top.classList.add('dragging'); top.setPointerCapture(e.pointerId);
-  });
-  stack.addEventListener('pointermove', function(e){ if (!active) return; dx = e.clientX - sx; active.style.transform = 'translate(' + dx + 'px,0) rotate(' + (dx/18) + 'deg)'; });
-  function end(){ if (!active) return; active.classList.remove('dragging'); if (Math.abs(dx) > 90) cycle(dx); else arrange(); active = null; }
-  stack.addEventListener('pointerup', end); stack.addEventListener('pointercancel', end);
 
   /* ---------- Tim ---------- */
   var TEAM = [

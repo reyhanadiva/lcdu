@@ -24,7 +24,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
-| Testimoni | Tumpukan kartu yang bisa diseret. |
+| Testimoni | Semua cerita terlihat: potret lengkung + kutipan besar (desktop asimetris; HP slide geser), penutup "Cerita berikutnya bisa datang dari kamu." Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
 | Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
 | FAQ | Stub, isi menyusul. |
 | Donasi untuk Palestina | Disalurkan melalui AWG. Nomor rekening + tombol salin + konfirmasi transfer (WhatsApp). |
@@ -75,7 +75,9 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 
 ## Perlu dilengkapi / diverifikasi sebelum live
 
-- [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini berupa kotak warna + inisial.
+- [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini penampung lengkung berwarna + inisial. Foto testimoni/tim HANYA foto asli pemiliknya (bukan foto stok).
+- [ ] **Izin tertulis** dari setiap penulis testimoni untuk **foto dan kutipan** yang ditampilkan, dan dari anggota tim untuk fotonya.
+- [ ] **Persetujuan orang tua/wali** untuk siswa yang berusia **di bawah 18 tahun** (sebagian siswa 16–17 tahun). Mohon konfirmasi prosedurnya dengan Yayasan.
 - [ ] **Foto stok sementara** di `assets/photos/` (lihat `CREDITS.md`): ganti dengan foto asli LCDU. Isi tulisan foto kaligrafi perlu dicek guru Arab.
 - [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (gambar hero Foto; juga aset hero 3D di arsip `lcdu-3d`) — perlu diverifikasi.
 - [ ] **Logo mitra** (logo LCDU resmi sudah dipasang, lihat bagian Logo).

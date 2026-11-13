@@ -69,7 +69,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   putih/hitam 18,9 · kunyit/hitam 11,7 · tinta kunyit/kunyit 10,1. **Gagal untuk teks biasa** (hanya dekor atau judul
   ≥ 24px tebal): putih/merah terang `#E23B4A` 4,2 · hijau logo `#7FA33F` di latar terang 2,8 · putih/hijau logo 2,9 ·
   kunyit/merah tua 4,1. Kata redup Pengantar (≥ 3:1): tinta 3,6 · biru 3,5 · Arab 3,7.
-- **Geser `.geser`** (komponen dipakai ulang; kelak Testimoni & Tim): `<div class="geser" data-geser="(media query)"
+- **Geser `.geser`** (komponen dipakai ulang: Kenapa, Pilih kelas, Testimoni, Tim): `<div class="geser" data-geser="(media query)"
   data-geser-nama="…">` berisi jalur `[data-geser-jalur]` dengan slide `[data-geser-slide]`, opsional penanda sendiri
   `[data-geser-penanda]` berisi `<button>` (tanpa itu: titik dibuat otomatis). Di bawah breakpoint JS memasang `.is-geser`,
   `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4", `tabindex=0` di jalur
@@ -225,6 +225,17 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   desktop = tali lentera horizontal berombak (SVG) dengan 6 lentera menyala berurutan sekali (120 ms), ke-6 lebih besar;
   **selalu kiri→kanan 1→6** untuk bahasa apa pun (pencerminan Arab dihapus); HP = daftar rapat + benang tegak.
   Langkah 1 menaut ke `#placement`. Tinggi section 390×844: 1.835 → 1.766 px.
+- **Testimoni** (selesai, sesi testimoni-tim; id `testimoni`): data di SATU array `CERITA` di JS (nama, kelas, kutipan,
+  foto = slug). Dua kutipan = teks asli situs lama — **jangan diubah, jangan mengarang** kutipan/nama/foto. Potret hanya
+  foto ASLI penulis yang disetujui: `node tools/build-photos.mjs --potret <folder-jpg> stories` → `assets/stories/<slug>-480`
+  (4:5, ≤ 60 KB) + `manifest.json`; halaman menukar penampung dengan foto hanya untuk slug di manifest (tanpa request
+  404), alt "Foto <nama>". **Dilarang foto stok sebagai wajah.** Penampung = `.frame-arch` + `.potret-kosong` (bidang
+  lengkung hijau kulit / biru / merah tua bergantian, jaring keffiyeh 9%, inisial Fraunces putih). Desktop ≥ 900px:
+  semua terlihat, asimetris (potret 3 kolom kiri + kutipan 8 kolom; cerita berikutnya kutipan kiri + potret 2 kolom
+  kanan), kutipan Fraunces 500 besar dengan tanda kutip merah semangka (dekor), nama & kelas kecil; penutup editorial
+  "Cerita berikutnya bisa datang dari kamu." (Fraunces miring merah tua, tanpa kotak/tombol). HP: `.geser` bila > 1
+  cerita. Tumpukan kartu seret, "Seret kartu…", tombol "Cerita berikutnya" & JS-nya dihapus. Tinggi 1440×900: 596 →
+  1.209 px (potret ditambahkan); 390×844: 777 → 768 px.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
@@ -334,7 +345,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    lebih sinematik. 3D tidak dikembangkan lagi (arsip di `lcdu-3d`).
 2. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
-   Testimoni, Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung
+   Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung, Testimoni
    (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
