@@ -25,7 +25,7 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Semua cerita terlihat: potret lengkung + kutipan besar (desktop asimetris; HP slide geser), penutup "Cerita berikutnya bisa datang dari kamu." Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
-| Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
+| Tim | Rak buku kaca: tiga rak (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab), satu orang = satu buku. Disorot/difokus/diketuk → buku keluar & menampilkan sampul (penampung foto, nama, peran, sertifikasi di karabiner); panel rincian teks di bawah rak. HP: satu rak per slide geser. Data di array `TEAM`; foto tim opsional lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | Stub, isi menyusul. |
 | Donasi untuk Palestina | Disalurkan melalui AWG. Nomor rekening + tombol salin + konfirmasi transfer (WhatsApp). |
 | Footer | Kosakata hari ini (Inggris + Arab), berganti tiap hari. |

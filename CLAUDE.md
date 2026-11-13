@@ -236,6 +236,21 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   "Cerita berikutnya bisa datang dari kamu." (Fraunces miring merah tua, tanpa kotak/tombol). HP: `.geser` bila > 1
   cerita. Tumpukan kartu seret, "Seret kartu…", tombol "Cerita berikutnya" & JS-nya dihapus. Tinggi 1440×900: 596 →
   1.209 px (potret ditambahkan); 390×844: 777 → 768 px.
+- **Tim = rak buku kaca** (selesai, sesi testimoni-tim; id `tim`, judul & `data-lentera`/`data-judul` tetap): array `TEAM`
+  tidak diubah (ejaan 5 nama guru masih menunggu verifikasi). Tiga rak: Pengelola (5), Guru Bahasa Inggris (8), Guru Bahasa
+  Arab (2); rak = kelompok pertama di TEAM, jadi pengelola yang juga guru (`'mgmt en'`) di rak Pengelola dengan **pembatas
+  buku** biru (Inggris) / hijau (Arab). Buku = `<button>` "Nama, peran", `aria-pressed`, roving tabindex per rak (panah,
+  Home/End, Esc menutup). Punggung: nama vertikal Fraunces, tinggi/lebar bervariasi tetap (tinggi minimum dihitung dari
+  panjang nama supaya utuh), warna hijau kulit/biru/merah tua/krem bergantian. Hover (pointer halus), fokus, ketuk →
+  `.buka`: buku translateY(−16px), punggung rotateY(−90°) memudar, sampul rotateY ke 0 (paruh kanan rak membuka ke kiri,
+  `.ke-kiri`) berisi penampung foto lengkung (inisial; foto opsional `assets/team/<slug>-480` lewat manifest), nama, peran,
+  karabiner perak SVG + gantungan sertifikasi. Satu buku terbuka. Panel `.rak-rincian` (aria-live, tinggi tetap 104px)
+  menulis nama, peran, sertifikasi. Kaca = gradient + border + bayangan + pantulan (tanpa backdrop-filter). Hiasan SVG inline:
+  sandaran buku ranting zaitun (Pengelola), tumpukan 3 buku mendatar + lentera kecil (Arab). Desktop ≥ 900px: ketiga rak
+  sebaris dalam satu lemari (dipilih karena paling ringkas: semua orang terlihat tanpa interaksi, tinggi 864px vs tab yang
+  menyembunyikan dua rak). HP: `.geser` satu rak per slide, penanda "Pengelola | Inggris | Arab" teks bergaris bawah, 8 buku
+  muat sebaris di 390px. Chip filter & catatan "Kotak warna adalah slot foto" dihapus. Tinggi: 1440×900 1.554 → 864 px;
+  390×844 8.230 → 724 px. Biaya hover (tanpa throttling): median 0,5 ms, p95 0,8 ms, maks. 1,9 ms per perpindahan buku.
 - **Gerak (hanya tiga, + ayunan semangka & crossfade foto Kenapa)**: `data-muncul` (pudar + naik 12px, sekali; jeda opsional `--d`), `data-tergambar` (garis terbentang mengikuti scroll;
   view timeline, cadangan JS `--t`), `.menyala` (cahaya hangat menyala saat terlihat, padam di luar layar). Token
   `--dur-muncul --dur-menyala --ease-muncul --ease-menyala`. JS memasang `.gerak` di `<html>` hanya bila bukan
@@ -345,7 +360,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    lebih sinematik. 3D tidak dikembangkan lagi (arsip di `lcdu-3d`).
 2. Lanjut section lain satu per satu (pemilik ingin dibahas per section, perubahan berani boleh). Fondasi sudah ada
    (fase, benang, ornamen, gerak, konfigurasi). Masih memakai isi lama dan perlu didesain ulang:
-   Tim, Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung, Testimoni
+   Donasi, Footer. FAQ masih stub. Selesai: Pengantar, Kenapa, Kelas, Biaya, Cara bergabung, Testimoni, Tim
    (keempatnya sudah memakai fondasi seni).
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.

@@ -934,27 +934,99 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cerita-geser.is-geser .cerita blockquote p{font-size:clamp(1.15rem,1rem + 1vw,1.4rem)}
 .cerita-geser .geser-titik{color:var(--ink)}
 
-/* ===== TIM ===== */
-.team-head{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:end;margin-bottom:clamp(28px,4vw,48px)}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{border:0;padding:10px 16px;border-radius:999px;background:var(--surface);box-shadow:0 0 0 1.5px var(--line) inset;font-weight:600;cursor:pointer;font-size:.92rem;transition:background-color .2s,color .2s}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);box-shadow:none}
-.chip small{opacity:.6;margin-left:4px;font-variant-numeric:tabular-nums}
-.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:clamp(14px,2vw,24px);list-style:none;margin:0;padding:0}
-.member{display:grid;gap:12px;transition:opacity .35s,transform .35s var(--ease)}
-.member.out{opacity:.12;transform:scale(.96);pointer-events:none}
-.portrait{aspect-ratio:4/5;max-width:100%;border-radius:var(--r-md);position:relative;overflow:hidden;background:var(--c,var(--lazuardi));display:grid;place-items:center;transform-style:preserve-3d;transition:transform .4s var(--ease)}
-.member[data-g~="ar"] .portrait{--c:var(--zamrud)}
-.member[data-g="mgmt"] .portrait{--c:var(--ink)}
-.portrait::before{content:"";position:absolute;inset:0;opacity:.14;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='white' stroke-width='1.6'%3E%3Crect x='18' y='18' width='36' height='36'/%3E%3Crect x='18' y='18' width='36' height='36' transform='rotate(45 36 36)'/%3E%3C/g%3E%3C/svg%3E");background-size:48px}
-.portrait .ini{position:relative;font-family:var(--f-display);font-weight:700;font-size:clamp(2.4rem,5vw,3.4rem);color:var(--on-color);letter-spacing:-.02em}
-.portrait .certs{position:absolute;left:10px;right:10px;bottom:10px;display:flex;flex-wrap:wrap;gap:6px;transform:translateY(10px);opacity:0;transition:opacity .3s,transform .3s var(--ease)}
-.portrait .certs span{background:var(--surface);color:var(--ink);font-size:.72rem;font-weight:700;padding:4px 8px;border-radius:999px}
-.member:hover .certs,.member:focus-within .certs{opacity:1;transform:none}
-@media (hover:none){.portrait .certs{opacity:1;transform:none}}
-.member b{display:block;font-size:1rem;line-height:1.3}
-.member span.role{font-size:var(--step--1);color:var(--ink-soft)}
-.team-note{margin-top:24px;font-size:var(--step--1);color:var(--ink-soft)}
+/* ===== TIM: rak buku kaca =====
+   Tiga rak kaca (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab); satu orang = satu buku. Pengelola yang juga guru
+   duduk di rak Pengelola dengan pembatas buku berwarna bahasa yang diajarnya (biru = Inggris, hijau = Arab).
+   Buku = <button> (nama aksesibel "Nama, peran"; roving tabindex per rak; panah kiri/kanan, Home/End; Enter/Spasi).
+   Disorot (hover), difokus, atau diketuk → buku tergeser keluar (translateY) & punggung berputar menampilkan sampul
+   (rotateY): penampung foto lengkung + nama + peran, sertifikasi = gantungan kecil di karabiner perak. Satu buku terbuka.
+   Panel rincian di bawah rak (aria-live) menulis nama, peran, sertifikasi sebagai teks. Hanya transform & opacity,
+   tanpa rAF, tanpa backdrop-filter. Desktop ≥ 900px: ketiga rak sebaris (satu lemari, paling ringkas). HP: .geser,
+   satu rak per slide, penanda "Pengelola | Inggris | Arab" teks bergaris bawah. Reduced-motion: perubahan instan. */
+.tim-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(20px,3vw,32px)}
+.lemari{display:flex;align-items:stretch}
+.rak{position:relative;display:grid;grid-template-rows:auto 1fr auto;min-width:0;contain:layout paint;padding:0 clamp(10px,1.4vw,20px)}
+.rak-judul{font-family:var(--f-body);font-weight:700;font-size:.9rem;letter-spacing:.02em;color:var(--ink-soft);margin:0 0 8px}
+.rak-isi{position:relative;display:flex;align-items:flex-end;gap:12px;padding-top:56px;min-height:300px}
+.rak-buku{display:flex;align-items:flex-end;gap:6px}
+/* papan kaca: tepi tersorot, isi bening kebiruan, bayangan lembut + pantulan tipis di bawah */
+.rak-papan{position:relative;height:12px;margin:0 calc(-1 * clamp(10px,1.4vw,20px));border:1px solid rgba(255,255,255,.95);border-radius:2px;
+  background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(206,224,233,.6) 45%,rgba(150,182,200,.45));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 14%,transparent),0 16px 22px -14px rgba(16,22,58,.4)}
+.rak-papan::after{content:"";position:absolute;left:4%;right:4%;top:100%;height:26px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(150,182,200,.22),transparent)}
+/* dinding kaca tipis di antara rak (desktop) */
+@media (min-width:900px){
+  .lemari{gap:0}
+  .rak+.rak{box-shadow:inset 1px 0 0 rgba(255,255,255,.9),inset 2px 0 0 color-mix(in srgb,var(--ink) 12%,transparent)}
+  .rak[data-rak="mgmt"]{flex:6}.rak[data-rak="en"]{flex:9}.rak[data-rak="ar"]{flex:5}
+}
+/* buku */
+.buku{--w:46px;--h:210px;position:relative;flex:none;width:var(--w);height:var(--h);padding:0;border:0;background:none;color:var(--tinta,#fff);
+  cursor:pointer;contain:layout style;transform-style:preserve-3d;transition:transform .35s var(--ease)}
+.buku-punggung{position:absolute;inset:0;display:flex;justify-content:center;padding:14px 0;border-radius:3px 3px 2px 2px;background:var(--warna);
+  box-shadow:inset 3px 0 0 rgba(255,255,255,.14),inset -4px 0 0 rgba(0,0,0,.14);transform-origin:100% 50%;transition:transform .35s var(--ease),opacity .25s}
+/* pita emas tipis di kepala & kaki punggung */
+.buku-punggung::before,.buku-punggung::after{content:"";position:absolute;left:5px;right:5px;height:2px;background:currentColor;opacity:.45}
+.buku-punggung::before{top:8px}.buku-punggung::after{bottom:8px}
+.buku-nama{writing-mode:vertical-rl;font-family:var(--f-display);font-weight:700;font-size:.8rem;line-height:1;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:100%}
+/* pembatas buku (bookmark): pengelola yang juga mengajar; warna = bahasa yang diajar */
+.buku-pembatas{position:absolute;right:7px;top:-15px;width:9px;height:26px;background:var(--pb);clip-path:polygon(0 0,100% 0,100% 100%,50% 78%,0 100%);transition:opacity .25s}
+.buku[data-ajar="en"]{--pb:var(--lazuardi)}.buku[data-ajar="ar"]{--pb:var(--kulit)}
+/* sampul (terbuka): melebar ke kanan, atau ke kiri untuk buku di paruh kanan rak (.ke-kiri) */
+.buku-sampul{position:absolute;bottom:0;left:0;width:158px;height:236px;display:grid;grid-template-columns:84px 1fr;grid-template-rows:auto 1fr;gap:10px 8px;
+  padding:16px 12px 14px;border-radius:3px 6px 6px 3px;background:var(--warna);color:var(--tinta,#fff);text-align:left;pointer-events:none;
+  box-shadow:inset 6px 0 0 rgba(0,0,0,.14),0 18px 28px -14px rgba(16,22,58,.55);opacity:0;transform-origin:0 50%;transform:perspective(700px) rotateY(80deg);
+  transition:transform .4s var(--ease),opacity .25s}
+.buku.ke-kiri .buku-sampul{left:auto;right:0;transform-origin:100% 50%;transform:perspective(700px) rotateY(-80deg);border-radius:6px 3px 3px 6px;box-shadow:inset -6px 0 0 rgba(0,0,0,.14),0 18px 28px -14px rgba(16,22,58,.55)}
+.sampul-potret{grid-column:1;width:84px;color:currentColor}
+.sampul-potret .potret-kosong{background:color-mix(in srgb,var(--tinta,#fff) 18%,var(--warna));color:var(--tinta,#fff)}
+.sampul-potret .potret-kosong span{font-size:1.7rem;padding-top:14%}
+.sampul-teks{grid-column:1/-1;align-self:end;display:grid;gap:4px}
+.sampul-teks b{font-family:var(--f-display);font-weight:700;font-size:1rem;line-height:1.1}
+.sampul-teks small{font-size:.72rem;line-height:1.3;opacity:.92}
+/* karabiner perak terjepit di kepala sampul; sertifikasi = gantungan kecil */
+.karabiner{grid-column:2;grid-row:1;position:relative;display:grid;justify-items:start;gap:3px;margin-top:-30px;padding-top:30px}
+.karabiner svg{position:absolute;left:6px;top:-2px;width:20px;height:34px;overflow:visible}
+.gantungan{position:relative;display:block;max-width:58px;padding:2px 5px;border-radius:2px;background:#F5DEC1;color:#10163A;font-size:.58rem;font-weight:800;line-height:1.2;
+  box-shadow:0 1px 0 rgba(0,0,0,.2);transform:rotate(var(--r,-3deg));transform-origin:10px 0}
+/* terbuka */
+.buku.buka{z-index:5;transform:translateY(-16px)}
+.buku.buka .buku-punggung{transform:rotateY(-90deg);opacity:0}
+.buku.buka .buku-pembatas{opacity:0}
+.buku.buka .buku-sampul{opacity:1;transform:none}
+.buku:focus-visible{outline:none}
+.buku:focus-visible .buku-punggung,.buku:focus-visible .buku-sampul{outline:3px solid var(--kunyit);outline-offset:3px}
+/* atribut rak (SVG ringan, dekor) */
+.rak-hias{flex:none;align-self:flex-end;color:var(--ink)}
+.sandaran{width:38px;height:150px}
+.tumpuk{display:grid;justify-items:start;gap:2px}
+.tumpuk i{display:block;height:15px;border-radius:2px;background:var(--wt);box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
+.rak-lentera{width:30px;height:52px}
+/* panel rincian: teks, tinggi tetap (tidak ada lompatan layout) */
+.rak-rincian{min-height:104px;display:grid;align-content:start;gap:4px;padding-top:14px;border-top:1px solid var(--line)}
+.rr-nama{font-family:var(--f-display);font-weight:700;font-size:var(--step-2);line-height:1.1}
+.rr-peran,.rr-sert,.rr-kosong{font-size:var(--step-0);color:var(--ink-soft)}
+.rr-sert b{color:var(--ink)}
+/* HP (< 900px): satu rak per slide, penanda teks bergaris bawah, buku maks 8 sebaris di 390px */
+.rak-penanda{display:none}
+.rak-geser.is-geser .rak-penanda{display:flex;align-items:baseline;gap:10px;margin-bottom:6px;font-weight:700;font-size:var(--step-0);color:var(--ink-soft)}
+.rak-penanda button{padding:6px 0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:transparent;transition:color .3s,text-decoration-color .3s}
+.rak-penanda button[aria-current="true"]{color:var(--ink);text-decoration-color:var(--semangka-tua)}
+.rak-penanda button:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
+@media (max-width:899px){
+  .rak{padding:0}
+  .rak-papan{margin:0}
+  .rak-geser.is-geser .rak-judul{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .rak-isi{gap:6px;padding-top:44px;min-height:256px}
+  .rak-buku{gap:4px}
+  .buku{width:calc(var(--w) * .74);height:calc(var(--h) * .86)}
+  .buku-nama{font-size:.68rem}
+  .buku-sampul{width:146px;height:200px;grid-template-columns:70px 1fr;padding:12px 10px}
+  .sampul-potret{width:70px}
+  .sandaran{width:30px;height:120px}
+}
+@media (prefers-reduced-motion: reduce){.buku,.buku-punggung,.buku-sampul,.buku-pembatas,.rak-penanda button{transition:none!important}}
 
 /* ===== DONASI ===== */
 .donate{position:relative;overflow:hidden}
@@ -1305,15 +1377,20 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 </div>
 
 <div class="fase" data-fase="senja">
-<!-- ============ TIM ============ -->
-<section data-lentera class="band" id="tim" aria-labelledby="team-h">
-  <div class="wrap">
-    <div class="team-head">
-      <h2 class="h2" id="team-h" data-judul>Yang akan menemani kamu belajar</h2>
-      <div class="chips" id="chips" role="group" aria-label="Saring tim"></div>
+<!-- ============ TIM: rak buku kaca ============
+     Buku diisi JS dari array TEAM (data tidak diubah). Foto tim opsional: assets/team/<slug>-480 (manifest). -->
+<section data-lentera class="band tim" id="tim" aria-labelledby="team-h">
+  <div class="wrap tim-wrap">
+    <h2 class="h2" id="team-h" data-judul>Yang akan menemani kamu belajar</h2>
+    <div class="geser rak-geser" data-geser="(max-width: 899px)" data-geser-nama="Rak tim LCDU">
+      <div class="rak-penanda" data-geser-penanda><button type="button">Pengelola</button><span aria-hidden="true">|</span><button type="button">Inggris</button><span aria-hidden="true">|</span><button type="button">Arab</button></div>
+      <div class="lemari geser-jalur" id="lemari" data-geser-jalur>
+        <div class="rak geser-slide" data-geser-slide data-rak="mgmt"><h3 class="rak-judul" id="rak-mgmt">Pengelola</h3><div class="rak-isi"><div class="rak-buku" role="group" aria-labelledby="rak-mgmt"></div><svg class="rak-hias sandaran" viewBox="0 0 38 150" aria-hidden="true" focusable="false"><path d="M4 150V22a4 4 0 0 1 4-4h6v132z" fill="#F5DEC1" stroke="currentColor" stroke-opacity=".35"/><rect x="0" y="144" width="38" height="6" rx="1.5" fill="#E7CDA9"/><path d="M9 112c4-18 6-40 4-68" fill="none" stroke="#5B4A2E" stroke-width="1.3" stroke-linecap="round"/><g fill="#7FA33F"><path d="M12 54c-6-2-9-7-9-12 6 1 9 6 9 12z"/><path d="M13 70c6-3 10-8 10-14-6 2-10 7-10 14z"/><path d="M12 86c-6-2-9-7-9-12 6 1 9 6 9 12z"/><path d="M12 101c6-3 9-8 9-13-6 2-9 7-9 13z"/></g><ellipse cx="17" cy="80" rx="2.6" ry="3.4" fill="#3B2A3F"/></svg></div><div class="rak-papan" aria-hidden="true"></div></div>
+        <div class="rak geser-slide" data-geser-slide data-rak="en"><h3 class="rak-judul" id="rak-en">Guru Bahasa Inggris</h3><div class="rak-isi"><div class="rak-buku" role="group" aria-labelledby="rak-en"></div></div><div class="rak-papan" aria-hidden="true"></div></div>
+        <div class="rak geser-slide" data-geser-slide data-rak="ar"><h3 class="rak-judul" id="rak-ar">Guru Bahasa Arab</h3><div class="rak-isi"><div class="rak-buku" role="group" aria-labelledby="rak-ar"></div><div class="rak-hias tumpuk" aria-hidden="true"><i style="width:96px;--wt:#B3202E"></i><i style="width:112px;--wt:#F5DEC1"></i><i style="width:104px;--wt:#1E6B3A"></i></div><svg class="rak-hias rak-lentera" viewBox="0 0 30 52" aria-hidden="true" focusable="false"><path d="M15 0v6" stroke="currentColor" stroke-opacity=".5" stroke-width="1.5"/><path d="M9 6h12l-2 6H11z" fill="#B08A3C"/><rect x="7" y="12" width="16" height="30" rx="4" fill="#FFE7B0" stroke="#B08A3C" stroke-width="1.5"/><path d="M15 14v26M7 27h16" stroke="#B08A3C" stroke-width="1"/><ellipse cx="15" cy="27" rx="4" ry="6" fill="#FFC21A" opacity=".85"/><path d="M8 42h14l-1.5 6h-11z" fill="#B08A3C"/></svg></div><div class="rak-papan" aria-hidden="true"></div></div>
+      </div>
     </div>
-    <ul class="team" id="team"></ul>
-    <p class="team-note">Arahkan kursor ke kartu untuk melihat sertifikasi. Kotak warna adalah slot foto.</p>
+    <div class="rak-rincian" id="rak-rincian" aria-live="polite"><p class="rr-kosong">Pilih satu buku untuk melihat siapa dia.</p></div>
   </div>
 </section>
 
@@ -1500,6 +1577,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   var geserKelas = $('#kelas [data-geser]') ? geser($('#kelas [data-geser]')) : null;
   /* HP: geser hanya bila ceritanya lebih dari satu */
   if (CERITA.length > 1 && $('#testimoni [data-geser]')) geser($('#testimoni [data-geser]'));
+  if ($('#tim [data-geser]')) geser($('#tim [data-geser]'));
 
   /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
   var nav = $('.nav'), fab = $('.fab'), heroEl = $('#hero'), lastY = window.scrollY, run = 0, grace = 0, inHero = true, nTick = false;
@@ -1877,26 +1955,60 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     ['Taara Dewiana Kania','Guru Bahasa Inggris','en',['TKT','CELTA']],
     ['Muhammad Edwar Kartakusuma','Guru Bahasa Inggris','en',['TKT']]
   ];
-  var teamEl = $('#team');
-  function initials(n){ return n.replace(/\./g,'').split(' ').filter(Boolean).slice(0,2).map(function(w){return w[0]}).join('').toUpperCase(); }
-  teamEl.innerHTML = TEAM.map(function(m){
-    return '<li class="member" data-g="'+m[2]+'" tabindex="0"><div class="portrait"><span class="ini">'+initials(m[0])+'</span>'+
-      (m[3].length?'<div class="certs">'+m[3].map(function(c){return '<span>'+c+'</span>'}).join('')+'</div>':'')+
-      '</div><div><b>'+m[0]+'</b><span class="role">'+m[1]+'</span></div></li>';
-  }).join('');
-  var groups = [['all','Semua'],['en','Bahasa Inggris'],['ar','Bahasa Arab'],['mgmt','Pengelola']];
-  var chips = $('#chips');
-  chips.innerHTML = groups.map(function(g,i){
-    var n = g[0]==='all' ? TEAM.length : TEAM.filter(function(m){ return m[2].split(' ').indexOf(g[0])>-1; }).length;
-    return '<button class="chip" type="button" data-g="'+g[0]+'" aria-pressed="'+(i===0)+'">'+g[1]+'<small>'+n+'</small></button>';
-  }).join('');
-  $$('.chip', chips).forEach(function(c){
-    c.addEventListener('click', function(){
-      $$('.chip', chips).forEach(function(x){ x.setAttribute('aria-pressed', x === c); });
-      var g = c.dataset.g;
-      $$('.member', teamEl).forEach(function(m){ m.classList.toggle('out', g !== 'all' && m.dataset.g.split(' ').indexOf(g) < 0); });
+  /* Rak buku kaca: rak = kelompok pertama ('mgmt en' → rak Pengelola + pembatas biru). Tinggi/lebar/warna punggung
+     bervariasi tetap (indeks), warna dari palet: hijau kulit, biru, merah tua, krem. */
+  var lemari = $('#lemari'), rincian = $('#rak-rincian');
+  if (lemari){
+    var WARNA_BUKU = [['#1E6B3A', '#FFFFFF'], ['#1724C0', '#FFFFFF'], ['#B3202E', '#FFFFFF'], ['#F5DEC1', '#10163A']];
+    var TINGGI = [214, 198, 228, 206, 236, 192, 222, 210], LEBAR = [46, 42, 50, 44, 48, 40, 52, 46];
+    var bukuSemua = [];
+    ['mgmt', 'en', 'ar'].forEach(function(r, ri){
+      var wadah = $('.rak[data-rak="' + r + '"] .rak-buku', lemari);
+      var isi = TEAM.filter(function(m){ return m[2].split(' ')[0] === r; });
+      wadah.innerHTML = isi.map(function(m, k){
+        var g = m[2].split(' '), ajar = g[0] === 'mgmt' && g[1] ? g[1] : '', w = WARNA_BUKU[(k + ri) % 4], n = (k + ri * 3) % 8;
+        var tinggi = Math.max(TINGGI[n], Math.ceil(m[0].length * 8.4 + 36));   // nama panjang tetap utuh di punggung
+        return '<button class="buku' + (k >= Math.ceil(isi.length / 2) && isi.length > 2 ? ' ke-kiri' : '') + '" type="button" tabindex="' + (k ? -1 : 0) + '" aria-pressed="false"'
+          + ' aria-label="' + m[0] + ', ' + m[1] + '" data-t="' + TEAM.indexOf(m) + '"' + (ajar ? ' data-ajar="' + ajar + '"' : '')
+          + ' style="--warna:' + w[0] + ';--tinta:' + w[1] + ';--h:' + tinggi + 'px;--w:' + LEBAR[n] + 'px">'
+          + '<span class="buku-punggung" aria-hidden="true"><span class="buku-nama">' + m[0] + '</span></span>'
+          + (ajar ? '<span class="buku-pembatas" aria-hidden="true"></span>' : '')
+          + '<span class="buku-sampul" aria-hidden="true"><span class="frame-arch sampul-potret" data-potret="' + slugDari(m[0]) + '" data-nama="' + m[0] + '">' + penampung(m[0], k) + '</span>'
+          + (m[3].length ? '<span class="karabiner"><svg viewBox="0 0 20 34"><defs><linearGradient id="perak' + TEAM.indexOf(m) + '" x1="0" x2="1"><stop offset="0" stop-color="#F2F4F7"/><stop offset=".5" stop-color="#AEB5BF"/><stop offset="1" stop-color="#E3E6EB"/></linearGradient></defs><rect x="2" y="1" width="16" height="32" rx="8" fill="none" stroke="url(#perak' + TEAM.indexOf(m) + ')" stroke-width="3"/><path d="M15 8v13" stroke="#8C949F" stroke-width="2" stroke-linecap="round"/></svg>'
+            + m[3].map(function(c, j){ return '<span class="gantungan" style="--r:' + [-4, 3, -2, 4][j % 4] + 'deg">' + c + '</span>'; }).join('') + '</span>' : '')
+          + '<span class="sampul-teks"><b>' + m[0] + '</b><small>' + m[1] + '</small></span></span></button>';
+      }).join('');
     });
-  });
+    bukuSemua = $$('.buku', lemari);
+    pasangFoto('team', lemari);
+    var terbuka = null;
+    function buka(b){
+      if (terbuka === b) return;
+      if (terbuka){ terbuka.classList.remove('buka'); terbuka.setAttribute('aria-pressed', 'false'); }
+      terbuka = b;
+      if (!b) return;
+      b.classList.add('buka'); b.setAttribute('aria-pressed', 'true');
+      var m = TEAM[+b.dataset.t];
+      rincian.innerHTML = '<p class="rr-nama">' + m[0] + '</p><p class="rr-peran">' + m[1] + '</p>'
+        + '<p class="rr-sert">' + (m[3].length ? 'Sertifikasi: <b>' + m[3].join(', ') + '</b>' : 'Sertifikasi: belum dicantumkan') + '</p>';
+    }
+    bukuSemua.forEach(function(b){
+      b.addEventListener('click', function(){ buka(b); });
+      b.addEventListener('focus', function(){ buka(b); });
+      if (fine) b.addEventListener('pointerenter', function(){ buka(b); });
+      b.addEventListener('keydown', function(e){
+        var rak = $$('.buku', b.parentElement), i = rak.indexOf(b), j = i;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = Math.min(rak.length - 1, i + 1);
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = Math.max(0, i - 1);
+        else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = rak.length - 1;
+        else if (e.key === 'Escape'){ buka(null); return; }
+        else return;
+        e.preventDefault(); if (j === i) return;
+        rak.forEach(function(x, k){ x.tabIndex = k === j ? 0 : -1; });
+        rak[j].focus();
+      });
+    });
+  }
 
   /* ---------- Salin rekening ---------- */
   var copyBtn = $('#copy'), copied = $('#copied'), acct = $('#acct');
