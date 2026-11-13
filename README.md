@@ -1,18 +1,61 @@
 # LCDU Landing Page
 
-Prototipe landing page LCDU (kelas Bahasa Inggris & Arab, Yayasan Taqwa Cerdas Kreatif).
-Situs statis tanpa build step: `index.html`, modul hero di `hero/`, Lenis (MIT) di `vendor/lenis/`. Bisa langsung di-deploy ke Vercel.
+Landing page **LCDU (Language Course for Da'wah dan Ummah)**: kelas Bahasa Arab & Inggris online, nirlaba, di bawah
+Yayasan Taqwa Cerdas Kreatif (Alfa Centauri Schools, Bandung). Tujuan halaman: pendaftaran siswa dan donasi untuk Palestina.
 
-Hero 3D (Kubah & Qibli, three.js) **diarsipkan** di [reyhanadiva/lcdu-3d](https://github.com/reyhanadiva/lcdu-3d) dan tidak lagi ada di repo ini.
+Situs **statis tanpa build step**: satu `index.html` (CSS & JS inline), modul hero di `hero/`, data yang sering berubah di
+`site-config.js`, Lenis (MIT) di `vendor/lenis/`. Deploy otomatis ke Vercel dari branch `main`.
+Hero 3D lama **diarsipkan** di [reyhanadiva/lcdu-3d](https://github.com/reyhanadiva/lcdu-3d).
 
-## Konsep: "Dua Aksara"
+> Dokumen ini = serah terima untuk tim IT. Keputusan desain, aturan, dan alasannya ada di `CLAUDE.md` (baca dulu sebelum
+> mengubah tampilan). Bagian **"Menunggu dari pemilik"** di bawah = data yang belum ada dan sengaja tidak ditampilkan.
 
-Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di antara dua arah itu.
+## Menjalankan lokal
 
-- **Biru (Lazuardi)** = Bahasa Inggris
-- **Hijau (Zamrud)** = Bahasa Arab
-- **Kuning (Kunyit)** = aksi utama (daftar, Placement Test)
-- Font (di-host sendiri, lihat `fonts/`): Fraunces (judul), Plus Jakarta Sans (teks), Reem Kufi & Noto Naskh Arabic (Arab)
+```bash
+python3 -m http.server 8000
+```
+
+Buka `http://localhost:8000/`. Modul ES butuh server (bukan `file://`). Saat mengembangkan, matikan cache browser
+(atau pakai server tanpa cache) karena modul ES lama sering tersimpan. Alat pengembang: `?edit-spots` (titik cahaya hero).
+
+## Peta struktur
+
+| Path | Isi |
+|---|---|
+| `index.html` | Seluruh halaman: `<head>` (meta, preload font), CSS inline (token di `:root` paling atas, lalu per section), markup, dan skrip inline (satu IIFE + modul Lenis). Data konten di array JS `CERITA` (testimoni), `TEAM` (tim), `FAQ` (FAQ + JSON-LD). |
+| `site-config.js` | **Satu tempat** untuk data yang berubah (lihat tabel kunci di bawah). HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa`; teks di HTML = cadangan. |
+| `hero/hero.js` | Pengendali hero: scroll → progres `p`, teks tiga babak, pegas + pemandu supaya fajar selalu tercapai. |
+| `hero/lentera-hd.js`, `hero/spots.json` | Hero Foto (kanvas: foto malam/fajar + titik cahaya). |
+| `assets/hero/` | Foto hero sumber + turunan web di `build/` (AVIF/WebP/JPG + `manifest.json`). |
+| `assets/photos/` | Foto stok SEMENTARA (Pexels) + `CREDITS.md`. |
+| `assets/stories/`, `assets/team/` | Potret ASLI testimoni/tim (sekarang kosong; `manifest.json` = daftar slug yang tersedia). |
+| `assets/brand/` | Logo resmi (PNG) + turunan web. |
+| `assets/ornaments/` | SVG ornamen keffiyeh & semangka (masker CSS). |
+| `fonts/` | woff2 di-host sendiri: Fraunces, Plus Jakarta Sans, Reem Kufi, Noto Naskh Arabic. |
+| `vendor/lenis/` | Scroll halus (MIT). |
+| `tools/` | Skrip aset (Python & Node), lihat `tools/README.md`. Tidak ikut ke situs. |
+| `ornamen-test.html` | Halaman uji ornamen SEMENTARA untuk persetujuan pemilik — boleh dihapus bila tidak dibutuhkan. |
+| `CLAUDE.md` | Konteks desain, keputusan terkunci, aturan kualitas. |
+
+## Kunci `site-config.js`
+
+| Kunci | Arti |
+|---|---|
+| `lcdu.namaLengkap` | Kepanjangan LCDU (Pengantar & footer). Ejaan resmi menunggu pemilik. |
+| `placement.en` / `placement.ar` → `open`, `url`, `urlSoal` | Status Placement Test per bahasa. `open: true` → tombol "Mulai tes …" ke `url` (halaman awal tes). Keduanya `false` → kalimat tutup + "Tanya admin lewat WhatsApp". `urlSoal` disimpan, tidak dipakai. |
+| `whatsappAdmin.nomor` / `.tampil` / `.pesan.umum\|placement\|konfirmasi` | Nomor untuk `wa.me` (tanpa "+"), versi tampilan (belum dipakai di teks), pesan awal per tombol (`data-wa="…"`). |
+| `yayasan.nama` / `.url` | Nama & tautan Yayasan (Pengantar, footer, FAQ). |
+| `donasi.mitra` / `.url` | Nama & situs AWG. |
+| `donasi.siapTayang` | `false` → lembar rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin". |
+| `donasi.logo` | Path logo AWG (kosong = tidak tampil; perlu izin AWG). |
+| `rekening.bank` / `.nomor` / `.atasNama` | Rekening donasi. Tombol salin menyalin angka tanpa titik. |
+| `kontak.email` / `.instagram` / `.alamat` | Kontak footer; kosong = tidak tampil. |
+| `jaringan[]` (`nama`, `url`) | Jaringan pendidikan di footer; hanya entri ber-URL yang tampil. |
+| `mitra[]` (`nama`, `url`, `logo`) | Baris mitra di footer; kosong = tersembunyi. |
+
+Data di `index.html` (bukan config): `CERITA` (nama, kelas, kutipan, foto, bahasa), `TEAM` (nama, peran, kelompok,
+sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bentuk objek ini.
 
 ## Section
 
@@ -30,7 +73,21 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 | Donasi untuk Palestina | Kalimat pembuka, panel AWG besar (foto ilustrasi kebun zaitun + fakta dari aqsaworkinggroup.com + "Kunjungi situs AWG"), alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
 | Footer | Langit malam Al-Aqsa (foto hero yang sama) + sembilan lentera + "Bahasa untuk umat.", lalu empat kolom gaya situs saudara: Identitas (logo kecil, kepanjangan, deskripsi, "For a Better Ummah"), Jelajahi, Hubungi kami (WhatsApp; email/Instagram/alamat bila diisi), Jaringan pendidikan (`jaringan[]`, hanya yang ber-URL); garis + baris legal; pita keffiyeh. |
 
-Semua animasi menghormati `prefers-reduced-motion`. Kursor kustom hanya aktif di perangkat dengan mouse.
+Semua gerak menghormati `prefers-reduced-motion` (diuji: tanpa kelas `.gerak` & tanpa Lenis). Tidak ada scroll horizontal
+halaman di 360/390px; geser horizontal hanya di dalam komponen `.geser` (keputusan pemilik).
+
+## Kualitas (pemeriksaan akhir, 13 Nov 2026)
+
+- **Lighthouse** (lokal, `python3 -m http.server` tanpa kompresi & tanpa cache — Vercel biasanya lebih baik):
+  - Mobile (emulasi HP kelas menengah, CPU 4×): Performance **80 / 97 / 98** (tiga kali, median 97; awal audit 69),
+    Accessibility **100**, Best Practices **100**, SEO **100**. LCP ±1,8 s, CLS 0. Penyebab skor turun-naik: Total Blocking
+    Time 30–810 ms dari skrip saat muat (skrip inline utama, hero kanvas `lentera-hd.js`, inisialisasi Lenis).
+  - Desktop: **100 / 100 / 100 / 100**.
+- Tautan: 28 anchor internal valid; 5 tautan eksternal hidup (Yayasan 200, Placement EN/AR 200, AWG 200 tetapi lambat
+  ±19 s, wa.me 302 → api.whatsapp.com); semua tautan keluar `target=_blank` + `rel=noopener`.
+- Sisa kerangka ("stub", "menyusul", `href="#"`, "Logo mitra", "Lorem", `console.log`): **0**.
+- Fakta: "Rp100.000" hanya di total struk Biaya & jawaban FAQ biaya; "Rp0" hanya di struk; tidak ada "gratis", "sudah
+  termasuk seluruh biaya belajar", "tanpa biaya tambahan"; jadwal, nomor WhatsApp, rekening konsisten dengan config.
 
 ## Gambar hero (hero Foto)
 
@@ -47,12 +104,15 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 `optimize-models.mjs` / `prep-model-textures.py` / `make-extras.py` dipindahkan ke
 [reyhanadiva/lcdu-3d](https://github.com/reyhanadiva/lcdu-3d) (snapshot commit `b6e428e`). Catatan sumber aset ada di sana.
 
-## Foto stok (SEMENTARA — ganti dengan foto asli)
+## Foto stok & kredit (SEMENTARA — ganti dengan foto asli)
 
-- 7 foto Pexels (Pexels License, gratis komersial) di `assets/photos/`: menulis, kelas online, Al-Qur'an di rehal,
-  kaligrafi, kebun zaitun, Al-Aqsa dari jauh, keffiyeh. Sumber, fotografer, lisensi & tanggal unduh di
-  `assets/photos/CREDITS.md`. **Semuanya sementara, ganti dengan foto asli LCDU.**
-- Turunan AVIF + WebP (480 / 960 / 1600, tidak diperbesar) dibuat dengan `node tools/build-photos.mjs <folder-jpg>`.
+- Foto Pexels (Pexels License, gratis komersial) di `assets/photos/`: menulis, kelas online, Al-Qur'an di rehal,
+  kaligrafi, kebun zaitun (juga latar panel AWG, berketerangan "Foto ilustrasi"), Al-Aqsa dari jauh, keffiyeh, guru di
+  papan tulis. Sumber, fotografer, lisensi & tanggal di **`assets/photos/CREDITS.md`**.
+- Turunan AVIF + WebP (480 / 960 / 1600, tidak diperbesar): `node tools/build-photos.mjs <folder-jpg>`.
+- Potret ASLI testimoni/tim (hanya yang sudah disetujui): `node tools/build-photos.mjs --potret <folder-jpg> stories|team`
+  → 4:5, ≤ 60 KB, `manifest.json`. **Dilarang foto stok sebagai wajah siswa/guru.**
+- Gambar hero dibuat dengan ChatGPT (lihat "Menunggu dari pemilik": ketentuan penggunaan).
 
 ## Ornamen (keffiyeh & semangka)
 
@@ -65,71 +125,58 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
   (latar abu-abu, resolusi rendah, tidak dipakai di situs).
 - Turunan untuk web di `assets/brand/web/` dibuat dengan **memotong dan memperkecil** PNG resmi, bentuk, proporsi, dan
   huruf tidak diubah. Tidak ada tracing ke SVG.
-  - `lcdu-logo-color.png` / `lcdu-logo-white.png`: logo lengkap + tagline "For a Better Ummah" (footer).
-  - `lcdu-lockup-color.png` / `lcdu-lockup-white.png`: ikon "d" + LCDU + garis, tanpa tagline (hero, navbar).
+  - `lcdu-logo-color.png` / `lcdu-logo-white.png`: logo lengkap + tagline "For a Better Ummah" (cadangan, tidak dipakai halaman).
+  - `lcdu-lockup-color.png` / `lcdu-lockup-white.png` (720×240) dan turunan `-360.png` (360×120, dipakai halaman):
+    ikon "d" + LCDU + garis, tanpa tagline (navbar, hero, footer).
   - Versi putih = semua piksel logo diwarnai putih, kanal transparansi asli dipertahankan.
   - Favicon (`/favicon.ico`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`) dari ikon "d".
 - Warna logo (diukur dari PNG): biru `#1724C0`, hijau `#7FA33F`, teks tagline `#332C2B`.
-- [ ] **Minta berkas vektor resmi (SVG/AI/PDF) dari pembuat logo.** PNG cukup untuk sekarang, tetapi vektor lebih tajam
-  di semua ukuran dan lebih ringan.
-
-## Perlu dilengkapi / diverifikasi sebelum live
-
-- [ ] **Foto**: slot foto kelas, foto tim (15), foto testimoni. Saat ini penampung lengkung berwarna + inisial. Foto testimoni/tim HANYA foto asli pemiliknya (bukan foto stok).
-- [ ] **Izin tertulis** dari setiap penulis testimoni untuk **foto dan kutipan** yang ditampilkan, dan dari anggota tim untuk fotonya.
-- [ ] **Persetujuan orang tua/wali** untuk siswa yang berusia **di bawah 18 tahun** (sebagian siswa 16–17 tahun). Mohon konfirmasi prosedurnya dengan Yayasan.
-- [ ] **Foto stok sementara** di `assets/photos/` (lihat `CREDITS.md`): ganti dengan foto asli LCDU. Isi tulisan foto kaligrafi perlu dicek guru Arab.
-- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (gambar hero Foto; juga aset hero 3D di arsip `lcdu-3d`) — perlu diverifikasi.
-- [ ] **Link formulir registrasi** (belum ada di halaman). Placement Test & WhatsApp admin sudah di `site-config.js`; nomor WhatsApp 0819-6009-333 perlu diverifikasi.
-- [ ] **PERLU VERIFIKASI — Jadwal kelas** (section Pilih kelas): Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; Weekend Sabtu 13.00–16.00 WIB (keduanya).
-- [ ] **PERLU VERIFIKASI — Arti "term"**: halaman menulis "per term (semester)" (1 term = 1 semester; struk Biaya, total Rp100.000). Pastikan sesuai kebijakan LCDU.
-- [ ] **PERLU VERIFIKASI — Nomor WhatsApp admin** 0819-6009-333 (diambil dari lcdu.org; ada di `site-config.js`).
-- [ ] **PERLU VERIFIKASI — Foto stok sementara** di `assets/photos/` (Pengantar, Kenapa, Pilih kelas): ganti dengan foto asli LCDU; daftar & lisensi di `CREDITS.md`.
-- [ ] **Ejaan nama 5 guru di baris terakhir** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
-- [ ] **Nama yayasan** di rekening: situs lama menulis "Yayasan Cerdas Taqwa Kreatif", nama resmi "Yayasan Taqwa Cerdas Kreatif". Pastikan sesuai buku rekening.
-- [ ] **Nomor rekening** Bank Muamalat 10.10.11.83.94 (tombol salin menyalin `1010118394`, tanpa titik). **Pastikan format salin tanpa titik ini benar** untuk transfer.
-- [ ] **Tujuan donasi**: situs lama mencampur "Donasi LCDU" dan "Donasi untuk Palestina" di satu rekening. Perlu dipisah/diperjelas.
-- [ ] **Soal kuis** dan kunci jawaban — minta guru Inggris & Arab mengecek ulang.
+- Berkas vektor resmi (SVG/AI/PDF) belum ada — lihat "Menunggu dari pemilik".
 
 ## Menunggu dari pemilik
 
-Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik memberikannya (tidak ada penampung kosong).
+Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai diberikan (tidak ada penampung kosong).
 
-**Nama lengkap LCDU**
-- [ ] **Ejaan resmi kepanjangan**: halaman memakai "Language Course for Da'wah dan Ummah" (`lcdu.namaLengkap` di
-  `site-config.js`, juga `<title>` dan meta description). Situs-situs saudara berbeda ("dan" / "&"; teks pembaca layar di
-  hero masih "&"). Tentukan SATU ejaan, lalu samakan di semua tempat.
+**1. Izin & risiko (sebelum rilis publik)**
+- [ ] **Izin penghimpunan donasi (PUB) dan nama pemilik rekening** — konfirmasi Yayasan. Bila belum, set
+  `donasi.siapTayang: false`. Situs lama menulis "Yayasan Cerdas Taqwa Kreatif"; nama resmi "Yayasan Taqwa Cerdas
+  Kreatif" — samakan dengan buku rekening. Situs lama juga mencampur "Donasi LCDU" & "Donasi untuk Palestina" di satu
+  rekening: pastikan rekening ini memang untuk donasi Palestina (AWG).
+- [ ] **Izin tertulis** setiap penulis testimoni untuk **foto dan kutipan**, dan anggota tim untuk fotonya.
+- [ ] **Persetujuan orang tua/wali** untuk siswa **di bawah 18 tahun** (sebagian 16–17 tahun) — prosedur dari Yayasan.
+- [ ] **Logo & foto resmi AWG beserta izin tertulis** → `donasi.logo`. Sekarang: foto stok ilustrasi, tanpa logo.
+- [ ] **Ketentuan penggunaan gambar ChatGPT** untuk keperluan lembaga (gambar hero; aset 3D di arsip).
 
-**Testimoni**
-- [ ] **Bahasa kelas Fitriza Rahma** (Siswa Elementary): Inggris atau Arab? Isi `bahasa` di array `CERITA` supaya bukunya
-  diberi pembatas berwarna (Aninda Salma = Inggris, karena kutipannya menyebut bahasa Inggris).
+**2. Verifikasi fakta yang sudah tampil**
+- [ ] **Jadwal kelas**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB (keduanya).
+- [ ] **Arti "term"**: halaman menulis "per term (semester)", Rp100.000.
+- [ ] **Nomor WhatsApp admin** 0819-6009-333 (dari lcdu.org).
+- [ ] **Format nomor rekening** saat disalin (angka tanpa titik: `1010118394`).
+- [ ] **Ejaan 5 nama guru** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria
+  Muzdalifah, Taara Dewiana Kania, Muhammad Edwar Kartakusuma.
+- [ ] **Ejaan resmi kepanjangan**: "Language Course for Da'wah dan Ummah" (`lcdu.namaLengkap`, `<title>`, meta) vs "&"
+  (situs saudara; teks pembaca layar hero). Pilih SATU, samakan di semua tempat.
+- [ ] **Isi tulisan foto kaligrafi** (stok) dicek guru Arab.
 
-**Pertanyaan FAQ yang belum punya jawaban resmi** (tambahkan ke array `FAQ` di `index.html` setelah dijawab):
-- [ ] Apakah ada sertifikat setelah menyelesaikan kelas?
-- [ ] Apakah kelas direkam / ada rekaman kelas?
-- [ ] Berapa lama satu term dalam bulan?
-- [ ] Apa saja level yang tersedia (daftar level)?
-- [ ] Metode pembayaran apa saja (selain yang tertulis)?
-- [ ] Bagaimana kebijakan bila siswa tidak melanjutkan / berhenti di tengah term?
+**3. Data yang belum ada**
+- [ ] **Jawaban FAQ resmi** (lalu tambahkan ke array `FAQ`): sertifikat? rekaman kelas? lama satu term dalam bulan? daftar
+  level? metode pembayaran? kebijakan bila berhenti di tengah term?
+- [ ] **Bahasa kelas Fitriza Rahma** (Siswa Elementary): isi `bahasa` di `CERITA` (untuk pembatas buku berwarna).
+- [ ] **Link formulir registrasi** (langkah 4 belum bertaut).
+- [ ] **Kontak footer**: `kontak.email`, `kontak.instagram` (URL lengkap), `kontak.alamat` (opsional, kelas online).
+- [ ] **URL jaringan pendidikan** (`jaringan[]`): SD Alfa Centauri, SMP Alfa Centauri, SMA Alfa Centauri, TK Alfa Centauri,
+  English Now. (Yayasan sudah.)
+- [ ] **Logo mitra** (dengan izin) → `mitra[]`.
+- [ ] **Laporan penyaluran dari AWG** — hanya ditautkan bila ada laporan nyata; tidak ada angka dampak di halaman.
 
-**Donasi**
-- [ ] **Laporan penyaluran dari AWG**: tautan/ringkasan laporan hanya ditambahkan bila ada laporan nyata dari AWG. Tidak ada angka dampak di halaman.
-- [ ] **Format nomor rekening** saat disalin (sekarang angka tanpa titik: `1010118394`).
-- [ ] **Izin penghimpunan donasi (PUB) dan nama pemilik rekening** — konfirmasi Yayasan. Bila belum, ubah `donasi.siapTayang` ke `false` di `site-config.js` (rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin").
-- [ ] **Logo dan foto resmi AWG beserta izin tertulis**: logo → `donasi.logo` di `site-config.js` (kosong = tidak tampil). Panel AWG sekarang memakai foto stok ilustrasi (kebun zaitun, Pexels, SEMENTARA) berketerangan "Foto ilustrasi".
-
-**Footer**
-- [ ] **Email** → `kontak.email` di `site-config.js`.
-- [ ] **Instagram** → `kontak.instagram` (URL lengkap) di `site-config.js`.
-- [ ] **URL Jaringan pendidikan** → `jaringan[]` di `site-config.js` (kosong = tidak tampil): SD Alfa Centauri, SMP Alfa
-  Centauri, SMA Alfa Centauri, TK Alfa Centauri, English Now. (Yayasan Taqwa Cerdas Kreatif sudah: https://alfacentauri.sch.id/yayasan/.)
-- [ ] **Alamat sekretariat** → `kontak.alamat`.
-- [ ] **Logo mitra** (dengan izin) → `mitra: [{ nama, url, logo }]`; kosong = baris mitra tersembunyi.
+**4. Aset**
+- [ ] **Foto asli LCDU** pengganti foto stok (Pengantar, Kenapa, Pilih kelas, panel AWG) dan **potret asli** testimoni/tim.
+- [ ] **Berkas vektor logo** resmi (SVG/AI/PDF) dari pembuat logo.
 
 ## Ditunda
 
-- **Ayat QS. Al-Baqarah: 261** (potongan awal) dihapus dari section Donasi (sesi F). Dipertimbangkan lagi nanti setelah
-  teks Arab & terjemah resmi diverifikasi di quran.kemenag.go.id.
+- **Ayat QS. Al-Baqarah: 261** (potongan awal) dihapus dari Donasi (sesi F). Dipertimbangkan lagi setelah teks Arab &
+  terjemah resmi diverifikasi di quran.kemenag.go.id.
 
 ## Deploy
 
@@ -137,6 +184,14 @@ Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik member
 2. Framework preset: **Other**. Build command kosong, output directory `.`
 3. Setiap push ke `main` otomatis ter-deploy.
 
-## Langkah berikutnya (Claude Code)
+## Rekomendasi untuk tim IT (belum dikerjakan)
 
-Pecah `index.html` menjadi komponen (rencana: Astro + Tailwind), siapkan konten untuk CMS, dan optimasi gambar (AVIF/WebP).
+- **Astro** (output statis, tetap bisa di Vercel): pecah `index.html` per section menjadi komponen (`Hero`, `Pengantar`,
+  `Kenapa`, `PilihKelas`, `Biaya`, `CaraBergabung`, `Testimoni`, `Tim`, `Faq`, `Donasi`, `Footer`) + komponen bersama
+  (`Geser`, `RakBuku`, `Kufiyah`, `Lentera`). Pindahkan `CERITA`/`TEAM`/`FAQ` dan `site-config.js` ke content collections
+  (atau CMS) dengan bentuk objek yang sama; render HTML di build time supaya konten tampil tanpa JS & JS saat muat berkurang
+  (TBT mobile turun). JSON-LD FAQ juga dibuat saat build.
+- CSS per komponen dengan token yang sama (`:root`); minify CSS/JS (Lighthouse: ±29 KB + 38 KB), hapus CSS tak terpakai.
+- Pertahankan aturan di `CLAUDE.md`: animasi hanya transform/opacity/clip-path, reduced-motion, tanpa scroll horizontal,
+  `.geser` native, fakta hanya dari pemilik.
+- Gambar: pakai `<Image>`/`<Picture>` Astro atau tetap `tools/build-photos.mjs`; jangan memperbesar melampaui resolusi asli.

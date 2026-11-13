@@ -259,10 +259,14 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   (sistem benang, menyala sekali) → lembar setoran (kertas krem bertepi zigzag ≠ struk Biaya; salin tanpa titik;
   `donasi.siapTayang`). **Ayat QS. Al-Baqarah: 261 dihapus** (README "Ditunda"). Tanpa angka dampak, target, nominal,
   urgensi, bendera/poster, logo/foto resmi AWG tanpa izin. HP: 1,35 layar tanpa gradasi, 1,76 dengan gradasi terkunci.
-- **Footer** (selesai): tanpa penampung kosong — Instagram/alamat/mitra hanya dari `kontak.*`/`mitra[]` di site-config.js.
-  Pita langit = foto malam hero dengan srcset sama (cache), 9 lentera menyala sekali, "Bahasa untuk umat." (teks dari
-  pemilik), logo putih resmi (560px, tidak diperbesar) terpotong di bawah, pita keffiyeh hitam-putih (`.orn-band--tebal`
-  `.kain-hitam` di atas putih; bukan `.kufiyah`), "Ke atas". HP 800 px (0,95 layar), CLS 0.
+- **Footer** (sesi G, gaya situs saudara SD/TK/English Now; tanpa menyalin ilustrasi mereka): pita langit malam Al-Aqsa
+  (foto hero yang sama, srcset sama → cache) + 9 lentera menyala sekali + "Bahasa untuk umat."; lalu empat kolom:
+  **Identitas** (logo lockup putih kecil resmi, kepanjangan dari `lcdu.namaLengkap`, deskripsi dari fakta yang ada,
+  "For a Better Ummah"), **Jelajahi** (anchor), **Hubungi kami** (WhatsApp `data-wa="umum"`; email/Instagram/alamat hanya
+  dari `kontak.*`), **Jaringan pendidikan** (`jaringan[]`, hanya yang ber-URL — kini hanya Yayasan; JANGAN menebak URL);
+  garis + legal ("© 2026 LCDU, Yayasan …", "Bandung, Jawa Barat"); mitra hanya dari `mitra[]`; pita keffiyeh hitam-putih.
+  **Dihapus**: Kosakata hari ini (+ JS/data), logo besar bawah, "Ke atas". Ikon garis SVG, area sentuh ≥ 44px; HP:
+  identitas penuh, Jelajahi kiri, Hubungi + Jaringan bertumpuk kanan. HP 930 px (1,10 layar), CLS 0.
 - **Sesi "rapikan" (file E)**: kepanjangan "Language Course for Da'wah dan Ummah" dari `lcdu.namaLengkap` (site-config.js)
   di Pengantar ("LCDU (…) dikelola Yayasan …", frasa `lang="en"`), `<title>`, meta description; ejaan resmi menunggu pemilik.
   Kenapa: bar merah `.why-item::before` selebar garis pemisah, scaleX 0→1 .6s saat AKTIF; yang dilewati kembali tipis.
