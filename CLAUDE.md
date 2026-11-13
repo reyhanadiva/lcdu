@@ -72,7 +72,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Geser `.geser`** (komponen dipakai ulang: Kenapa, Pilih kelas, Testimoni, Tim): `<div class="geser" data-geser="(media query)"
   data-geser-nama="…">` berisi jalur `[data-geser-jalur]` dengan slide `[data-geser-slide]`, opsional penanda sendiri
   `[data-geser-penanda]` berisi `<button>` (tanpa itu: titik dibuat otomatis). Di bawah breakpoint JS memasang `.is-geser`,
-  `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4", `tabindex=0` di jalur
+  `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4", `tabindex=0` di WADAH (jalur `<ol>/<ul>` diberi `role="none"`)
   (panah kiri/kanan, Home/End), `aria-current` di penanda, event `geser` (detail = indeks, bubble). CSS: scroll-snap x
   mandatory, `overscroll-behavior-x: contain`, scrollbar tersembunyi, jalur menjorok selebar layar (padding .wrap),
   slide `flex: 0 0 86%` + `contain: layout paint`, tinggi sama (flex stretch). Penanda lewat IntersectionObserver (root =
