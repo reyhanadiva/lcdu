@@ -1,16 +1,9 @@
 {
   "name": "lcdu-tools",
   "private": true,
-  "description": "Alat bantu aset (tidak ikut ke situs). Jalankan: npm install, lalu npm run models",
+  "description": "Alat bantu aset (tidak ikut ke situs). Jalankan: npm install, lalu node build-photos.mjs / node make-ornaments.mjs",
   "type": "module",
-  "scripts": {
-    "models": "node optimize-models.mjs"
-  },
   "devDependencies": {
-    "@gltf-transform/core": "4.1.1",
-    "@gltf-transform/extensions": "4.1.1",
-    "@gltf-transform/functions": "4.1.1",
-    "meshoptimizer": "0.22.0",
     "sharp": "0.33.5"
   }
 }

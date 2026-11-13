@@ -10,19 +10,7 @@ pip install numpy pillow
 |---|---|
 | `check-align.py <malam.png> <fajar.png>` | Periksa apakah pasangan malam/fajar sejajar. Lulus bila pergeseran ≤ 4 px di tiap zona (kiri, tengah, kanan, atas, bawah; diukur pada lebar 1536) dan korelasi tepi area bangunan ≥ 0,40. Pembanding: pasangan tall = 0–1 px, korelasi 0,52. Kode keluar 0 = lulus. |
 | `build-hero-images.py` | Buat turunan AVIF/WebP/JPG di `assets/hero/build/` dan `manifest.json`. Tidak pernah memperbesar melampaui resolusi asli (tall: 750 & 1024; wide: 1280 & 1536). Pasangan yang berkasnya belum ada dilewati. |
-| `gen-spots.py tall` | Buat titik cahaya awal otomatis ke `hero/spots.json`. Setelah itu rapikan di browser dengan `?hero=lentera-hd&edit-spots`. |
-
-## Model 3D (Kubah & Qibli)
-
-Berkas asli `assets/models/{dome,qibli}.glb` tidak pernah ditimpa. Hasil ke `assets/models/optimized/`.
-
-```bash
-python3 tools/prep-model-textures.py     # color grade, pita ornamen Kubah, bercak Qibli, masker jendela
-cd tools && npm install && npm run models # pusat ke dasar, weld, simplify, Meshopt, tekstur WebP (2048 / 1024 HP)
-```
-
-`prep-model-textures.py --probe` mencetak profil warna dinding per ketinggian untuk menyetel `BANDS` (letak pita) bila
-model diganti. Anggaran: desktop ≤ 3 MB total.
+| `gen-spots.py tall` | Buat titik cahaya awal otomatis ke `hero/spots.json`. Setelah itu rapikan di browser dengan `?edit-spots`. |
 
 ## Alur menambah pasangan wide (night-wide-v2)
 
@@ -38,3 +26,5 @@ model diganti. Anggaran: desktop ≤ 3 MB total.
 |---|---|
 | `node build-photos.mjs <folder-jpg>` | Foto stok (`<nama>.jpg`) → `assets/photos/<nama>-{480,960,1600}.{avif,webp}` + `manifest.json`. Potongan per foto di objek `FOTO`. Tidak memperbesar. Catat sumber di `assets/photos/CREDITS.md`. |
 | `node make-ornaments.mjs` | Tulis ulang semua SVG di `assets/ornaments/` (kain keffiyeh, pita, bingkai, semangka, lengkung). |
+
+Alat model 3D (`optimize-models.mjs`, `prep-model-textures.py`, `make-extras.py`) ikut diarsipkan di repo `reyhanadiva/lcdu-3d`.
