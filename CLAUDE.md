@@ -263,7 +263,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   `donasi.terjemahAyat`. Lembar setoran (kertas krem, tepi kiri zigzag, perforasi, isian bergaris titik) ≠ struk Biaya.
   `donasi.siapTayang` (bawaan true; false → kalimat + WhatsApp). Tanpa angka dampak, target, nominal, urgensi, logo AWG.
   Transisi FAQ → Donasi tetap gradasi senja → malam (terkunci; `.kufiyah` tidak dipakai lagi). HP: 1,30 layar tanpa
-  gradasi, 1,69 layar termasuk gradasi `--sambung-malam` (terkunci).
+  gradasi, 1,69 layar termasuk gradasi `--sambung-malam` (terkunci; **pemilik memutuskan gradasi tetap, tidak dipendekkan di HP**).
 - **Footer** (selesai): tanpa penampung kosong — Instagram/alamat/mitra hanya dari `kontak.*`/`mitra[]` di site-config.js.
   Pita langit = foto malam hero dengan srcset sama (cache), 9 lentera menyala sekali, "Bahasa untuk umat." (teks dari
   pemilik), logo putih resmi (560px, tidak diperbesar) terpotong di bawah, pita keffiyeh hitam-putih (`.orn-band--tebal`
