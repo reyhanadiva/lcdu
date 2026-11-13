@@ -5,9 +5,10 @@
    bila berkas ini gagal dimuat. */
 window.LCDU_CONFIG = {
   /* Placement Test resmi LCDU, PER BAHASA (en = Inggris, ar = Arab).
-     open: true  → tombol "Mulai Placement Test" menuju `url` (halaman AWAL tes, "-rule"; tombol "Mulai Test" ada di
-                   akhir halaman itu);
-     open: false → tombol diganti "Tanya admin lewat WhatsApp" + kalimat bahwa tes ditutup sementara.
+     open: true  → kartu Placement Test menampilkan tombol "Mulai tes Inggris" / "Mulai tes Arab" menuju `url` (halaman
+                   AWAL tes, "-rule"; tombol "Mulai Test" ada di akhir halaman itu); tes lain yang tutup = "tutup sementara";
+     open: false untuk KEDUANYA → satu kalimat "Placement Test Inggris dan Arab sedang tutup sementara." + tombol
+                   "Tanya admin lewat WhatsApp".
      urlSoal = halaman soal langsung (disimpan sebagai data, tidak dipakai di halaman). */
   placement: {
     en: { open: false, url: 'https://lcdu.org/en-placement-rule/', urlSoal: 'https://lcdu.org/en-placement/' },

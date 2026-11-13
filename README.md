@@ -20,10 +20,10 @@ Inggris ditulis kiri ke kanan, Arab kanan ke kiri. Seluruh halaman bermain di an
 |---|---|
 | Hero | Cerita scroll 3 babak (tinggi 190vh, 13vh terakhir "tahan fajar"): malam → lampu menyala dari Kubah ke luar → fajar. Hero **Foto**: foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu. Geser kencang tetap berakhir di fajar penuh. Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Pengantar | Stub, isi menyusul. |
-| Kenapa LCDU | Daftar tipografi besar, baris terbuka saat di-hover / di-tap. |
+| Kenapa LCDU | Blok hijau, foto lengkung berganti mengikuti pernyataan (desktop); di HP tiap pernyataan = slide geser. |
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
-| Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (snap 30/50/70), sisi lebar menampilkan rincian & strip 7 hari. HP: panel atas–bawah, ketuk untuk membuka. |
-| Cara bergabung | Syarat satu kalimat, pilihan bahasa (Inggris/Arab), kartu Placement Test (status & tautan per bahasa di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara), 6 langkah sebagai tali lentera. |
+| Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
+| Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Tumpukan kartu yang bisa diseret. |
 | Tim | Filter (Inggris / Arab / Pengelola), kartu miring mengikuti kursor, sertifikasi muncul saat hover. |
 | FAQ | Stub, isi menyusul. |
