@@ -69,31 +69,23 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   putih/hitam 18,9 · kunyit/hitam 11,7 · tinta kunyit/kunyit 10,1. **Gagal untuk teks biasa** (hanya dekor atau judul
   ≥ 24px tebal): putih/merah terang `#E23B4A` 4,2 · hijau logo `#7FA33F` di latar terang 2,8 · putih/hijau logo 2,9 ·
   kunyit/merah tua 4,1. Kata redup Pengantar (≥ 3:1): tinta 3,6 · biru 3,5 · Arab 3,7.
-- **Aliran benang** (sesi "aliran"; dulu `.benang` fixed + titik kecil yang ikut ter-scroll → nyaris tak terlihat):
-  - **A. Benang menempel pada halaman** (desktop ≥ 900px): tiap elemen aliran (`.hari > .fase > *` + `footer.fase`) = satu
-    ruas yang bersambung (diuji: 0 celah). `::after` = garis dasar redup putus-putus (CSS murni; tanpa JS tampil utuh
-    0,85); `.ruas-isi` (JS) = bagian yang sudah dilewati, jahitan keffiyeh `--orn-benang-tebal` (±2,5px, opacity .92),
-    terbuka lewat `clip-path` dengan view timeline ruas itu sendiri, `animation-range: cover calc(100vh − var(--picu))
-    cover calc(100% − var(--picu))` → batas terisi|redup selalu di garis picu `--picu: 52vh`. Cadangan tanpa view timeline:
-    clip-path ditulis di listener scroll yang sudah ada (hanya ruas yang terlihat). Elemen aliran diberi
-    `position:relative; isolation:isolate`. Warna: `--benang-c` / `--benang-bg` (gelap di terang, krem `#F5DEC1` di blok
-    hijau/merah, gradasi di zona peralihan Kenapa, batas-biji, Biaya, Donasi). Bulat kuning (`.benang-ujung`, fixed,
-    16px) diam di garis picu = "yang menarik benang", tampil selama benang melintasi garis itu. HP: garis progres atas.
-  - **B. Lentera** (`[data-lentera]` pada section; Donasi = `"zaitun"`): penanda 1px selalu ada (juga di HP) di x benang,
+- **Benang + lentera + ranting** (sesi "aliran", lalu dikembalikan sebagian atas keputusan pemilik):
+  - **Benang** = versi sebelum "aliran": `.benang` `position:fixed` di gutter kiri (`--benang-x`), jahitan tipis yang
+    tergambar mengikuti scroll (view timeline `--hari`, cadangan JS `--benang`) dengan bulat kuning `.benang-ujung` yang
+    BERGERAK sepanjang garis. HP: garis progres atas. **Dihapus** (keputusan pemilik): benang menempel per ruas
+    (`.ruas-isi`, `::after`, `--benang-bg`, `--picu`, `--orn-benang-tebal`) dan garis tenun (`.tenun`, desktop & HP).
+  - **Lentera** (`[data-lentera]` pada section; Donasi = `"zaitun"`): penanda 1px selalu ada (juga di HP) di x benang,
     y = tengah baris pertama judul (dihitung saat muat/load/resize). Inti 18px (cincin `--lt-c` kontras ≥ 3:1 → isi
     kunyit), cahaya radius 40px (radial-gradient, opacity, z-index −1 di bawah teks). Satu IntersectionObserver,
-    `rootMargin: 100000px 0 −48% 0` = semua yang di atas garis picu → menyala TEPAT saat bulat kuning lewat (diuji 9
-    section: mati 20px sebelum, nyala 20px sesudah), juga saat melompat jauh; lentera sebelumnya ikut menyala.
-  - **C. Ranting zaitun** `.lt-ranting`: tumbuh ke KIRI benang saja (kanan = teks). Satu ruas per lentera yang menyala:
+    `rootMargin: 100000px 0 −45% 0` → menyala saat baris pertama judul melewati **garis picu 55%** tinggi layar (tidak
+    lagi terikat bulat kuning; diuji 7 section: mati 20px sebelum, nyala 20px sesudah), juga saat melompat jauh;
+    lentera sebelumnya ikut menyala. Desktop 1440: inti berakhir 7px sebelum judul (tidak menabrak teks).
+  - **Ranting zaitun** `.lt-ranting`: tumbuh ke KIRI benang saja (kanan = teks). Satu ruas per lentera yang menyala:
     batang (stroke-dashoffset) + daun lancip (scale dari pangkal), 2 → 5 daun makin ke bawah; Donasi 5 daun + 3 buah
     zaitun gelap bertepi krem. Lebar `min(106px, --benang-x − 6px)`; disembunyikan < 1296px (margin kiri < ±40px).
-  - **D. Garis tenun** `.tenun`: di batas tepat setelah tiap section (9 pergantian, menembus pembatas apa pun), jahitan
-    putus-putus ganda keluar dari benang 140–220px (bervariasi) lalu kembali, tinggi 38px, di zona padding (diuji: tidak
-    menyentuh teks). HP: gelombang mendatar selebar layar − 32px (tidak di Tim → FAQ: melintasi kata Arab raksasa).
-    Digambar sekali lewat mask `stroke-dashoffset` (IntersectionObserver). Warna = warna benang di titik itu.
-  - **E. HP**: titik lentera 11px di garis progres atas (`.lt-hp`, posisi = progres judul), tenun mendatar; tanpa ranting.
-  - Reduced-motion: benang utuh terisi, lentera yang sudah dilewati menyala & ranting tampil tanpa transisi, tenun utuh.
-    Tanpa JS: benang dasar utuh. Hanya transform/opacity/clip-path (elemen 8px)/stroke-dashoffset; tanpa rAF baru.
+  - **HP**: titik lentera 11px di garis progres atas (`.lt-hp`; posisi = isi garis saat judul di garis picu); tanpa ranting.
+  - Reduced-motion: benang utuh tanpa bulat kuning, lentera yang sudah dilewati menyala & ranting tampil tanpa transisi.
+    Tanpa JS: benang tidak tampil. Hanya transform/opacity/clip-path/stroke-dashoffset; tanpa rAF baru.
 - **Ornamen** (SVG sebagai `mask`, warna = `currentColor`/token, tanpa warna tertanam; data URI di token `--orn-*`):
   `.orn-band` pita keffiyeh horizontal (daun zaitun + dua garis), `.orn-net` jaring keffiyeh untuk latar (opacity .05,
   `position:absolute; inset:0`), `.orn-leaf` ikon daun zaitun (centang), `.orn-list` daftar berbutir daun,
