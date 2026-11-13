@@ -4,6 +4,12 @@
    atau ubah fungsi `cfg()` di index.html agar membaca dari sumber lain. Teks di HTML tetap menjadi cadangan
    bila berkas ini gagal dimuat. */
 window.LCDU_CONFIG = {
+  /* Nama lengkap LCDU. Ejaan di situs-situs saudara berbeda ("dan" / "&"): PERLU DIVERIFIKASI pemilik, lalu pakai SATU
+     ejaan yang sama di semua tempat (juga <title>, meta description, dan teks pembaca layar di hero pada index.html). */
+  lcdu: {
+    namaLengkap: "Language Course for Da'wah dan Ummah"
+  },
+
   /* Placement Test resmi LCDU, PER BAHASA (en = Inggris, ar = Arab).
      open: true  → kartu Placement Test menampilkan tombol "Mulai tes Inggris" / "Mulai tes Arab" menuju `url` (halaman
                    AWAL tes, "-rule"; tombol "Mulai Test" ada di akhir halaman itu); tes lain yang tutup = "tutup sementara";

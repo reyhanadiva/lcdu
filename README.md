@@ -96,6 +96,11 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 
 Data di bawah ini **sengaja tidak ditampilkan** di halaman sampai pemilik memberikannya (tidak ada penampung kosong).
 
+**Nama lengkap LCDU**
+- [ ] **Ejaan resmi kepanjangan**: halaman memakai "Language Course for Da'wah dan Ummah" (`lcdu.namaLengkap` di
+  `site-config.js`, juga `<title>` dan meta description). Situs-situs saudara berbeda ("dan" / "&"; teks pembaca layar di
+  hero masih "&"). Tentukan SATU ejaan, lalu samakan di semua tempat.
+
 **Pertanyaan FAQ yang belum punya jawaban resmi** (tambahkan ke array `FAQ` di `index.html` setelah dijawab):
 - [ ] Apakah ada sertifikat setelah menyelesaikan kelas?
 - [ ] Apakah kelas direkam / ada rekaman kelas?
