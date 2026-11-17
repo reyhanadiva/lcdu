@@ -994,31 +994,61 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cerita-geser.is-geser .geser-titik{margin-top:0}
 @media (prefers-reduced-motion: reduce){.cerita-cetak,.cerita-gambar img{transition:none}}
 
-/* ===== TIM: daftar nama editorial (tanpa rak, tanpa kotak/pill/chip) =====
-   Tiga kelompok dari array TEAM: Pengelola (rak = kelompok pertama, jadi pengelola yang juga guru ada di sini), Guru Bahasa
-   Inggris, Guru Bahasa Arab (+ kata Arab kecil مُعَلِّم di label, Naskh, dekor). Tiap nama satu baris; peran (bila beda dari
-   kelompok) & sertifikasi kecil sebaris, selalu terlihat. Foto HANYA bila ada di assets/team/manifest.json (potret bulat
-   kecil); tanpa foto = nama saja. Desktop: tiga kolom. HP: .geser satu kelompok per slide + penanda teks bergaris bawah. */
+/* ===== TIM: berbasis foto (permintaan pemilik: "berbasis foto, bukan list") =====
+   Kiri: potret besar orang terpilih (bingkai lengkung) + nama, peran, bahasa yang diajar, sertifikasi. Kanan: wajah semua
+   anggota (bulat) dalam tiga kelompok — Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab (+ مُعَلِّم kecil). Ketuk/klik
+   (dan arahkan kursor di pointer halus) = ganti potret besar. Data dari array TEAM (ejaan tidak diubah). Foto ASLI hanya
+   bila slug ada di assets/team/manifest.json; selain itu penampung bermonogram (warna kelompok + jaring keffiyeh).
+   DILARANG foto stok sebagai wajah. Gerak: pudar + naik 8px saat potret berganti (transform/opacity), mati saat reduced-motion. */
 .tim-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(18px,2.6vw,32px)}
-.tim-kolom{display:grid;gap:clamp(24px,3vw,48px)}
-@media (min-width:900px){.tim-kolom{grid-template-columns:5fr 6fr 4fr}}
-.tim-label{display:flex;align-items:baseline;gap:10px;margin:0 0 6px;padding-bottom:8px;border-bottom:1.5px solid var(--ink);font-family:var(--f-body);font-weight:700;font-size:.95rem;letter-spacing:.02em}
+.tim-panggung{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(22px,3vw,48px);align-items:start}
+@media (min-width:900px){.tim-panggung{grid-template-columns:minmax(260px,4fr) minmax(0,7fr)}}
+/* potret: lengkung arkade (atas membulat penuh) */
+.tim-wajah-isi,.tim-sorot-foto{position:relative;display:grid;place-items:center;overflow:hidden;background:var(--tk,var(--kulit));color:#fff;isolation:isolate}
+.tim-wajah-isi::before,.tim-sorot-foto::before{content:"";position:absolute;inset:0;z-index:-1;background:currentColor;opacity:.12;
+  -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/18px 18px repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/18px 18px repeat}
+.tim-wajah-isi picture,.tim-wajah-isi img,.tim-sorot-foto picture,.tim-sorot-foto img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.tim-wajah-isi img,.tim-sorot-foto img{object-fit:cover;object-position:50% 30%}
+.tim-ini{font-family:var(--f-display);font-weight:700;letter-spacing:-.03em;line-height:1}
+.k-mgmt{--tk:var(--semangka-tua)}.k-en{--tk:var(--lazuardi)}.k-ar{--tk:var(--kulit)}
+/* sorot */
+.tim-sorot{margin:0;display:grid;gap:16px;align-content:start}
+.tim-sorot-foto{width:min(100%,280px);aspect-ratio:4/5;border-radius:999px 999px 6px 6px;box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 12%,transparent),0 24px 40px -26px rgba(16,22,58,.55)}
+.tim-sorot-foto .tim-ini{font-size:clamp(4rem,9vw,6.4rem);padding-top:10%}
+.tim-sorot figcaption{display:grid;gap:4px}
+.tim-sorot-nama{font-family:var(--f-display);font-weight:700;font-size:var(--step-2);line-height:1.1;letter-spacing:-.01em}
+.tim-sorot-peran{font-weight:600;color:var(--ink)}
+.tim-sorot-info{font-size:var(--step--1);color:var(--ink-soft)}
+.gerak .tim-sorot.ganti{animation:tim-ganti .45s var(--ease-muncul)}
+@keyframes tim-ganti{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* galeri wajah */
+.tim-galeri{display:grid;gap:clamp(16px,2vw,26px)}
+.tim-label{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:8px;border-bottom:1.5px solid var(--ink);font-family:var(--f-body);font-weight:700;font-size:.95rem;letter-spacing:.01em}
 .tim-ar{font-family:var(--f-ar);font-weight:400;font-size:1.05rem;line-height:1;color:var(--zamrud-ink);opacity:.85}
-.tim-daftar{list-style:none;margin:0;padding:0}
-.tim-daftar li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
-.tim-daftar li>span:last-child{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;min-width:0}
-.tim-nama{font-family:var(--f-display);font-weight:600;font-size:1.08rem;line-height:1.2}
-.tim-meta{font-size:.8rem;color:var(--ink-soft)}
-.tim-potret{flex:none;width:36px;height:36px;border-radius:50%;overflow:hidden}
-.tim-potret[hidden]{display:none}
-.tim-potret img{display:block;width:100%;height:100%;object-fit:cover}
-.tim-penanda{display:none}
-.tim-geser.is-geser .tim-penanda{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;font-weight:700;font-size:var(--step-0);color:var(--ink-soft)}
-.tim-penanda button{padding:6px 0;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:transparent;transition:color .3s,text-decoration-color .3s}
-.tim-penanda button[aria-current="true"]{color:var(--ink);text-decoration-color:var(--semangka-tua)}
-.tim-penanda button:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
-.tim-geser.is-geser .tim-label{border-bottom-width:1px}
-@media (prefers-reduced-motion: reduce){.tim-penanda button{transition:none}}
+.tim-wajah{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:12px 8px}
+.tim-wajah-btn{width:100%;display:grid;justify-items:center;gap:8px;padding:4px 2px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-align:center}
+.tim-wajah-isi{width:68px;height:68px;border-radius:50%;box-shadow:0 0 0 2px var(--paper),0 0 0 2px transparent;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
+.tim-wajah-isi .tim-ini{font-size:1.45rem}
+.tim-wajah-nama{font-size:.8rem;font-weight:600;line-height:1.2;color:var(--ink-soft);max-width:12ch}
+.tim-wajah-btn[aria-pressed="true"] .tim-wajah-isi{transform:scale(1.06);box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--kunyit)}
+.tim-wajah-btn[aria-pressed="true"] .tim-wajah-nama{color:var(--ink)}
+@media (hover:hover) and (pointer:fine){.tim-wajah-btn:hover .tim-wajah-isi{transform:scale(1.06)}}
+.tim-wajah-btn:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;border-radius:8px}
+@media (max-width:899px){
+  .tim-sorot{grid-template-columns:132px minmax(0,1fr);align-items:end;gap:16px}
+  .tim-sorot-foto{width:132px}
+  .tim-sorot-foto .tim-ini{font-size:2.8rem}
+  .tim-sorot-nama{font-size:var(--step-1)}
+  /* HP: satu baris wajah per kelompok, digeser horizontal (native) → section tidak memanjang ke bawah */
+  .tim-wajah{display:flex;gap:4px;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:2px max(16px,env(safe-area-inset-left,0px)) 6px;
+    overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:max(16px,env(safe-area-inset-left,0px));overscroll-behavior-x:contain;scrollbar-width:none}
+  .tim-wajah::-webkit-scrollbar{display:none}
+  .tim-wajah li{flex:0 0 78px;scroll-snap-align:start}
+  .tim-label{margin-bottom:6px}
+  .tim-wajah-isi{width:58px;height:58px}
+  .tim-wajah-isi .tim-ini{font-size:1.2rem}
+}
+@media (prefers-reduced-motion: reduce){.tim-wajah-isi{transition:none}}
 
 /* ===== FAQ: "Yang sering ditanyakan" =====
    Isi HANYA dari fakta yang sudah ada di halaman / README / site-config.js (array FAQ di JS; JSON-LD FAQPage dibentuk dari
@@ -1557,12 +1587,13 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <section data-lentera class="band tim" id="tim" aria-labelledby="team-h">
   <div class="wrap tim-wrap">
     <h2 class="h2" id="team-h" data-judul>Yang akan menemani kamu belajar</h2>
-    <div class="geser tim-geser" data-geser="(max-width: 899px)" data-geser-nama="Tim LCDU">
-      <div class="tim-penanda" data-geser-penanda><button type="button">Pengelola</button><span aria-hidden="true">|</span><button type="button">Inggris</button><span aria-hidden="true">|</span><button type="button">Arab</button></div>
-      <div class="tim-kolom geser-jalur" id="tim-kolom" data-geser-jalur>
-        <div class="tim-kelompok geser-slide" data-geser-slide><h3 class="tim-label" id="tk-mgmt">Pengelola</h3><ul class="tim-daftar" data-k="mgmt" aria-labelledby="tk-mgmt"></ul></div>
-        <div class="tim-kelompok geser-slide" data-geser-slide><h3 class="tim-label" id="tk-en">Guru Bahasa Inggris</h3><ul class="tim-daftar" data-k="en" aria-labelledby="tk-en"></ul></div>
-        <div class="tim-kelompok geser-slide" data-geser-slide><h3 class="tim-label" id="tk-ar">Guru Bahasa Arab <span class="tim-ar" lang="ar" aria-hidden="true">مُعَلِّم</span></h3><ul class="tim-daftar" data-k="ar" aria-labelledby="tk-ar"></ul></div>
+    <!-- Diisi JS dari array TEAM (data & ejaan tidak diubah). Foto ASLI hanya dari assets/team/manifest.json. -->
+    <div class="tim-panggung">
+      <figure class="tim-sorot" id="tim-sorot" aria-live="polite"></figure>
+      <div class="tim-galeri" id="tim-galeri">
+        <div class="tim-kelompok"><h3 class="tim-label" id="tk-mgmt">Pengelola</h3><ul class="tim-wajah" data-k="mgmt" aria-labelledby="tk-mgmt"></ul></div>
+        <div class="tim-kelompok"><h3 class="tim-label" id="tk-en">Guru Bahasa Inggris</h3><ul class="tim-wajah" data-k="en" aria-labelledby="tk-en"></ul></div>
+        <div class="tim-kelompok"><h3 class="tim-label" id="tk-ar">Guru Bahasa Arab <span class="tim-ar" lang="ar" aria-hidden="true">مُعَلِّم</span></h3><ul class="tim-wajah" data-k="ar" aria-labelledby="tk-ar"></ul></div>
       </div>
     </div>
   </div>
@@ -2283,20 +2314,45 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     ['Taara Dewiana Kania','Guru Bahasa Inggris','en',['TKT','CELTA']],
     ['Muhammad Edwar Kartakusuma','Guru Bahasa Inggris','en',['TKT']]
   ];
-  /* Tim: kelompok = kelompok pertama di TEAM ('mgmt en' → Pengelola). Peran ditulis bila beda dari nama kelompok;
-     sertifikasi sebaris. Foto kecil hanya bila slug ada di assets/team/manifest.json. */
-  var timKolom = $('#tim-kolom');
-  if (timKolom){
-    var NAMA_K = { mgmt: 'Pengelola', en: 'Guru Bahasa Inggris', ar: 'Guru Bahasa Arab' };
-    $$('.tim-daftar', timKolom).forEach(function(ul){
-      var k = ul.dataset.k;
-      ul.innerHTML = TEAM.filter(function(m){ return m[2].split(' ')[0] === k; }).map(function(m){
-        var meta = (m[1] !== NAMA_K[k] ? [m[1]] : []).concat(m[3].length ? [m[3].join(' · ')] : []);
-        return '<li><span class="tim-potret" data-potret="' + slugDari(m[0]) + '" data-nama="' + m[0] + '" hidden></span><span><b class="tim-nama">' + m[0] + '</b>'
-          + (meta.length ? '<span class="tim-meta">' + meta.join(' · ') + '</span>' : '') + '</span></li>';
-      }).join('');
-    });
-    pasangFoto('team', timKolom);
+  /* Tim berbasis foto: kelompok = kelompok pertama di TEAM ('mgmt en' → Pengelola). Klik/ketuk (atau arahkan kursor
+     di pointer halus) wajah → potret besar berganti. Foto asli hanya bila slug ada di assets/team/manifest.json. */
+  var timGaleri = $('#tim-galeri'), timSorot = $('#tim-sorot');
+  if (timGaleri && timSorot){
+    var NAMA_K = { mgmt: 'Pengelola', en: 'Guru Bahasa Inggris', ar: 'Guru Bahasa Arab' }, fotoTim = {};
+    var potretTim = function(m, besar){
+      var slug = slugDari(m[0]), f = fotoTim[slug];
+      if (f && f.widths && f.widths.length) return fotoAsli('team', slug, m[0], besar ? f.widths[f.widths.length - 1] : f.widths[0]);
+      return '<span class="tim-ini" aria-hidden="true">' + inisial(m[0]) + '</span>';
+    };
+    var kel = function(m){ return m[2].split(' ')[0]; };
+    var sorot = function(k, animasi){
+      var m = TEAM[k], g = m[2].split(' '), ajar = [];
+      if (g.indexOf('en') > -1) ajar.push('Bahasa Inggris'); if (g.indexOf('ar') > -1) ajar.push('Bahasa Arab');
+      var info = [];
+      if (ajar.length && !/^Guru Bahasa/.test(m[1])) info.push('Mengajar ' + ajar.join(' & '));
+      if (m[3].length) info.push(m[3].join(' · '));
+      timSorot.innerHTML = '<div class="tim-sorot-foto k-' + kel(m) + '">' + potretTim(m, true) + '</div><figcaption><b class="tim-sorot-nama">' + m[0]
+        + '</b><span class="tim-sorot-peran">' + m[1] + '</span>' + (info.length ? '<span class="tim-sorot-info">' + info.join(' · ') + '</span>' : '') + '</figcaption>';
+      if (animasi){ timSorot.classList.remove('ganti'); void timSorot.offsetWidth; timSorot.classList.add('ganti'); }
+      $$('.tim-wajah-btn', timGaleri).forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.k === k ? 'true' : 'false'); });
+    };
+    var gambarGaleri = function(){
+      $$('.tim-wajah', timGaleri).forEach(function(ul){
+        var k = ul.dataset.k;
+        ul.innerHTML = TEAM.map(function(m, i){ return [m, i]; }).filter(function(x){ return kel(x[0]) === k; }).map(function(x){
+          var m = x[0], pendek = m[0].split(' ').slice(0, 2).join(' ');
+          return '<li><button class="tim-wajah-btn" type="button" data-k="' + x[1] + '" aria-pressed="false" aria-label="' + m[0] + ', ' + m[1] + '">'
+            + '<span class="tim-wajah-isi k-' + k + '">' + potretTim(m, false) + '</span><span class="tim-wajah-nama" aria-hidden="true">' + pendek + '</span></button></li>';
+        }).join('');
+      });
+    };
+    var aktifTim = 0;
+    gambarGaleri(); sorot(aktifTim, false);
+    timGaleri.addEventListener('click', function(e){ var b = e.target.closest('.tim-wajah-btn'); if (!b || +b.dataset.k === aktifTim) return; aktifTim = +b.dataset.k; sorot(aktifTim, !reduce); });
+    if (fine) timGaleri.addEventListener('pointerover', function(e){ var b = e.target.closest('.tim-wajah-btn'); if (!b || +b.dataset.k === aktifTim) return; aktifTim = +b.dataset.k; sorot(aktifTim, !reduce); });
+    if (window.fetch) fetch('assets/team/manifest.json').then(function(r){ return r.ok ? r.json() : {}; }).then(function(m){
+      if (!m || !Object.keys(m).length) return; fotoTim = m; gambarGaleri(); sorot(aktifTim, false);
+    }).catch(function(){});
   }
 
   /* ---------- Donasi: siap tayang, logo AWG (hanya dari config), alur menyala sekali, salin rekening ---------- */
