@@ -428,8 +428,21 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - **Jaringan pendidikan** (footer) seperti situs saudara: Yayasan, TK, SD, SMP, SMA Alfa Centauri, English Now — URL dari
   halaman Yayasan (dicek 17 Nov 2026). (Laporan "tautan spam" dari alat baca web ternyata keliru — pemilik sudah cek,
   halaman aman.)
-- **Lokasi kantor**: `kontak.peta` (label "Kantor LCDU Bandung", URL Google Maps dari pemilik) → tautan berikon pin di
-  footer "Hubungi kami" (tab baru). Bukan section baru: LCDU kelas online, kantor cukup sebagai kontak.
+- **Kantor LCDU** (permintaan pemilik; section baru `#lokasi` setelah FAQ, fase senja, `data-lentera`; mengacu kartu
+  "Lokasi" situs SD dengan palet LCDU): kartu dua kolom — kiri judul kecil "Kantor LCDU" (h2, `data-judul`), alamat besar
+  Fraunces (jalan biru + "Kota Bandung"), alamat lengkap + "Kelas LCDU berlangsung online; ini alamat kantor kami di
+  Bandung.", baris WhatsApp Admin + "Chat", tombol "Petunjuk arah ↗"; kanan **fasad peta** (SVG ringan + pin semangka
+  berdenyut) dan tombol "Tampilkan peta" yang baru memuat iframe Google Maps (`maps?q=lat,lng&output=embed`) saat
+  diketuk — tanpa skrip pihak ketiga sebelum diminta. Data di `site-config.js` `kantor.*` (nama, jalan, kota, lengkap,
+  peta, lat, lng). **Alamat "Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115"**: jalan dari pemilik,
+  sisanya dari footer situs TK (Lokasi Diponegoro) — perlu konfirmasi pemilik. Footer "Hubungi kami" = alamat lengkap yang
+  menaut ke peta. Footer Jelajahi + "Lokasi kantor". Navbar tidak berubah.
+- **Footer legal**: "© 2026 LCDU, Yayasan Taqwa Cerdas Kreatif. Seluruh hak cipta dilindungi." ("Bandung, Jawa Barat"
+  dihapus, pemilik). **"Admin" berhuruf kapital** di semua teks (Tanya Admin, WhatsApp Admin, Hubungi Admin).
+- **Bintang & komet di belakang kubah**: `.kaki-bintang`/`.kaki-komet` memakai masker langit `assets/hero/build/langit-wide.png`
+  / `langit-tall.png` (dibuat dari foto malam: piksel langit biru gelap; garis cakrawala per kolom, minimum ±6 kolom supaya
+  puncak menara/pohon tertutup), `mask-size: cover` + posisi sama dengan `object-position` foto (50% 27% / HP 50% 71%) →
+  selalu sejajar dengan foto. Buat ulang masker bila foto malam diganti.
 - **Footer bergerak** (permintaan pemilik, pengecualian dari "tiga jenis gerak"; dipertegas: "kurang kelihatan"): 26 bintang
   berkelip, 3 **bintang jatuh/komet** (`.kaki-komet`, siklus 7 / 9,5 / 12 s, melintas ±1 s), kabut tipis bergeser 28 s,
   lentera mengapung ±12px & berdenyut. Hanya transform/opacity, `animation-play-state` jalan hanya saat

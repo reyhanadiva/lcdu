@@ -873,7 +873,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 /* (B) Kartu Placement Test = "lembar ujian" LCDU: kertas putih bergaris halus, margin merah, strip keffiyeh houndstooth
    hijau di atas. Komposisi = 70 titik lentera (20 biru · 20 hijau · 30 merah) yang muncul berurutan sekali; cincin waktu
    tergambar sekali (stroke-dashoffset); "Tes suara" = nada pendek Web Audio + gelombang (statis saat reduced-motion).
-   Tombol kunyit hanya di sini: "Mulai tes Inggris/Arab" per tes yang buka, atau "Tanya admin lewat WhatsApp" bila
+   Tombol kunyit hanya di sini: "Mulai tes Inggris/Arab" per tes yang buka, atau "Tanya Admin lewat WhatsApp" bila
    keduanya tutup (.pt-aksi[data-buka] = "", "en", "ar", "en ar"; ditulis JS dari site-config.js). */
 .pt-kartu{position:relative;display:grid;gap:clamp(28px,4vw,56px);margin-top:clamp(32px,4vw,48px);padding:clamp(36px,4vw,52px) clamp(22px,4vw,56px) clamp(28px,3.4vw,44px) clamp(36px,5vw,72px);
   background:#fff;color:#10163A;border:1px solid color-mix(in srgb,#10163A 14%,transparent);border-radius:4px;
@@ -900,7 +900,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .pt-aksi{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:4px}
 .pt-status{flex-basis:100%;font-weight:600;color:var(--semangka-tua)}
 .pt-tutup{font-size:.95rem;font-weight:600;color:var(--semangka-tua)}
-/* bawaan = keduanya tutup: kalimat + Tanya admin. Ada yang buka: tombol tes yang buka + keterangan tes yang tutup */
+/* bawaan = keduanya tutup: kalimat + Tanya Admin. Ada yang buka: tombol tes yang buka + keterangan tes yang tutup */
 .pt-mulai,.pt-tutup{display:none}
 .pt-aksi:not([data-buka=""]) .pt-status,.pt-aksi:not([data-buka=""]) .pt-tanya{display:none}
 .pt-aksi[data-buka~="en"] .pt-mulai[data-bhs="en"],.pt-aksi[data-buka~="ar"] .pt-mulai[data-bhs="ar"]{display:inline-flex}
@@ -1107,6 +1107,41 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .faq-kosong a{color:var(--ink);font-weight:700}
 @media (prefers-reduced-motion: reduce){.faq-jawab,.faq-item.buka .faq-jawab,.faq-tanda::before,.faq-tanda::after,.faq-topik button{transition:none!important}}
 
+/* ===== KANTOR LCDU (lokasi) =====
+   Kartu dua kolom (mengacu kartu "Lokasi" situs SD, palet LCDU): kiri judul kecil, alamat besar Fraunces (jalan biru,
+   kota tinta), alamat lengkap + kalimat kelas online, baris kontak WhatsApp Admin + "Chat", tombol "Petunjuk arah".
+   Kanan: fasad peta (SVG ringan + pin semangka); tombol memuat iframe Google Maps sesuai permintaan (hemat & privat). */
+.lok-kartu{display:grid;grid-template-columns:minmax(0,1fr);overflow:hidden;border-radius:6px;background:#FFFDF8;color:#10163A;
+  box-shadow:0 0 0 1px rgba(16,22,58,.08),0 30px 50px -34px rgba(16,22,58,.45)}
+@media (min-width:900px){.lok-kartu{grid-template-columns:minmax(0,5fr) minmax(0,6fr);min-height:440px}}
+.lok-info{display:grid;align-content:start;gap:14px;padding:clamp(24px,4vw,52px)}
+.lok-label{margin:0;font-family:var(--f-body);font-weight:700;font-size:var(--step-0);color:#10163A}
+.lok-alamat{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,1.4rem + 2.4vw,3.4rem);line-height:1.04;letter-spacing:-.02em}
+.lok-jalan{color:var(--lazuardi)}
+.lok-lengkap{max-width:44ch;font-size:var(--step-0);line-height:1.55;color:#4B4F63}
+.lok-kontak{list-style:none;margin:6px 0 0;padding:0;border-top:1px solid rgba(16,22,58,.12)}
+.lok-kontak li{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(16,22,58,.12)}
+.lok-ikon{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:color-mix(in srgb,var(--zamrud) 12%,#fff);color:var(--zamrud)}
+.lok-ikon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.lok-teks{display:grid;gap:2px;flex:1;min-width:0}
+.lok-teks small{font-size:.85rem;color:#4B4F63}
+.lok-teks b{font-size:var(--step-1);letter-spacing:.01em}
+.lok-aksi{flex:none;display:inline-grid;place-items:center;min-height:44px;padding:0 18px;border-radius:999px;background:color-mix(in srgb,var(--zamrud) 12%,#fff);color:var(--zamrud);font-weight:700;text-decoration:none}
+.lok-aksi:hover{background:color-mix(in srgb,var(--zamrud) 20%,#fff)}
+.lok-aksi:focus-visible,.lok-muat:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px}
+.lok-arah{justify-self:start;margin-top:8px}
+.lok-peta{position:relative;min-height:260px;overflow:hidden;background:#EEE6D6}
+.lok-peta-gambar,.lok-peta iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.lok-pin{position:absolute;left:50%;top:46%;display:grid;justify-items:center;gap:6px;transform:translate(-50%,-100%)}
+.lok-pin svg{width:34px;height:46px;filter:drop-shadow(0 6px 6px rgba(16,22,58,.25))}
+.lok-pin b{padding:4px 10px;border-radius:4px;background:#FFFDF8;color:#10163A;font-size:.85rem;box-shadow:0 2px 8px rgba(16,22,58,.15)}
+.gerak .lok-pin svg{animation:lok-pin 2.6s var(--ease) infinite}
+@keyframes lok-pin{0%,70%,100%{transform:none}80%{transform:translateY(-8px)}90%{transform:translateY(0)}}
+.lok-muat{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);min-height:44px;padding:0 18px;border:0;border-radius:999px;background:#10163A;color:#fff;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 10px 20px -10px rgba(16,22,58,.6)}
+.lok-peta.dimuat .lok-pin,.lok-peta.dimuat .lok-muat,.lok-peta.dimuat .lok-peta-gambar{display:none}
+@media (max-width:899px){.lok-peta{min-height:240px}}
+@media (prefers-reduced-motion: reduce){.lok-pin svg{animation:none}}
+
 /* ===== DONASI ===== */
 .donate{position:relative;overflow:hidden}
 /* jaring keffiyeh sangat tipis; memudar masuk setelah sambungan senja → malam (tanpa tepi tajam) */
@@ -1233,6 +1268,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Hanya transform/opacity, jalan HANYA saat pita langit terlihat (.hidup dari IntersectionObserver), mati tanpa .gerak
    (reduced-motion). */
 .kaki-bintang{position:absolute;inset:0;z-index:2;pointer-events:none}
+/* bintang & komet hanya di LANGIT (di belakang kubah, menara & pohon): masker dari foto malam (assets/hero/build/langit-*.png,
+   alfa 1 di atas garis cakrawala), ukuran & posisi = object-fit/object-position foto → selalu sejajar */
+.kaki-bintang,.kaki-komet{-webkit-mask:url(assets/hero/build/langit-wide.png) 50% 27%/cover no-repeat;mask:url(assets/hero/build/langit-wide.png) 50% 27%/cover no-repeat}
+@media (max-width:699px){.kaki-bintang,.kaki-komet{-webkit-mask:url(assets/hero/build/langit-tall.png) 50% 71%/cover no-repeat;mask:url(assets/hero/build/langit-tall.png) 50% 71%/cover no-repeat}}
 .kaki-bintang i{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:#FFF6DA;opacity:.55;box-shadow:0 0 6px rgba(255,246,218,.7)}
 .kaki-kabut{position:absolute;left:-10%;right:-10%;bottom:18%;height:38%;z-index:2;pointer-events:none;opacity:.5;
   background:radial-gradient(40% 60% at 20% 60%,rgba(190,200,235,.16),transparent 70%),radial-gradient(35% 55% at 70% 50%,rgba(190,200,235,.12),transparent 70%)}
@@ -1537,7 +1576,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <p class="pt-catatan">Dikerjakan sekali duduk: jawaban tidak tersimpan bila halaman ditinggalkan sebelum selesai.
           Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset. Tanpa auto translate, tanpa bertanya
           kepada orang lain, tanpa membuka tab lain. Soal yang tidak kamu pahami, kosongkan saja.</p>
-        <!-- aksi per bahasa (JS dari site-config.js): kedua tes tutup → satu kalimat + "Tanya admin"; ada yang buka → tombol
+        <!-- aksi per bahasa (JS dari site-config.js): kedua tes tutup → satu kalimat + "Tanya Admin"; ada yang buka → tombol
              "Mulai tes <bahasa>" per tes yang buka, tes yang tutup = keterangan "tutup sementara". HTML = keadaan tutup (cadangan). -->
         <div class="pt-aksi" data-buka="">
           <p class="pt-status">Placement Test Inggris dan Arab sedang tutup sementara.</p>
@@ -1545,7 +1584,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
           <p class="pt-tutup" data-bhs="en">Tes Inggris: tutup sementara</p>
           <a class="btn btn-sun pt-mulai" data-bhs="ar" href="https://lcdu.org/ar-placement-rule/" target="_blank" rel="noopener">Mulai tes Arab<span class="sr-only"> (buka di tab baru)</span></a>
           <p class="pt-tutup" data-bhs="ar">Tes Arab: tutup sementara</p>
-          <a class="btn btn-sun pt-tanya" href="https://wa.me/628196009333" data-wa="placement">Tanya admin lewat WhatsApp</a>
+          <a class="btn btn-sun pt-tanya" href="https://wa.me/628196009333" data-wa="placement">Tanya Admin lewat WhatsApp</a>
         </div>
       </div>
       <div class="pt-samping">
@@ -1648,12 +1687,36 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <div class="faq-topik" role="group" aria-label="Topik pertanyaan" id="faq-topik"></div>
       <p class="faq-info" id="faq-info" aria-live="polite"></p>
     </div>
-    <p class="faq-bantu">Pertanyaanmu belum ada di sini? <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya admin lewat WhatsApp</a></p>
+    <p class="faq-bantu">Pertanyaanmu belum ada di sini? <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya Admin lewat WhatsApp</a></p>
     </div>
     <div class="faq-kanan">
     <ul class="faq-daftar" id="faq-daftar"></ul>
     <button class="faq-lainnya" id="faq-lainnya" type="button" aria-controls="faq-daftar" aria-expanded="false" hidden></button>
-    <p class="faq-kosong" id="faq-kosong" hidden>Tidak ada yang cocok. <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya admin lewat WhatsApp</a></p>
+    <p class="faq-kosong" id="faq-kosong" hidden>Tidak ada yang cocok. <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya Admin lewat WhatsApp</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ KANTOR LCDU (permintaan pemilik; gaya mengacu kartu "Lokasi" situs SD, dibuat ulang dengan palet LCDU)
+     Data dari site-config.js kantor.* (alamat perlu dikonfirmasi pemilik). Peta interaktif Google Maps hanya dimuat saat
+     tombol diketuk (fasad ringan: tanpa skrip pihak ketiga sebelum diminta). ============ -->
+<section data-lentera class="band lokasi" id="lokasi" aria-labelledby="lok-h">
+  <div class="wrap">
+    <div class="lok-kartu">
+      <div class="lok-info">
+        <h2 class="lok-label" id="lok-h" data-judul>Kantor LCDU</h2>
+        <p class="lok-alamat"><span class="lok-jalan" data-cfg-text="kantor.jalan">Jl. Diponegoro No. 48</span>,<br><span class="lok-kota" data-cfg-text="kantor.kota">Kota Bandung</span></p>
+        <p class="lok-lengkap"><span data-cfg-text="kantor.lengkap">Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115</span>. Kelas LCDU berlangsung online; ini alamat kantor kami di Bandung.</p>
+        <ul class="lok-kontak">
+          <li><span class="lok-ikon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.6 3.4 3.6 4.1l1.2-1 1.7.8-.4 1.4c-3.3.3-6.6-3-6.4-6.3l1.4-.4.7 1.7z"/></svg></span><span class="lok-teks"><small>WhatsApp Admin</small><b data-cfg-text="whatsappAdmin.tampil">0819-6009-333</b></span><a class="lok-aksi" href="https://wa.me/628196009333" data-wa="umum">Chat<span class="sr-only"> dengan Admin lewat WhatsApp</span></a></li>
+        </ul>
+        <a class="btn btn-ink lok-arah" href="https://maps.app.goo.gl/BMVJsNqZdJs6WWMz8" data-cfg-href="kantor.peta">Petunjuk arah <span aria-hidden="true">↗</span><span class="sr-only"> (Google Maps, buka di tab baru)</span></a>
+      </div>
+      <div class="lok-peta" id="lok-peta">
+        <svg class="lok-peta-gambar" viewBox="0 0 640 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><rect width="640" height="480" fill="#EEE6D6"/><path d="M-20 360 C120 330 220 400 360 380 S560 300 680 330" fill="none" stroke="#BFD3E6" stroke-width="22"/><path d="M410 60 h120 v90 h-120z M70 70 h110 v70 h-110z" fill="#D7E4C8"/><g fill="none" stroke="#FFFFFF" stroke-linecap="round"><path d="M-20 210 L660 150" stroke-width="26"/><path d="M190 -20 L250 500" stroke-width="18"/><path d="M450 -20 L420 500" stroke-width="14"/><path d="M-20 90 L660 40" stroke-width="10"/><path d="M-20 430 L660 400" stroke-width="10"/><path d="M60 -20 L110 500" stroke-width="8"/><path d="M560 -20 L590 500" stroke-width="8"/><path d="M250 260 L640 250" stroke-width="8"/></g></svg>
+        <span class="lok-pin" aria-hidden="true"><svg viewBox="0 0 32 44"><path d="M16 43C16 43 2 26.5 2 16a14 14 0 0 1 28 0c0 10.5-14 27-14 27z" fill="#B3202E"/><circle cx="16" cy="16" r="6" fill="#FFFDF8"/></svg><b>LCDU Bandung</b></span>
+        <button class="lok-muat" type="button" id="lok-muat">Tampilkan peta<span class="sr-only"> interaktif Google Maps</span></button>
+      </div>
     </div>
   </div>
 </section>
@@ -1708,7 +1771,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
           <p class="copied" id="copied" role="status" aria-live="polite"></p>
         </div>
       </div>
-      <p class="donate-tunda" id="donate-tunda" hidden>Donasi akan segera dibuka. <a href="https://wa.me/628196009333" data-wa="umum">Hubungi admin</a></p>
+      <p class="donate-tunda" id="donate-tunda" hidden>Donasi akan segera dibuka. <a href="https://wa.me/628196009333" data-wa="umum">Hubungi Admin</a></p>
     </div>
     </div>
   </div>
@@ -1739,12 +1802,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       </div>
       <div>
         <h3>Jelajahi</h3>
-        <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Biaya</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#testimoni">Testimoni</a></li><li><a href="#tim">Tim</a></li><li><a href="#faq">FAQ</a></li><li><a href="#donasi">Donasi</a></li></ul>
+        <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Biaya</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#testimoni">Testimoni</a></li><li><a href="#tim">Tim</a></li><li><a href="#faq">FAQ</a></li><li><a href="#lokasi">Lokasi kantor</a></li><li><a href="#donasi">Donasi</a></li></ul>
       </div>
       <div>
         <h3>Hubungi kami</h3>
         <!-- email, Instagram & alamat ditambah JS hanya bila ada di site-config.js (kontak.email / instagram / alamat) -->
-        <ul class="foot-links" id="foot-kontak"><li><a href="https://wa.me/628196009333" data-wa="umum"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.6l1.2-1.1 1.8.8-.3 1.6c-3.6.2-7.2-3.3-7-7l1.6-.3.8 1.8z"/></svg><span>WhatsApp admin<span class="sr-only"> (buka di tab baru)</span></span></a></li></ul>
+        <ul class="foot-links" id="foot-kontak"><li><a href="https://wa.me/628196009333" data-wa="umum"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.6l1.2-1.1 1.8.8-.3 1.6c-3.6.2-7.2-3.3-7-7l1.6-.3.8 1.8z"/></svg><span>WhatsApp Admin<span class="sr-only"> (buka di tab baru)</span></span></a></li></ul>
       </div>
       <div>
         <h3>Jaringan pendidikan</h3>
@@ -1754,7 +1817,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </div>
     <!-- baris mitra: dibuat JS hanya bila site-config.js punya mitra[] (nama, url, logo) -->
     <div class="mitra-baris" id="mitra" hidden></div>
-    <div class="legal"><span>© 2026 LCDU, <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a></span><span>Bandung, Jawa Barat</span></div>
+    <div class="legal"><span>© 2026 LCDU, <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a>. Seluruh hak cipta dilindungi.</span></div>
   </div>
   <div class="kaki-pita" aria-hidden="true"><div class="orn-band orn-band--tebal kain-hitam"></div></div>
 </footer>
@@ -1762,7 +1825,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <!-- benang keffiyeh: garis tipis di gutter kiri (desktop) / garis progres di atas (HP), tergambar mengikuti scroll -->
 <div class="benang" aria-hidden="true"><i class="benang-garis"></i><i class="benang-ujung"></i></div>
 
-<aside class="fab-wadah" aria-label="Bantuan cepat"><a class="fab is-away" id="tanya" href="https://wa.me/628196009333" data-wa="umum" aria-label="Tanya admin lewat WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg><span class="fab-teks">Tanya admin</span></a></aside>
+<aside class="fab-wadah" aria-label="Bantuan cepat"><a class="fab is-away" id="tanya" href="https://wa.me/628196009333" data-wa="umum" aria-label="Tanya Admin lewat WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg><span class="fab-teks">Tanya Admin</span></a></aside>
 
 
 <script src="site-config.js"></script>
@@ -1874,7 +1937,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   }
   window.addEventListener('scroll', function(){ if (!nTick){ nTick = true; requestAnimationFrame(navUpdate); } }, {passive:true});
   navUpdate();
-  /* footer sudah memuat WhatsApp admin: tombol mengambang menepi supaya tidak menutupi isi footer */
+  /* footer sudah memuat WhatsApp Admin: tombol mengambang menepi supaya tidak menutupi isi footer */
   if ('IntersectionObserver' in window && $('footer')) new IntersectionObserver(function(en){ fab.classList.toggle('is-kaki', en[0].isIntersecting); }, { rootMargin: '0px 0px -12% 0px' }).observe($('footer'));
 
   /* ---------- Satu hari belajar: fase aktif mewarnai navbar (garis ±5% dari atas) & benang (tengah layar) ---------- */
@@ -2088,8 +2151,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (ul && em) ul.insertAdjacentHTML('beforeend', '<li><a href="mailto:' + esc(em) + '">' + IKON.email + '<span>' + esc(em) + '</span></a></li>');
     if (ul && ig) ul.insertAdjacentHTML('beforeend', '<li><a href="' + esc(ig) + '" target="_blank" rel="noopener">' + IKON.instagram + '<span>Instagram<span class="sr-only"> (buka di tab baru)</span></span></a></li>');
     if (ul && alamat) ul.insertAdjacentHTML('beforeend', '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamat) + '</span></address></li>');
-    var peta = cfg('kontak.peta');
-    if (ul && peta && peta.url) ul.insertAdjacentHTML('beforeend', '<li><a href="' + esc(peta.url) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(peta.label || 'Lokasi kantor') + '<span class="sr-only"> (Google Maps, buka di tab baru)</span></span></a></li>');
+    var kantor = cfg('kantor');
+    if (ul && kantor && (kantor.lengkap || kantor.peta)) ul.insertAdjacentHTML('beforeend', kantor.peta
+      ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(kantor.lengkap || kantor.nama) + '<span class="sr-only"> (Google Maps, buka di tab baru)</span></span></a></li>'
+      : '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(kantor.lengkap) + '</span></address></li>');
     var jar = cfg('jaringan'), uj = $('#foot-jaringan');
     if (uj && jar && jar.length){
       var ada = jar.filter(function(j){ return j && j.url; });
@@ -2115,7 +2180,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   (function(){
     var daftar = $('#faq-daftar'); if (!daftar) return;
     var buka_ = ['en', 'ar'].filter(function(b){ return !!cfg('placement.' + b + '.open'); });
-    var statusTes = !buka_.length ? 'Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke admin kapan dibuka lagi.'
+    var statusTes = !buka_.length ? 'Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke Admin kapan dibuka lagi.'
       : buka_.length === 2 ? 'Saat ini tes Inggris dan Arab sudah dibuka.' : 'Saat ini tes ' + (buka_[0] === 'en' ? 'Inggris' : 'Arab') + ' sudah dibuka; tes ' + (buka_[0] === 'en' ? 'Arab' : 'Inggris') + ' tutup sementara.';
     var yUrl = cfg('yayasan.url') || 'https://alfacentauri.sch.id/yayasan/', yNama = cfg('yayasan.nama') || 'Yayasan Taqwa Cerdas Kreatif';
     var awg = cfg('donasi.mitra') || 'Aqsa Working Group (AWG)';
@@ -2415,6 +2480,19 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (window.fetch) fetch('assets/team/manifest.json').then(function(r){ return r.ok ? r.json() : {}; }).then(function(m){
       if (!m || !Object.keys(m).length) return; fotoTim = m; gambarGaleri(); sorot(aktifTim, false);
     }).catch(function(){});
+  }
+
+  /* ---------- Kantor: peta interaktif dimuat hanya saat diminta; tautan peta = tab baru ---------- */
+  var lokMuat = $('#lok-muat');
+  if (lokMuat){
+    var arah = $('.lok-arah'); if (arah){ arah.target = '_blank'; arah.rel = 'noopener'; }
+    lokMuat.addEventListener('click', function(){
+      var k = cfg('kantor') || {}, lat = k.lat || -6.9013996, lng = k.lng || 107.6241906, wadah = $('#lok-peta');
+      var f = document.createElement('iframe');
+      f.src = 'https://www.google.com/maps?q=' + lat + ',' + lng + '&z=17&hl=id&output=embed';
+      f.title = 'Peta lokasi ' + (k.nama || 'Kantor LCDU Bandung'); f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
+      wadah.appendChild(f); wadah.classList.add('dimuat'); f.focus();
+    });
   }
 
   /* ---------- Donasi: siap tayang, logo AWG (hanya dari config), alur menyala sekali, salin rekening ---------- */

@@ -142,6 +142,7 @@ Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai 
   `donasi.siapTayang: false`. Situs lama menulis "Yayasan Cerdas Taqwa Kreatif"; nama resmi "Yayasan Taqwa Cerdas
   Kreatif" — samakan dengan buku rekening. Situs lama juga mencampur "Donasi LCDU" & "Donasi untuk Palestina" di satu
   rekening: pastikan rekening ini memang untuk donasi Palestina (AWG).
+- [ ] **Alamat kantor**: konfirmasi "Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115" (site-config.js `kantor`).
 - [ ] **Izin tertulis** setiap penulis testimoni untuk **foto dan kutipan**, dan anggota tim untuk fotonya.
 - [ ] **Persetujuan orang tua/wali** untuk siswa **di bawah 18 tahun** (sebagian 16–17 tahun) — prosedur dari Yayasan.
 - [ ] **Logo & foto resmi AWG beserta izin tertulis** → `donasi.logo`. Sekarang: foto stok ilustrasi, tanpa logo.

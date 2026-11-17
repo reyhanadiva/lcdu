@@ -14,14 +14,14 @@ window.LCDU_CONFIG = {
      open: true  → kartu Placement Test menampilkan tombol "Mulai tes Inggris" / "Mulai tes Arab" menuju `url` (halaman
                    AWAL tes, "-rule"; tombol "Mulai Test" ada di akhir halaman itu); tes lain yang tutup = "tutup sementara";
      open: false untuk KEDUANYA → satu kalimat "Placement Test Inggris dan Arab sedang tutup sementara." + tombol
-                   "Tanya admin lewat WhatsApp".
+                   "Tanya Admin lewat WhatsApp".
      urlSoal = halaman soal langsung (disimpan sebagai data, tidak dipakai di halaman). */
   placement: {
     en: { open: false, url: 'https://lcdu.org/en-placement-rule/', urlSoal: 'https://lcdu.org/en-placement/' },
     ar: { open: false, url: 'https://lcdu.org/ar-placement-rule/', urlSoal: 'https://lcdu.org/ar-placement/' }
   },
 
-  /* WhatsApp admin (diambil dari lcdu.org — PERLU DIVERIFIKASI pemilik sebelum live).
+  /* WhatsApp Admin (diambil dari lcdu.org — PERLU DIVERIFIKASI pemilik sebelum live).
      nomor: format internasional tanpa "+" dan tanpa spasi, dipakai untuk tautan wa.me.
      pesan: teks awal yang otomatis terisi di WhatsApp, sesuai tombol yang diklik (data-wa="umum" dst.). */
   whatsappAdmin: {
@@ -44,7 +44,7 @@ window.LCDU_CONFIG = {
   donasi: {
     mitra: 'Aqsa Working Group (AWG)',
     url: 'https://aqsaworkinggroup.com/',
-    /* siapTayang: false → lembar rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi admin".
+    /* siapTayang: false → lembar rekening disembunyikan, diganti "Donasi akan segera dibuka. Hubungi Admin".
        Ubah ke false bila Yayasan belum mengonfirmasi izin penghimpunan donasi (PUB) dan nama rekening. */
     siapTayang: true,
     /* Logo AWG di panel Donasi: path berkas (mis. 'assets/partners/awg.svg'). KOSONG = tidak tampil.
@@ -57,10 +57,21 @@ window.LCDU_CONFIG = {
   kontak: {
     email: '',
     instagram: '',
-    alamat: '',
-    /* Lokasi kantor di Google Maps (dari pemilik, 17 Nov 2026; nama tempat di peta: "LCDU Bandung").
-       Tampil di footer "Hubungi kami" sebagai tautan peta. Kosongkan url untuk menyembunyikan. */
-    peta: { label: 'Kantor LCDU Bandung', url: 'https://maps.app.goo.gl/BMVJsNqZdJs6WWMz8' }
+    alamat: ''
+  },
+
+  /* Kantor LCDU (section "Kantor LCDU" + footer "Hubungi kami"). Tautan peta & titik dari pemilik (Google Maps "LCDU
+     Bandung", 17 Nov 2026). Alamat jalan dari pemilik ("Jl. Diponegoro …"); nomor, kelurahan, kecamatan & kode pos diambil
+     dari footer situs TK Alfa Centauri (Lokasi Diponegoro) — PERLU DIKONFIRMASI pemilik. Kosongkan `lengkap` untuk
+     menyembunyikan alamat. */
+  kantor: {
+    nama: 'Kantor LCDU Bandung',
+    jalan: 'Jl. Diponegoro No. 48',
+    kota: 'Kota Bandung',
+    lengkap: 'Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115',
+    peta: 'https://maps.app.goo.gl/BMVJsNqZdJs6WWMz8',
+    lat: -6.9013996,
+    lng: 107.6241906
   },
 
   /* Jaringan pendidikan (footer, tautan keluar), urutan & nama seperti footer situs saudara (SD/TK/English Now).
