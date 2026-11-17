@@ -406,7 +406,7 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - Area sentuh ≥ 44px (titik geser 40×44, topik FAQ, tautan langkah 1, tautan AWG, tautan legal) lewat padding + margin
   negatif (tata letak tidak berubah). Teks terkecil 12px (label hari jadwal, "menit, maks.", "Foto ilustrasi").
 - Logo nav/hero/footer: `lcdu-lockup-*-240.png` (cukup untuk 90–120px CSS di layar 2x; 360px tetap ada).
-- Diukur (server lokal + gzip, Lighthouse 12): HP Performance 80 → 84, Accessibility 96 → 100, Best Practices 100,
+- Diukur (server lokal + gzip, Lighthouse 12): HP Performance 80 → 80–84 (bervariasi antar-run), Accessibility 96 → 100, Best Practices 100,
   SEO 100; desktop 99/100/100/100. Sisa beban HP: inisialisasi hero Foto (`lentera-hd.js` ±250 ms, pengolahan kanvas fajar
   & bintang) dan skrip utama ±300 ms — tidak diubah (mengubah tampilan hero).
 
