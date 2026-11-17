@@ -23,7 +23,7 @@ Buka `http://localhost:8000/`. Modul ES butuh server (bukan `file://`). Saat men
 
 | Path | Isi |
 |---|---|
-| `index.html` | Seluruh halaman: `<head>` (meta, preload font), CSS inline (token di `:root` paling atas, lalu per section), markup, dan skrip inline (satu IIFE + modul Lenis). Data konten di array JS `CERITA` (testimoni), `TEAM` (tim), `FAQ` (FAQ + JSON-LD). |
+| `index.html` | Seluruh halaman: `<head>` (meta, preload font), CSS inline (token di `:root` paling atas, lalu per section), markup, dan skrip inline (satu IIFE + modul Lenis). Data konten: kartu testimoni langsung di HTML (`#testimoni`), array JS `TEAM` (tim), `FAQ` (FAQ + JSON-LD). |
 | `site-config.js` | **Satu tempat** untuk data yang berubah (lihat tabel kunci di bawah). HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa`; teks di HTML = cadangan. |
 | `hero/hero.js` | Pengendali hero: scroll → progres `p`, teks tiga babak, pegas + pemandu supaya fajar selalu tercapai. |
 | `hero/lentera-hd.js`, `hero/spots.json` | Hero Foto (kanvas: foto malam/fajar + titik cahaya). |
@@ -67,7 +67,7 @@ sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bent
 | Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
-| Testimoni | "Rak cerita": satu rak kaca, satu buku per testimoni + buku kosong "Ceritamu"; buku terpilih (bawaan: pertama) menampilkan sampul (potret lengkung/penampung, nama, gantungan kelas) dan kutipannya di panel. Data di array `CERITA` (index.html); potret asli lewat `node tools/build-photos.mjs --potret <folder> stories`. |
+| Testimoni | Dinding foto: tiga foto cetak (selotip keffiyeh, sedikit miring) dengan kutipan di atas foto + kartu "Ceritamu"; HP = geser. Data = kartu `<li class="cerita-kartu">` di `index.html`. Foto sementara = foto stok tanpa wajah bertanda "Foto ilustrasi"; foto asli penulis (dengan izin) lewat `node tools/build-photos.mjs --potret <folder> stories` → otomatis menggantikan (slug `aninda-salma`, `fitriza-rahma`). |
 | Tim | Daftar nama editorial tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + kata مُعَلِّم kecil), peran & sertifikasi sebaris. HP: satu kelompok per slide geser. Data di array `TEAM`; foto kecil hanya bila ada lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
 | Donasi untuk Palestina | Kalimat pembuka, panel AWG besar (foto ilustrasi kebun zaitun + fakta dari aqsaworkinggroup.com + "Kunjungi situs AWG"), alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |

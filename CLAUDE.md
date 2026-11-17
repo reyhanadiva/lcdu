@@ -1,7 +1,7 @@
 # LCDU landing page — konteks untuk Claude Code
 
 ## Proyek
-Landing page marketing LCDU (**Language Course for Da'wah and Ummah**): kelas Bahasa Arab & Inggris online (usia 16+),
+Landing page marketing LCDU (**Language Course for Da'wah dan Ummah**): kelas Bahasa Arab & Inggris online (usia 16+),
 untuk dakwah dan umat, nirlaba, di bawah
 Yayasan Taqwa Cerdas Kreatif (Alfa Centauri Schools, Bandung). Tujuan halaman: pendaftaran siswa dan donasi.
 Pemilik: Bapak Reyhan (non-developer, berpikir sebagai desainer). Kode akhirnya diserahkan ke tim IT sekolah.
@@ -72,7 +72,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Geser `.geser`** (komponen dipakai ulang: Kenapa, Pilih kelas, Testimoni, Tim): `<div class="geser" data-geser="(media query)"
   data-geser-nama="…">` berisi jalur `[data-geser-jalur]` dengan slide `[data-geser-slide]`, opsional penanda sendiri
   `[data-geser-penanda]` berisi `<button>` (tanpa itu: titik dibuat otomatis). Di bawah breakpoint JS memasang `.is-geser`,
-  `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4", `tabindex=0` di WADAH (jalur `<ol>/<ul>` diberi `role="none"`)
+  `role="region"` + `aria-roledescription="carousel"` + nama, slide `role="group"` "1 dari 4" (slide `<li>` TIDAK diberi role group — tidak sah; tetap listitem + `aria-label` "1 dari 4"), `tabindex=0` di JALUR (elemen yang di-scroll; aturan axe scrollable-region-focusable)
   (panah kiri/kanan, Home/End), `aria-current` di penanda, event `geser` (detail = indeks, bubble). CSS: scroll-snap x
   mandatory, `overscroll-behavior-x: contain`, scrollbar tersembunyi, jalur menjorok selebar layar (padding .wrap),
   slide `flex: 0 0 86%` + `contain: layout paint`, tinggi sama (flex stretch). Penanda lewat IntersectionObserver (root =
@@ -231,14 +231,17 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   desktop = tali lentera horizontal berombak (SVG) dengan 6 lentera menyala berurutan sekali (120 ms), ke-6 lebih besar;
   **selalu kiri→kanan 1→6** untuk bahasa apa pun (pencerminan Arab dihapus); HP = daftar rapat + benang tegak.
   Langkah 1 menaut ke `#placement`. Tinggi section 390×844: 1.835 → 1.766 px.
-- **Testimoni = "Rak cerita"** (sesi F; id `testimoni`): data di SATU array `CERITA` (nama, kelas, kutipan, foto = slug,
-  bahasa 'en'|'ar'|'' — isi hanya bila pasti). Dua kutipan = teks asli situs lama — **jangan diubah/dikarang**. Satu rak kaca
-  (komponen bersama `bukuHTML()`/`rakPilih()`, CSS blok "RAK BUKU KACA"): satu buku per cerita + buku kosong **"Ceritamu"**
-  (tanpa nama/foto; panelnya "Cerita berikutnya bisa datang dari kamu."). Buku pertama terpilih bawaan; klik/ketuk/fokus/
-  hover/panah memilih satu: buku keluar & miring, sampul = potret lengkung (foto ASLI via `assets/stories/manifest.json`,
-  selain itu penampung berinisial; **dilarang foto stok sebagai wajah**), nama, karabiner + gantungan nama kelas, pembatas
-  buku = bahasa. Tiap buku punya slot selebar sampul (`--slot`) supaya tidak saling menutup. Panel kutipan (aria-live, tinggi
-  tetap). Tinggi: desktop 499 px (rak + panel 312), HP 652 px. > 4 cerita kelak: bungkus rak dengan `.geser`.
+- **Testimoni = dinding foto** (sesi audit mandiri, menggantikan "Rak cerita" atas permintaan pemilik: "testimoni berbasis
+  foto, bukan list"; id `testimoni`): data = kartu `<li class="cerita-kartu">` di HTML (satu tempat, terbaca tanpa JS).
+  Dua kutipan = teks asli situs lama — **jangan diubah/dikarang**. Tiap kartu = foto cetak (kertas `#FFFDF8`, selotip
+  keffiyeh `.cerita-selotip` warna bergilir merah/hijau/hitam, miring `--miring` ±1,6°), kutipan putih di atas gradasi gelap
+  foto (kontras ≥ 7:1 di bagian teks), nama + kelas di tepi bawah kertas. Kartu ketiga **"Ceritamu"** (tanpa nama/foto orang,
+  kalimat "Cerita berikutnya bisa datang dari kamu."). Foto: **foto ASLI penulis** (izin tertulis; wali < 18 th) lewat
+  `assets/stories/manifest.json` + `pasangFoto()` (slug di `data-potret`) otomatis menggantikan foto ilustrasi & label;
+  selama belum ada = foto stok **tanpa wajah** bertanda "Foto ilustrasi" (kelas-online, menulis, keffiyeh). Desktop: 3 kolom,
+  kartu tengah turun (kolase); hover meluruskan kartu + foto 1,045× (transform saja). HP < 900px: `.geser` (slide berpadding
+  supaya selotip & bayangan tidak terpotong `contain: paint`, kartu tidak miring). Rak buku kaca (`bukuHTML`, `rakPilih`,
+  karabiner, CSS "RAK BUKU KACA") **dihapus** — tidak dipakai di mana pun lagi.
 - **Tim = daftar nama editorial** (sesi F; rak buku dipindah ke Testimoni atas keputusan pemilik): tiga kelompok dari
   `TEAM` (data & ejaan tidak diubah) — Pengelola (kelompok pertama, jadi pengelola yang juga guru ada di sini), Guru Bahasa
   Inggris, Guru Bahasa Arab + kata Arab kecil مُعَلِّم (Naskh, dekor, `aria-hidden`; dipindah dari pembatas raksasa
@@ -388,6 +391,24 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
    Fondasi seni (palet semangka-keffiyeh, ornamen v2, bingkai lengkung, foto stok) **disetujui pemilik**;
    `ornamen-test.html` masih ada — hapus bila pemilik tidak membutuhkannya lagi.
 3. Sebelum serah terima ke IT: pertimbangkan Astro + komponen, optimasi gambar (AVIF/WebP), Lighthouse ≥ 90 mobile.
+
+## Sesi audit mandiri (17 Nov 2026, branch `audit-perbaikan`)
+Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni dinding foto (lihat di atas):
+- **FAQ desktop ≥ 1000px** dua kolom: `.faq-kiri` (judul + cari + topik + `.faq-bantu` "Pertanyaanmu belum ada di sini?
+  Tanya admin lewat WhatsApp", sticky) | `.faq-kanan` (daftar). HP tetap satu kolom.
+- **Donasi desktop ≥ 1100px**: `.donate-bawah` = alur empat lentera TEGAK (Fraunces, kiri) | lembar setoran (kanan).
+  900–1099px alur mendatar seperti sebelumnya; HP tegak.
+- **Tombol "Tanya admin"** (`.fab`, di dalam `<aside aria-label="Bantuan cepat">`): HP < 700px = lingkaran ikon 56px
+  (nama aksesibel dari `aria-label`); menepi (`.is-kaki`) saat footer terlihat, karena footer sudah memuat WhatsApp.
+- **Lenis hanya untuk `pointer: fine`** (mouse/trackpad). Di layar sentuh scroll native (`html{scroll-behavior:smooth}`
+  untuk anchor) — Lenis di HP hanya menambah loop rAF tanpa efek (smoothTouch mati).
+- Glyph raksasa Pilih kelas (`.side-glyph`) = `::before{content:attr(data-g)}` (dekor, bukan node teks).
+- Area sentuh ≥ 44px (titik geser 40×44, topik FAQ, tautan langkah 1, tautan AWG, tautan legal) lewat padding + margin
+  negatif (tata letak tidak berubah). Teks terkecil 12px (label hari jadwal, "menit, maks.", "Foto ilustrasi").
+- Logo nav/hero/footer: `lcdu-lockup-*-240.png` (cukup untuk 90–120px CSS di layar 2x; 360px tetap ada).
+- Diukur (server lokal + gzip, Lighthouse 12): HP Performance 80 → 84, Accessibility 96 → 100, Best Practices 100,
+  SEO 100; desktop 99/100/100/100. Sisa beban HP: inisialisasi hero Foto (`lentera-hd.js` ±250 ms, pengolahan kanvas fajar
+  & bintang) dan skrip utama ±300 ms — tidak diubah (mengubah tampilan hero).
 
 ## Aturan kualitas
 - **Animasi hanya transform & opacity** (clip-path bila perlu). Jangan menganimasikan properti tata letak (width, left,
