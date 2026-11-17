@@ -242,12 +242,16 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   kartu tengah turun (kolase); hover meluruskan kartu + foto 1,045× (transform saja). HP < 900px: `.geser` (slide berpadding
   supaya selotip & bayangan tidak terpotong `contain: paint`, kartu tidak miring). Rak buku kaca (`bukuHTML`, `rakPilih`,
   karabiner, CSS "RAK BUKU KACA") **dihapus** — tidak dipakai di mana pun lagi.
-- **Tim = daftar nama editorial** (sesi F; rak buku dipindah ke Testimoni atas keputusan pemilik): tiga kelompok dari
-  `TEAM` (data & ejaan tidak diubah) — Pengelola (kelompok pertama, jadi pengelola yang juga guru ada di sini), Guru Bahasa
-  Inggris, Guru Bahasa Arab + kata Arab kecil مُعَلِّم (Naskh, dekor, `aria-hidden`; dipindah dari pembatas raksasa
-  `.batas-kata` yang dihapus). Nama Fraunces satu baris; peran (bila beda dari kelompok) & sertifikasi kecil sebaris, selalu
-  terlihat; tanpa kotak/pill/chip. Foto bulat kecil HANYA bila ada di `assets/team/manifest.json`. Desktop tiga kolom
-  (559 px); HP `.geser` satu kelompok per slide + penanda teks bergaris bawah (598 px).
+- **Tim = berbasis foto** (sesi audit mandiri 2; pemilik: "Tim berbasis foto, bukan list"): kiri `.tim-sorot` = potret
+  besar orang terpilih (lengkung arkade 4:5, maks 280px) + nama, peran, "Mengajar Bahasa …" (dari kelompok di TEAM, hanya
+  bila peran belum menyebutnya), sertifikasi sebaris; kanan `.tim-galeri` = wajah bulat 68px semua anggota dalam tiga
+  kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + مُعَلِّم kecil). Klik/ketuk (pointer halus: juga arahkan
+  kursor) → potret besar berganti (`tim-ganti` pudar + naik 8px; `aria-pressed`, `aria-live`). Data & ejaan dari `TEAM`
+  (tidak diubah). Foto ASLI hanya dari `assets/team/manifest.json` (foto kecil = lebar terkecil, besar = terbesar);
+  selain itu penampung monogram warna kelompok (Pengelola merah tua, Inggris biru, Arab hijau kulit) + jaring keffiyeh.
+  **Dilarang foto stok sebagai wajah.** HP < 900px: potret 132px di samping keterangan; tiap kelompok = SATU baris wajah
+  digeser horizontal (native, scroll-snap proximity) supaya tidak memanjang. `.tim-galeri`/`.tim-kelompok` `min-width:0`
+  (tanpa itu baris geser melebarkan halaman di HP). Tinggi: desktop 717 px, HP 809 px. Tidak lagi memakai `.geser`.
 - **FAQ** (selesai, sesi FAQ-donasi-footer; judul "Yang sering ditanyakan"): **hanya fakta yang sudah ada** di halaman/README/
   site-config.js — satu array `FAQ` (id, topik, tanya, jawab) + JSON-LD FAQPage dari array & teks yang SAMA (diuji identik).
   9 pertanyaan: biaya (satu-satunya "Rp100.000" selain struk, bersama "tanpa biaya bulanan"), syarat, cara daftar, Placement
@@ -409,6 +413,21 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - Diukur (server lokal + gzip, Lighthouse 12): HP Performance 80 → 80–84 (bervariasi antar-run), Accessibility 96 → 100, Best Practices 100,
   SEO 100; desktop 99/100/100/100. Sisa beban HP: inisialisasi hero Foto (`lentera-hd.js` ±250 ms, pengolahan kanvas fajar
   & bintang) dan skrip utama ±300 ms — tidak diubah (mengubah tampilan hero).
+
+## Sesi audit mandiri 2 (17 Nov 2026)
+- **FAQ ringkas**: tanpa cari/topik hanya 5 pertanyaan pertama; tombol teks `#faq-lainnya` "Lihat 4 pertanyaan lainnya" /
+  "Tampilkan lebih sedikit" (`aria-expanded`, fokus pindah ke pertanyaan ke-6). Cari & topik selalu menyaring SEMUA
+  pertanyaan (tombol disembunyikan saat menyaring); `#faq-<id>` ke pertanyaan tersembunyi membuka semuanya dulu.
+- **AWG**: kalimat tanpa "Menurut situs resminya" (fakta tetap dari situs AWG).
+- **Alur donasi diperjelas** (pemilik: "ga jelas"): judul kecil "Ke mana donasimu mengalir?" + empat langkah berketerangan
+  (Kamu berdonasi → Masuk ke rekening Yayasan [bank & atas nama dari site-config] → Disalurkan melalui AWG [Aqsa Working
+  Group] → Untuk Palestina) dengan panah kunyit di antara lentera (ke bawah saat tegak, ke kanan saat mendatar 900–1099px).
+- **Jaringan pendidikan** (footer) seperti situs saudara: Yayasan, TK, SD, SMP, SMA Alfa Centauri, English Now — URL dari
+  halaman Yayasan (dicek 17 Nov 2026). Catatan: halaman Yayasan itu memuat tautan spam judi (kemungkinan disusupi) —
+  sudah dilaporkan ke pemilik; jangan menyalin tautan lain dari halaman itu.
+- **Footer bergerak tipis** (permintaan pemilik, pengecualian dari "tiga jenis gerak"): 26 bintang berkelip, kabut tipis
+  bergeser 28 s, lentera mengapung & berdenyut pelan. Hanya transform/opacity, `animation-play-state` jalan hanya saat
+  pita langit terlihat (`.hidup` dari IntersectionObserver), mati saat reduced-motion.
 
 ## Aturan kualitas
 - **Animasi hanya transform & opacity** (clip-path bila perlu). Jangan menganimasikan properti tata letak (width, left,

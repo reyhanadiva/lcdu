@@ -60,15 +60,16 @@ window.LCDU_CONFIG = {
     alamat: ''
   },
 
-  /* Jaringan pendidikan (footer, tautan keluar). Hanya entri yang URL-nya TERISI yang tampil. JANGAN menebak URL:
-     isi dari pemilik. Yayasan memakai URL yang sama dengan yayasan.url. */
+  /* Jaringan pendidikan (footer, tautan keluar), urutan & nama seperti footer situs saudara (SD/TK/English Now).
+     URL dari halaman Yayasan https://alfacentauri.sch.id/yayasan/ (dicek 17 Nov 2026; PAUD/TK = /tk). Hanya entri yang
+     URL-nya TERISI yang tampil. JANGAN menebak URL. Yayasan memakai URL yang sama dengan yayasan.url. */
   jaringan: [
     { nama: 'Yayasan Taqwa Cerdas Kreatif', url: 'https://alfacentauri.sch.id/yayasan/' },
-    { nama: 'SD Alfa Centauri', url: '' },
-    { nama: 'SMP Alfa Centauri', url: '' },
-    { nama: 'SMA Alfa Centauri', url: '' },
-    { nama: 'TK Alfa Centauri', url: '' },
-    { nama: 'English Now', url: '' }
+    { nama: 'TK Alfa Centauri', url: 'https://alfacentauri.sch.id/tk' },
+    { nama: 'SD Alfa Centauri', url: 'https://sdalfacentauri.sch.id' },
+    { nama: 'SMP Alfa Centauri', url: 'https://smpalfacentauri.sch.id' },
+    { nama: 'SMA Alfa Centauri', url: 'https://smaalfacentauri.sch.id' },
+    { nama: 'English Now', url: 'https://englishnow.co.id' }
   ],
 
   /* Mitra di footer: [{ nama: 'Nama mitra', url: 'https://…', logo: 'assets/partners/nama.svg' }].

@@ -23,7 +23,7 @@ Buka `http://localhost:8000/`. Modul ES butuh server (bukan `file://`). Saat men
 
 | Path | Isi |
 |---|---|
-| `index.html` | Seluruh halaman: `<head>` (meta, preload font), CSS inline (token di `:root` paling atas, lalu per section), markup, dan skrip inline (satu IIFE + modul Lenis). Data konten: kartu testimoni langsung di HTML (`#testimoni`), array JS `TEAM` (tim), `FAQ` (FAQ + JSON-LD). |
+| `index.html` | Seluruh halaman: `<head>` (meta, preload font), CSS inline (token di `:root` paling atas, lalu per section), markup, dan skrip inline (satu IIFE + modul Lenis). Data konten: kartu testimoni langsung di HTML (`#testimoni`), array JS `TEAM` (tim; tampil sebagai potret besar + wajah per kelompok), `FAQ` (FAQ + JSON-LD). |
 | `site-config.js` | **Satu tempat** untuk data yang berubah (lihat tabel kunci di bawah). HTML memakai `data-cfg-href`, `data-cfg-text`, `data-wa`; teks di HTML = cadangan. |
 | `hero/hero.js` | Pengendali hero: scroll → progres `p`, teks tiga babak, pegas + pemandu supaya fajar selalu tercapai. |
 | `hero/lentera-hd.js`, `hero/spots.json` | Hero Foto (kanvas: foto malam/fajar + titik cahaya). |
