@@ -1005,62 +1005,68 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cerita-geser.is-geser .geser-titik{margin-top:0}
 @media (prefers-reduced-motion: reduce){.cerita-cetak,.cerita-gambar img{transition:none}}
 
-/* ===== TIM: berbasis foto (permintaan pemilik: "berbasis foto, bukan list") =====
-   Kiri: potret besar orang terpilih (bingkai lengkung) + nama, peran, bahasa yang diajar, sertifikasi. Kanan: wajah semua
-   anggota (bulat) dalam tiga kelompok — Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab (+ مُعَلِّم kecil). Ketuk/klik
-   (dan arahkan kursor di pointer halus) = ganti potret besar. Data dari array TEAM (ejaan tidak diubah). Foto ASLI hanya
-   bila slug ada di assets/team/manifest.json; selain itu penampung bermonogram (warna kelompok + jaring keffiyeh).
-   DILARANG foto stok sebagai wajah. Gerak: pudar + naik 8px saat potret berganti (transform/opacity), mati saat reduced-motion. */
+/* ===== TIM: gaya "cineflow" (inspirasi pemilik; dibuat ulang, tanpa menyalin) — sebelumnya "berbasis foto, bukan list" =====
+   Layar lebar .tim-layar = orang terpilih: foto ASLI (assets/team/manifest.json) bila ada, selain itu warna kelompok (Pengelola
+   merah tua, Inggris biru, Arab hijau kulit) + jaring keffiyeh + monogram raksasa. DILARANG foto stok sebagai wajah.
+   Keterangan (nama, peran, bahasa, sertifikasi) putih di kiri bawah layar (≥ 6,5:1 di warna kelompok; di atas foto: scrim).
+   Pita wajah .tim-galeri melintang di tepi bawah layar (setengah di layar, setengah di kertas), tiga kelompok berlabel di bawahnya;
+   wajah terpilih memanjang penuh (clip-path), yang lain terpotong atas-bawah. Klik/ketuk (pointer halus: juga arahkan kursor)
+   = ganti; layar baru memudar di atas yang lama (dua lapis, transform/opacity). Data & ejaan dari TEAM (tidak diubah). */
 .tim-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(18px,2.6vw,32px)}
-.tim-panggung{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(22px,3vw,48px);align-items:start}
-@media (min-width:900px){.tim-panggung{grid-template-columns:minmax(260px,4fr) minmax(0,7fr)}}
-/* potret: lengkung arkade (atas membulat penuh) */
-.tim-wajah-isi,.tim-sorot-foto{position:relative;display:grid;place-items:center;overflow:hidden;background:var(--tk,var(--kulit));color:#fff;isolation:isolate}
-.tim-wajah-isi::before,.tim-sorot-foto::before{content:"";position:absolute;inset:0;z-index:-1;background:currentColor;opacity:.12;
-  -webkit-mask:url(assets/ornaments/kain-jaring.svg) 0 0/18px 18px repeat;mask:url(assets/ornaments/kain-jaring.svg) 0 0/18px 18px repeat}
-.tim-wajah-isi picture,.tim-wajah-isi img,.tim-sorot-foto picture,.tim-sorot-foto img{position:absolute;inset:0;display:block;width:100%;height:100%}
-.tim-wajah-isi img,.tim-sorot-foto img{object-fit:cover;object-position:50% 30%}
-.tim-ini{font-family:var(--f-display);font-weight:700;letter-spacing:-.03em;line-height:1}
-.k-mgmt{--tk:var(--semangka-tua)}.k-en{--tk:var(--lazuardi)}.k-ar{--tk:var(--kulit)}
-/* sorot */
-.tim-sorot{margin:0;display:grid;gap:16px;align-content:start}
-.tim-sorot-foto{width:min(100%,280px);aspect-ratio:4/5;border-radius:999px 999px 6px 6px;box-shadow:0 0 0 1px color-mix(in srgb,var(--ink) 12%,transparent),0 24px 40px -26px rgba(16,22,58,.55)}
-.tim-sorot-foto .tim-ini{font-size:clamp(4rem,9vw,6.4rem);padding-top:10%}
-.tim-sorot figcaption{display:grid;gap:4px}
-.tim-sorot-nama{font-family:var(--f-display);font-weight:700;font-size:var(--step-2);line-height:1.1;letter-spacing:-.01em}
-.tim-sorot-peran{font-weight:600;color:var(--ink)}
-.tim-sorot-info{font-size:var(--step--1);color:var(--ink-soft)}
+.tim-cine{position:relative;display:grid;grid-template-columns:minmax(0,1fr)}
+.tim-layar{grid-area:1/1;position:relative;aspect-ratio:16/7;min-height:340px;border-radius:8px;overflow:hidden;background:var(--keffiyeh);isolation:isolate}
+.tim-layar-isi{position:absolute;inset:0;background:var(--tk) url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/22px 22px repeat;color:#fff}
+.tim-layar-isi picture,.tim-layar-isi img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.tim-layar-isi img{object-fit:cover;object-position:50% 28%}
+.tim-layar-isi.ada-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgb(0 0 0 / .72),rgb(0 0 0 / .2) 45%,transparent 70%)}
+.tim-layar-ini{position:absolute;right:4%;bottom:-.16em;font-family:var(--f-display);font-weight:700;font-size:clamp(9rem,26vw,24rem);line-height:1;letter-spacing:-.05em;
+  color:rgb(255 255 255 / .2);pointer-events:none}
+.gerak .tim-layar-isi.masuk{animation:tim-layar .6s var(--ease-muncul) both}
+@keyframes tim-layar{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+.tim-sorot{grid-area:1/1;align-self:end;position:relative;z-index:2;margin:0;display:grid;gap:6px;max-width:min(60%,560px);
+  padding:0 clamp(20px,4vw,48px) calc(var(--pita-h) / 2 + clamp(22px,3vw,36px));color:#fff;--pita-h:104px}
+.tim-sorot-nama{font-family:var(--f-display);font-weight:700;font-size:clamp(1.8rem,1.2rem + 2.4vw,3.2rem);line-height:1.02;letter-spacing:-.02em}
+.tim-sorot-peran{font-weight:700;font-size:var(--step-0)}
+.tim-sorot-info{font-size:var(--step--1);color:rgb(255 255 255 / .9)}
 .gerak .tim-sorot.ganti{animation:tim-ganti .45s var(--ease-muncul)}
 @keyframes tim-ganti{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-/* galeri wajah */
-.tim-galeri{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,2vw,26px);min-width:0}
-.tim-kelompok{min-width:0}
-.tim-label{display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:8px;border-bottom:1.5px solid var(--ink);font-family:var(--f-body);font-weight:700;font-size:.95rem;letter-spacing:.01em}
+/* pita wajah: melintang di tepi bawah layar */
+.tim-galeri{position:relative;z-index:3;display:flex;justify-content:center;gap:clamp(18px,2.4vw,34px);margin-top:-52px;padding:0 16px 4px;min-width:0;
+  overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
+.tim-galeri::-webkit-scrollbar{display:none}
+.tim-kelompok{flex:none;display:grid;gap:0;min-width:0}
+.tim-label{margin-top:-8px!important}
+.tim-wajah{list-style:none;margin:0;padding:6px 4px;display:flex;gap:4px}
+.tim-label{display:flex;align-items:baseline;gap:8px;margin:0;padding-top:8px;border-top:1.5px solid var(--ink);font-family:var(--f-body);font-weight:700;font-size:.8rem;
+  letter-spacing:.02em;color:var(--ink);white-space:nowrap}
 .tim-ar{font-family:var(--f-ar);font-weight:400;font-size:1.05rem;line-height:1;color:var(--zamrud-ink);opacity:.85}
-.tim-wajah{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:12px 8px}
-.tim-wajah-btn{width:100%;display:grid;justify-items:center;gap:8px;padding:4px 2px;border:0;background:none;color:inherit;font:inherit;cursor:pointer;text-align:center}
-.tim-wajah-isi{width:68px;height:68px;border-radius:50%;box-shadow:0 0 0 2px var(--paper),0 0 0 2px transparent;transition:transform .3s var(--ease),box-shadow .3s var(--ease)}
-.tim-wajah-isi .tim-ini{font-size:1.45rem}
-.tim-wajah-nama{font-size:.8rem;font-weight:600;line-height:1.2;color:var(--ink-soft);max-width:12ch}
-.tim-wajah-btn[aria-pressed="true"] .tim-wajah-isi{transform:scale(1.06);box-shadow:0 0 0 3px var(--paper),0 0 0 6px var(--kunyit)}
-.tim-wajah-btn[aria-pressed="true"] .tim-wajah-nama{color:var(--ink)}
-@media (hover:hover) and (pointer:fine){.tim-wajah-btn:hover .tim-wajah-isi{transform:scale(1.06)}}
-.tim-wajah-btn:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;border-radius:8px}
-@media (max-width:899px){
-  .tim-sorot{grid-template-columns:132px minmax(0,1fr);align-items:end;gap:16px}
-  .tim-sorot-foto{width:132px}
-  .tim-sorot-foto .tim-ini{font-size:2.8rem}
-  .tim-sorot-nama{font-size:var(--step-1)}
-  /* HP: satu baris wajah per kelompok, digeser horizontal (native) → section tidak memanjang ke bawah */
-  .tim-wajah{display:flex;gap:4px;margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:2px max(16px,env(safe-area-inset-left,0px)) 6px;
-    overflow-x:auto;scroll-snap-type:x proximity;scroll-padding-inline:max(16px,env(safe-area-inset-left,0px));overscroll-behavior-x:contain;scrollbar-width:none}
-  .tim-wajah::-webkit-scrollbar{display:none}
-  .tim-wajah li{flex:0 0 78px;scroll-snap-align:start}
-  .tim-label{margin-bottom:6px}
-  .tim-wajah-isi{width:58px;height:58px}
-  .tim-wajah-isi .tim-ini{font-size:1.2rem}
+/* tombol = bingkai kertas 3px (memisahkan wajah dari layar berwarna sama); clip-path di tombol memotong atas-bawah */
+.tim-wajah-btn{display:block;padding:3px;border:0;background:var(--paper);color:inherit;font:inherit;cursor:pointer;border-radius:8px;
+  clip-path:inset(18px 0 18px 0 round 8px);transition:clip-path .38s var(--ease)}
+.tim-wajah-isi{position:relative;display:grid;place-items:center;width:66px;height:104px;overflow:hidden;border-radius:5px;background:var(--tk) url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/16px 16px repeat;
+  color:#fff}
+.tim-wajah-isi picture,.tim-wajah-isi img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.tim-wajah-isi img{object-fit:cover;object-position:50% 30%}
+.tim-ini{font-family:var(--f-display);font-weight:700;letter-spacing:-.03em;line-height:1;font-size:1.3rem}
+.tim-wajah-btn[aria-pressed="true"]{clip-path:inset(-4px round 11px);box-shadow:0 0 0 4px var(--kunyit)}
+@media (hover:hover) and (pointer:fine){.tim-wajah-btn:hover:not([aria-pressed="true"]){clip-path:inset(8px 0 8px 0 round 8px)}}
+.tim-wajah-btn:focus-visible{clip-path:inset(-4px round 11px);box-shadow:0 0 0 4px var(--kunyit)}
+.k-mgmt{--tk:var(--semangka-tua)}.k-en{--tk:var(--lazuardi)}.k-ar{--tk:var(--kulit)}
+/* pita lebih lebar dari layar (HP/tablet): mulai dari kiri, digeser native */
+@media (max-width:1199px){.tim-galeri{justify-content:flex-start;margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));scroll-snap-type:x proximity}
+  .tim-wajah li{scroll-snap-align:start}}
+@media (max-width:699px){
+  .tim-layar{aspect-ratio:4/3;min-height:0}
+  .tim-sorot{max-width:none;--pita-h:84px;padding-left:18px;padding-right:18px}
+  .tim-sorot-nama{font-size:clamp(1.5rem,7vw,2rem)}
+  .tim-galeri{margin-top:-42px}
+  .tim-wajah-isi{width:54px;height:84px}
+  .tim-wajah-btn{clip-path:inset(15px 0 15px 0 round 8px)}
+  .tim-ini{font-size:1.1rem}
+  .tim-layar-ini{font-size:min(52vw,13rem)}
 }
-@media (prefers-reduced-motion: reduce){.tim-wajah-isi{transition:none}}
+@media (prefers-reduced-motion: reduce){.tim-wajah-btn{transition:none}.tim-layar-isi,.tim-sorot{animation:none!important}}
 
 /* ===== FAQ: "Yang sering ditanyakan" =====
    Isi HANYA dari fakta yang sudah ada di halaman / README / site-config.js (array FAQ di JS; JSON-LD FAQPage dibentuk dari
@@ -1085,38 +1091,78 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .faq-cari input:focus{outline:none}
 .faq-cari:focus-within{box-shadow:0 3px 0 -1px var(--kunyit)}
 .faq-cari input::-webkit-search-cancel-button{cursor:pointer}
-.faq-topik{display:flex;flex-wrap:wrap;gap:4px 16px;font-weight:700;font-size:.95rem;color:var(--ink-soft)}
-.faq-topik button{min-height:44px;padding:6px 2px;border:0;background:none;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:.3em;text-decoration-color:transparent;transition:color .25s,text-decoration-color .25s}
-.faq-topik button[aria-pressed="true"]{color:var(--ink);text-decoration-color:var(--semangka-tua)}
-.faq-topik button:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
 .faq-info{min-height:1.4em;font-size:var(--step--1);color:var(--ink-soft)}
-.faq-daftar{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.faq-item{border-bottom:1px solid var(--line);scroll-margin-top:calc(env(safe-area-inset-top,0px) + 96px)}
-.faq-item[hidden]{display:none}
-.faq-h3{margin:0}
-.faq-tanya{width:100%;display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:13px 0;border:0;background:none;color:inherit;text-align:left;cursor:pointer;
-  font-family:var(--f-display);font-weight:600;font-size:clamp(1.12rem,1rem + .6vw,1.45rem);line-height:1.25}
-.faq-tanya:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;border-radius:4px}
-.faq-tanda{flex:none;position:relative;width:14px;height:14px;align-self:center}
-.faq-tanda::before,.faq-tanda::after{content:"";position:absolute;left:0;top:6px;width:14px;height:2px;background:var(--semangka-tua);transition:transform .3s var(--ease)}
-.faq-tanda::after{transform:rotate(90deg)}
-.faq-item.buka .faq-tanda::after{transform:rotate(0deg)}
-.faq-jawab{display:grid;grid-template-rows:0fr;visibility:hidden;transition:grid-template-rows .32s var(--ease),visibility 0s .32s}
-.faq-item.buka .faq-jawab{grid-template-rows:1fr;visibility:visible;transition:grid-template-rows .32s var(--ease),visibility 0s}
-.faq-jawab>div{overflow:hidden}
-.faq-jawab p{max-width:62ch;padding-bottom:18px;font-size:var(--step-0);line-height:1.6;color:var(--ink-soft)}
-.faq-jawab a{color:var(--ink);text-decoration-thickness:1.5px;text-underline-offset:.2em}
 .faq-tautan{display:inline-block;margin-left:.4em;font-size:.85rem;font-weight:600;color:var(--ink-soft)!important}
-.faq mark{background:color-mix(in srgb,var(--kunyit) 55%,transparent);color:inherit;border-radius:2px;padding:0 1px}
-.faq-lainnya{display:inline-flex;align-items:center;gap:10px;min-height:44px;margin-top:6px;padding:8px 0;border:0;background:none;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;
-  text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:.3em;text-decoration-color:var(--semangka-tua)}
-.faq-lainnya[hidden]{display:none}
-.faq-lainnya::after{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .3s var(--ease)}
-.faq-lainnya[aria-expanded="true"]::after{transform:translateY(2px) rotate(-135deg)}
-.faq-lainnya:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px;border-radius:4px}
 .faq-kosong{padding:18px 0;font-size:var(--step-0);color:var(--ink-soft)}
 .faq-kosong a{color:var(--ink);font-weight:700}
-@media (prefers-reduced-motion: reduce){.faq-jawab,.faq-item.buka .faq-jawab,.faq-tanda::before,.faq-tanda::after,.faq-topik button{transition:none!important}}
+/* ===== FAQ = LACI KARTU INDEKS (inspirasi pemilik "flex carousel"; dibuat ulang dengan palet LCDU, tanpa menyalin)
+   Keluarga "benda kertas" halaman ini: struk (Biaya), lembar ujian (Placement Test), lembar setoran (Donasi), kartu arsip (FAQ).
+   Pola ARIA tabs: tab = pertanyaan (di dalam laci), panel = kartu terangkat di atas laci. Semua panel ditumpuk di satu sel grid
+   (tinggi = jawaban terpanjang, tidak melompat). Warna kartu = tint palet (tinta #10163A ≥ 12:1); kunyit TIDAK dipakai.
+   Gerak: kartu baru naik dari laci, kartu lama turun (transform/opacity), tab terpilih terangkat 8px. Reduced-motion: tanpa gerak. */
+.laci{--kayu:#CDB48E;--kayu-gelap:#7A6448;--kayu-terang:#E2CFAE;--kuningan:#A8862E;position:relative;display:grid;max-width:660px;
+  scroll-margin-top:calc(env(safe-area-inset-top,0px) + 88px)}
+.laci[hidden]{display:none}
+.w-krem{--w:#F5DEC1}.w-biru{--w:#C9D1F8}.w-hijau{--w:#D2E6C6}.w-merah{--w:#F4CBC6}.w-kertas{--w:#FFFDF8}
+.laci-kartu{position:relative;z-index:2;display:grid;margin:30px clamp(10px,2.4vw,22px) -10px}
+.laci-panel{grid-area:1/1;position:relative;display:flex;flex-direction:column;gap:12px;padding:clamp(20px,3vw,30px) clamp(20px,3vw,32px) clamp(18px,2.4vw,24px);
+  background:var(--w);color:#10163A;border-radius:0 10px 10px 10px;box-shadow:0 1px 0 rgb(16 22 58 / .08),0 14px 26px -18px rgb(16 22 58 / .45);
+  visibility:hidden;opacity:0}
+.laci-panel.on{visibility:visible;opacity:1;z-index:2}
+.laci-panel:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px}
+.laci-telinga{position:absolute;left:0;bottom:100%;padding:6px 16px 4px;background:var(--w);border-radius:8px 8px 0 0;font-size:.8rem;font-weight:700;
+  font-variant-numeric:tabular-nums;color:#10163A}
+.laci-meta{font-size:.8rem;letter-spacing:.04em;color:#3E4256;font-variant-numeric:tabular-nums}
+.laci-tanya{font-family:var(--f-display);font-weight:700;font-size:clamp(1.4rem,1.1rem + 1.2vw,2rem);line-height:1.12;letter-spacing:-.01em}
+.laci-jawab{max-width:58ch;font-size:var(--step-0);line-height:1.6;color:#2B3048}
+.laci-jawab a{color:#10163A;text-decoration-thickness:1.5px;text-underline-offset:.2em}
+.laci-kaki{margin-top:auto;padding-top:12px;border-top:1px solid rgb(16 22 58 / .18)}
+.laci-kaki .faq-tautan{margin-left:0;color:#3E4256!important}
+.laci .faq-tautan{padding:10px 0;margin-top:-10px;margin-bottom:-10px}
+/* laci: dinding kayu, ruang dalam gelap, tab bertumpuk (baris saling menindih, baris bawah di depan) */
+.laci-kotak{position:relative;z-index:1;padding:12px 12px 0;background:var(--kayu);border-radius:8px;
+  box-shadow:inset 0 0 0 1px rgb(0 0 0 / .08),0 20px 30px -24px rgb(16 22 58 / .6)}
+.laci-dalam{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:8px;padding:14px 10px 18px;background:var(--kayu-gelap);border-radius:4px 4px 0 0}
+.laci-tab{position:relative;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-height:58px;margin-bottom:-16px;padding:9px 11px 22px;
+  border:0;border-radius:7px 7px 0 0;background:var(--w);color:#10163A;font:inherit;font-size:.8rem;font-weight:700;line-height:1.3;text-align:left;cursor:pointer;
+  box-shadow:0 -1px 0 rgb(0 0 0 / .1),0 -6px 10px -8px rgb(0 0 0 / .45);transition:transform .3s var(--ease)}
+.laci-tab:nth-child(3n+2){margin-top:5px}.laci-tab:nth-child(3n){margin-top:2px}
+.laci-tab[hidden]{display:none}
+.laci-tab-n{flex:none;font-weight:600;font-variant-numeric:tabular-nums;color:#3E4256}
+.laci-tab[aria-selected="true"]{transform:translateY(-9px);box-shadow:inset 0 3px 0 var(--semangka-tua),0 -6px 12px -8px rgb(0 0 0 / .5)}
+.laci-tab[aria-selected="true"] .laci-tab-n{color:var(--semangka-tua)}
+.laci-tab:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;z-index:5}
+@media (hover:hover){.laci-tab:hover:not([aria-selected="true"]){transform:translateY(-4px)}}
+.laci mark{background:var(--putih);color:inherit;border-radius:3px;padding:0 2px;box-shadow:0 0 0 1px rgb(16 22 58 / .25)}
+/* muka laci: tepi keffiyeh tipis, plat label berbingkai kuningan, pegangan */
+.laci-depan{position:relative;z-index:3;display:grid;justify-items:center;gap:10px;margin:0 -12px;padding:22px 16px 18px;border-radius:0 0 8px 8px;
+  background:repeating-linear-gradient(90deg,rgb(0 0 0 / .03) 0 2px,transparent 2px 9px),linear-gradient(var(--kayu-terang),var(--kayu));
+  box-shadow:inset 0 2px 0 rgb(255 255 255 / .35),inset 0 -2px 0 rgb(0 0 0 / .08)}
+.laci-pita{position:absolute;left:0;right:0;top:0;--pita:12px;color:var(--keffiyeh);opacity:.5}
+.laci-plat{display:grid;gap:1px;padding:6px 16px;background:#FFFDF8;border:2px solid var(--kuningan);border-radius:3px;text-align:center;line-height:1.25}
+.laci-plat b{font-size:.8rem;letter-spacing:.06em;color:#10163A}
+.laci-plat small{font-size:.75rem;letter-spacing:.08em;color:#3E4256}
+.laci-tarik{width:96px;height:10px;border-radius:2px 2px 6px 6px;background:var(--kuningan);box-shadow:inset 0 2px 0 rgb(255 255 255 / .35)}
+/* gerak: kartu baru naik dari laci, kartu lama turun ke laci (JS memasang .ganti sekali per pergantian) */
+.gerak .laci-kartu.ganti .laci-panel.on{animation:kartu-naik .5s var(--ease-muncul) both}
+.gerak .laci-kartu.ganti .laci-panel.lalu{visibility:visible;animation:kartu-turun .32s ease-in both}
+@keyframes kartu-naik{from{opacity:0;transform:translateY(46px) rotate(-.6deg)}to{opacity:1;transform:none}}
+@keyframes kartu-turun{from{opacity:1;transform:none}to{opacity:0;transform:translateY(46px)}}
+/* sekali saat laci pertama terlihat: kartu pertama terangkat dari laci */
+.gerak .laci.tunggu .laci-kartu{opacity:0;transform:translateY(60px)}
+.gerak .laci.buka .laci-kartu{transition:opacity .5s var(--ease-muncul),transform .8s var(--ease-muncul)}
+/* HP: dua kolom tab (urutan baca tetap 01 → 09 mengikuti DOM); layar sangat sempit: satu kolom */
+@media (max-width:699px){
+  /* HP: kartu setinggi jawabannya sendiri (tidak ditumpuk setinggi jawaban terpanjang — ruang kosong terlalu besar) */
+  .laci-panel:not(.on){display:none}
+  .laci-panel{min-height:200px}
+  .laci-tab{min-height:54px;padding-bottom:20px}
+  .laci-kartu{margin-left:8px;margin-right:8px}
+  .laci-dalam{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .laci-tab:nth-child(n){margin-top:0}.laci-tab:nth-child(2n){margin-top:5px}
+}
+@media (max-width:359px){.laci-dalam{grid-template-columns:minmax(0,1fr)}.laci-tab:nth-child(2n){margin-top:0}}
+@media (prefers-reduced-motion: reduce){.laci-tab,.laci .laci-kartu{transition:none!important}.laci-panel{animation:none!important}}
 
 /* ===== KANTOR LCDU (lokasi) =====
    Kartu dua kolom (mengacu kartu "Lokasi" situs SD, palet LCDU): kiri judul kecil, alamat besar Fraunces (jalan biru,
@@ -1676,12 +1722,15 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   <div class="wrap tim-wrap">
     <h2 class="h2" id="team-h" data-judul>Yang akan menemani kamu belajar</h2>
     <!-- Diisi JS dari array TEAM (data & ejaan tidak diubah). Foto ASLI hanya dari assets/team/manifest.json. -->
-    <div class="tim-panggung">
+    <!-- gaya "cineflow" (inspirasi pemilik): layar lebar = orang terpilih (foto ASLI bila ada; selain itu warna kelompok +
+         monogram), pita wajah melintang di tepi bawah layar; yang terpilih memanjang penuh -->
+    <div class="tim-cine">
+      <div class="tim-layar" id="tim-layar" aria-hidden="true"></div>
       <figure class="tim-sorot" id="tim-sorot" aria-live="polite"></figure>
       <div class="tim-galeri" id="tim-galeri">
-        <div class="tim-kelompok"><h3 class="tim-label" id="tk-mgmt">Pengelola</h3><ul class="tim-wajah" data-k="mgmt" aria-labelledby="tk-mgmt"></ul></div>
-        <div class="tim-kelompok"><h3 class="tim-label" id="tk-en">Guru Bahasa Inggris</h3><ul class="tim-wajah" data-k="en" aria-labelledby="tk-en"></ul></div>
-        <div class="tim-kelompok"><h3 class="tim-label" id="tk-ar">Guru Bahasa Arab <span class="tim-ar" lang="ar" aria-hidden="true">مُعَلِّم</span></h3><ul class="tim-wajah" data-k="ar" aria-labelledby="tk-ar"></ul></div>
+        <div class="tim-kelompok"><ul class="tim-wajah" data-k="mgmt" aria-labelledby="tk-mgmt"></ul><h3 class="tim-label" id="tk-mgmt">Pengelola</h3></div>
+        <div class="tim-kelompok"><ul class="tim-wajah" data-k="en" aria-labelledby="tk-en"></ul><h3 class="tim-label" id="tk-en">Guru Bahasa Inggris</h3></div>
+        <div class="tim-kelompok"><ul class="tim-wajah" data-k="ar" aria-labelledby="tk-ar"></ul><h3 class="tim-label" id="tk-ar">Guru Bahasa Arab <span class="tim-ar" lang="ar" aria-hidden="true">مُعَلِّم</span></h3></div>
       </div>
     </div>
   </div>
@@ -1694,15 +1743,20 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     <div class="faq-kiri">
     <h2 class="h2" id="faq-h" data-judul>Yang sering ditanyakan</h2>
     <div class="faq-alat">
-      <label class="faq-cari"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Cari pertanyaan</span><input type="search" id="faq-q" placeholder="Cari, mis. biaya, jadwal, tes" autocomplete="off" enterkeyhint="search"></label>
-      <div class="faq-topik" role="group" aria-label="Topik pertanyaan" id="faq-topik"></div>
+      <label class="faq-cari"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span class="sr-only">Cari pertanyaan</span><input type="search" id="faq-q" placeholder="Cari, mis. biaya, jadwal, tes" autocomplete="off" enterkeyhint="search" aria-controls="faq-tab"></label>
       <p class="faq-info" id="faq-info" aria-live="polite"></p>
     </div>
     <p class="faq-bantu">Pertanyaanmu belum ada di sini? <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya Admin lewat WhatsApp</a></p>
     </div>
     <div class="faq-kanan">
-    <ul class="faq-daftar" id="faq-daftar"></ul>
-    <button class="faq-lainnya" id="faq-lainnya" type="button" aria-controls="faq-daftar" aria-expanded="false" hidden></button>
+    <!-- laci kartu indeks: kartu terpilih terangkat di atas laci; tab semua pertanyaan di dalam laci (pola ARIA tabs) -->
+    <div class="laci" id="faq-laci">
+      <div class="laci-kartu" id="faq-kartu"></div>
+      <div class="laci-kotak">
+        <div class="laci-dalam" role="tablist" aria-label="Pertanyaan" id="faq-tab"></div>
+        <div class="laci-depan" aria-hidden="true"><i class="orn-band orn-band--sempit laci-pita"></i><span class="laci-plat"><b>Yang sering ditanyakan</b><small>LCDU · Arsip pertanyaan</small></span><span class="laci-tarik"></span></div>
+      </div>
+    </div>
     <p class="faq-kosong" id="faq-kosong" hidden>Tidak ada yang cocok. <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya Admin lewat WhatsApp</a></p>
     </div>
   </div>
@@ -2189,7 +2243,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   /* ---------- FAQ: SATU array (id, topik, tanya, jawab). Jawaban hanya dari fakta yang sudah ada di halaman/README/
      site-config.js — JANGAN menambah fakta. JSON-LD FAQPage dibentuk dari array & teks yang sama. ---------- */
   (function(){
-    var daftar = $('#faq-daftar'); if (!daftar) return;
+    var tabEl = $('#faq-tab'), kartuEl = $('#faq-kartu'), laci = $('#faq-laci'); if (!tabEl) return;
     var buka_ = ['en', 'ar'].filter(function(b){ return !!cfg('placement.' + b + '.open'); });
     var statusTes = !buka_.length ? 'Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke Admin kapan dibuka lagi.'
       : buka_.length === 2 ? 'Saat ini tes Inggris dan Arab sudah dibuka.' : 'Saat ini tes ' + (buka_[0] === 'en' ? 'Inggris' : 'Arab') + ' sudah dibuka; tes ' + (buka_[0] === 'en' ? 'Arab' : 'Inggris') + ' tutup sementara.';
@@ -2215,12 +2269,21 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       { id: 'pengelola', topik: 'daftar', tanya: 'Siapa yang mengelola LCDU?',
         jawab: 'LCDU adalah program nirlaba yang dikelola <a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> (buka di tab baru)</span></a>.' }
     ];
-    var TOPIK = [['semua', 'Semua'], ['biaya', 'Biaya'], ['daftar', 'Daftar'], ['tes', 'Tes'], ['belajar', 'Belajar'], ['donasi', 'Donasi']];
-    daftar.innerHTML = FAQ.map(function(f){
-      return '<li class="faq-item" id="faq-' + f.id + '" data-topik="' + f.topik + '"><h3 class="faq-h3">'
-        + '<button class="faq-tanya" type="button" aria-expanded="false" aria-controls="faq-' + f.id + '-j"><span class="faq-t">' + f.tanya + '</span><span class="faq-tanda" aria-hidden="true"></span></button></h3>'
-        + '<div class="faq-jawab" id="faq-' + f.id + '-j" role="region" aria-labelledby="faq-' + f.id + '"><div><p><span class="faq-j">' + f.jawab + '</span>'
-        + '<a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a></p></div></div></li>';
+    /* warna kartu bergilir (tint palet LCDU; tinta #10163A ≥ 12:1 di semua) — kunyit TIDAK dipakai (khusus tombol aksi) */
+    var WARNA = ['krem', 'biru', 'hijau', 'merah', 'kertas'];
+    var nomor = function(k){ return (k < 9 ? '0' : '') + (k + 1); };
+    tabEl.innerHTML = FAQ.map(function(f, k){
+      return '<button class="laci-tab w-' + WARNA[k % WARNA.length] + '" type="button" role="tab" id="faq-' + f.id + '" aria-selected="false" aria-controls="faq-' + f.id + '-j" tabindex="-1" style="--k:' + k + '">'
+        + '<span class="laci-tab-t">' + f.tanya + '</span><span class="laci-tab-n" aria-hidden="true">' + nomor(k) + '</span></button>';
+    }).join('');
+    /* semua panel ditumpuk di satu sel grid → tinggi kartu = jawaban terpanjang (laci tidak melompat saat berganti) */
+    kartuEl.innerHTML = FAQ.map(function(f, k){
+      return '<div class="laci-panel w-' + WARNA[k % WARNA.length] + '" role="tabpanel" id="faq-' + f.id + '-j" aria-labelledby="faq-' + f.id + '" tabindex="0">'
+        + '<span class="laci-telinga" aria-hidden="true">No. ' + nomor(k) + '</span>'
+        + '<p class="laci-meta" aria-hidden="true">No. ' + nomor(k) + ' · Arsip pertanyaan LCDU</p>'
+        + '<h3 class="laci-tanya faq-t">' + f.tanya + '</h3>'
+        + '<p class="laci-jawab faq-j">' + f.jawab + '</p>'
+        + '<p class="laci-kaki"><a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a></p></div>';
     }).join('');
     /* JSON-LD dari array yang sama (teks jawaban tanpa tag) */
     var tmp = document.createElement('div');
@@ -2229,15 +2292,31 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQ.map(function(f){
       return { '@type': 'Question', name: f.tanya, acceptedAnswer: { '@type': 'Answer', text: teks(f.jawab) } }; }) });
     document.head.appendChild(ld);
-    var items = $$('.faq-item', daftar), q = $('#faq-q'), info = $('#faq-info'), kosong = $('#faq-kosong'), topikEl = $('#faq-topik'), topik = 'semua';
-    /* ringkas: tanpa cari/topik hanya AWAL pertanyaan pertama tampil; sisanya di balik tombol (permintaan pemilik) */
-    var AWAL = 5, semua = false, lainnya = $('#faq-lainnya'), sisa = Math.max(0, items.length - AWAL);
+    var tabs = $$('.laci-tab', tabEl), panel = $$('.laci-panel', kartuEl), q = $('#faq-q'), info = $('#faq-info'), kosong = $('#faq-kosong'), aktif = 0, laluT = 0;
     var wa = $('a', kosong), no = cfg('whatsappAdmin.nomor'), pesan = cfg('whatsappAdmin.pesan.umum');
     if (no) wa.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
-    var asli = items.map(function(it){ return [$('.faq-t', it).innerHTML, $('.faq-j', it).innerHTML]; });
-    function setBuka(it, on){ it.classList.toggle('buka', on); $('.faq-tanya', it).setAttribute('aria-expanded', on ? 'true' : 'false'); }
-    items.forEach(function(it){ $('.faq-tanya', it).addEventListener('click', function(){ var on = !it.classList.contains('buka'); items.forEach(function(x){ setBuka(x, false); }); setBuka(it, on); }); });
-    topikEl.innerHTML = TOPIK.map(function(t){ return '<button type="button" data-t="' + t[0] + '" aria-pressed="' + (t[0] === 'semua') + '">' + t[1] + '</button>'; }).join('');
+    var asli = panel.map(function(pn, k){ return [$('.faq-t', pn).innerHTML, $('.faq-j', pn).innerHTML, $('.laci-tab-t', tabs[k]).innerHTML]; });
+    /* pilih kartu: tab terangkat di laci, kartu lama turun ke laci & kartu baru naik (transform/opacity saja) */
+    function pilih(k, fokus){
+      if (k < 0 || k >= tabs.length) return;
+      var ganti = k !== aktif;
+      tabs.forEach(function(t, i){ var on = i === k; t.setAttribute('aria-selected', on ? 'true' : 'false'); t.tabIndex = on ? 0 : -1; });
+      panel.forEach(function(pn, i){ pn.classList.toggle('on', i === k); pn.classList.toggle('lalu', ganti && i === aktif); });
+      aktif = k;
+      if (ganti && !reduce){ kartuEl.classList.remove('ganti'); void kartuEl.offsetWidth; kartuEl.classList.add('ganti'); }
+      clearTimeout(laluT); laluT = setTimeout(function(){ panel.forEach(function(pn){ pn.classList.remove('lalu'); }); }, reduce ? 0 : 400);
+      if (fokus) tabs[k].focus();
+    }
+    tabs.forEach(function(t, k){ t.addEventListener('click', function(){ pilih(k); }); });
+    /* keyboard pola tabs: panah (kiri/kanan & atas/bawah), Home, End — hanya tab yang tampil (hasil cari) */
+    tabEl.addEventListener('keydown', function(e){
+      var tampil = tabs.filter(function(t){ return !t.hidden; }), i = tampil.indexOf(document.activeElement), j = -1;
+      if (i < 0) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') j = (i + 1) % tampil.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') j = (i - 1 + tampil.length) % tampil.length;
+      else if (e.key === 'Home') j = 0; else if (e.key === 'End') j = tampil.length - 1;
+      if (j < 0) return; e.preventDefault(); pilih(tabs.indexOf(tampil[j]), true);
+    });
     /* sorot: bungkus kata yang cocok dengan <mark> hanya di simpul teks (tautan & struktur tetap) */
     function sorot(el, kata){
       if (!kata) return;
@@ -2245,43 +2324,36 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       while ((n = w.nextNode())) if (re.test(n.nodeValue)) simpul.push(n);
       simpul.forEach(function(t){ var s = document.createElement('span'); s.innerHTML = t.nodeValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(re, '<mark>$1</mark>'); t.replaceWith.apply(t, Array.prototype.slice.call(s.childNodes)); });
     }
+    /* cari: tab yang tidak cocok disembunyikan dari laci; kartu pindah ke hasil pertama bila kartu aktif tidak cocok */
     function saring(){
-      var kata = q.value.trim(), kk = kata.toLowerCase(), n = 0;
-      items.forEach(function(it, k){
-        $('.faq-t', it).innerHTML = asli[k][0]; $('.faq-j', it).innerHTML = asli[k][1];
-        var cocokT = topik === 'semua' || it.dataset.topik === topik;
-        var cocokK = !kk || (teks(asli[k][0]) + ' ' + teks(asli[k][1])).toLowerCase().indexOf(kk) > -1;
-        var ringkas = !kk && topik === 'semua' && !semua && k >= AWAL;
-        it.hidden = !(cocokT && cocokK) || ringkas; if (!it.hidden){ n++; sorot($('.faq-t', it), kata); sorot($('.faq-j', it), kata); }
+      var kata = q.value.trim(), kk = kata.toLowerCase(), n = 0, pertama = -1;
+      panel.forEach(function(pn, k){
+        $('.faq-t', pn).innerHTML = asli[k][0]; $('.faq-j', pn).innerHTML = asli[k][1]; $('.laci-tab-t', tabs[k]).innerHTML = asli[k][2];
+        var cocok = !kk || (teks(asli[k][0]) + ' ' + teks(asli[k][1])).toLowerCase().indexOf(kk) > -1;
+        tabs[k].hidden = !cocok;
+        if (cocok){ n++; if (pertama < 0) pertama = k; sorot($('.faq-t', pn), kata); sorot($('.faq-j', pn), kata); sorot($('.laci-tab-t', tabs[k]), kata); }
       });
-      var tanpaSaring = !kk && topik === 'semua';
-      lainnya.hidden = !tanpaSaring || !sisa;
-      lainnya.textContent = semua ? 'Tampilkan lebih sedikit' : 'Lihat ' + sisa + ' pertanyaan lainnya';
-      lainnya.setAttribute('aria-expanded', semua ? 'true' : 'false');
-      kosong.hidden = n > 0;
-      info.textContent = (kata || topik !== 'semua') ? (n ? n + ' pertanyaan cocok' : 'Tidak ada pertanyaan yang cocok') : '';
-      /* kata cari mengenai satu pertanyaan saja → buka langsung */
-      if (kk && n === 1) items.forEach(function(it){ setBuka(it, !it.hidden); });
+      laci.hidden = n === 0; kosong.hidden = n > 0;
+      info.textContent = kata ? (n ? n + ' pertanyaan cocok' : 'Tidak ada pertanyaan yang cocok') : '';
+      if (n && tabs[aktif].hidden) pilih(pertama);
     }
-    lainnya.addEventListener('click', function(){
-      semua = !semua; saring();
-      if (semua){ var it = items[AWAL]; if (it) $('.faq-tanya', it).focus({ preventScroll: true }); }
-    });
-    saring();
+    pilih(0); kartuEl.classList.remove('ganti');
     q.addEventListener('input', saring);
-    $$('button', topikEl).forEach(function(b){ b.addEventListener('click', function(){
-      topik = b.dataset.t; $$('button', topikEl).forEach(function(x){ x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); }); saring();
-    }); });
-    /* tautan langsung #faq-<id>: buka & gulir (saat dibuka, saat klik tautan, saat hash berubah) */
+    /* tautan langsung #faq-<id>: pilih kartunya & gulir ke laci (saat dibuka, saat klik tautan, saat hash berubah) */
     function keHash(gulir){
-      var m = /^#faq-([a-z]+)$/.exec(location.hash), it = m && $('#faq-' + m[1]); if (!it || !it.classList.contains('faq-item')) return;
-      topik = 'semua'; q.value = ''; if (items.indexOf(it) >= AWAL) semua = true; $$('button', topikEl).forEach(function(x){ x.setAttribute('aria-pressed', x.dataset.t === 'semua' ? 'true' : 'false'); }); saring();
-      items.forEach(function(x){ setBuka(x, x === it); });
-      if (gulir) setTimeout(function(){ if (window.lenis) window.lenis.scrollTo(it, { offset: -(parseFloat(getComputedStyle(it).scrollMarginTop) || 0), immediate: true }); else it.scrollIntoView(); }, 60);
+      var m = /^#faq-([a-z]+)$/.exec(location.hash), t = m && $('#faq-' + m[1]); if (!t || !t.classList.contains('laci-tab')) return;
+      if (q.value){ q.value = ''; saring(); }
+      pilih(tabs.indexOf(t));
+      if (gulir) setTimeout(function(){ if (window.lenis) window.lenis.scrollTo(laci, { offset: -(parseFloat(getComputedStyle(laci).scrollMarginTop) || 0), immediate: true }); else laci.scrollIntoView(); }, 60);
     }
     keHash(true);
     window.addEventListener('hashchange', function(){ keHash(true); });
-    daftar.addEventListener('click', function(e){ var a = e.target.closest('a.faq-tautan'); if (a) setTimeout(function(){ keHash(false); }, 0); });
+    kartuEl.addEventListener('click', function(e){ var a = e.target.closest('a.faq-tautan'); if (a) setTimeout(function(){ keHash(false); }, 0); });
+    /* sekali: saat laci pertama terlihat, kartu pertama naik dari laci */
+    if ('IntersectionObserver' in window && !reduce){
+      laci.classList.add('tunggu');
+      new IntersectionObserver(function(en, ob){ if (en[0].isIntersecting){ laci.classList.remove('tunggu'); laci.classList.add('buka'); ob.disconnect(); } }, { threshold: .35 }).observe(laci);
+    }
   })();
 
   /* ---------- Cara bergabung: kartu Placement Test → tombol per bahasa dari site-config.js (placement.en / .ar) ---------- */
@@ -2457,8 +2529,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   ];
   /* Tim berbasis foto: kelompok = kelompok pertama di TEAM ('mgmt en' → Pengelola). Klik/ketuk (atau arahkan kursor
      di pointer halus) wajah → potret besar berganti. Foto asli hanya bila slug ada di assets/team/manifest.json. */
-  var timGaleri = $('#tim-galeri'), timSorot = $('#tim-sorot');
-  if (timGaleri && timSorot){
+  var timGaleri = $('#tim-galeri'), timSorot = $('#tim-sorot'), timLayar = $('#tim-layar');
+  if (timGaleri && timSorot && timLayar){
     var NAMA_K = { mgmt: 'Pengelola', en: 'Guru Bahasa Inggris', ar: 'Guru Bahasa Arab' }, fotoTim = {};
     var potretTim = function(m, besar){
       var slug = slugDari(m[0]), f = fotoTim[slug];
@@ -2472,18 +2544,27 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       var info = [];
       if (ajar.length && !/^Guru Bahasa/.test(m[1])) info.push('Mengajar ' + ajar.join(' & '));
       if (m[3].length) info.push(m[3].join(' · '));
-      timSorot.innerHTML = '<div class="tim-sorot-foto k-' + kel(m) + '">' + potretTim(m, true) + '</div><figcaption><b class="tim-sorot-nama">' + m[0]
+      timSorot.innerHTML = '<figcaption style="display:contents"><b class="tim-sorot-nama">' + m[0]
         + '</b><span class="tim-sorot-peran">' + m[1] + '</span>' + (info.length ? '<span class="tim-sorot-info">' + info.join(' · ') + '</span>' : '') + '</figcaption>';
       if (animasi){ timSorot.classList.remove('ganti'); void timSorot.offsetWidth; timSorot.classList.add('ganti'); }
+      /* layar: lapis baru memudar di atas lapis lama; lapis lama dibuang setelah selesai (maks. dua lapis) */
+      var potret = potretTim(m, true), lapis = document.createElement('div');
+      lapis.className = 'tim-layar-isi k-' + kel(m) + (/tim-ini/.test(potret) ? '' : ' ada-foto') + (animasi ? ' masuk' : '');
+      lapis.innerHTML = /tim-ini/.test(potret) ? '<span class="tim-layar-ini">' + inisial(m[0]) + '</span>' : potret;
+      $$('.tim-layar-isi', timLayar).slice(0, -1).forEach(function(x){ x.remove(); });
+      timLayar.appendChild(lapis);
+      var lama = $$('.tim-layar-isi', timLayar).slice(0, -1);
+      if (!animasi) lama.forEach(function(x){ x.remove(); });
+      else setTimeout(function(){ lama.forEach(function(x){ x.remove(); }); }, 650);
       $$('.tim-wajah-btn', timGaleri).forEach(function(b){ b.setAttribute('aria-pressed', +b.dataset.k === k ? 'true' : 'false'); });
     };
     var gambarGaleri = function(){
       $$('.tim-wajah', timGaleri).forEach(function(ul){
         var k = ul.dataset.k;
         ul.innerHTML = TEAM.map(function(m, i){ return [m, i]; }).filter(function(x){ return kel(x[0]) === k; }).map(function(x){
-          var m = x[0], pendek = m[0].split(' ').slice(0, 2).join(' ');
-          return '<li><button class="tim-wajah-btn" type="button" data-k="' + x[1] + '" aria-pressed="false" aria-label="' + m[0] + ', ' + m[1] + '">'
-            + '<span class="tim-wajah-isi k-' + k + '">' + potretTim(m, false) + '</span><span class="tim-wajah-nama" aria-hidden="true">' + pendek + '</span></button></li>';
+          var m = x[0];
+          return '<li><button class="tim-wajah-btn" type="button" data-k="' + x[1] + '" aria-pressed="false" aria-label="' + m[0] + ', ' + m[1] + '" title="' + m[0] + '">'
+            + '<span class="tim-wajah-isi k-' + k + '">' + potretTim(m, false) + '</span></button></li>';
         }).join('');
       });
     };

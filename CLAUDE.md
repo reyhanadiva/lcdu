@@ -242,7 +242,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   kartu tengah turun (kolase); hover meluruskan kartu + foto 1,045× (transform saja). HP < 900px: `.geser` (slide berpadding
   supaya selotip & bayangan tidak terpotong `contain: paint`, kartu tidak miring). Rak buku kaca (`bukuHTML`, `rakPilih`,
   karabiner, CSS "RAK BUKU KACA") **dihapus** — tidak dipakai di mana pun lagi.
-- **Tim = berbasis foto** (sesi audit mandiri 2; pemilik: "Tim berbasis foto, bukan list"): kiri `.tim-sorot` = potret
+- **Tim** → kini gaya **cineflow** (lihat sesi "laci & cineflow"); catatan lama: **Tim = berbasis foto** (sesi audit mandiri 2; pemilik: "Tim berbasis foto, bukan list"): kiri `.tim-sorot` = potret
   besar orang terpilih (lengkung arkade 4:5, maks 280px) + nama, peran, "Mengajar Bahasa …" (dari kelompok di TEAM, hanya
   bila peran belum menyebutnya), sertifikasi sebaris; kanan `.tim-galeri` = wajah bulat 68px semua anggota dalam tiga
   kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + مُعَلِّم kecil). Klik/ketuk (pointer halus: juga arahkan
@@ -252,7 +252,8 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   **Dilarang foto stok sebagai wajah.** HP < 900px: potret 132px di samping keterangan; tiap kelompok = SATU baris wajah
   digeser horizontal (native, scroll-snap proximity) supaya tidak memanjang. `.tim-galeri`/`.tim-kelompok` `min-width:0`
   (tanpa itu baris geser melebarkan halaman di HP). Tinggi: desktop 717 px, HP 809 px. Tidak lagi memakai `.geser`.
-- **FAQ** (selesai, sesi FAQ-donasi-footer; judul "Yang sering ditanyakan"): **hanya fakta yang sudah ada** di halaman/README/
+- **FAQ** → kini **laci kartu indeks** (lihat sesi "laci & cineflow"; akordeon, topik & "Lihat 4 pertanyaan lainnya" dihapus). Catatan lama:
+  (selesai, sesi FAQ-donasi-footer; judul "Yang sering ditanyakan"): **hanya fakta yang sudah ada** di halaman/README/
   site-config.js — satu array `FAQ` (id, topik, tanya, jawab) + JSON-LD FAQPage dari array & teks yang SAMA (diuji identik).
   9 pertanyaan: biaya (satu-satunya "Rp100.000" selain struk, bersama "tanpa biaya bulanan"), syarat, cara daftar, Placement
   Test (status dari `placement.*.open`), belajar, jadwal (persis dari Pilih kelas), kelas, donasi, pengelola. Pertanyaan tanpa
@@ -429,8 +430,27 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   baris sendiri di bawah (`.rline-ket`, tidak terpecah). Kolom `minmax(0,max-content) minmax(20px,1fr) max-content`;
   ≤ 420px tepi struk 16px & huruf .88rem, ≤ 370px .82rem → satu baris sampai 360px (320px: label boleh turun).
 
+## Sesi "laci & cineflow" (17 Nov 2026; inspirasi IG dari pemilik, dibuat ulang tanpa menyalin kode/aset)
+- **FAQ = laci kartu indeks** (pemilik setuju; keluarga "benda kertas": struk, lembar ujian, lembar setoran, kartu arsip).
+  Pola ARIA tabs: `#faq-tab` (role tablist) di dalam laci kayu berisi 9 tab = pertanyaan lengkap + nomor 01–09 (grid 3 kolom,
+  HP 2, < 360px 1; baris saling menindih −16px); `#faq-kartu` = 9 tabpanel ditumpuk satu sel grid (desktop tinggi = jawaban
+  terpanjang, tidak melompat; HP < 700px hanya panel aktif tampil). Panel: telinga "No. 0n", meta, pertanyaan Fraunces, jawaban,
+  "Tautan". Warna tint palet bergilir krem/biru/hijau/merah muda/kertas (tinta #10163A ≥ 12:1; **kunyit tidak dipakai**).
+  Muka laci: pita keffiyeh tipis, plat label "Yang sering ditanyakan · LCDU · Arsip pertanyaan" berbingkai kuningan, pegangan.
+  Gerak: kartu baru naik dari laci + lama turun (keyframes `kartu-naik/turun`), tab terpilih terangkat 9px, sekali saat laci
+  terlihat kartu pertama terangkat. Panah/Home/End (roving tabindex). Cari menyembunyikan tab yang tidak cocok + `<mark>` putih;
+  0 hasil → laci disembunyikan + "Tidak ada yang cocok". `#faq-<id>` = id TAB → memilih & menggulir ke laci. Array FAQ &
+  JSON-LD tidak berubah (9, diuji). Tinggi: desktop 779 px, HP 994 px.
+- **Tim = cineflow**: `.tim-layar` lebar (16:7, HP 4:3) = orang terpilih — foto ASLI (manifest) + scrim, selain itu warna
+  kelompok + jaring putih tipis (`kain-jaring-tipis-putih.svg`) + monogram raksasa putih 20%. Keterangan putih kiri bawah.
+  Pita wajah `.tim-galeri` melintang di tepi bawah layar (−52px), 15 wajah 66×104 dalam tiga kelompok berlabel di bawahnya;
+  tombol berbingkai kertas 3px, `clip-path` memotong atas-bawah 18px, terpilih = penuh + cincin kunyit (fokus sama). < 1200px
+  pita digeser native. Ganti = lapis layar baru memudar+skala 1,04→1 di atas yang lama (maks. 2 lapis, yang lama dibuang 650 ms).
+  Nama pendek di bawah wajah dihapus (nama di `aria-label` + `title`). Tinggi: desktop 801 px, HP 489 px.
+- "Suasana kelas" (copier) **tidak dibuat**: kelas LCDU online semua (pemilik). Crest gallery (glitch/WebGL) ditolak.
+
 ## Sesi audit mandiri 2 (17 Nov 2026)
-- **FAQ ringkas**: tanpa cari/topik hanya 5 pertanyaan pertama; tombol teks `#faq-lainnya` "Lihat 4 pertanyaan lainnya" /
+- ~~**FAQ ringkas**~~ (diganti laci kartu, sesi "laci & cineflow"): tanpa cari/topik hanya 5 pertanyaan pertama; tombol teks `#faq-lainnya` "Lihat 4 pertanyaan lainnya" /
   "Tampilkan lebih sedikit" (`aria-expanded`, fokus pindah ke pertanyaan ke-6). Cari & topik selalu menyaring SEMUA
   pertanyaan (tombol disembunyikan saat menyaring); `#faq-<id>` ke pertanyaan tersembunyi membuka semuanya dulu.
 - **AWG**: kalimat tanpa "Menurut situs resminya" (fakta tetap dari situs AWG).
