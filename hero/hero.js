@@ -48,7 +48,10 @@ hero.addEventListener('touchend', () => { releaseT = setTimeout(() => state.poin
 
 /* ---------- teks per babak ---------- */
 function smooth(t) { t = Math.min(1, Math.max(0, t)); return t * t * (3 - 2 * t); }
+let pCopy = -1;
 function updateCopy(p) {
+  if (Math.abs(p - pCopy) < 1e-4) return;   // tidak menulis gaya bila p tidak berubah (hemat hitung ulang gaya hero)
+  pCopy = p;
   beats.forEach((b, i) => {
     const d = Math.abs(p - CENTERS[i]);
     const o = 1 - smooth((d - .12) / .14);

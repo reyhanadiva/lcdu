@@ -148,9 +148,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   aksen merah semangka hanya dekor (garis 64px di atas pernyataan aktif, isi kata Arab, pita). Judul "Kenapa LCDU?".
   Tanpa kotak/panel/tombol/eyebrow. Pernyataan = `<ol>`: `h3` Fraunces 36–48px + kalimat (teks persis dari pemilik).
   Desktop ≥ 960px: grid 5 : 7; judul di atas kolom kanan (`.why-kanan`); kiri `.why-stage` sticky (tinggi `min(54vh,480px)`, rasio 4:5) berisi empat `.frame-arch`
-  bertumpuk + empat kata Arab raksasa (Reem Kufi 5,4–8,8rem, garis putih 1,5px, rata kiri di tepi bawah foto supaya tidak
-  masuk kolom teks), crossfade .7s saat pernyataan melewati tengah layar (IntersectionObserver `-45% 0px -45% 0px`, JS
-  memasang `.aktif` di item & `.on` di panggung). Kata Arab aktif terisi `--semangka`. Foto: menulis (kurikulum),
+  bertumpuk + empat kata Arab raksasa (**Noto Naskh Arabic 700 putih penuh** sejak sesi "berat" — Reem Kufi bergaris kurang
+  terbaca; 5,4–8,8rem, rata kiri di tepi bawah foto supaya tidak masuk kolom teks), crossfade .7s saat pernyataan melewati tengah layar (IntersectionObserver `-45% 0px -45% 0px`, JS
+  memasang `.aktif` di item & `.on` di panggung). Kata Arab aktif: putih + bayangan cetak merah `--semangka` (.045em) + pendar gelap tipis; belum aktif putih 55%. Foto: menulis (kurikulum),
   kelas-online, guru-papan (tangan + kapur, lengan berbaju), quran-rehal. **HP & tablet (< 960px): `.geser`** — tiap pernyataan = satu slide
   (`.why-media` foto 54vw maks. 220px + kata Arab + judul + kalimat), slide yang tampil = pernyataan aktif (kata Arab
   merah; IO vertikal diabaikan saat geser aktif). Section di 390×844: 2.543 → 784 px (≤ satu layar). **Dimampatkan** (permintaan pemilik): pernyataan desktop
@@ -404,7 +404,7 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   900–1099px alur mendatar seperti sebelumnya; HP tegak.
 - **Tombol "Tanya admin"** (`.fab`, di dalam `<aside aria-label="Bantuan cepat">`): HP < 700px = lingkaran ikon 56px
   (nama aksesibel dari `aria-label`); menepi (`.is-kaki`) saat footer terlihat, karena footer sudah memuat WhatsApp.
-- **Lenis hanya untuk `pointer: fine`** (mouse/trackpad). Di layar sentuh scroll native (`html{scroll-behavior:smooth}`
+- **Lenis hanya untuk `pointer: fine`** (mouse/trackpad; juga adaptif, lihat sesi "berat"). Di layar sentuh scroll native (`html{scroll-behavior:smooth}`
   untuk anchor) — Lenis di HP hanya menambah loop rAF tanpa efek (smoothTouch mati).
 - Glyph raksasa Pilih kelas (`.side-glyph`) = `::before{content:attr(data-g)}` (dekor, bukan node teks).
 - Area sentuh ≥ 44px (titik geser 40×44, topik FAQ, tautan langkah 1, tautan AWG, tautan legal) lewat padding + margin
@@ -413,6 +413,21 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - Diukur (server lokal + gzip, Lighthouse 12): HP Performance 80 → 80–84 (bervariasi antar-run), Accessibility 96 → 100, Best Practices 100,
   SEO 100; desktop 99/100/100/100. Sisa beban HP: inisialisasi hero Foto (`lentera-hd.js` ±250 ms, pengolahan kanvas fajar
   & bintang) dan skrip utama ±300 ms — tidak diubah (mengubah tampilan hero).
+
+## Sesi "berat" (17 Nov 2026; pemilik: "web agak berat di komputer sederhana, Pilih kelas berat juga di laptop biasa")
+- **Hero** (`lentera-hd.js`): (1) saat diam (p tetap, kursor tidak bergerak) kanvas digambar ±24 fps saja (bintang & lampu
+  tetap berkelip); (2) **kualitas adaptif**: bila rata-rata waktu gambar > 11 ms (kanvas dikerjakan CPU), resolusi internal
+  turun ×0,8 bertahap sampai 0,6, tidak naik lagi dalam satu kunjungan. Komputer biasa (kanvas GPU) tidak berubah.
+  `hero.js` tidak menulis gaya teks babak bila p tidak berubah. Diukur (CPU 4x, 1366×768): hero 178 → ±71 ms/frame.
+- **Lenis adaptif**: tidak dipasang bila `hardwareConcurrency ≤ 2`; dimatikan otomatis (kembali ke scroll bawaan, dikerjakan
+  compositor) bila median jarak frame selama Lenis menggulir > 22 ms pada dua jendela 90 frame berturut-turut.
+- **Pilih kelas**: (1) hover hanya dari gerakan mouse sungguhan (`pointermove` dengan movementX/Y, diabaikan 300 ms setelah
+  scroll) — dulu isi yang bergeser di bawah kursor saat menggulir memicu pergeseran latar selebar layar di tengah scroll;
+  (2) jaring `.orn-net--kain` di `#split` = `assets/ornaments/kain-jaring-tipis-{biru,hijau}.svg` (warna & alfa 10%
+  dipanggang, background biasa) — tanpa mask & opacity elemen; (3) denyut pegangan 4× saja (bukan tanpa henti).
+- **Struk Biaya**: baris donasi = "Donasi untuk Palestina ···· sebebasnya" (titik-titik seperti Biaya bulanan) + "(tidak wajib)"
+  baris sendiri di bawah (`.rline-ket`, tidak terpecah). Kolom `minmax(0,max-content) minmax(20px,1fr) max-content`;
+  ≤ 420px tepi struk 16px & huruf .88rem, ≤ 370px .82rem → satu baris sampai 360px (320px: label boleh turun).
 
 ## Sesi audit mandiri 2 (17 Nov 2026)
 - **FAQ ringkas**: tanpa cari/topik hanya 5 pertanyaan pertama; tombol teks `#faq-lainnya` "Lihat 4 pertanyaan lainnya" /

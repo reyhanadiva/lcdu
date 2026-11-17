@@ -93,6 +93,7 @@ export default {
 
     let alive = true, token = 0, orient = '', entry = null, night = null, dawn = null, data = null;
     let W = 1, H = 1, DPR = 1, view = null, spots = [], stars = [], sun = [0, 0], horizonY = 0, base = 10, lx = -1, ly = -1, last = '';
+    let Q = 1, lastP = -1, lastDraw = 0, ema = 0, nFr = 0, coolUntil = 0;
 
     async function ensure(){
       const o = orientOf(state);
@@ -114,7 +115,7 @@ export default {
     /* cover dengan titik fokus di kubah; semua posisi dihitung ulang ke piksel kanvas */
     function layout(){
       if (!night) return;
-      DPR = Math.min(devicePixelRatio || 1, state.w > 1200 ? 1.25 : 1.5);
+      DPR = Math.min(devicePixelRatio || 1, state.w > 1200 ? 1.25 : 1.5)*Q;   // Q < 1 hanya di komputer yang lambat (lihat frame)
       W = Math.max(1, Math.round(state.w*DPR)); H = Math.max(1, Math.round(state.h*DPR));
       for (const c of [cv, nightC, dawnC, blueC, preC, tmp]){ c.width = W; c.height = H; }
       mask.width = Math.ceil(W*MASK_Q); mask.height = Math.ceil(H*MASK_Q);
@@ -134,8 +135,8 @@ export default {
         .sort((a, b) => a[4] - b[4]);
       findStars();
       /* butiran film hanya bila foto tampil lebih besar dari resolusi aslinya (layar retina) */
-      grain.hidden = s*(devicePixelRatio || 1)/DPR <= 1.05;
-      last = '';
+      grain.hidden = s*(devicePixelRatio || 1)/DPR <= 1.05;   // s ∝ DPR, jadi Q tidak memengaruhi keputusan ini
+      last = ''; lx = ly = -1; lastP = -1;
     }
     /* fajar biru (babak 2): foto malam yang diterangi struktur foto fajar (luminositas saja, warna tetap biru),
        langit sedikit lebih terang, dan semburat merah muda-jingga di cakrawala. Dibuat sekali per tata letak. */
@@ -184,8 +185,23 @@ export default {
       stars.sort((a, b) => b[3] - a[3]); stars.length = Math.min(stars.length, 140);
     }
 
+    /* Hemat untuk komputer sederhana (sesi "berat"): tampilan tidak berubah di komputer biasa.
+       1. Diam (p tetap & kursor tidak bergerak): hanya bintang & lampu yang berkelip → cukup digambar ±24 fps.
+       2. Kualitas adaptif: bila rata-rata waktu gambar > 11 ms (kanvas dikerjakan CPU), resolusi internal kanvas diturunkan
+          bertahap (×0,8, minimum 0,6); tidak pernah dinaikkan lagi dalam satu kunjungan supaya tidak berkedip. */
     function frame(st, now){
       if (!night) return;
+      if (!st.reduce){
+        const pa = st.pointer.active, gerak = pa && (lx < 0 || Math.abs(st.pointer.x*DPR - lx) > .5 || Math.abs(st.pointer.y*DPR - ly) > .5);
+        if (Math.abs(st.p - lastP) < 1e-4 && !gerak && now - lastDraw < 40) return;
+      }
+      lastP = st.p; lastDraw = now;
+      const t0 = performance.now(); draw(st, now); const d = performance.now() - t0;
+      if (st.reduce) return;
+      nFr++; ema = nFr === 1 ? d : ema + (d - ema)*.1;
+      if (nFr > 15 && now > coolUntil && ema > 11 && Q > .62){ Q = Math.max(.6, Q*.8); nFr = 0; coolUntil = now + 1000; layout(); }
+    }
+    function draw(st, now){
       const p = st.p, t = st.reduce ? 0 : now/1000, n = spots.length;
       /* garis waktu (p = 0..1), berurutan dan tidak tumpang-tindih supaya tiap tahap terlihat:
          lampu menyala .04–.46 · malam → fajar biru .14–.5 · bulan, bintang & biru memudar ke subuh .5–.64 ·

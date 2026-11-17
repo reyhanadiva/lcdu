@@ -553,13 +553,16 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .why-item.aktif::before{transform:none}
 .why-judul{font-family:var(--f-display);font-weight:700;font-size:clamp(2.25rem,1.7rem + 1.2vw,3rem);line-height:1.05;letter-spacing:-.02em}
 .why-item p{margin-top:14px;max-width:34ch;font-size:var(--step-1);line-height:1.5;color:var(--why-lembut)}
-/* kata Arab raksasa (dekor; hanya kata yang sudah ada): garis putih, terisi merah semangka saat aktif */
-.why-ar{font-family:var(--f-ar-display);font-weight:700;line-height:1;white-space:nowrap;direction:rtl;unicode-bidi:isolate;pointer-events:none;
-  color:transparent;-webkit-text-stroke:1.5px var(--putih);transition:color .6s var(--ease-menyala) .2s}
-.why-item.aktif .why-ar,.why-stage .why-ar.on{color:var(--semangka)}
+/* kata Arab raksasa (hanya kata yang sudah ada). Sesi "berat": Reem Kufi bergaris tipis kurang terbaca (pemilik) → Noto Naskh
+   Arabic 700 terisi putih penuh (≥ 6,5:1 di hijau kulit), harakat jelas. Aksen merah semangka = bayangan cetak bergeser
+   (bukan isi huruf: merah di hijau hanya ±1,3:1). Yang belum aktif (HP, slide lain) putih 55%. Pendar gelap tipis
+   menjaga keterbacaan di bagian foto yang terang; kata diturunkan sehingga sebagian besar di bawah tepi foto. */
+.why-ar{font-family:var(--f-ar);font-weight:700;line-height:1.25;white-space:nowrap;direction:rtl;unicode-bidi:isolate;pointer-events:none;
+  color:color-mix(in srgb,var(--putih) 55%,transparent);text-shadow:none;transition:color .6s var(--ease-menyala) .2s,text-shadow .6s var(--ease-menyala) .2s}
+.why-item.aktif .why-ar,.why-stage .why-ar.on{color:var(--putih);text-shadow:.045em .045em 0 var(--semangka),0 0 .2em rgb(0 0 0 / .45)}
 .why-media{position:relative;width:min(66vw,290px);margin-bottom:44px}
 .why-media .frame-arch{color:var(--putih)}
-.why-media .why-ar{position:absolute;right:-.12em;bottom:-.22em;font-size:clamp(3.6rem,17vw,5.4rem)}
+.why-media .why-ar{position:absolute;right:-.12em;bottom:-.4em;font-size:clamp(3.6rem,17vw,5.4rem)}
 .why-stage{display:none}
 @media (min-width:960px){
   .why-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(48px,6vw,104px);align-items:start}
@@ -568,7 +571,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     width:min(100%,calc(var(--panggung) * .8));margin-top:clamp(36px,6vw,56px)}
   .why-stage .frame-arch{position:absolute;inset:0;aspect-ratio:auto;color:var(--putih);opacity:0;transition:opacity .7s var(--ease)}
   .why-stage .frame-arch.on{opacity:1}
-  .why-stage .why-ar{position:absolute;left:-.04em;bottom:-.4em;font-size:clamp(5.4rem,9.6vw,8.8rem);opacity:0;transition:opacity .7s var(--ease),color .6s var(--ease-menyala) .25s}
+  .why-stage .why-ar{position:absolute;left:-.04em;bottom:-.58em;font-size:clamp(5.4rem,9.6vw,8.8rem);opacity:0;transition:opacity .7s var(--ease),color .6s var(--ease-menyala) .25s}
   .why-stage .why-ar.on{opacity:1}
   /* dimampatkan (permintaan pemilik): ±29vh per pernyataan, terakhir ±37vh; judul pindah ke atas kolom kanan supaya
      panggung mulai sejajar judul. Total section ≈ 1,6 layar di 1440×900 */
@@ -630,11 +633,16 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .receipt-head{text-align:center;display:grid;gap:4px;padding-bottom:18px;border-bottom:1px dashed color-mix(in srgb,var(--ink) 35%,transparent)}
 .receipt-head b{font-family:var(--f-display);letter-spacing:.12em;font-size:1.1rem}
 .receipt-head>span{font-size:var(--step--1);color:var(--ink-soft)}
-.rline{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:baseline;padding:12px 0;font-size:.95rem}
+.rline{display:grid;grid-template-columns:minmax(0,max-content) minmax(20px,1fr) max-content;gap:8px;align-items:baseline;padding:12px 0;font-size:.95rem}
 .rline::before{content:"";grid-column:2;grid-row:1;border-bottom:1px dotted color-mix(in srgb,var(--ink) 45%,transparent);transform:translateY(-4px)}
-.rline span:first-child{grid-column:1;grid-row:1}
-.rline span:last-child{grid-column:3;grid-row:1;font-weight:700;text-align:right}
-.rline-donasi span:first-child{max-width:20ch}
+.rline>span:first-child{grid-column:1;grid-row:1}
+.rline>span:nth-of-type(2){grid-column:3;grid-row:1;font-weight:700;text-align:right}
+/* layar HP: huruf & tepi sedikit dikecilkan supaya label, titik-titik (min. 20px), dan nilai tetap satu baris (≥ 360px) */
+@media (max-width:420px){.receipt{padding-left:16px;padding-right:16px}.rline{font-size:.88rem}}
+@media (max-width:370px){.rline{font-size:.82rem}}
+/* donasi: titik-titik sama seperti baris di atasnya; "(tidak wajib)" baris sendiri di bawah label, tidak terpecah */
+.rline-donasi{row-gap:2px}
+.rline-ket{grid-column:1/-1;grid-row:2;white-space:nowrap;font-size:var(--step--1);color:var(--ink-soft)}
 /* total besar: label di atas, angka besar */
 .rtotal{display:grid;gap:2px;border-top:1px dashed color-mix(in srgb,var(--ink) 45%,transparent);margin-top:10px;padding-top:18px}
 .rtotal span:first-child{font-weight:700;font-size:.95rem}
@@ -671,7 +679,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .side{position:relative;overflow:hidden;min-width:0;contain:layout paint;color:var(--ink);--ink-soft:#3E4256}
 .side-en{--c:var(--lazuardi-ink);background:#C9D1F8}
 .side-ar{--c:var(--zamrud-ink);background:#D2E6C6;text-align:right}
-.side>.orn-net,.latar .orn-net{color:var(--c);--orn-alpha:.1}
+/* jaring: pola berwarna yang alfanya sudah dipanggang di berkas (tanpa mask & tanpa opacity elemen) — mask bertile di bidang
+   seluas layar mahal dirender di komputer sederhana (sesi "berat"). Tampilan sama dengan --orn-alpha .1 + warna --c. */
+.split .orn-net--kain{-webkit-mask:none;mask:none;opacity:1;background:url(assets/ornaments/kain-jaring-tipis-biru.svg) 0 0/24px 24px repeat}
+.split .side-ar>.orn-net--kain,.split .latar-ar .orn-net--kain{background-image:url(assets/ornaments/kain-jaring-tipis-hijau.svg)}
 /* glyph raksasa (dekoratif, tanpa filter/blur) */
 .side-glyph{position:absolute;bottom:-.2em;font-family:var(--f-display);font-weight:700;font-size:clamp(11rem,28vw,28rem);line-height:1;color:var(--c);opacity:.16;
   pointer-events:none;user-select:none;-webkit-user-select:none;transition:opacity .5s var(--ease)}
@@ -747,7 +758,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .split-pegangan svg{display:block;width:100%;height:100%;pointer-events:none}
   .split-pegangan:focus-visible{outline:3px solid var(--kunyit);outline-offset:6px;border-radius:50%}
   /* denyut: hanya scale pada SVG di dalam pegangan (transform pegangan sendiri dipakai untuk posisi) */
-  .gerak .split.is-lihat:not(.sudah) .split-pegangan svg{animation:denyut 1.8s var(--ease) infinite}
+  .gerak .split.is-lihat:not(.sudah) .split-pegangan svg{animation:denyut 1.8s var(--ease) 4}   /* 4× saja, tidak tanpa henti */
 }
 /* HP (< 700px): dua slide geser (Inggris, Arab), semua info satu kelas dalam satu slide. Penanda "Inggris | Arab" = teks
    bergaris bawah yang tersinkron dengan slide dan bisa diketuk. Ketuk-untuk-penekanan (garis tepi) tidak dipakai di sini. */
@@ -1536,7 +1547,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         <div class="receipt" id="receipt">
           <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian biaya</span></div>
           <div class="rline"><span>Biaya bulanan</span><span>Rp0</span></div>
-          <div class="rline rline-donasi"><span>Donasi untuk Palestina (tidak wajib)</span><span>sebebasnya</span></div>
+          <div class="rline rline-donasi"><span>Donasi untuk Palestina</span><span>sebebasnya</span><small class="rline-ket">(tidak wajib)</small></div>
           <div class="rtotal"><span>Total per term (semester)</span><span>Rp100.000</span></div>
           <p class="receipt-foot"><i class="orn-band" aria-hidden="true"></i><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah belajar bersama LCDU.</p>
         </div>
@@ -2343,7 +2354,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
      Undangan sekali (58 → 42 → 50) & denyut hanya saat terlihat; dihentikan bila section keluar layar.
      HP/tablet (< 1000px): blok bertumpuk; ketuk = penekanan visual. Reduced-motion: tanpa undangan, denyut, transisi. */
   var split = $('#split'), pegangan = $('.split-pegangan', split), sisi = $$('.side', split), lebarMQ = window.matchMedia('(min-width: 1000px)');
-  var MIN = 35, aNow = 50, lebar = 0, kiri = 0, tarik = false, xTarik = 0, rafTarik = 0, undangan = [], hoverT = null;
+  var MIN = 35, aNow = 50, lebar = 0, kiri = 0, tarik = false, xTarik = 0, rafTarik = 0, undangan = [], hoverT = null, hoverSisi = null, gulirT = 0;
+  if (fine) addEventListener('scroll', function(){ gulirT = performance.now(); clearTimeout(hoverT); hoverSisi = null; }, { passive: true });
   var latarEn = $('.latar-en', split), latarIsi = $('.latar-en-isi', split), garis = $('.split-garis', split);
   function ukurSplit(){
     lebar = split.clientWidth;
@@ -2378,11 +2390,13 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       if (!lebarMQ.matches){ split.dataset.state = split.dataset.state === s.dataset.side ? 'imbang' : s.dataset.side; return; }
       fokus(split.dataset.state === s.dataset.side ? 'imbang' : s.dataset.side);
     });
-    if (fine) s.addEventListener('pointerenter', function(){
-      if (!lebarMQ.matches || tarik) return;
-      clearTimeout(hoverT); hoverT = setTimeout(function(){ sudah(); fokus(s.dataset.side); }, 300);
+    /* hover hanya dari gerakan mouse SUNGGUHAN: saat halaman digulir dengan kursor diam, isi bergeser di bawah kursor dan
+       browser mengirim pointerenter — dulu itu memicu pergeseran latar selebar layar di tengah scroll (berat). */
+    if (fine) s.addEventListener('pointermove', function(e){
+      if (!lebarMQ.matches || tarik || hoverSisi === s || !(e.movementX || e.movementY) || performance.now() - gulirT < 300) return;
+      hoverSisi = s; clearTimeout(hoverT); hoverT = setTimeout(function(){ sudah(); fokus(s.dataset.side); }, 300);
     });
-    if (fine) s.addEventListener('pointerleave', function(){ clearTimeout(hoverT); });
+    if (fine) s.addEventListener('pointerleave', function(){ clearTimeout(hoverT); if (hoverSisi === s) hoverSisi = null; });
   });
   pegangan.addEventListener('pointerdown', function(e){
     if (!lebarMQ.matches) return;
@@ -2518,7 +2532,22 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <script type="module">
 /* Scroll halus untuk seluruh halaman (Lenis, di-vendor). Tidak aktif saat prefers-reduced-motion. */
 import Lenis from './vendor/lenis/lenis.mjs';
-const lenis = (matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(pointer: fine)').matches) ? null : (window.lenis = new Lenis({ lerp: .12, autoRaf: true }));
+let lenis = (matchMedia('(prefers-reduced-motion: reduce)').matches || !matchMedia('(pointer: fine)').matches || (navigator.hardwareConcurrency || 4) <= 2) ? null : (window.lenis = new Lenis({ lerp: .12, autoRaf: true }));
+/* Komputer sederhana: Lenis menggulir lewat JS di thread utama, jadi bila halaman berat setiap putaran roda terasa
+   tersendat. Jarak antar-frame selama Lenis menggulir diukur; bila median > 22 ms (< ±45 fps) dari 90 frame — dua kali — Lenis dimatikan
+   dan halaman kembali ke scroll bawaan browser (dikerjakan compositor, tetap halus). Tidak dinyalakan lagi dalam kunjungan ini. */
+if (lenis){
+  const jarak = []; let tPrev = 0, buruk = 0;   // dua jendela buruk berturut-turut (bukan sekadar sentakan saat memuat)
+  const ukur = () => {
+    const t = performance.now(), d = t - tPrev; tPrev = t;
+    if (d > 0 && d < 150) jarak.push(d);
+    if (jarak.length < 90) return;
+    const med = jarak.sort((a, b) => a - b)[45]; jarak.length = 0;
+    buruk = med > 22 ? buruk + 1 : 0;
+    if (buruk >= 2){ lenis.off && lenis.off('scroll', ukur); lenis.destroy(); lenis = window.lenis = null; document.documentElement.classList.add('tanpa-lenis'); }
+  };
+  lenis.on('scroll', ukur);
+}
 /* tautan #anchor: hormati scroll-margin-top (nav tidak menutupi judul) dan pindahkan fokus ke section tujuan */
 document.addEventListener('click', e => {
   const a = e.target.closest('a[href^="#"]'); if (!a || e.defaultPrevented) return;
