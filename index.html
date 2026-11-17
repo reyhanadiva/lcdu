@@ -989,7 +989,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .cerita-kartu:hover .cerita-gambar img{transform:scale(1.045)}
 }
 /* HP: geser; ruang di dalam slide supaya selotip, kemiringan & bayangan tidak terpotong (slide memakai contain: paint) */
-.cerita-geser.is-geser .geser-slide{padding:18px 8px 26px}
+.cerita-geser.is-geser .geser-slide{flex-basis:min(86%,360px);padding:18px 8px 26px}
 .cerita-geser.is-geser .cerita-cetak{--miring:0deg}
 .cerita-geser.is-geser .geser-titik{margin-top:0}
 @media (prefers-reduced-motion: reduce){.cerita-cetak,.cerita-gambar img{transition:none}}
