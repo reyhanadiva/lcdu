@@ -430,13 +430,15 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   halaman aman.)
 - **Kantor LCDU** (permintaan pemilik; section baru `#lokasi` setelah FAQ, fase senja, `data-lentera`; mengacu kartu
   "Lokasi" situs SD dengan palet LCDU): kartu dua kolom — kiri judul kecil "Kantor LCDU" (h2, `data-judul`), alamat besar
-  Fraunces (jalan biru + "Kota Bandung"), alamat lengkap + "Kelas LCDU berlangsung online; ini alamat kantor kami di
-  Bandung.", baris WhatsApp Admin + "Chat", tombol "Petunjuk arah ↗"; kanan **fasad peta** (SVG ringan + pin semangka
+  Fraunces (jalan biru + "Kota Bandung"; paragraf alamat kecil DIHAPUS — redundan, pemilik), baris WhatsApp Admin +
+  "Chat", tombol "Petunjuk arah ↗"; kanan **fasad peta** (SVG ringan + pin semangka
   berdenyut) dan tombol "Tampilkan peta" yang baru memuat iframe Google Maps (`maps?q=lat,lng&output=embed`) saat
   diketuk — tanpa skrip pihak ketiga sebelum diminta. Data di `site-config.js` `kantor.*` (nama, jalan, kota, lengkap,
   peta, lat, lng). **Alamat "Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115"**: jalan dari pemilik,
-  sisanya dari footer situs TK (Lokasi Diponegoro) — perlu konfirmasi pemilik. Footer "Hubungi kami" = alamat lengkap yang
-  menaut ke peta. Footer Jelajahi + "Lokasi kantor". Navbar tidak berubah.
+  sisanya dari footer situs TK (Lokasi Diponegoro) — perlu konfirmasi pemilik. Footer "Hubungi kami" ala situs SD:
+  baris 1 alamat SINGKAT `kantor.singkat` "Jl. Diponegoro No. 48, Bandung" (menaut ke peta), baris 2 nomor
+  "0819-6009-333 (WhatsApp Admin)" (`whatsappAdmin.tampil`). Kolom footer desktop 1,25 / ,75 / 1,75 / 1,15 (satu baris
+  di ≥ 1280px); HP: Hubungi kami selebar penuh di bawah identitas, lalu Jelajahi | Jaringan. Footer Jelajahi + "Lokasi kantor". Navbar tidak berubah.
 - **Footer legal**: "© 2026 LCDU, Yayasan Taqwa Cerdas Kreatif. Seluruh hak cipta dilindungi." ("Bandung, Jawa Barat"
   dihapus, pemilik). **"Admin" berhuruf kapital** di semua teks (Tanya Admin, WhatsApp Admin, Hubungi Admin).
 - **Bintang & komet di belakang kubah**: `.kaki-bintang`/`.kaki-komet` memakai masker langit `assets/hero/build/langit-wide.png`

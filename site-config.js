@@ -69,6 +69,7 @@ window.LCDU_CONFIG = {
     jalan: 'Jl. Diponegoro No. 48',
     kota: 'Kota Bandung',
     lengkap: 'Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115',
+    singkat: 'Jl. Diponegoro No. 48, Bandung',   // footer (pemilik: cukup ini)
     peta: 'https://maps.app.goo.gl/BMVJsNqZdJs6WWMz8',
     lat: -6.9013996,
     lng: 107.6241906

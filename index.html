@@ -1118,7 +1118,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .lok-label{margin:0;font-family:var(--f-body);font-weight:700;font-size:var(--step-0);color:#10163A}
 .lok-alamat{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,1.4rem + 2.4vw,3.4rem);line-height:1.04;letter-spacing:-.02em}
 .lok-jalan{color:var(--lazuardi)}
-.lok-lengkap{max-width:44ch;font-size:var(--step-0);line-height:1.55;color:#4B4F63}
 .lok-kontak{list-style:none;margin:6px 0 0;padding:0;border-top:1px solid rgba(16,22,58,.12)}
 .lok-kontak li{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(16,22,58,.12)}
 .lok-ikon{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:50%;background:color-mix(in srgb,var(--zamrud) 12%,#fff);color:var(--zamrud)}
@@ -1310,8 +1309,9 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .foot-desk{font-size:var(--step--1);line-height:1.6;color:var(--ink-soft)}
 .foot-tagline{font-family:var(--f-display);font-style:italic;font-weight:600;color:var(--zamrud-ink)}
 /* HP: Jelajahi di kiri (dua baris), Hubungi kami & Jaringan bertumpuk di kanan */
-@media (max-width:899px){.foot-grid>:nth-child(2){grid-row:span 2}}
-@media (min-width:900px){.foot-grid{grid-template-columns:1.5fr 1fr 1fr 1.2fr;gap:32px}.foot-id{grid-column:auto}}
+/* HP: Hubungi kami selebar penuh tepat di bawah identitas (alamat & nomor tidak terlipat), lalu Jelajahi | Jaringan */
+@media (max-width:899px){.foot-grid>:nth-child(3){grid-column:1/-1;order:1}.foot-grid>:nth-child(2){order:2}.foot-grid>:nth-child(4){order:3}}
+@media (min-width:900px){.foot-grid{grid-template-columns:1.25fr .75fr 1.75fr 1.15fr;gap:32px}.foot-id{grid-column:auto}}
 .foot h3{margin:0 0 8px;font-family:var(--f-body);font-size:var(--step--1);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft)}
 .foot-links{list-style:none;margin:0;padding:0;display:grid}
 .foot-links a,.foot-links .foot-alamat{display:flex;align-items:center;gap:10px;min-height:44px;text-decoration:none;font-weight:600}
@@ -1706,7 +1706,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <div class="lok-info">
         <h2 class="lok-label" id="lok-h" data-judul>Kantor LCDU</h2>
         <p class="lok-alamat"><span class="lok-jalan" data-cfg-text="kantor.jalan">Jl. Diponegoro No. 48</span>,<br><span class="lok-kota" data-cfg-text="kantor.kota">Kota Bandung</span></p>
-        <p class="lok-lengkap"><span data-cfg-text="kantor.lengkap">Jl. Diponegoro No. 48, Citarum, Bandung Wetan, Kota Bandung 40115</span>. Kelas LCDU berlangsung online; ini alamat kantor kami di Bandung.</p>
         <ul class="lok-kontak">
           <li><span class="lok-ikon"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.6 3.4 3.6 4.1l1.2-1 1.7.8-.4 1.4c-3.3.3-6.6-3-6.4-6.3l1.4-.4.7 1.7z"/></svg></span><span class="lok-teks"><small>WhatsApp Admin</small><b data-cfg-text="whatsappAdmin.tampil">0819-6009-333</b></span><a class="lok-aksi" href="https://wa.me/628196009333" data-wa="umum">Chat<span class="sr-only"> dengan Admin lewat WhatsApp</span></a></li>
         </ul>
@@ -1807,7 +1806,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       <div>
         <h3>Hubungi kami</h3>
         <!-- email, Instagram & alamat ditambah JS hanya bila ada di site-config.js (kontak.email / instagram / alamat) -->
-        <ul class="foot-links" id="foot-kontak"><li><a href="https://wa.me/628196009333" data-wa="umum"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.6l1.2-1.1 1.8.8-.3 1.6c-3.6.2-7.2-3.3-7-7l1.6-.3.8 1.8z"/></svg><span>WhatsApp Admin<span class="sr-only"> (buka di tab baru)</span></span></a></li></ul>
+        <ul class="foot-links" id="foot-kontak"><li><a href="https://wa.me/628196009333" data-wa="umum"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 20l1.2-3.6A8 8 0 1 1 8.4 19z"/><path d="M9 9.5c.3 2 1.8 3.8 4 4.6l1.2-1.1 1.8.8-.3 1.6c-3.6.2-7.2-3.3-7-7l1.6-.3.8 1.8z"/></svg><span><span data-cfg-text="whatsappAdmin.tampil">0819-6009-333</span> (WhatsApp Admin)<span class="sr-only"> (buka di tab baru)</span></span></a></li></ul>
       </div>
       <div>
         <h3>Jaringan pendidikan</h3>
@@ -2152,9 +2151,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     if (ul && ig) ul.insertAdjacentHTML('beforeend', '<li><a href="' + esc(ig) + '" target="_blank" rel="noopener">' + IKON.instagram + '<span>Instagram<span class="sr-only"> (buka di tab baru)</span></span></a></li>');
     if (ul && alamat) ul.insertAdjacentHTML('beforeend', '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamat) + '</span></address></li>');
     var kantor = cfg('kantor');
-    if (ul && kantor && (kantor.lengkap || kantor.peta)) ul.insertAdjacentHTML('beforeend', kantor.peta
-      ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(kantor.lengkap || kantor.nama) + '<span class="sr-only"> (Google Maps, buka di tab baru)</span></span></a></li>'
-      : '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(kantor.lengkap) + '</span></address></li>');
+    var alamatKantor = kantor && (kantor.singkat || kantor.lengkap);
+    if (ul && alamatKantor) ul.insertAdjacentHTML('afterbegin', kantor.peta
+      ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(alamatKantor) + '<span class="sr-only"> (Google Maps, buka di tab baru)</span></span></a></li>'
+      : '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamatKantor) + '</span></address></li>');
     var jar = cfg('jaringan'), uj = $('#foot-jaringan');
     if (uj && jar && jar.length){
       var ada = jar.filter(function(j){ return j && j.url; });
