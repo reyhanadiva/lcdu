@@ -447,6 +447,18 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   tombol berbingkai kertas 3px, `clip-path` memotong atas-bawah 18px, terpilih = penuh + cincin kunyit (fokus sama). < 1200px
   pita digeser native. Ganti = lapis layar baru memudar+skala 1,04→1 di atas yang lama (maks. 2 lapis, yang lama dibuang 650 ms).
   Nama pendek di bawah wajah dihapus (nama di `aria-label` + `title`). Tinggi: desktop 801 px, HP 489 px.
+- **Revisi "laci hidup"** (pemilik: "jomplang, kurang hidup & nyala"): desktop satu kolom — baris kepala (judul kiri, cari +
+  bantuan kanan) lalu `.laci-meja` (laci 920px di tengah, bayangan meja). Kartu 78% lebar laci, rata bawah (`align-self:end`,
+  min 300px desktop) → setinggi isinya, laci TIDAK bergeser. Kartu indeks: garis merah di bawah "Arsip pertanyaan LCDU",
+  garis tulis (`--g` per warna, line-height 2) mengisi sisa kartu, kaki "Tautan" + "01 / 09". Laci = **hijau kulit**
+  (muka berjaring putih + pita keffiyeh putih + plat kertas berbingkai kuningan "LCDU · 9 kartu" dari `FAQ.length`), ruang
+  dalam hitam keffiyeh. **Lentera gantung** SVG (kuningan + kaca kunyit, dekor) di dalam `.laci-kotak`, di atas ujung kanan
+  laci samping kartu, tali memudar ke atas, cahaya radial kunyit; berayun ±2,2° (6 s) & berpendar hanya saat `#faq.hidup`
+  (IO), mati saat reduced-motion; ≤ 420px disembunyikan. `.faq{overflow-x:clip}` (cahaya tidak membuat halaman bergeser).
+- **Tim: foto potret** — foto ASLI tidak dibentang selebar layar; berdiri di `.tim-layar-bingkai` (lengkung arkade 4:5, 86%
+  tinggi layar, kanan, muncul dari tepi bawah, garis putih) di atas warna kelompok; HP keterangan maks 56% (`.tim-cine.ada-foto`).
+  `build-photos.mjs --potret … team` kini 160/480/800. Pita: wajah 60×100, kelompok pertama/terakhir `margin:auto` (tengah
+  bila muat, mulai kiri bila meluap). `.tim-layar` `width:100%` (aspect-ratio + min-height dulu melebarkan halaman di 768px).
 - "Suasana kelas" (copier) **tidak dibuat**: kelas LCDU online semua (pemilik). Crest gallery (glitch/WebGL) ditolak.
 
 ## Sesi audit mandiri 2 (17 Nov 2026)

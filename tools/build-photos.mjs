@@ -5,9 +5,9 @@
 // Potret ASLI (Testimoni / Tim) — hanya foto yang sudah disetujui pemiliknya (izin tertulis; wali bila < 18 tahun):
 //   node build-photos.mjs --potret <folder-jpg> stories   → assets/stories/<slug>-480.avif|webp + manifest.json
 //   node build-photos.mjs --potret <folder-jpg> team      → assets/team/<slug>-480.avif|webp + manifest.json
-// Nama berkas = slug (huruf kecil, tanda hubung), mis. aninda-salma.jpg. Dipotong 4:5 di tengah (atur dengan
-// <slug>.jpg yang sudah dipotong bila wajah tidak di tengah), lebar 480 (tidak diperbesar), kualitas diturunkan
-// bertahap sampai ≤ 60 KB per berkas. Halaman hanya memakai slug yang tercantum di manifest.json.
+// Nama berkas = slug (huruf kecil, tanda hubung), mis. aninda-salma.jpg. Dipotong 4:5 (sharp 'attention'; atur dengan
+// <slug>.jpg yang sudah dipotong bila wajah tidak di tengah). Tim: lebar 160/480/800, Testimoni: 480 (tidak diperbesar);
+// kualitas diturunkan bertahap sampai ≤ 20/60/110 KB per berkas. Halaman hanya memakai slug yang tercantum di manifest.json.
 import sharp from 'sharp';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -19,18 +19,24 @@ if (process.argv[2] === '--potret') {
   fs.mkdirSync(out, { recursive: true });
   const manifestPath = path.join(out, 'manifest.json');
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
+  // Tim: tiga lebar (160 = wajah kecil di pita, 480, 800 = layar besar di layar 2x); Testimoni: 480 saja. Tidak diperbesar.
+  const LEBAR_P = folder === 'team' ? [160, 480, 800] : [480], BATAS_P = { 160: 20 * 1024, 480: BATAS, 800: 110 * 1024 };
   for (const f of fs.readdirSync(src).filter(f => /\.(jpe?g|png)$/i.test(f))) {
     const slug = f.replace(/\.[^.]+$/, '').toLowerCase();
     const meta = await sharp(path.join(src, f)).rotate().metadata();
-    const w = Math.min(480, meta.width, Math.floor(meta.height * 4 / 5));
-    const base = () => sharp(path.join(src, f)).rotate().resize({ width: w, height: Math.round(w * 5 / 4), fit: 'cover', position: 'attention' });
-    for (const [ext, enc] of [['avif', q => ({ quality: q, effort: 6 })], ['webp', q => ({ quality: q })]]) {
-      let q = ext === 'avif' ? 55 : 78, buf;
-      do { buf = await base()[ext](enc(q)).toBuffer(); q -= 6; } while (buf.length > BATAS && q > 20);
-      fs.writeFileSync(path.join(out, `${slug}-${w}.${ext}`), buf);
-      console.log(`${folder}/${slug}-${w}.${ext}`, Math.round(buf.length / 1024) + ' KB');
+    const maks = Math.min(meta.width, Math.floor(meta.height * 4 / 5));
+    const lebar = [...new Set(LEBAR_P.map(l => Math.min(l, maks)))];
+    for (const w of lebar) {
+      const base = () => sharp(path.join(src, f)).rotate().resize({ width: w, height: Math.round(w * 5 / 4), fit: 'cover', position: 'attention' });
+      const batas = BATAS_P[w] || BATAS;
+      for (const [ext, enc] of [['avif', q => ({ quality: q, effort: 6 })], ['webp', q => ({ quality: q })]]) {
+        let q = ext === 'avif' ? 55 : 78, buf;
+        do { buf = await base()[ext](enc(q)).toBuffer(); q -= 6; } while (buf.length > batas && q > 20);
+        fs.writeFileSync(path.join(out, `${slug}-${w}.${ext}`), buf);
+        console.log(`${folder}/${slug}-${w}.${ext}`, Math.round(buf.length / 1024) + ' KB');
+      }
     }
-    manifest[slug] = { widths: [w] };
+    manifest[slug] = { widths: lebar };
   }
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
   process.exit(0);

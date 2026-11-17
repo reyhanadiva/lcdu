@@ -1014,11 +1014,14 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    = ganti; layar baru memudar di atas yang lama (dua lapis, transform/opacity). Data & ejaan dari TEAM (tidak diubah). */
 .tim-wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(18px,2.6vw,32px)}
 .tim-cine{position:relative;display:grid;grid-template-columns:minmax(0,1fr)}
-.tim-layar{grid-area:1/1;position:relative;aspect-ratio:16/7;min-height:340px;border-radius:8px;overflow:hidden;background:var(--keffiyeh);isolation:isolate}
+.tim-layar{grid-area:1/1;position:relative;width:100%;aspect-ratio:16/7;min-height:340px;border-radius:8px;overflow:hidden;background:var(--keffiyeh);isolation:isolate}
 .tim-layar-isi{position:absolute;inset:0;background:var(--tk) url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/22px 22px repeat;color:#fff}
-.tim-layar-isi picture,.tim-layar-isi img{position:absolute;inset:0;display:block;width:100%;height:100%}
-.tim-layar-isi img{object-fit:cover;object-position:50% 28%}
-.tim-layar-isi.ada-foto::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgb(0 0 0 / .72),rgb(0 0 0 / .2) 45%,transparent 70%)}
+/* foto ASLI guru (umumnya POTRET, bukan lanskap): tidak dibentang selebar layar (kepala terpotong, buram), tetapi berdiri
+   di bingkai lengkung arkade 4:5 di kanan layar, muncul dari tepi bawah — layar tetap berwarna kelompok + jaring. */
+.tim-layar-bingkai{position:absolute;right:clamp(24px,7%,96px);bottom:0;height:86%;aspect-ratio:4/5;overflow:hidden;border-radius:999px 999px 0 0;
+  background:rgb(255 255 255 / .12);box-shadow:0 0 0 3px rgb(255 255 255 / .9),0 0 0 9px rgb(255 255 255 / .18)}
+.tim-layar-bingkai picture,.tim-layar-bingkai img{position:absolute;inset:0;display:block;width:100%;height:100%}
+.tim-layar-bingkai img{object-fit:cover;object-position:50% 22%}
 .tim-layar-ini{position:absolute;right:4%;bottom:-.16em;font-family:var(--f-display);font-weight:700;font-size:clamp(9rem,26vw,24rem);line-height:1;letter-spacing:-.05em;
   color:rgb(255 255 255 / .2);pointer-events:none}
 .gerak .tim-layar-isi.masuk{animation:tim-layar .6s var(--ease-muncul) both}
@@ -1031,10 +1034,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .gerak .tim-sorot.ganti{animation:tim-ganti .45s var(--ease-muncul)}
 @keyframes tim-ganti{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 /* pita wajah: melintang di tepi bawah layar */
-.tim-galeri{position:relative;z-index:3;display:flex;justify-content:center;gap:clamp(18px,2.4vw,34px);margin-top:-52px;padding:0 16px 4px;min-width:0;
+.tim-galeri{position:relative;z-index:3;display:flex;justify-content:flex-start;gap:clamp(18px,2.2vw,28px);margin-top:-52px;padding:0 16px 4px;min-width:0;
   overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none}
 .tim-galeri::-webkit-scrollbar{display:none}
 .tim-kelompok{flex:none;display:grid;gap:0;min-width:0}
+/* tengah bila muat, mulai dari kiri bila meluap (justify-content:center akan membuat awal pita tak terjangkau) */
+.tim-kelompok:first-child{margin-left:auto}.tim-kelompok:last-child{margin-right:auto}
 .tim-label{margin-top:-8px!important}
 .tim-wajah{list-style:none;margin:0;padding:6px 4px;display:flex;gap:4px}
 .tim-label{display:flex;align-items:baseline;gap:8px;margin:0;padding-top:8px;border-top:1.5px solid var(--ink);font-family:var(--f-body);font-weight:700;font-size:.8rem;
@@ -1043,7 +1048,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 /* tombol = bingkai kertas 3px (memisahkan wajah dari layar berwarna sama); clip-path di tombol memotong atas-bawah */
 .tim-wajah-btn{display:block;padding:3px;border:0;background:var(--paper);color:inherit;font:inherit;cursor:pointer;border-radius:8px;
   clip-path:inset(18px 0 18px 0 round 8px);transition:clip-path .38s var(--ease)}
-.tim-wajah-isi{position:relative;display:grid;place-items:center;width:66px;height:104px;overflow:hidden;border-radius:5px;background:var(--tk) url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/16px 16px repeat;
+.tim-wajah-isi{position:relative;display:grid;place-items:center;width:60px;height:100px;overflow:hidden;border-radius:5px;background:var(--tk) url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/16px 16px repeat;
   color:#fff}
 .tim-wajah-isi picture,.tim-wajah-isi img{position:absolute;inset:0;display:block;width:100%;height:100%}
 .tim-wajah-isi img{object-fit:cover;object-position:50% 30%}
@@ -1065,6 +1070,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   .tim-wajah-btn{clip-path:inset(15px 0 15px 0 round 8px)}
   .tim-ini{font-size:1.1rem}
   .tim-layar-ini{font-size:min(52vw,13rem)}
+  .tim-layar-bingkai{right:14px;height:78%}
+  .tim-cine.ada-foto .tim-sorot{max-width:56%;padding-right:0}
 }
 @media (prefers-reduced-motion: reduce){.tim-wajah-btn{transition:none}.tim-layar-isi,.tim-sorot{animation:none!important}}
 
@@ -1078,11 +1085,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .faq-kiri{display:grid;gap:clamp(14px,2vw,24px);align-content:start}
 .faq-bantu{font-size:var(--step--1);color:var(--ink-soft)}
 .faq-bantu a{display:inline-block;padding:10px 0;margin:-10px 0;color:var(--ink);font-weight:700;text-decoration-thickness:1.5px;text-underline-offset:.2em}
-/* desktop: judul + cari di kiri (menempel saat daftar digulir), daftar di kanan → tidak ada ruang kosong lebar di kanan */
+/* desktop (sesi "laci hidup"): dulu kiri judul+cari | kanan laci → jomplang (pemilik). Kini SATU kolom: baris kepala
+   (judul kiri, cari + bantuan kanan, rata bawah), lalu "meja" selebar wrap dengan laci di tengah + lentera gantung. */
 @media (min-width:1000px){
-  .faq-wrap{max-width:1240px;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(40px,6vw,104px);align-items:start}
-  .faq-kiri{position:sticky;top:calc(env(safe-area-inset-top,0px) + 96px)}
-  .faq-kanan{padding-top:clamp(4px,1vw,14px)}
+  .faq-wrap{max-width:1240px;gap:clamp(20px,2.4vw,36px)}
+  .faq-kiri{grid-template-columns:minmax(0,1fr) minmax(300px,420px);column-gap:clamp(32px,5vw,80px);align-items:end}
+  .faq-kiri .h2{grid-row:1/3}
 }
 .faq-cari{display:flex;align-items:center;gap:10px;border-bottom:2px solid var(--ink);padding:4px 2px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 96px)}
 .faq-cari svg{flex:none;width:20px;height:20px;color:var(--ink-soft)}
@@ -1100,69 +1108,104 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    Pola ARIA tabs: tab = pertanyaan (di dalam laci), panel = kartu terangkat di atas laci. Semua panel ditumpuk di satu sel grid
    (tinggi = jawaban terpanjang, tidak melompat). Warna kartu = tint palet (tinta #10163A ≥ 12:1); kunyit TIDAK dipakai.
    Gerak: kartu baru naik dari laci, kartu lama turun (transform/opacity), tab terpilih terangkat 8px. Reduced-motion: tanpa gerak. */
-.laci{--kayu:#CDB48E;--kayu-gelap:#7A6448;--kayu-terang:#E2CFAE;--kuningan:#A8862E;position:relative;display:grid;max-width:660px;
+/* "Meja": bidang hangat tempat laci berdiri; lentera gantung menyinari kartu (motif LCDU: ilmu menyalakan cahaya). */
+/* cahaya lentera boleh melewati tepi section, tapi tidak boleh membuat halaman bisa digeser ke samping */
+.faq{overflow-x:clip}
+.laci-meja{position:relative;display:grid;justify-items:center;padding:0 0 clamp(8px,1.4vw,18px);isolation:isolate}
+.laci-meja::after{content:"";position:absolute;left:6%;right:6%;bottom:0;height:22px;z-index:-1;border-radius:50%;
+  background:radial-gradient(closest-side,rgb(16 22 58 / .22),transparent)}
+.laci{--hijau:#1E6B3A;--hijau-gelap:#14482A;--sumur:#1B1A17;--kuningan:#A8862E;position:relative;display:grid;width:min(100%,920px);
   scroll-margin-top:calc(env(safe-area-inset-top,0px) + 88px)}
 .laci[hidden]{display:none}
-.w-krem{--w:#F5DEC1}.w-biru{--w:#C9D1F8}.w-hijau{--w:#D2E6C6}.w-merah{--w:#F4CBC6}.w-kertas{--w:#FFFDF8}
-.laci-kartu{position:relative;z-index:2;display:grid;margin:30px clamp(10px,2.4vw,22px) -10px}
-.laci-panel{grid-area:1/1;position:relative;display:flex;flex-direction:column;gap:12px;padding:clamp(20px,3vw,30px) clamp(20px,3vw,32px) clamp(18px,2.4vw,24px);
-  background:var(--w);color:#10163A;border-radius:0 10px 10px 10px;box-shadow:0 1px 0 rgb(16 22 58 / .08),0 14px 26px -18px rgb(16 22 58 / .45);
-  visibility:hidden;opacity:0}
+.w-krem{--w:#F5DEC1;--g:#D9B98F}.w-biru{--w:#C9D1F8;--g:#9FAAE6}.w-hijau{--w:#D2E6C6;--g:#A9CC97}.w-merah{--w:#F4CBC6;--g:#E19B93}.w-kertas{--w:#FFFDF8;--g:#C9D1F8}
+/* kartu: lebih sempit dari laci (seperti ditarik keluar), rata bawah → setinggi isinya; ruang di atas kartu pendek = udara
+   untuk lentera, laci TIDAK bergeser saat kartu berganti */
+.laci-kartu{position:relative;z-index:2;display:grid;align-items:end;width:min(78%,700px);margin:30px 0 -12px clamp(14px,3vw,40px)}
+.laci-panel{grid-area:1/1;align-self:end;position:relative;display:flex;flex-direction:column;gap:10px;min-height:260px;
+  padding:clamp(18px,2.6vw,26px) clamp(20px,3vw,32px) clamp(16px,2.2vw,22px);
+  background:var(--w);color:#10163A;border-radius:0 10px 10px 10px;box-shadow:0 1px 0 rgb(16 22 58 / .08),0 18px 30px -18px rgb(16 22 58 / .5);
+  visibility:hidden;opacity:0;transform-origin:50% 100%}
+@media (min-width:700px){.laci-panel{min-height:300px}}
 .laci-panel.on{visibility:visible;opacity:1;z-index:2}
 .laci-panel:focus-visible{outline:3px solid var(--kunyit);outline-offset:3px}
 .laci-telinga{position:absolute;left:0;bottom:100%;padding:6px 16px 4px;background:var(--w);border-radius:8px 8px 0 0;font-size:.8rem;font-weight:700;
   font-variant-numeric:tabular-nums;color:#10163A}
-.laci-meta{font-size:.8rem;letter-spacing:.04em;color:#3E4256;font-variant-numeric:tabular-nums}
+/* kartu indeks sungguhan: garis merah di bawah kepala, garis-garis tulis di bawahnya (warna tint kartu, dekor) */
+.laci-meta{padding-bottom:8px;border-bottom:2px solid color-mix(in srgb,var(--semangka) 70%,transparent);font-size:.8rem;letter-spacing:.04em;
+  color:#3E4256;font-variant-numeric:tabular-nums}
 .laci-tanya{font-family:var(--f-display);font-weight:700;font-size:clamp(1.4rem,1.1rem + 1.2vw,2rem);line-height:1.12;letter-spacing:-.01em}
-.laci-jawab{max-width:58ch;font-size:var(--step-0);line-height:1.6;color:#2B3048}
+.laci-jawab{flex:1;max-width:60ch;font-size:var(--step-0);line-height:2;color:#2B3048;
+  background:linear-gradient(transparent calc(2em - 1px),var(--g) calc(2em - 1px)) 0 0/100% 2em}
 .laci-jawab a{color:#10163A;text-decoration-thickness:1.5px;text-underline-offset:.2em}
-.laci-kaki{margin-top:auto;padding-top:12px;border-top:1px solid rgb(16 22 58 / .18)}
+.laci-kaki{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .laci-kaki .faq-tautan{margin-left:0;color:#3E4256!important}
+.laci-urut{font-size:.8rem;font-weight:600;font-variant-numeric:tabular-nums;color:#3E4256}
 .laci .faq-tautan{padding:10px 0;margin-top:-10px;margin-bottom:-10px}
-/* laci: dinding kayu, ruang dalam gelap, tab bertumpuk (baris saling menindih, baris bawah di depan) */
-.laci-kotak{position:relative;z-index:1;padding:12px 12px 0;background:var(--kayu);border-radius:8px;
-  box-shadow:inset 0 0 0 1px rgb(0 0 0 / .08),0 20px 30px -24px rgb(16 22 58 / .6)}
-.laci-dalam{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:8px;padding:14px 10px 18px;background:var(--kayu-gelap);border-radius:4px 4px 0 0}
+/* laci: hijau kulit LCDU (bukan kayu kusam), ruang dalam hitam keffiyeh, tab berwarna bertumpuk */
+.laci-kotak{position:relative;z-index:1;padding:12px 12px 0;background:var(--hijau);border-radius:10px;
+  box-shadow:inset 0 0 0 1px rgb(0 0 0 / .15),inset 0 2px 0 rgb(255 255 255 / .12),0 24px 34px -24px rgb(16 22 58 / .7)}
+.laci-dalam{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:8px;padding:14px 10px 18px;background:var(--sumur);border-radius:5px 5px 0 0}
+/* cahaya lentera jatuh di ujung kanan laci (statis, tanpa blend mode) */
+.laci-dalam::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;border-radius:inherit;
+  background:radial-gradient(60% 120% at 92% -10%,rgb(255 194 26 / .22),transparent 70%)}
 .laci-tab{position:relative;display:flex;justify-content:space-between;align-items:flex-start;gap:8px;min-height:58px;margin-bottom:-16px;padding:9px 11px 22px;
   border:0;border-radius:7px 7px 0 0;background:var(--w);color:#10163A;font:inherit;font-size:.8rem;font-weight:700;line-height:1.3;text-align:left;cursor:pointer;
-  box-shadow:0 -1px 0 rgb(0 0 0 / .1),0 -6px 10px -8px rgb(0 0 0 / .45);transition:transform .3s var(--ease)}
+  box-shadow:0 -1px 0 rgb(0 0 0 / .1),0 -6px 10px -8px rgb(0 0 0 / .6);transition:transform .3s var(--ease)}
 .laci-tab:nth-child(3n+2){margin-top:5px}.laci-tab:nth-child(3n){margin-top:2px}
 .laci-tab[hidden]{display:none}
 .laci-tab-n{flex:none;font-weight:600;font-variant-numeric:tabular-nums;color:#3E4256}
-.laci-tab[aria-selected="true"]{transform:translateY(-9px);box-shadow:inset 0 3px 0 var(--semangka-tua),0 -6px 12px -8px rgb(0 0 0 / .5)}
+.laci-tab[aria-selected="true"]{transform:translateY(-10px);box-shadow:inset 0 3px 0 var(--semangka-tua),0 -8px 14px -8px rgb(255 194 26 / .7)}
 .laci-tab[aria-selected="true"] .laci-tab-n{color:var(--semangka-tua)}
 .laci-tab:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px;z-index:5}
-@media (hover:hover){.laci-tab:hover:not([aria-selected="true"]){transform:translateY(-4px)}}
+@media (hover:hover){.laci-tab:hover:not([aria-selected="true"]){transform:translateY(-5px)}}
 .laci mark{background:var(--putih);color:inherit;border-radius:3px;padding:0 2px;box-shadow:0 0 0 1px rgb(16 22 58 / .25)}
-/* muka laci: tepi keffiyeh tipis, plat label berbingkai kuningan, pegangan */
-.laci-depan{position:relative;z-index:3;display:grid;justify-items:center;gap:10px;margin:0 -12px;padding:22px 16px 18px;border-radius:0 0 8px 8px;
-  background:repeating-linear-gradient(90deg,rgb(0 0 0 / .03) 0 2px,transparent 2px 9px),linear-gradient(var(--kayu-terang),var(--kayu));
-  box-shadow:inset 0 2px 0 rgb(255 255 255 / .35),inset 0 -2px 0 rgb(0 0 0 / .08)}
-.laci-pita{position:absolute;left:0;right:0;top:0;--pita:12px;color:var(--keffiyeh);opacity:.5}
-.laci-plat{display:grid;gap:1px;padding:6px 16px;background:#FFFDF8;border:2px solid var(--kuningan);border-radius:3px;text-align:center;line-height:1.25}
+/* muka laci: hijau dengan jaring keffiyeh putih tipis, pita keffiyeh putih, plat kertas berbingkai kuningan, pegangan */
+.laci-depan{position:relative;z-index:3;display:grid;justify-items:center;gap:10px;margin:0 -12px;padding:24px 16px 18px;border-radius:0 0 10px 10px;
+  background:url(assets/ornaments/kain-jaring-tipis-putih.svg) 0 0/20px 20px repeat,linear-gradient(#24804A,var(--hijau) 40%,var(--hijau-gelap));
+  box-shadow:inset 0 2px 0 rgb(255 255 255 / .22),inset 0 -2px 0 rgb(0 0 0 / .2)}
+.laci-pita{position:absolute;left:0;right:0;top:0;--pita:12px;color:#fff;opacity:.6}
+.laci-plat{display:grid;gap:1px;padding:7px 18px;background:#FFFDF8;border:2px solid var(--kuningan);border-radius:3px;text-align:center;line-height:1.25;
+  box-shadow:0 2px 0 rgb(0 0 0 / .25)}
 .laci-plat b{font-size:.8rem;letter-spacing:.06em;color:#10163A}
 .laci-plat small{font-size:.75rem;letter-spacing:.08em;color:#3E4256}
-.laci-tarik{width:96px;height:10px;border-radius:2px 2px 6px 6px;background:var(--kuningan);box-shadow:inset 0 2px 0 rgb(255 255 255 / .35)}
+.laci-tarik{width:110px;height:12px;border-radius:2px 2px 7px 7px;background:linear-gradient(#D2B158,var(--kuningan));box-shadow:0 2px 0 rgb(0 0 0 / .3)}
+/* lentera gantung (dekor, aria-hidden): tali dari atas meja, cahaya kunyit lembut; berayun & berpendar hanya saat terlihat */
+/* digantung di dalam .laci-kotak: tepat di atas ujung kanan laci, di samping kartu; tali memudar ke atas (tidak menabrak kotak cari) */
+.laci-lentera{position:absolute;bottom:calc(100% + 26px);right:clamp(26px,7%,72px);z-index:3;width:76px;transform-origin:50% -120px;pointer-events:none}
+.laci-lentera::after{content:"";position:absolute;left:calc(50% - .75px);bottom:calc(100% - 24px);width:1.5px;height:150px;z-index:-1;
+  background:linear-gradient(transparent,#6E5A36 70%)}
+.laci-lentera svg{display:block;width:100%;height:auto;overflow:visible}
+.laci-lentera::before{content:"";position:absolute;left:50%;top:62%;width:340px;height:340px;margin:-170px 0 0 -170px;z-index:-1;border-radius:50%;
+  background:radial-gradient(closest-side,rgb(255 194 26 / .42),rgb(255 194 26 / .14) 45%,transparent)}
+.gerak .faq.hidup .laci-lentera{animation:lentera-ayun 6s ease-in-out infinite}
+.gerak .faq.hidup .laci-lentera::before{animation:lentera-pendar 3.2s ease-in-out infinite}
+@keyframes lentera-ayun{0%,100%{transform:rotate(-2.2deg)}50%{transform:rotate(2.2deg)}}
+@keyframes lentera-pendar{0%,100%{opacity:.8;transform:scale(.96)}50%{opacity:1;transform:scale(1.04)}}
 /* gerak: kartu baru naik dari laci, kartu lama turun ke laci (JS memasang .ganti sekali per pergantian) */
-.gerak .laci-kartu.ganti .laci-panel.on{animation:kartu-naik .5s var(--ease-muncul) both}
+.gerak .laci-kartu.ganti .laci-panel.on{animation:kartu-naik .55s var(--ease-muncul) both}
 .gerak .laci-kartu.ganti .laci-panel.lalu{visibility:visible;animation:kartu-turun .32s ease-in both}
-@keyframes kartu-naik{from{opacity:0;transform:translateY(46px) rotate(-.6deg)}to{opacity:1;transform:none}}
-@keyframes kartu-turun{from{opacity:1;transform:none}to{opacity:0;transform:translateY(46px)}}
+@keyframes kartu-naik{from{opacity:0;transform:translateY(56px) rotate(-.8deg)}60%{opacity:1}to{opacity:1;transform:none}}
+@keyframes kartu-turun{from{opacity:1;transform:none}to{opacity:0;transform:translateY(56px)}}
 /* sekali saat laci pertama terlihat: kartu pertama terangkat dari laci */
 .gerak .laci.tunggu .laci-kartu{opacity:0;transform:translateY(60px)}
 .gerak .laci.buka .laci-kartu{transition:opacity .5s var(--ease-muncul),transform .8s var(--ease-muncul)}
+/* tablet: lentera lebih kecil */
+@media (max-width:999px){.laci-lentera{width:58px}.laci-lentera::before{width:240px;height:240px;margin:-120px 0 0 -120px}}
 /* HP: dua kolom tab (urutan baca tetap 01 → 09 mengikuti DOM); layar sangat sempit: satu kolom */
 @media (max-width:699px){
+  .laci-lentera{width:44px;right:8px;bottom:calc(100% + 18px)}
+  .laci-lentera::before{width:180px;height:180px;margin:-90px 0 0 -90px}
   /* HP: kartu setinggi jawabannya sendiri (tidak ditumpuk setinggi jawaban terpanjang — ruang kosong terlalu besar) */
   .laci-panel:not(.on){display:none}
-  .laci-panel{min-height:200px}
+  .laci-panel{min-height:220px}
   .laci-tab{min-height:54px;padding-bottom:20px}
-  .laci-kartu{margin-left:8px;margin-right:8px}
+  .laci-kartu{width:auto;margin-left:8px;margin-right:22%}
   .laci-dalam{grid-template-columns:repeat(2,minmax(0,1fr))}
   .laci-tab:nth-child(n){margin-top:0}.laci-tab:nth-child(2n){margin-top:5px}
 }
+@media (max-width:420px){.laci-kartu{margin-right:8px}.laci-lentera{display:none}}
 @media (max-width:359px){.laci-dalam{grid-template-columns:minmax(0,1fr)}.laci-tab:nth-child(2n){margin-top:0}}
-@media (prefers-reduced-motion: reduce){.laci-tab,.laci .laci-kartu{transition:none!important}.laci-panel{animation:none!important}}
+@media (prefers-reduced-motion: reduce){.laci-tab,.laci .laci-kartu{transition:none!important}.laci-panel,.laci-lentera,.laci-lentera::before{animation:none!important}}
 
 /* ===== KANTOR LCDU (lokasi) =====
    Kartu dua kolom (mengacu kartu "Lokasi" situs SD, palet LCDU): kiri judul kecil, alamat besar Fraunces (jalan biru,
@@ -1750,12 +1793,21 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     </div>
     <div class="faq-kanan">
     <!-- laci kartu indeks: kartu terpilih terangkat di atas laci; tab semua pertanyaan di dalam laci (pola ARIA tabs) -->
+    <div class="laci-meja">
     <div class="laci" id="faq-laci">
       <div class="laci-kartu" id="faq-kartu"></div>
       <div class="laci-kotak">
+      <span class="laci-lentera" aria-hidden="true"><svg viewBox="0 0 76 150">
+        <circle cx="38" cy="26" r="5" fill="none" stroke="#A8862E" stroke-width="2.5"/>
+        <path d="M24 46 Q38 26 52 46Z" fill="#A8862E"/><rect x="20" y="45" width="36" height="6" rx="2" fill="#8C6E22"/>
+        <path d="M22 51h32l4 52H18z" fill="#FFC21A"/><path d="M30 56h16l2 40H28z" fill="#FFF3C4"/>
+        <path d="M22 51h32l4 52H18z" fill="none" stroke="#8C6E22" stroke-width="2.5"/><path d="M38 51v52M27 51l-4 52M49 51l4 52" stroke="#8C6E22" stroke-width="1.6"/>
+        <path d="M24 64 Q38 56 52 64" fill="none" stroke="#8C6E22" stroke-width="1.6"/>
+        <rect x="15" y="103" width="46" height="7" rx="2" fill="#8C6E22"/><path d="M24 110h28l-8 14h-12z" fill="#A8862E"/><path d="M38 124v14" stroke="#A8862E" stroke-width="2"/><circle cx="38" cy="141" r="3" fill="#A8862E"/></svg></span>
         <div class="laci-dalam" role="tablist" aria-label="Pertanyaan" id="faq-tab"></div>
-        <div class="laci-depan" aria-hidden="true"><i class="orn-band orn-band--sempit laci-pita"></i><span class="laci-plat"><b>Yang sering ditanyakan</b><small>LCDU · Arsip pertanyaan</small></span><span class="laci-tarik"></span></div>
+        <div class="laci-depan" aria-hidden="true"><i class="orn-band orn-band--sempit laci-pita"></i><span class="laci-plat"><b>Yang sering ditanyakan</b><small>LCDU · 9 kartu</small></span><span class="laci-tarik"></span></div>
       </div>
+    </div>
     </div>
     <p class="faq-kosong" id="faq-kosong" hidden>Tidak ada yang cocok. <a href="https://wa.me/628196009333" data-wa="umum" target="_blank" rel="noopener">Tanya Admin lewat WhatsApp</a></p>
     </div>
@@ -2280,10 +2332,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     kartuEl.innerHTML = FAQ.map(function(f, k){
       return '<div class="laci-panel w-' + WARNA[k % WARNA.length] + '" role="tabpanel" id="faq-' + f.id + '-j" aria-labelledby="faq-' + f.id + '" tabindex="0">'
         + '<span class="laci-telinga" aria-hidden="true">No. ' + nomor(k) + '</span>'
-        + '<p class="laci-meta" aria-hidden="true">No. ' + nomor(k) + ' · Arsip pertanyaan LCDU</p>'
+        + '<p class="laci-meta" aria-hidden="true">Arsip pertanyaan LCDU</p>'
         + '<h3 class="laci-tanya faq-t">' + f.tanya + '</h3>'
         + '<p class="laci-jawab faq-j">' + f.jawab + '</p>'
-        + '<p class="laci-kaki"><a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a></p></div>';
+        + '<p class="laci-kaki"><a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a><span class="laci-urut" aria-hidden="true">' + nomor(k) + ' / ' + nomor(FAQ.length - 1) + '</span></p></div>';
     }).join('');
     /* JSON-LD dari array yang sama (teks jawaban tanpa tag) */
     var tmp = document.createElement('div');
@@ -2338,6 +2390,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       if (n && tabs[aktif].hidden) pilih(pertama);
     }
     pilih(0); kartuEl.classList.remove('ganti');
+    var plat = $('.laci-plat small'); if (plat) plat.textContent = 'LCDU · ' + FAQ.length + ' kartu';
+    /* lentera gantung berayun hanya saat section terlihat */
+    var faqSec = $('#faq');
+    if (faqSec && 'IntersectionObserver' in window) new IntersectionObserver(function(en){ faqSec.classList.toggle('hidup', en[0].isIntersecting); }).observe(faqSec);
     q.addEventListener('input', saring);
     /* tautan langsung #faq-<id>: pilih kartunya & gulir ke laci (saat dibuka, saat klik tautan, saat hash berubah) */
     function keHash(gulir){
@@ -2549,8 +2605,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       if (animasi){ timSorot.classList.remove('ganti'); void timSorot.offsetWidth; timSorot.classList.add('ganti'); }
       /* layar: lapis baru memudar di atas lapis lama; lapis lama dibuang setelah selesai (maks. dua lapis) */
       var potret = potretTim(m, true), lapis = document.createElement('div');
-      lapis.className = 'tim-layar-isi k-' + kel(m) + (/tim-ini/.test(potret) ? '' : ' ada-foto') + (animasi ? ' masuk' : '');
-      lapis.innerHTML = /tim-ini/.test(potret) ? '<span class="tim-layar-ini">' + inisial(m[0]) + '</span>' : potret;
+      var adaFoto = !/tim-ini/.test(potret);
+      lapis.className = 'tim-layar-isi k-' + kel(m) + (animasi ? ' masuk' : '');
+      lapis.innerHTML = adaFoto ? '<div class="tim-layar-bingkai">' + potret + '</div>' : '<span class="tim-layar-ini">' + inisial(m[0]) + '</span>';
+      timLayar.parentNode.classList.toggle('ada-foto', adaFoto);
       $$('.tim-layar-isi', timLayar).slice(0, -1).forEach(function(x){ x.remove(); });
       timLayar.appendChild(lapis);
       var lama = $$('.tim-layar-isi', timLayar).slice(0, -1);

@@ -68,7 +68,7 @@ sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bent
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Dinding foto: tiga foto cetak (selotip keffiyeh, sedikit miring) dengan kutipan di atas foto + kartu "Ceritamu"; HP = geser. Data = kartu `<li class="cerita-kartu">` di `index.html`. Foto sementara = foto stok tanpa wajah bertanda "Foto ilustrasi"; foto asli penulis (dengan izin) lewat `node tools/build-photos.mjs --potret <folder> stories` → otomatis menggantikan (slug `aninda-salma`, `fitriza-rahma`). |
-| Tim | Daftar nama editorial tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + kata مُعَلِّم kecil), peran & sertifikasi sebaris. HP: satu kelompok per slide geser. Data di array `TEAM`; foto kecil hanya bila ada lewat `node tools/build-photos.mjs --potret <folder> team`. |
+| Tim | Gaya "cineflow": layar lebar orang terpilih (warna kelompok + monogram; bila ada foto ASLI: potret di bingkai lengkung arkade di kanan layar) + pita wajah tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + مُعَلِّم). Data di array `TEAM`; foto lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
 | Donasi untuk Palestina | Kalimat pembuka, panel AWG besar (foto ilustrasi kebun zaitun + fakta dari aqsaworkinggroup.com + "Kunjungi situs AWG"), alur empat lentera (Donatur → Rekening Yayasan → disalurkan melalui AWG → untuk Palestina), lembar setoran (salin nomor, konfirmasi transfer via WhatsApp). `donasi.siapTayang: false` di `site-config.js` menyembunyikan rekening. |
 | Footer | Langit malam Al-Aqsa (foto hero yang sama) + sembilan lentera + "Bahasa untuk umat.", lalu empat kolom gaya situs saudara: Identitas (logo kecil, kepanjangan, deskripsi, "For a Better Ummah"), Jelajahi, Hubungi kami (WhatsApp; email/Instagram/alamat bila diisi), Jaringan pendidikan (`jaringan[]`, hanya yang ber-URL); garis + baris legal; pita keffiyeh. |
@@ -111,7 +111,10 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
   papan tulis. Sumber, fotografer, lisensi & tanggal di **`assets/photos/CREDITS.md`**.
 - Turunan AVIF + WebP (480 / 960 / 1600, tidak diperbesar): `node tools/build-photos.mjs <folder-jpg>`.
 - Potret ASLI testimoni/tim (hanya yang sudah disetujui): `node tools/build-photos.mjs --potret <folder-jpg> stories|team`
-  → 4:5, ≤ 60 KB, `manifest.json`. **Dilarang foto stok sebagai wajah siswa/guru.**
+  → 4:5, `manifest.json` (tim: lebar 160/480/800; testimoni: 480). **Dilarang foto stok sebagai wajah siswa/guru.**
+- **Panduan foto guru** (untuk tim yang memotret): tegak (portrait), minimal 1000 × 1250 px, setengah badan (kepala sampai
+  dada), mata di ±⅓ dari atas, ruang kosong di atas kepala ±10%, latar polos/rapi & terang merata, semua guru dengan jarak &
+  tinggi kamera yang sama. Nama berkas = slug nama di `TEAM` (mis. `nina-fatimah.jpg`). Hanya foto dengan izin.
 - Gambar hero dibuat dengan ChatGPT (lihat "Menunggu dari pemilik": ketentuan penggunaan).
 
 ## Ornamen (keffiyeh & semangka)
