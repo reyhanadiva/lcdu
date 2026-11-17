@@ -57,7 +57,10 @@ window.LCDU_CONFIG = {
   kontak: {
     email: '',
     instagram: '',
-    alamat: ''
+    alamat: '',
+    /* Lokasi kantor di Google Maps (dari pemilik, 17 Nov 2026; nama tempat di peta: "LCDU Bandung").
+       Tampil di footer "Hubungi kami" sebagai tautan peta. Kosongkan url untuk menyembunyikan. */
+    peta: { label: 'Kantor LCDU Bandung', url: 'https://maps.app.goo.gl/BMVJsNqZdJs6WWMz8' }
   },
 
   /* Jaringan pendidikan (footer, tautan keluar), urutan & nama seperti footer situs saudara (SD/TK/English Now).

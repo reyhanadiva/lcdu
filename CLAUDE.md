@@ -422,11 +422,17 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - **Alur donasi diperjelas** (pemilik: "ga jelas"): judul kecil "Ke mana donasimu mengalir?" + empat langkah berketerangan
   (Kamu berdonasi → Masuk ke rekening Yayasan [bank & atas nama dari site-config] → Disalurkan melalui AWG [Aqsa Working
   Group] → Untuk Palestina) dengan panah kunyit di antara lentera (ke bawah saat tegak, ke kanan saat mendatar 900–1099px).
+  Benang = RUAS per simpul (`.alur-simpul:not(:last-child)::before`, dari pusat lentera 11px ke pusat lentera berikutnya,
+  `100% + --g`) → tidak melewati lentera terakhir; panah tepat di tengah ruas pada garis yang sama. Ruas tergambar
+  (scaleY/scaleX) & panah muncul berurutan sekali.
 - **Jaringan pendidikan** (footer) seperti situs saudara: Yayasan, TK, SD, SMP, SMA Alfa Centauri, English Now — URL dari
-  halaman Yayasan (dicek 17 Nov 2026). Catatan: halaman Yayasan itu memuat tautan spam judi (kemungkinan disusupi) —
-  sudah dilaporkan ke pemilik; jangan menyalin tautan lain dari halaman itu.
-- **Footer bergerak tipis** (permintaan pemilik, pengecualian dari "tiga jenis gerak"): 26 bintang berkelip, kabut tipis
-  bergeser 28 s, lentera mengapung & berdenyut pelan. Hanya transform/opacity, `animation-play-state` jalan hanya saat
+  halaman Yayasan (dicek 17 Nov 2026). (Laporan "tautan spam" dari alat baca web ternyata keliru — pemilik sudah cek,
+  halaman aman.)
+- **Lokasi kantor**: `kontak.peta` (label "Kantor LCDU Bandung", URL Google Maps dari pemilik) → tautan berikon pin di
+  footer "Hubungi kami" (tab baru). Bukan section baru: LCDU kelas online, kantor cukup sebagai kontak.
+- **Footer bergerak** (permintaan pemilik, pengecualian dari "tiga jenis gerak"; dipertegas: "kurang kelihatan"): 26 bintang
+  berkelip, 3 **bintang jatuh/komet** (`.kaki-komet`, siklus 7 / 9,5 / 12 s, melintas ±1 s), kabut tipis bergeser 28 s,
+  lentera mengapung ±12px & berdenyut. Hanya transform/opacity, `animation-play-state` jalan hanya saat
   pita langit terlihat (`.hidup` dari IntersectionObserver), mati saat reduced-motion.
 
 ## Aturan kualitas
