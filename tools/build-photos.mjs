@@ -5,6 +5,8 @@
 // Potret ASLI (Testimoni / Tim) — hanya foto yang sudah disetujui pemiliknya (izin tertulis; wali bila < 18 tahun):
 //   node build-photos.mjs --potret <folder-jpg> stories   → assets/stories/<slug>-480.avif|webp + manifest.json
 //   node build-photos.mjs --potret <folder-jpg> team      → assets/team/<slug>-480.avif|webp + manifest.json
+//   node build-photos.mjs --potret <folder-jpg> team-contoh → foto STOK untuk pratinjau tata letak Tim (hanya tampil dengan
+//                                                            ?contoh-foto; catat sumber & lisensi di assets/photos/CREDITS.md)
 // Nama berkas = slug (huruf kecil, tanda hubung), mis. aninda-salma.jpg. Dipotong 4:5 (sharp 'attention'; atur dengan
 // <slug>.jpg yang sudah dipotong bila wajah tidak di tengah). Tim: lebar 160/480/800, Testimoni: 480 (tidak diperbesar);
 // kualitas diturunkan bertahap sampai ≤ 20/60/110 KB per berkas. Halaman hanya memakai slug yang tercantum di manifest.json.
@@ -14,13 +16,13 @@ import path from 'node:path';
 
 if (process.argv[2] === '--potret') {
   const [, , , src, folder] = process.argv;
-  if (!src || !['stories', 'team'].includes(folder)) { console.error('Pakai: node build-photos.mjs --potret <folder-jpg> stories|team'); process.exit(1); }
+  if (!src || !['stories', 'team', 'team-contoh'].includes(folder)) { console.error('Pakai: node build-photos.mjs --potret <folder-jpg> stories|team|team-contoh'); process.exit(1); }
   const out = new URL(`../assets/${folder}/`, import.meta.url).pathname, BATAS = 60 * 1024;
   fs.mkdirSync(out, { recursive: true });
   const manifestPath = path.join(out, 'manifest.json');
   const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
   // Tim: tiga lebar (160 = wajah kecil di pita, 480, 800 = layar besar di layar 2x); Testimoni: 480 saja. Tidak diperbesar.
-  const LEBAR_P = folder === 'team' ? [160, 480, 800] : [480], BATAS_P = { 160: 20 * 1024, 480: BATAS, 800: 110 * 1024 };
+  const LEBAR_P = folder.startsWith('team') ? [160, 480, 800] : [480], BATAS_P = { 160: 20 * 1024, 480: BATAS, 800: 110 * 1024 };
   for (const f of fs.readdirSync(src).filter(f => /\.(jpe?g|png)$/i.test(f))) {
     const slug = f.replace(/\.[^.]+$/, '').toLowerCase();
     const meta = await sharp(path.join(src, f)).rotate().metadata();

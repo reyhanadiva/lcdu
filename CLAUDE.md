@@ -459,6 +459,11 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   tinggi layar, kanan, muncul dari tepi bawah, garis putih) di atas warna kelompok; HP keterangan maks 56% (`.tim-cine.ada-foto`).
   `build-photos.mjs --potret … team` kini 160/480/800. Pita: wajah 60×100, kelompok pertama/terakhir `margin:auto` (tengah
   bila muat, mulai kiri bila meluap). `.tim-layar` `width:100%` (aspect-ratio + min-height dulu melebarkan halaman di 768px).
+- **Sesi 18 Nov**: FAQ kepala = judul, lalu satu baris (≥ 700px) kotak cari kiri (maks 440px, rata judul) + bantuan WhatsApp
+  di sampingnya; jumlah hasil melayang di bawah kotak cari (HP: di alur). Tim: bingkai lengkung SELALU tampil, berdiri di atas
+  pita wajah (`top:28px; bottom:66px`); tanpa foto = siluet + inisial (monogram raksasa layar dihapus). `?contoh-foto` memuat
+  `assets/team-contoh/` (foto stok, HANYA pratinjau; situs publik tetap tanpa wajah stok). Unduh Pexels/Unsplash dari container
+  ditolak proxy (domain belum diizinkan) — foto contoh belum ada.
 - "Suasana kelas" (copier) **tidak dibuat**: kelas LCDU online semua (pemilik). Crest gallery (glitch/WebGL) ditolak.
 
 ## Sesi audit mandiri 2 (17 Nov 2026)
