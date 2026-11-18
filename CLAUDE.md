@@ -536,8 +536,9 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - Pilih kelas: `.cls-fokus` `repeat(2,minmax(0,max-content))` + `min-width:0` — terjemahan EN membuat butir fokus Arab
   melebarkan kolom keluar layar (laporan pemilik). Pengecek teks terpotong (scratchpad `potong.py`) bersih di id/en/ar ×
   1440/1280/1024/768/390.
-- **Tanya Admin** = lingkaran hijau kulit 60px (HP 56px) bercincin putih, ikon WhatsApp; gelombang dua cincin (::before/
-  ::after, transform+opacity) memancar tiap 5 s sampai pengunjung berinteraksi (`.sudah`: hover/fokus/klik), tidak saat
+- **Tanya Admin** = lingkaran KUNYIT 66px (HP 60px; hijau dulu tenggelam di blok hijau — pemilik: "kurang menonjol"),
+  ikon WhatsApp tinta, cincin putih + garis tinta tipis; gelombang dua cincin kunyit (::before/::after, transform+opacity,
+  skala 2,2) memancar tiap 4 s sampai pengunjung mengeklik (`.sudah`), tidak saat
   tersembunyi/reduced-motion; label "Tanya Admin" (keping tinta di kiri) saat hover/fokus + sekali 4 s saat pertama muncul
   (`.sapa`). Teks label tetap di `.fab-teks` (kunci i18n tidak berubah). Foto stok contoh: pemilik setuju
   (situs Vercel = mockup), tetapi unduhan Pexels/Unsplash ditolak proxy → belum ada; `?contoh-foto` siap.

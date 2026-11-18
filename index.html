@@ -1498,22 +1498,24 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (prefers-reduced-motion: reduce){.kaki-lentera i{transition:none!important;opacity:1!important}.kaki-bintang i,.kaki-kabut,.kaki-lentera i,.kaki-komet i{animation:none!important}}
 
 /* ===== Mengambang ===== */
-/* Tombol "Tanya Admin" (sesi 18 Nov, permintaan pemilik): LINGKARAN hijau kulit 60px (HP 56px) + ikon WhatsApp putih (6,5:1),
-   gelombang mengundang = dua cincin (::before/::after, transform + opacity saja) yang memancar sekali-sekali (tiap 5 s), berhenti
-   setelah pengunjung berinteraksi (.sudah), saat tombol tersembunyi, dan saat reduced-motion. Label "Tanya Admin" = keping tinta
+/* Tombol "Tanya Admin" (sesi 18 Nov, permintaan pemilik): LINGKARAN KUNYIT 66px (HP 60px) + ikon WhatsApp tinta (#10163A, 10:1)
+   — kunyit = warna tombol aksi, menonjol di semua fase & blok (hijau dulu tenggelam di blok hijau Kenapa / sisi Arab); cincin putih
+   + garis tinta tipis supaya tetap bertepi di latar terang. Gelombang mengundang = dua cincin kunyit (::before/::after, transform +
+   opacity saja) yang memancar tiap 4 s, berhenti setelah pengunjung mengeklik (.sudah), saat tombol tersembunyi, dan saat
+   reduced-motion. Label "Tanya Admin" = keping tinta
    di kirinya: tampil saat hover/fokus, dan sekali 4 s ketika tombol pertama kali muncul (.sapa). Nama aksesibel dari aria-label. */
-.fab{--fab:60px;position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;
-  display:grid;place-items:center;width:var(--fab);height:var(--fab);border-radius:50%;background:var(--zamrud);color:var(--on-color);text-decoration:none;
-  box-shadow:0 0 0 3px var(--putih),0 14px 28px -10px rgba(6,60,30,.65);transition:transform .25s var(--ease),opacity .5s ease,visibility .5s}
-.fab svg{position:relative;z-index:1;width:28px;height:28px;fill:currentColor}
-.fab::before,.fab::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:50%;border:2px solid var(--zamrud);background:rgb(30 107 58 / .18);
+.fab{--fab:66px;position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:40;
+  display:grid;place-items:center;width:var(--fab);height:var(--fab);border-radius:50%;background:var(--kunyit);color:#10163A;text-decoration:none;
+  box-shadow:0 0 0 3px var(--putih),0 0 0 4.5px rgb(16 22 58 / .45),0 16px 30px -8px rgb(16 22 58 / .55);transition:transform .25s var(--ease),opacity .5s ease,visibility .5s}
+.fab svg{position:relative;z-index:1;width:32px;height:32px;fill:currentColor}
+.fab::before,.fab::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:50%;border:3px solid var(--kunyit);background:rgb(255 194 26 / .3);
   opacity:0;pointer-events:none}
-.gerak .fab:not(.sudah):not(.is-away):not(.is-kaki)::before{animation:fab-gelombang 5s cubic-bezier(.2,.7,.3,1) 1.2s infinite}
-.gerak .fab:not(.sudah):not(.is-away):not(.is-kaki)::after{animation:fab-gelombang 5s cubic-bezier(.2,.7,.3,1) 1.75s infinite}
-@keyframes fab-gelombang{0%{opacity:.75;transform:scale(1)}36%{opacity:0;transform:scale(1.9)}100%{opacity:0;transform:scale(1.9)}}
+.gerak .fab:not(.sudah):not(.is-away):not(.is-kaki)::before{animation:fab-gelombang 4s cubic-bezier(.2,.7,.3,1) .8s infinite}
+.gerak .fab:not(.sudah):not(.is-away):not(.is-kaki)::after{animation:fab-gelombang 4s cubic-bezier(.2,.7,.3,1) 1.3s infinite}
+@keyframes fab-gelombang{0%{opacity:.95;transform:scale(1)}45%{opacity:0;transform:scale(2.2)}100%{opacity:0;transform:scale(2.2)}}
 .fab:hover{transform:scale(1.06)}
 .fab:active{transform:scale(.96)}
-.fab:focus-visible{outline:3px solid var(--kunyit);outline-offset:5px}
+.fab:focus-visible{outline:3px solid #10163A;outline-offset:6px}
 /* label: keping tinta di kiri tombol (opacity + transform) */
 .fab-teks{position:absolute;right:calc(100% + 14px);top:50%;padding:9px 14px;border-radius:8px;background:#10163A;color:#fff;font-weight:700;font-size:.95rem;
   line-height:1.2;white-space:nowrap;box-shadow:0 10px 22px -12px rgb(16 22 58 / .7);opacity:0;transform:translate(8px,-50%);
@@ -1522,7 +1524,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .fab:hover .fab-teks,.fab:focus-visible .fab-teks,.fab.sapa .fab-teks{opacity:1;transform:translate(0,-50%)}
 /* selama hero tombol disembunyikan; muncul halus setelah hero */
 .fab.is-away,.fab.is-kaki{opacity:0;visibility:hidden;transform:translateY(16px) scale(.8);pointer-events:none}
-@media (max-width:699px){.fab{--fab:56px}.fab svg{width:26px;height:26px}.fab-teks{font-size:.875rem;padding:8px 12px}}
+@media (max-width:699px){.fab{--fab:60px}.fab svg{width:30px;height:30px}.fab-teks{font-size:.875rem;padding:8px 12px}}
 @media (prefers-reduced-motion: reduce){.fab,.fab-teks{transition:opacity .2s}.fab::before,.fab::after{animation:none!important}.fab:hover,.fab:active{transform:none}}
 
 
@@ -2152,9 +2154,9 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
 
   /* ---------- Nav: sembunyi selama hero; setelahnya muncul saat scroll ke atas, sembunyi saat ke bawah ---------- */
   var nav = $('.nav'), fab = $('.fab'), heroEl = $('#hero'), lastY = window.scrollY, run = 0, grace = 0, inHero = true, nTick = false;
-  /* tombol Tanya Admin: label menyapa sekali saat pertama muncul; gelombang berhenti setelah pengunjung berinteraksi */
+  /* tombol Tanya Admin: label menyapa sekali saat pertama muncul; gelombang berhenti setelah pengunjung mengeklik */
   var fabSapa = false;
-  ['pointerenter', 'focus', 'click'].forEach(function(ev){ fab.addEventListener(ev, function(){ fab.classList.add('sudah'); }); });
+  fab.addEventListener('click', function(){ fab.classList.add('sudah'); });
   function navUpdate(){
     nTick = false;
     var y = window.scrollY, dy = y - lastY; lastY = y;
