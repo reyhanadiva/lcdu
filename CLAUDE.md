@@ -404,8 +404,8 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   Tanya admin lewat WhatsApp", sticky) | `.faq-kanan` (daftar). HP tetap satu kolom.
 - **Donasi desktop ≥ 1100px**: `.donate-bawah` = alur empat lentera TEGAK (Fraunces, kiri) | lembar setoran (kanan).
   900–1099px alur mendatar seperti sebelumnya; HP tegak.
-- **Tombol "Tanya admin"** (`.fab`, di dalam `<aside aria-label="Bantuan cepat">`): HP < 700px = lingkaran ikon 56px
-  (nama aksesibel dari `aria-label`); menepi (`.is-kaki`) saat footer terlihat, karena footer sudah memuat WhatsApp.
+- **Tombol "Tanya admin"** (`.fab`, di dalam `<aside aria-label="Bantuan cepat">`): kini lingkaran di semua layar (lihat
+  sesi "bahasa"); nama aksesibel dari `aria-label`; menepi (`.is-kaki`) saat footer terlihat, karena footer sudah memuat WhatsApp.
 - **Lenis hanya untuk `pointer: fine`** (mouse/trackpad; juga adaptif, lihat sesi "berat"). Di layar sentuh scroll native (`html{scroll-behavior:smooth}`
   untuk anchor) — Lenis di HP hanya menambah loop rAF tanpa efek (smoothTouch mati).
 - Glyph raksasa Pilih kelas (`.side-glyph`) = `::before{content:attr(data-g)}` (dekor, bukan node teks).
@@ -526,8 +526,20 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   Pengantar: span `.k` "Bahasa" dibuang di EN/AR (penanda tidak dipakai = elemen dihapus).
 - FAQ ringkas (pemilik: "kebesaran"): laci 820px, kartu ≥ 1000px selebar laci − 64px & semua setinggi kartu terpanjang
   (garis tulis), lentera di luar tepi kanan laci; section desktop 958 → 834 px, HP 930 → 861 px.
-- Tim: layar = batu krem + arkade samar; bingkai **ablaq** (13 batu conic-gradient krem/warna kelompok, kaki bergaris,
-  impost kuningan, garis kuningan dalam); keterangan tinta (peran = warna kelompok). Foto stok contoh: pemilik setuju
+- Tim: **latar & bingkai berbeda per kelompok** (pemilik: "dibedain"; CSS `.tim-layar-isi.k-mgmt|k-en|k-ar`, selektor
+  WAJIB lewat lapis itu, bukan `.tim-cine`, supaya lapis lama tidak berubah saat crossfade). Pengelola = batu merah muda +
+  arkade LANCIP, bingkai lengkung lancip (mask SVG 400×500) ablaq merah tua/krem; Inggris = batu biru pucat + ubin bintang
+  delapan, lengkung BULAT 21 batu biru/putih + kaki ubin belah ketupat; Arab = batu hijau pucat + arkade tapal kuda, MIHRAB
+  (bidang persegi berjaring + garis alfiz, cincin ablaq hijau tua/krem, dua bintang delapan kuningan). Struktur:
+  `.tim-layar-bingkai` (posisi + drop-shadow) > `.tim-bentuk` (bertopeng) > `.tim-lengkung` + `::after` (garis kuningan)
+  + `.tim-bingkai-dalam`; `.tim-impost` di luar topeng, `top: var(--spring)`. Keterangan tinta; peran merah ≥ 4,9:1.
+- Pilih kelas: `.cls-fokus` `repeat(2,minmax(0,max-content))` + `min-width:0` — terjemahan EN membuat butir fokus Arab
+  melebarkan kolom keluar layar (laporan pemilik). Pengecek teks terpotong (scratchpad `potong.py`) bersih di id/en/ar ×
+  1440/1280/1024/768/390.
+- **Tanya Admin** = lingkaran hijau kulit 60px (HP 56px) bercincin putih, ikon WhatsApp; gelombang dua cincin (::before/
+  ::after, transform+opacity) memancar tiap 5 s sampai pengunjung berinteraksi (`.sudah`: hover/fokus/klik), tidak saat
+  tersembunyi/reduced-motion; label "Tanya Admin" (keping tinta di kiri) saat hover/fokus + sekali 4 s saat pertama muncul
+  (`.sapa`). Teks label tetap di `.fab-teks` (kunci i18n tidak berubah). Foto stok contoh: pemilik setuju
   (situs Vercel = mockup), tetapi unduhan Pexels/Unsplash ditolak proxy → belum ada; `?contoh-foto` siap.
 
 ## Belum lengkap (lihat juga checklist di README)
