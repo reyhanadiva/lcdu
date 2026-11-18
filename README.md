@@ -136,6 +136,22 @@ Model Kubah & Qibli (TRELLIS.2 dari gambar ChatGPT), sprite, tekstur, `hero/dior
 - Warna logo (diukur dari PNG): biru `#1724C0`, hijau `#7FA33F`, teks tagline `#332C2B`.
 - Berkas vektor resmi (SVG/AI/PDF) belum ada — lihat "Menunggu dari pemilik".
 
+## Bahasa: Indonesia / English / العربية
+Pemilih **ID · EN · عربي** di hero (kanan atas) dan di navbar. Situs tetap statis, tanpa build step:
+- Teks asli = Bahasa Indonesia di `index.html`. Terjemahan di `i18n/en.js` dan `i18n/ar.js` (kunci = teks Indonesia persis).
+- `i18n/i18n.js` memilih bahasa (`?lang=en` → pilihan tersimpan → Indonesia), memuat kamus, lalu menerjemahkan HTML
+  sebelum skrip utama berjalan. Teks yang dibuat skrip memakai `LCDU_T('teks Indonesia', [nilai])`.
+- Ganti bahasa = muat ulang dengan `?lang=…` (posisi baca dipertahankan lewat `#section`), jadi tiap bahasa punya URL sendiri.
+- Arab: hanya arah teks kanan-ke-kiri + huruf Noto Naskh Arabic; tata letak, gambar, dan animasi tidak dicerminkan
+  (keputusan pemilik). Urutan 6 langkah tetap 1 → 6 dari kiri.
+- Kunci yang tidak ada di kamus → teks Indonesia tetap tampil (tidak rusak). Setelah mengubah teks di `index.html`,
+  jalankan `python3 tools/i18n-cek.py http://127.0.0.1:8000/` untuk melihat kunci yang perlu diterjemahkan ulang.
+- **Perlu diperiksa sebelum rilis**: terjemahan pertama dibuat Claude (18 Nov 2026) — mohon dicek guru English Now
+  (EN) dan ustadz/guru Bahasa Arab (AR), terutama: dua kutipan testimoni (diterjemahkan setia, bukan dikarang),
+  peran guru dalam bahasa Arab (bentuk مُعلِّم laki-laki dipakai umum), dan pesan WhatsApp otomatis — Admin akan
+  menerima pesan dalam bahasa Inggris/Arab dari pengunjung versi itu.
+- Belum: `hreflang` (butuh domain resmi, URL lengkap), JSON-LD FAQ ikut bahasa aktif.
+
 ## Menunggu dari pemilik
 
 Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai diberikan (tidak ada penampung kosong).

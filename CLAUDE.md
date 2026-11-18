@@ -40,6 +40,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   blok warna solid. Jangan pasang strip fixed di `safe-area-inset-top`.
 - `vendor/lenis/` — scroll halus seluruh halaman (mati saat reduced-motion). Klik anchor ditangani sendiri di `index.html`
   supaya `scroll-margin-top` dihormati.
+- `i18n/` — pilihan bahasa ID/EN/AR (lihat sesi "bahasa"); `tools/i18n-cek.py` = kunci yang belum diterjemahkan.
 - `site-config.js` — **satu tempat** untuk data yang berubah: status Placement Test **per bahasa** (`placement.en.open`,
   `placement.ar.open`; `false` → "Tanya admin lewat WhatsApp" + kalimat ditutup sementara; `url` = halaman awal tes `-rule`), tautan tes & aturan Inggris/Arab, WhatsApp admin + pesan awal per tombol,
   AWG, rekening, tautan Yayasan (`yayasan.url` → https://alfacentauri.sch.id/yayasan/, dipakai `.tautan-yayasan` di
@@ -512,6 +513,22 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
 - Jangan mengarang fakta: harga (Rp100.000/term), jadwal, nama guru, nomor rekening hanya dari data yang ada (lihat README checklist).
 - Ayat & hadits: cantumkan rujukan, minta pemilik verifikasi di quran.kemenag.go.id. Jangan mengeluarkan fatwa.
 - Commit kecil dengan pesan Bahasa Indonesia yang jelas. Tanyakan sebelum push jika perubahan besar.
+
+## Sesi "bahasa" (18 Nov 2026; pemilik: toggle ID / EN / AR, seluruh halaman, Arab = teks RTL saja, di hero + navbar)
+- `i18n/i18n.js` (sinkron, tepat sebelum `site-config.js`) + `LCDU_I18N.terapkan()`; kamus `i18n/en.js`, `i18n/ar.js`
+  dimuat lewat `document.write` (sama-origin, hanya bila bukan ID). `<head>` memasang `lang` + `.i18n-tunggu` (body
+  tersembunyi sampai diterjemahkan; pengaman 4 s). Satuan = elemen berisi teks + elemen sebaris; kunci bertanda
+  `<0>…</0>` (elemen ASLI dipakai ulang → kelas/data-*/pendengar tetap), atribut aria-label/title/placeholder/alt.
+  Skrip utama: `var T = window.LCDU_T`, semua teks buatan skrip lewat `T()` (FAQ, Tim `peran: …`, pesan WA, status tes,
+  aria geser, dst.). **Teks baru di skrip WAJIB lewat T()**, teks baru di HTML otomatis jadi kunci → tambahkan ke kedua
+  kamus (cek: `tools/i18n-cek.py`). Pemilih `.bahasa` (role=group, bukan nav: dua pemilih = landmark ganda).
+- Arab: `dir=rtl` per satuan, `--f-display/--f-body` + Noto Naskh, tanpa letter-spacing/miring, line-height judul 1,45.
+  Pengantar: span `.k` "Bahasa" dibuang di EN/AR (penanda tidak dipakai = elemen dihapus).
+- FAQ ringkas (pemilik: "kebesaran"): laci 820px, kartu ≥ 1000px selebar laci − 64px & semua setinggi kartu terpanjang
+  (garis tulis), lentera di luar tepi kanan laci; section desktop 958 → 834 px, HP 930 → 861 px.
+- Tim: layar = batu krem + arkade samar; bingkai **ablaq** (13 batu conic-gradient krem/warna kelompok, kaki bergaris,
+  impost kuningan, garis kuningan dalam); keterangan tinta (peran = warna kelompok). Foto stok contoh: pemilik setuju
+  (situs Vercel = mockup), tetapi unduhan Pexels/Unsplash ditolak proxy → belum ada; `?contoh-foto` siap.
 
 ## Belum lengkap (lihat juga checklist di README)
 Foto asli (tim, kelas, testimoni), logo mitra, link formulir registrasi/Instagram/alamat, ejaan 5 nama guru,

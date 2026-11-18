@@ -12,7 +12,11 @@
 <link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-wide-v2-1280.avif" imagesrcset="assets/hero/build/night-wide-v2-1280.avif 1280w, assets/hero/build/night-wide-v2-1536.avif 1536w" imagesizes="(min-aspect-ratio: 3/2) 100vw, 150vh" media="(orientation: landscape)" fetchpriority="high">
 <meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU (Language Course for Da'wah dan Ummah), untuk dakwah dan umat. Biaya Rp100.000 per term (1 semester).">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
-<script>document.documentElement.classList.add('js')</script>
+<script>document.documentElement.classList.add('js');
+/* bahasa (i18n/i18n.js): pasang lang lebih awal & sembunyikan body sebentar supaya teks Indonesia tidak berkedip */
+(function(h){ var l = 'id'; try { var u = new URLSearchParams(location.search).get('lang'), s = localStorage.getItem('lcdu-bahasa'); l = /^(id|en|ar)$/.test(u) ? u : (/^(id|en|ar)$/.test(s) ? s : 'id'); } catch (e) {}
+  if (l !== 'id'){ h.lang = l; h.classList.add('i18n-tunggu'); setTimeout(function(){ h.classList.remove('i18n-tunggu'); }, 4000); } })(document.documentElement);</script>
+<!-- hreflang (id/en/ar) menyusul saat domain resmi sudah pasti: Google mewajibkan URL lengkap -->
 <link rel="preload" href="fonts/fraunces-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/plus-jakarta-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style>
@@ -25,6 +29,7 @@
 @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-arabic.woff2) format('woff2');unicode-range:U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC, U+102E0-102FB, U+10E60-10E7E, U+10EC2-10EC7, U+10EC9-10EEE, U+10EF0-10EFF, U+1EE00-1EE03, U+1EE05-1EE1F, U+1EE21-1EE22, U+1EE24, U+1EE27, U+1EE29-1EE32, U+1EE34-1EE37, U+1EE39, U+1EE3B, U+1EE42, U+1EE47, U+1EE49, U+1EE4B, U+1EE4D-1EE4F, U+1EE51-1EE52, U+1EE54, U+1EE57, U+1EE59, U+1EE5B, U+1EE5D, U+1EE5F, U+1EE61-1EE62, U+1EE64, U+1EE67-1EE6A, U+1EE6C-1EE72, U+1EE74-1EE77, U+1EE79-1EE7C, U+1EE7E, U+1EE80-1EE89, U+1EE8B-1EE9B, U+1EEA1-1EEA3, U+1EEA5-1EEA9, U+1EEAB-1EEBB, U+1EEF0-1EEF1}
 @font-face{font-family:'Noto Naskh Arabic';font-style:normal;font-weight:400 700;font-display:swap;src:url(fonts/noto-naskh-arabic-latin.woff2) format('woff2');unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}
 body{margin:0}
+html.i18n-tunggu body{visibility:hidden}
 /* Palet "semangka-keffiyeh" × logo LCDU. Hijau = Arab & identitas LCDU, biru = Inggris, merah = aksen hangat & blok besar,
    hitam + putih = pola keffiyeh, kunyit = HANYA tombol aksi. Latar dasar putih hangat; warna kuat datang dari blok per section. */
 :root{
@@ -1472,6 +1477,27 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
 }
+
+/* ===== PILIHAN BAHASA (i18n/i18n.js): ID / EN / عربي di hero (kanan atas) dan di navbar =====
+   Tautan biasa (?lang=…); bahasa aktif = aria-current. Arab: hanya arah teks (dir=rtl per satuan) + huruf Noto Naskh. */
+.bahasa{display:flex;align-items:center;gap:2px;padding:3px;border-radius:999px;font-family:var(--f-body)}
+.bahasa a{display:inline-grid;place-items:center;min-width:38px;min-height:34px;padding:0 .55em;border-radius:999px;font-size:.8rem;font-weight:700;
+  letter-spacing:.03em;text-decoration:none;color:var(--ink-soft);transition:background-color .2s,color .2s}
+.bahasa a[lang="ar"]{font-family:var(--f-ar);font-size:.92rem;letter-spacing:0}
+.bahasa a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 8%,transparent)}
+.bahasa a[aria-current="true"]{background:var(--ink);color:#fff}
+.bahasa a:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px}
+.bahasa-nav{margin-left:auto;margin-right:4px}
+.bahasa-hero{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(16px,env(safe-area-inset-right,0px));
+  background:rgb(4 8 32 / .42);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22)}
+.bahasa-hero a{color:#fff}
+.bahasa-hero a:hover{color:#fff;background:rgb(255 255 255 / .14)}
+.bahasa-hero a[aria-current="true"]{background:#fff;color:#10163A}
+@media (min-width:900px){.bahasa-hero{top:calc(env(safe-area-inset-top,0px) + 22px);right:max(28px,env(safe-area-inset-right,0px))}}
+html[lang="ar"]{--f-display:"Fraunces","Noto Naskh Arabic",Georgia,serif;--f-body:"Plus Jakarta Sans","Noto Naskh Arabic",system-ui,sans-serif}
+/* huruf Arab bersambung: tanpa jarak huruf & tanpa miring sintetis; baris sedikit lebih lega */
+html[lang="ar"] [data-i18n],html[lang="ar"] [data-i18n] *{letter-spacing:0!important;font-style:normal!important}
+html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[data-i18n]{line-height:1.45}
 </style>
 </head>
 <body>
@@ -1973,8 +1999,12 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 <aside class="fab-wadah" aria-label="Bantuan cepat"><a class="fab is-away" id="tanya" href="https://wa.me/628196009333" data-wa="umum" aria-label="Tanya Admin lewat WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3z"/></svg><span class="fab-teks">Tanya Admin</span></a></aside>
 
 
+<script src="i18n/i18n.js"></script>
+<script>LCDU_I18N.terapkan()</script>
 <script src="site-config.js"></script>
 <script>
+  /* terjemahan (i18n/i18n.js): T('teks Indonesia', [nilai]) → teks bahasa aktif; tanpa kamus = teks Indonesia */
+  var T = window.LCDU_T || function(t, v){ return v ? t.replace(/\{(\d+)\}/g, function(_, i){ return v[+i]; }) : t; };
 (function(){
   document.documentElement.classList.add('js');
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1989,7 +2019,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   function slugDari(n){ return n.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
   function fotoAsli(folder, slug, nama, w){
     var b = 'assets/' + folder + '/' + slug + '-';
-    return '<picture><source type="image/avif" srcset="' + b + w + '.avif"><img src="' + b + w + '.webp" alt="Foto ' + nama + '" loading="lazy" decoding="async"></picture>';
+    return '<picture><source type="image/avif" srcset="' + b + w + '.avif"><img src="' + b + w + '.webp" alt="' + T('Foto {0}', [nama]) + '" loading="lazy" decoding="async"></picture>';
   }
   function pasangFoto(folder, akar){
     if (!window.fetch) return;
@@ -2013,7 +2043,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     var penanda = $('[data-geser-penanda]', root), tombol;
     if (!penanda){
       penanda = document.createElement('div'); penanda.className = 'geser-titik';
-      slides.forEach(function(sl, i){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', 'Ke slide ' + (i + 1) + ' dari ' + n); penanda.appendChild(b); });
+      slides.forEach(function(sl, i){ var b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-label', T('Ke slide {0} dari {1}', [i + 1, n])); penanda.appendChild(b); });
       jalur.insertAdjacentElement('afterend', penanda);
     }
     tombol = $$('button', penanda);
@@ -2050,7 +2080,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         root.setAttribute('aria-label', root.dataset.geserNama || 'Carousel');
         jalur.setAttribute('tabindex', '0');
         /* <li> tetap listitem (role group tidak sah di <li>); slide lain = group "slide". Nama "1 dari n" di keduanya. */
-        slides.forEach(function(sl, i){ if (sl.tagName !== 'LI'){ sl.setAttribute('role', 'group'); sl.setAttribute('aria-roledescription', 'slide'); } sl.setAttribute('aria-label', (i + 1) + ' dari ' + n); if (io) io.observe(sl); });
+        slides.forEach(function(sl, i){ if (sl.tagName !== 'LI'){ sl.setAttribute('role', 'group'); sl.setAttribute('aria-roledescription', 'slide'); } sl.setAttribute('aria-label', T('{0} dari {1}', [i + 1, n])); if (io) io.observe(sl); });
         if (isyaratIO) isyaratIO.observe(root);
         tandai(0);
       } else {
@@ -2277,10 +2307,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   function cfg(path){ return path.split('.').reduce(function(o,k){ return o == null ? o : o[k]; }, CFG); }
   function external(a){ a.target = '_blank'; a.rel = 'noopener'; }
   $$('[data-cfg-href]').forEach(function(a){ var v = cfg(a.dataset.cfgHref); if (v) a.href = v; external(a); });
-  $$('[data-cfg-text]').forEach(function(el){ var v = cfg(el.dataset.cfgText); if (v) el.textContent = v; });
+  $$('[data-cfg-text]').forEach(function(el){ var v = cfg(el.dataset.cfgText); if (v) el.textContent = T(v); });
   $$('[data-wa]').forEach(function(a){
     var no = cfg('whatsappAdmin.nomor'), pesan = cfg('whatsappAdmin.pesan.' + a.dataset.wa);
-    if (no) a.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+    if (no) a.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(T(pesan)) : '');
     external(a);
   });
   /* ---------- Footer: kontak & mitra hanya bila datanya ada; lentera penutup menyala sekali ---------- */
@@ -2294,22 +2324,22 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     var esc = function(t){ var d = document.createElement('div'); d.textContent = t; return d.innerHTML; };
     var ul = $('#foot-kontak'), em = cfg('kontak.email'), ig = cfg('kontak.instagram'), alamat = cfg('kontak.alamat');
     if (ul && em) ul.insertAdjacentHTML('beforeend', '<li><a href="mailto:' + esc(em) + '">' + IKON.email + '<span>' + esc(em) + '</span></a></li>');
-    if (ul && ig) ul.insertAdjacentHTML('beforeend', '<li><a href="' + esc(ig) + '" target="_blank" rel="noopener">' + IKON.instagram + '<span>Instagram<span class="sr-only"> (buka di tab baru)</span></span></a></li>');
+    if (ul && ig) ul.insertAdjacentHTML('beforeend', '<li><a href="' + esc(ig) + '" target="_blank" rel="noopener">' + IKON.instagram + '<span>Instagram<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></span></a></li>');
     if (ul && alamat) ul.insertAdjacentHTML('beforeend', '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamat) + '</span></address></li>');
     var kantor = cfg('kantor');
     var alamatKantor = kantor && (kantor.singkat || kantor.lengkap);
     if (ul && alamatKantor) ul.insertAdjacentHTML('afterbegin', kantor.peta
-      ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(alamatKantor) + '<span class="sr-only"> (Google Maps, buka di tab baru)</span></span></a></li>'
+      ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(alamatKantor) + '<span class="sr-only"> ' + T('(Google Maps, buka di tab baru)') + '</span></span></a></li>'
       : '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamatKantor) + '</span></address></li>');
     var jar = cfg('jaringan'), uj = $('#foot-jaringan');
     if (uj && jar && jar.length){
       var ada = jar.filter(function(j){ return j && j.url; });
       if (ada.length) uj.innerHTML = ada.map(function(j){
-        return '<li><a class="foot-keluar" href="' + esc(j.url) + '" target="_blank" rel="noopener">' + IKON.keluar + '<span>' + esc(j.nama) + '<span class="sr-only"> (buka di tab baru)</span></span></a></li>'; }).join('');
+        return '<li><a class="foot-keluar" href="' + esc(j.url) + '" target="_blank" rel="noopener">' + IKON.keluar + '<span>' + esc(T(j.nama)) + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></span></a></li>'; }).join('');
     }
     var mitra = cfg('mitra'), baris = $('#mitra');
     if (baris && mitra && mitra.length){
-      baris.innerHTML = '<p>Bekerja sama dengan</p>' + mitra.map(function(m){
+      baris.innerHTML = '<p>' + T('Bekerja sama dengan') + '</p>' + mitra.map(function(m){
         return '<a href="' + m.url + '" target="_blank" rel="noopener"><img src="' + m.logo + '" alt="' + m.nama + '" loading="lazy" decoding="async"></a>'; }).join('');
       baris.hidden = false;
     }
@@ -2326,29 +2356,29 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   (function(){
     var tabEl = $('#faq-tab'), kartuEl = $('#faq-kartu'), laci = $('#faq-laci'); if (!tabEl) return;
     var buka_ = ['en', 'ar'].filter(function(b){ return !!cfg('placement.' + b + '.open'); });
-    var statusTes = !buka_.length ? 'Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke Admin kapan dibuka lagi.'
-      : buka_.length === 2 ? 'Saat ini tes Inggris dan Arab sudah dibuka.' : 'Saat ini tes ' + (buka_[0] === 'en' ? 'Inggris' : 'Arab') + ' sudah dibuka; tes ' + (buka_[0] === 'en' ? 'Arab' : 'Inggris') + ' tutup sementara.';
+    var statusTes = !buka_.length ? T('Saat ini Placement Test Inggris dan Arab sedang tutup sementara; tanyakan ke Admin kapan dibuka lagi.')
+      : buka_.length === 2 ? T('Saat ini tes Inggris dan Arab sudah dibuka.') : (buka_[0] === 'en' ? T('Saat ini tes Inggris sudah dibuka; tes Arab tutup sementara.') : T('Saat ini tes Arab sudah dibuka; tes Inggris tutup sementara.'));
     var yUrl = cfg('yayasan.url') || 'https://alfacentauri.sch.id/yayasan/', yNama = cfg('yayasan.nama') || 'Yayasan Taqwa Cerdas Kreatif';
     var awg = cfg('donasi.mitra') || 'Aqsa Working Group (AWG)';
     var FAQ = [
-      { id: 'biaya', topik: 'biaya', tanya: 'Berapa biayanya?',
-        jawab: 'Rp100.000 per term (semester), tanpa biaya bulanan.' },
-      { id: 'syarat', topik: 'daftar', tanya: 'Siapa yang boleh ikut?',
-        jawab: 'Cukup empat hal: usia 16+, bisa membaca Al-Qur\'an, punya laptop atau HP, dan siap konsisten sampai term selesai.' },
-      { id: 'daftar', topik: 'daftar', tanya: 'Bagaimana cara daftar?',
-        jawab: 'Dalam enam langkah: kerjakan Placement Test, kirim screenshot hasilnya ke Admin LCDU (Mr. Syahril), tunggu admin memberi tahu kelas yang tersedia, isi formulir registrasi dan bayar biaya term pertama, masuk grup WhatsApp kelas dan aktifkan akun Canvas LMS, lalu mulai belajar. Rinciannya ada di <a href="#bergabung">Cara bergabung</a>.' },
-      { id: 'tes', topik: 'tes', tanya: 'Apa itu Placement Test?',
-        jawab: 'Tes singkat untuk menentukan kelas yang pas untukmu: 20 soal listening, 20 soal reading, dan 30 soal grammar, maksimal 60 menit, dikerjakan sekali duduk. Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset. ' + statusTes },
-      { id: 'belajar', topik: 'belajar', tanya: 'Belajarnya bagaimana?',
-        jawab: 'Online. Tatap muka lewat Zoom; materi, tugas, dan link Zoom tersimpan di Canvas LMS.' },
-      { id: 'jadwal', topik: 'belajar', tanya: 'Kapan jadwal kelasnya?',
-        jawab: 'Kelas Inggris: Senin dan Rabu, 16.00–17.30 WIB. Kelas Arab: Selasa dan Kamis, 16.00–17.30 WIB. Kelas weekend untuk keduanya: Sabtu, 13.00–16.00 WIB.' },
-      { id: 'kelas', topik: 'belajar', tanya: 'Kelas apa saja yang ada?',
-        jawab: 'Dua kelas: Bahasa Inggris dan Bahasa Arab, bersama guru profesional sesuai level kamu. Lihat <a href="#kelas">Pilih kelas</a>.' },
-      { id: 'donasi', topik: 'donasi', tanya: 'Apakah donasi wajib?',
-        jawab: 'Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui ' + awg + '.' },
-      { id: 'pengelola', topik: 'daftar', tanya: 'Siapa yang mengelola LCDU?',
-        jawab: 'LCDU adalah program nirlaba yang dikelola <a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> (buka di tab baru)</span></a>.' }
+      { id: 'biaya', topik: 'biaya', tanya: T('Berapa biayanya?'),
+        jawab: T('Rp100.000 per term (semester), tanpa biaya bulanan.') },
+      { id: 'syarat', topik: 'daftar', tanya: T('Siapa yang boleh ikut?'),
+        jawab: T('Cukup empat hal: usia 16+, bisa membaca Al-Qur\'an, punya laptop atau HP, dan siap konsisten sampai term selesai.') },
+      { id: 'daftar', topik: 'daftar', tanya: T('Bagaimana cara daftar?'),
+        jawab: T('Dalam enam langkah: kerjakan Placement Test, kirim screenshot hasilnya ke Admin LCDU (Mr. Syahril), tunggu admin memberi tahu kelas yang tersedia, isi formulir registrasi dan bayar biaya term pertama, masuk grup WhatsApp kelas dan aktifkan akun Canvas LMS, lalu mulai belajar. Rinciannya ada di <a href="#bergabung">Cara bergabung</a>.') },
+      { id: 'tes', topik: 'tes', tanya: T('Apa itu Placement Test?'),
+        jawab: T('Tes singkat untuk menentukan kelas yang pas untukmu: 20 soal listening, 20 soal reading, dan 30 soal grammar, maksimal 60 menit, dikerjakan sekali duduk. Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset.') + ' ' + statusTes },
+      { id: 'belajar', topik: 'belajar', tanya: T('Belajarnya bagaimana?'),
+        jawab: T('Online. Tatap muka lewat Zoom; materi, tugas, dan link Zoom tersimpan di Canvas LMS.') },
+      { id: 'jadwal', topik: 'belajar', tanya: T('Kapan jadwal kelasnya?'),
+        jawab: T('Kelas Inggris: Senin dan Rabu, 16.00–17.30 WIB. Kelas Arab: Selasa dan Kamis, 16.00–17.30 WIB. Kelas weekend untuk keduanya: Sabtu, 13.00–16.00 WIB.') },
+      { id: 'kelas', topik: 'belajar', tanya: T('Kelas apa saja yang ada?'),
+        jawab: T('Dua kelas: Bahasa Inggris dan Bahasa Arab, bersama guru profesional sesuai level kamu. Lihat <a href="#kelas">Pilih kelas</a>.') },
+      { id: 'donasi', topik: 'donasi', tanya: T('Apakah donasi wajib?'),
+        jawab: T('Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui {0}.', [awg]) },
+      { id: 'pengelola', topik: 'daftar', tanya: T('Siapa yang mengelola LCDU?'),
+        jawab: T('LCDU adalah program nirlaba yang dikelola {0}.', ['<a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></a>']) }
     ];
     /* warna kartu bergilir (tint palet LCDU; tinta #10163A ≥ 12:1 di semua) — kunyit TIDAK dipakai (khusus tombol aksi) */
     var WARNA = ['krem', 'biru', 'hijau', 'merah', 'kertas'];
@@ -2361,10 +2391,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     kartuEl.innerHTML = FAQ.map(function(f, k){
       return '<div class="laci-panel w-' + WARNA[k % WARNA.length] + '" role="tabpanel" id="faq-' + f.id + '-j" aria-labelledby="faq-' + f.id + '" tabindex="0">'
         + '<span class="laci-telinga" aria-hidden="true">No. ' + nomor(k) + '</span>'
-        + '<p class="laci-meta" aria-hidden="true">Arsip pertanyaan LCDU</p>'
+        + '<p class="laci-meta" aria-hidden="true">' + T('Arsip pertanyaan LCDU') + '</p>'
         + '<h3 class="laci-tanya faq-t">' + f.tanya + '</h3>'
         + '<p class="laci-jawab faq-j">' + f.jawab + '</p>'
-        + '<p class="laci-kaki"><a class="faq-tautan" href="#faq-' + f.id + '">Tautan<span class="sr-only"> ke pertanyaan ini</span></a><span class="laci-urut" aria-hidden="true">' + nomor(k) + ' / ' + nomor(FAQ.length - 1) + '</span></p></div>';
+        + '<p class="laci-kaki"><a class="faq-tautan" href="#faq-' + f.id + '">' + T('Tautan') + '<span class="sr-only"> ' + T('ke pertanyaan ini') + '</span></a><span class="laci-urut" aria-hidden="true">' + nomor(k) + ' / ' + nomor(FAQ.length - 1) + '</span></p></div>';
     }).join('');
     /* JSON-LD dari array yang sama (teks jawaban tanpa tag) */
     var tmp = document.createElement('div');
@@ -2375,7 +2405,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
     document.head.appendChild(ld);
     var tabs = $$('.laci-tab', tabEl), panel = $$('.laci-panel', kartuEl), q = $('#faq-q'), info = $('#faq-info'), kosong = $('#faq-kosong'), aktif = 0, laluT = 0;
     var wa = $('a', kosong), no = cfg('whatsappAdmin.nomor'), pesan = cfg('whatsappAdmin.pesan.umum');
-    if (no) wa.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+    if (no) wa.href = 'https://wa.me/' + no + (pesan ? '?text=' + encodeURIComponent(T(pesan)) : '');
     var asli = panel.map(function(pn, k){ return [$('.faq-t', pn).innerHTML, $('.faq-j', pn).innerHTML, $('.laci-tab-t', tabs[k]).innerHTML]; });
     /* pilih kartu: tab terangkat di laci, kartu lama turun ke laci & kartu baru naik (transform/opacity saja) */
     function pilih(k, fokus){
@@ -2415,11 +2445,11 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         if (cocok){ n++; if (pertama < 0) pertama = k; sorot($('.faq-t', pn), kata); sorot($('.faq-j', pn), kata); sorot($('.laci-tab-t', tabs[k]), kata); }
       });
       laci.hidden = n === 0; kosong.hidden = n > 0;
-      info.textContent = kata ? (n ? n + ' pertanyaan cocok' : 'Tidak ada pertanyaan yang cocok') : '';
+      info.textContent = kata ? (n ? T('{0} pertanyaan cocok', [n]) : T('Tidak ada pertanyaan yang cocok')) : '';
       if (n && tabs[aktif].hidden) pilih(pertama);
     }
     pilih(0); kartuEl.classList.remove('ganti');
-    var plat = $('.laci-plat small'); if (plat) plat.textContent = 'LCDU · ' + FAQ.length + ' kartu';
+    var plat = $('.laci-plat small'); if (plat) plat.textContent = T('LCDU · {0} kartu', [FAQ.length]);
     /* lentera gantung berayun hanya saat section terlihat */
     var faqSec = $('#faq');
     if (faqSec && 'IntersectionObserver' in window) new IntersectionObserver(function(en){ faqSec.classList.toggle('hidup', en[0].isIntersecting); }).observe(faqSec);
@@ -2469,7 +2499,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.16, t + .03); g.gain.setValueAtTime(.16, t + .52); g.gain.linearRampToValueAtTime(0, t + .64);
       o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .66);
       ptK.classList.add('bunyi'); setTimeout(function(){ ptK.classList.remove('bunyi'); }, 700);
-      ket.textContent = 'Nada diputar. Terdengar jelas? Speaker atau headset kamu siap.';
+      ket.textContent = T('Nada diputar. Terdengar jelas? Speaker atau headset kamu siap.');
     });
   }
 
@@ -2626,14 +2656,16 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       return '<span class="tim-ini" aria-hidden="true">' + inisial(m[0]) + '</span>';
     };
     var kel = function(m){ return m[2].split(' ')[0]; };
+    /* peran perorangan diterjemahkan lewat kunci 'peran: …' (label kelompok "Guru Bahasa Inggris" = jamak, peran = tunggal) */
+    var peran = function(r){ var k = 'peran: ' + r, t = T(k); return t === k ? r : t; };
     var sorot = function(k, animasi){
       var m = TEAM[k], g = m[2].split(' '), ajar = [];
       if (g.indexOf('en') > -1) ajar.push('Bahasa Inggris'); if (g.indexOf('ar') > -1) ajar.push('Bahasa Arab');
       var info = [];
-      if (ajar.length && !/^Guru Bahasa/.test(m[1])) info.push('Mengajar ' + ajar.join(' & '));
-      if (m[3].length) info.push(m[3].join(' · '));
+      if (ajar.length && !/^Guru Bahasa/.test(m[1])) info.push(T('Mengajar {0}', [ajar.map(function(b){ return T(b); }).join(' & ')]));
+      if (m[3].length) info.push(m[3].map(function(c){ return T(c); }).join(' · '));
       timSorot.innerHTML = '<figcaption style="display:contents"><b class="tim-sorot-nama">' + m[0]
-        + '</b><span class="tim-sorot-peran">' + m[1] + '</span>' + (info.length ? '<span class="tim-sorot-info">' + info.join(' · ') + '</span>' : '') + '</figcaption>';
+        + '</b><span class="tim-sorot-peran">' + peran(m[1]) + '</span>' + (info.length ? '<span class="tim-sorot-info">' + info.join(' · ') + '</span>' : '') + '</figcaption>';
       if (animasi){ timSorot.classList.remove('ganti'); void timSorot.offsetWidth; timSorot.classList.add('ganti'); }
       /* layar: lapis baru memudar di atas lapis lama; lapis lama dibuang setelah selesai (maks. dua lapis) */
       var potret = potretTim(m, true), lapis = document.createElement('div');
@@ -2657,7 +2689,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
         var k = ul.dataset.k;
         ul.innerHTML = TEAM.map(function(m, i){ return [m, i]; }).filter(function(x){ return kel(x[0]) === k; }).map(function(x){
           var m = x[0];
-          return '<li><button class="tim-wajah-btn" type="button" data-k="' + x[1] + '" aria-pressed="false" aria-label="' + m[0] + ', ' + m[1] + '" title="' + m[0] + '">'
+          return '<li><button class="tim-wajah-btn" type="button" data-k="' + x[1] + '" aria-pressed="false" aria-label="' + m[0] + ', ' + peran(m[1]) + '" title="' + m[0] + '">'
             + '<span class="tim-wajah-isi k-' + k + '">' + potretTim(m, false) + '</span></button></li>';
         }).join('');
       });
@@ -2679,7 +2711,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
       var k = cfg('kantor') || {}, lat = k.lat || -6.9013996, lng = k.lng || 107.6241906, wadah = $('#lok-peta');
       var f = document.createElement('iframe');
       f.src = 'https://www.google.com/maps?q=' + lat + ',' + lng + '&z=17&hl=id&output=embed';
-      f.title = 'Peta lokasi ' + (k.nama || 'Kantor LCDU Bandung'); f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
+      f.title = T('Peta lokasi {0}', [T(k.nama || 'Kantor LCDU Bandung')]); f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade';
       wadah.appendChild(f); wadah.classList.add('dimuat'); f.focus();
     });
   }
@@ -2698,8 +2730,8 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
   copyBtn.addEventListener('click', function(){
     var digits = acct.textContent.replace(/\D/g,'');   // tanpa titik pemisah (format perlu diverifikasi pemilik, lihat README)
     function tampil(t){ copied.textContent = t; clearTimeout(copiedT); copiedT = setTimeout(function(){ copied.textContent = ''; }, 4000); }
-    function fallback(){ var sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(acct); sel.removeAllRanges(); sel.addRange(rg); tampil('Nomor sudah dipilih. Salin dengan Ctrl+C (Cmd+C di Mac) atau tekan lama lalu Salin.'); }
-    try { if (!navigator.clipboard) throw 0; navigator.clipboard.writeText(digits).then(function(){ tampil('Nomor tersalin: ' + digits); }, fallback); } catch(err){ fallback(); }
+    function fallback(){ var sel = window.getSelection(), rg = document.createRange(); rg.selectNodeContents(acct); sel.removeAllRanges(); sel.addRange(rg); tampil(T('Nomor sudah dipilih. Salin dengan Ctrl+C (Cmd+C di Mac) atau tekan lama lalu Salin.')); }
+    try { if (!navigator.clipboard) throw 0; navigator.clipboard.writeText(digits).then(function(){ tampil(T('Nomor tersalin: {0}', [digits])); }, fallback); } catch(err){ fallback(); }
   });
 
 })();
