@@ -833,21 +833,19 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
 @media (min-width:1200px){.jaringan{grid-template-columns:minmax(150px,200px) minmax(0,1fr);align-items:center;gap:28px}}
 .jaringan-label{font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
 .jaringan-daftar{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
-/* nama selalu satu baris (pemilik) → sel Yayasan & English Now lebih lebar. HP: Yayasan satu baris penuh, TK/SD/SMP, lalu SMA/EN */
+/* lima unit (tanpa Yayasan, pemilik). HP: TK/SD/SMP lalu SMA/English Now; ≥ 900px satu baris, English Now (logo mendatar) lebih lebar */
 .jaringan-daftar li{display:flex;grid-column:span 2;border-left:1px solid var(--line)}
-.jaringan-daftar li:first-child{grid-column:1/-1;border-left:0}
-.jaringan-daftar li:nth-child(2),.jaringan-daftar li:nth-child(5){border-left:0}
-.jaringan-daftar li:nth-child(n+5){grid-column:span 3}
-.jaringan-daftar li:nth-child(n+2){border-top:1px solid var(--line)}
+.jaringan-daftar li:nth-child(1),.jaringan-daftar li:nth-child(4){border-left:0}
+.jaringan-daftar li:nth-child(n+4){grid-column:span 3;border-top:1px solid var(--line)}
 @media (min-width:900px){
-  .jaringan-daftar{grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.35fr}
-  .jaringan-daftar li,.jaringan-daftar li:first-child,.jaringan-daftar li:nth-child(n+5){grid-column:auto}
-  .jaringan-daftar li:nth-child(n){border-top:0;border-left:1px solid var(--line)}
+  .jaringan-daftar{grid-template-columns:1fr 1fr 1fr 1fr 1.4fr}
+  .jaringan-daftar li:nth-child(n){grid-column:auto;border-top:0;border-left:1px solid var(--line)}
   .jaringan-daftar li:nth-child(1){border-left:0}}
-.jaringan-daftar a{flex:1;display:grid;place-items:center;min-height:76px;padding:10px 8px;color:var(--ink);text-decoration:none;text-align:center;opacity:.78;transition:opacity .25s ease,transform .3s var(--ease)}
+.jaringan-daftar a{flex:1;display:grid;place-items:center;min-height:116px;padding:14px 10px;color:var(--ink);text-decoration:none;text-align:center;opacity:.9;transition:opacity .25s ease,transform .3s var(--ease)}
 .jaringan-daftar a:hover,.jaringan-daftar a:focus-visible{opacity:1;transform:translateY(-2px)}
 .jaringan-daftar a:focus-visible{outline:3px solid var(--kunyit);outline-offset:-3px;border-radius:6px}
-.jaringan-daftar img{display:block;max-width:min(132px,100%);max-height:40px;width:auto;height:auto;object-fit:contain}
+.jaringan-daftar img{display:block;width:auto;height:clamp(72px,6.6vw,96px);max-width:100%;object-fit:contain}
+.jaringan-daftar a[href*="englishnow"] img{height:clamp(48px,4.4vw,64px)}
 .jw{display:grid;gap:2px;line-height:1.05}
 .jw b{font-family:var(--f-display);font-weight:700;font-size:clamp(1.1rem,.95rem + .4vw,1.35rem);letter-spacing:-.01em;white-space:nowrap}
 .jw small{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
@@ -1703,12 +1701,11 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   <div class="wrap jaringan">
     <p class="jaringan-label" id="jaringan-h">Jaringan pendidikan</p>
     <ul class="jaringan-daftar" id="jaringan-daftar" aria-labelledby="jaringan-h" data-i18n-lewati>
-      <li><a href="https://alfacentauri.sch.id/yayasan/" target="_blank" rel="noopener"><span class="jw"><small>Yayasan</small> <b>Taqwa Cerdas Kreatif</b></span><span class="sr-only"> (buka di tab baru)</span></a></li>
-      <li><a href="https://alfacentauri.sch.id/tk" target="_blank" rel="noopener"><span class="jw"><b>TK</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
-      <li><a href="https://sdalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SD</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
-      <li><a href="https://smpalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SMP</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
-      <li><a href="https://smaalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SMA</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
-      <li><a href="https://englishnow.co.id" target="_blank" rel="noopener"><span class="jw"><b>English Now</b></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://alfacentauri.sch.id/tk" target="_blank" rel="noopener"><img src="assets/jaringan/tk.png" alt="TK Alfa Centauri" loading="lazy" decoding="async"><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://sdalfacentauri.sch.id" target="_blank" rel="noopener"><img src="assets/jaringan/sd.png" alt="SD Alfa Centauri" loading="lazy" decoding="async"><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://smpalfacentauri.sch.id" target="_blank" rel="noopener"><img src="assets/jaringan/smp.png" alt="SMP Alfa Centauri" loading="lazy" decoding="async"><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://smaalfacentauri.sch.id" target="_blank" rel="noopener"><img src="assets/jaringan/sma.png" alt="SMA Alfa Centauri" loading="lazy" decoding="async"><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://englishnow.co.id" target="_blank" rel="noopener"><img src="assets/jaringan/englishnow.png" alt="English Now" loading="lazy" decoding="async"><span class="sr-only"> (buka di tab baru)</span></a></li>
     </ul>
   </div>
 </section>
@@ -2545,7 +2542,7 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
         if (y) return '<small>Yayasan</small> <b>' + esc(y[1]) + '</b>';
         return '<b>' + esc(T(nama)) + '</b>';
       };
-      jd.innerHTML = jar.filter(function(j){ return j && j.url; }).map(function(j){
+      jd.innerHTML = jar.filter(function(j){ return j && j.url && !/^Yayasan\b/.test(j.nama); }).map(function(j){   // pita tanpa Yayasan (pemilik)
         var isi = j.logo ? '<img src="' + esc(j.logo) + '" alt="' + esc(T(j.nama)) + '" loading="lazy" decoding="async">'
                          : '<span class="jw">' + tulisan(j.nama) + '</span>';
         return '<li><a href="' + esc(j.url) + '" target="_blank" rel="noopener">' + isi + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></a></li>';

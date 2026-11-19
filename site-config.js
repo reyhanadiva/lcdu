@@ -78,15 +78,16 @@ window.LCDU_CONFIG = {
   /* Jaringan pendidikan (footer, tautan keluar), urutan & nama seperti footer situs saudara (SD/TK/English Now).
      URL dari halaman Yayasan https://alfacentauri.sch.id/yayasan/ (dicek 17 Nov 2026; PAUD/TK = /tk). Hanya entri yang
      URL-nya TERISI yang tampil. JANGAN menebak URL. Yayasan memakai URL yang sama dengan yayasan.url. */
-  /* Dipakai di DUA tempat: pita "Jaringan pendidikan" (akhir Pengantar) dan kolom footer. `logo` = berkas logo RESMI di
-     assets/jaringan/ (PNG/SVG transparan, versi warna, tinggi ≥ 80 px); kosong = nama unit ditampilkan sebagai tulisan. */
+  /* Dipakai di DUA tempat: pita "Jaringan pendidikan" (akhir Pengantar; TANPA Yayasan — keputusan pemilik) dan kolom footer.
+     `logo` = berkas logo resmi dari pemilik (19 Nov 2026) di assets/jaringan/ (PNG transparan, dipangkas, tinggi ≤ 240 px);
+     kosong = nama unit ditampilkan sebagai tulisan. yayasan.png = logo bintang Yayasan (disimpan, belum dipakai). */
   jaringan: [
-    { nama: 'Yayasan Taqwa Cerdas Kreatif', url: 'https://alfacentauri.sch.id/yayasan/', logo: '' },
-    { nama: 'TK Alfa Centauri', url: 'https://alfacentauri.sch.id/tk', logo: '' },
-    { nama: 'SD Alfa Centauri', url: 'https://sdalfacentauri.sch.id', logo: '' },
-    { nama: 'SMP Alfa Centauri', url: 'https://smpalfacentauri.sch.id', logo: '' },
-    { nama: 'SMA Alfa Centauri', url: 'https://smaalfacentauri.sch.id', logo: '' },
-    { nama: 'English Now', url: 'https://englishnow.co.id', logo: '' }
+    { nama: 'Yayasan Taqwa Cerdas Kreatif', url: 'https://alfacentauri.sch.id/yayasan/', logo: 'assets/jaringan/yayasan.png' },
+    { nama: 'TK Alfa Centauri', url: 'https://alfacentauri.sch.id/tk', logo: 'assets/jaringan/tk.png' },
+    { nama: 'SD Alfa Centauri', url: 'https://sdalfacentauri.sch.id', logo: 'assets/jaringan/sd.png' },
+    { nama: 'SMP Alfa Centauri', url: 'https://smpalfacentauri.sch.id', logo: 'assets/jaringan/smp.png' },
+    { nama: 'SMA Alfa Centauri', url: 'https://smaalfacentauri.sch.id', logo: 'assets/jaringan/sma.png' },
+    { nama: 'English Now', url: 'https://englishnow.co.id', logo: 'assets/jaringan/englishnow.png' }
   ],
 
   /* Mitra di footer: [{ nama: 'Nama mitra', url: 'https://…', logo: 'assets/partners/nama.svg' }].

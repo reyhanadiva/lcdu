@@ -173,9 +173,8 @@ Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai 
 **2. Verifikasi fakta yang sudah tampil**
 - [ ] **Jadwal kelas**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Arti "term"**: halaman menulis "per term (semester)", Rp100.000.
-- [ ] **Logo resmi unit Yayasan** (Yayasan, TK, SD, SMP, SMA, English Now) untuk pita "Jaringan pendidikan" di akhir
-  Pengantar: PNG/SVG transparan versi warna, tinggi ≥ 80 px, beserta izin pakai → `assets/jaringan/` + isi `logo` di
-  `site-config.js` `jaringan[]`. Selama kosong, nama unit tampil sebagai tulisan.
+- [x] **Logo unit** (TK, SD, SMP, SMA, English Now) dari pemilik, 19 Nov 2026 → `assets/jaringan/`. Logo SD & SMA hanya
+  200×200 px (cukup untuk tampilan 96 px); bila ada versi lebih besar/SVG, ganti berkasnya dengan nama yang sama.
 - [ ] **Citra beasiswa** (19 Nov 2026): nilai program Rp1.800.000 per term, beasiswa Yayasan Rp1.700.000, kontribusi siswa
   Rp100.000. Teks ketentuan (section "Amanah beasiswa") & FAQ "Siapa pemberi beasiswanya?" ditulis Claude — mohon ditinjau.
   Kewajiban yang ditulis sebagai SYARAT hanya: Placement Test & konsisten sampai term selesai. Kehadiran minimum belum

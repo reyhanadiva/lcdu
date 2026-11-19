@@ -574,12 +574,15 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   `p{text-wrap:pretty}` global; `.foot-nama` `text-wrap:balance`.
 - **Pita "Jaringan pendidikan"** (pemilik: "section our networks berisi logo unit Yayasan, jangan di footer"): di AKHIR
   Pengantar (`.jaringan`, setelah kalimat "beasiswa bahasa dari Yayasan …" — bukan langsung di bawah hero, karena pengunjung
-  belum tahu LCDU itu apa dan logo TK/SD/SMP di situ membuat LCDU terbaca sebagai sekolah). Data = `site-config.js`
-  `jaringan[]` (`logo` baru). **Logo resmi belum ada**: situs unit hanya punya logo kecil & tidak seragam (SMP 203×41, SD
-  648×124 warna, SMA hanya ikon bintang; unduhan dari container diblokir proxy) → selama `logo` kosong tampil nama unit
-  sebagai tulisan (Fraunces + label kecil, satu baris, `nowrap`). Grid: Yayasan 2fr, TK/SD/SMP/SMA 1fr, English Now 1,35fr
-  (≥ 900px satu baris; label di kiri ≥ 1200px); HP: Yayasan satu baris, TK/SD/SMP, SMA/English Now. Irisan semangka
-  Pengantar kini di `.intro-panggung` (tidak menimpa pita). Daftar `data-i18n-lewati` (nama = nama diri).
+  belum tahu LCDU itu apa). **Tanpa Yayasan** (pemilik: "jaringan gak perlu yayasan"; JS menyaring `^Yayasan`): TK, SD,
+  SMP, SMA Alfa Centauri, English Now. **Logo resmi dari pemilik** (19 Nov 2026) → `assets/jaringan/{tk,sd,smp,sma,
+  englishnow}.png`: latar putih diubah transparan (warna-ke-alfa, ambang 40 → garis bingkai tipis logo SMP ikut hilang),
+  dipangkas, tinggi ≤ 240 px, dikuantisasi 96 warna (4–13 KB). `yayasan.png` = logo bintang Yayasan (disimpan, BELUM
+  dipakai). Data = `site-config.js` `jaringan[]` (`logo`); tanpa `logo` → nama unit sebagai tulisan (`.jw`). Logo tinggi
+  72–96 px (English Now 48–64 px, mendatar), opacity .9 → 1 + naik 2px saat hover. Grid ≥ 900px: 1fr ×4 + 1,4fr (label
+  di kiri ≥ 1200px); HP 6 kolom: TK/SD/SMP (span 2) lalu SMA/English Now (span 3). Irisan semangka Pengantar kini di
+  `.intro-panggung` (tidak menimpa pita). Daftar `data-i18n-lewati` (nama diri). Footer "Jaringan pendidikan" tetap
+  memuat Yayasan (tautan teks).
 
 ## Belum lengkap (lihat juga checklist di README)
 Foto asli (tim, kelas, testimoni), logo mitra, link formulir registrasi/Instagram/alamat, ejaan 5 nama guru,
