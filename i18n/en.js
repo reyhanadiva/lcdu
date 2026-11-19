@@ -221,13 +221,13 @@ window.LCDU_KAMUS.en = {
   "Beasiswa ini <0>amanah.</0>": "This scholarship is <0>an amanah.</0>",
   "Setiap pelajar menerima <0>beasiswa</0>.": "Every student receives a <0>scholarship</0>.",
   "Sebagian besar nilai program ditanggung Yayasan Taqwa Cerdas Kreatif.": "Most of the program's value is covered by Yayasan Taqwa Cerdas Kreatif.",
-  "Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh. Ada tiga ketentuan yang menyertainya.": "The LCDU scholarship is for students ready to complete a full term with real commitment. It comes with three conditions.",
+  "Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh.": "The LCDU scholarship is for students ready to complete a full term with real commitment.",
   "Ketentuan beasiswa": "Scholarship conditions",
-  "Placement Test dikerjakan mandiri": "The Placement Test is taken independently",
-  "Sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.": "In one sitting, without auto-translation or help from anyone. Your result determines your class.",
-  "Kontribusi dibayar setiap term": "A contribution is paid each term",
-  "Pembayaran pertama saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.": "The first payment is made at registration. The rest of the program's value is covered by the Foundation's scholarship.",
-  "Diikuti sampai term selesai": "Followed through to the end of the term",
-  "Beasiswa diberikan per term, untuk satu term penuh.": "The scholarship is granted per term, for one full term."
+  "Mengerjakan Placement Test secara mandiri": "Take the Placement Test independently",
+  "Dalam sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.": "In one sitting, without auto-translation or help from anyone. Your result determines your class.",
+  "Membayar kontribusi setiap term": "Pay a contribution each term",
+  "Pembayaran pertama dilakukan saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.": "The first payment is made at registration. The rest of the program's value is covered by the Foundation's scholarship.",
+  "Mengikuti kelas sampai term selesai": "Attend classes until the term ends",
+  "Beasiswa berlaku untuk satu term penuh.": "The scholarship covers one full term."
  }
 };

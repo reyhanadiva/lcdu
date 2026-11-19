@@ -221,13 +221,13 @@ window.LCDU_KAMUS.ar = {
   "Beasiswa ini <0>amanah.</0>": "هذه المنحة <0>أمانة.</0>",
   "Setiap pelajar menerima <0>beasiswa</0>.": "كل طالب يحصل على <0>منحة</0>.",
   "Sebagian besar nilai program ditanggung Yayasan Taqwa Cerdas Kreatif.": "تتحمّل مؤسسة Yayasan Taqwa Cerdas Kreatif الجزء الأكبر من قيمة البرنامج.",
-  "Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh. Ada tiga ketentuan yang menyertainya.": "تُمنح منحة LCDU للطلاب المستعدين لإتمام فصل كامل بجدّية، ولها ثلاثة شروط.",
+  "Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh.": "تُمنح منحة LCDU للطلاب المستعدين لإتمام فصل كامل بجدّية.",
   "Ketentuan beasiswa": "شروط المنحة",
-  "Placement Test dikerjakan mandiri": "يُؤدّى اختبار تحديد المستوى ذاتيًّا",
-  "Sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.": "في جلسة واحدة، دون ترجمة آلية أو مساعدة من أحد. ونتيجتك تحدّد فصلك.",
-  "Kontribusi dibayar setiap term": "تُدفع المساهمة في كل فصل",
-  "Pembayaran pertama saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.": "الدفعة الأولى عند التسجيل، وتتحمّل منحة المؤسسة باقي قيمة البرنامج.",
-  "Diikuti sampai term selesai": "المواظبة حتى نهاية الفصل",
-  "Beasiswa diberikan per term, untuk satu term penuh.": "تُمنح المنحة لكل فصل، لفصل دراسي كامل."
+  "Mengerjakan Placement Test secara mandiri": "أداء اختبار تحديد المستوى ذاتيًّا",
+  "Dalam sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.": "في جلسة واحدة، دون ترجمة آلية أو مساعدة من أحد. ونتيجتك تحدّد فصلك.",
+  "Membayar kontribusi setiap term": "دفع المساهمة في كل فصل",
+  "Pembayaran pertama dilakukan saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.": "تُدفع الدفعة الأولى عند التسجيل، وتتحمّل منحة المؤسسة باقي قيمة البرنامج.",
+  "Mengikuti kelas sampai term selesai": "المواظبة على الدروس حتى نهاية الفصل",
+  "Beasiswa berlaku untuk satu term penuh.": "تغطّي المنحة فصلًا دراسيًّا كاملًا."
  }
 };

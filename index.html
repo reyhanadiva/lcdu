@@ -130,7 +130,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-siz
 /* tanpa strip warna di area status bar: di iOS 26 elemen fixed yang menempel di tepi layar membuat Safari mengisi area
    status bar / toolbar dengan blok warna solid (tidak immersive) */
 h1,h2,h3{margin:0;text-wrap:balance}
-p{margin:0}
+p{margin:0;text-wrap:pretty}
 a{color:inherit}
 button{font:inherit;color:inherit}
 [lang="ar"]{font-family:var(--f-ar)}
@@ -535,6 +535,7 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
    irisan semangka menjorok dari tepi layar di belakang foto. Ke Kenapa: hanya pergeseran warna (gradasi di atas blok hijau). */
 @property --p{syntax:'<number>';inherits:true;initial-value:1}
 .intro{position:relative;isolation:isolate;overflow:clip;padding-bottom:0}
+.intro-panggung{position:relative}   /* irisan semangka diposisikan di sini, bukan di section → tidak menimpa pita Jaringan */
 .intro-grid{position:relative;z-index:1;display:grid;gap:clamp(40px,6vw,72px);padding-bottom:calc(var(--jarak-section) * .6)}
 .intro-kalimat{font-family:var(--f-display);letter-spacing:-.02em}
 .intro-l1{display:block;font-weight:300;font-size:clamp(2.2rem,1.1rem + 4vw,4.9rem);line-height:1.06;max-width:10.5em;text-wrap:balance}
@@ -826,6 +827,32 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
    (keputusan pemilik): kartu Placement Test menampilkan tombol per bahasa. */
 .gabung{padding-bottom:calc(var(--jarak-section) * .6)}
 .gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
+/* ===== JARINGAN PENDIDIKAN (akhir Pengantar): label kecil | enam sel bergaris tipis; logo resmi bila ada, selain itu
+   nama unit sebagai tulisan (Fraunces). Hover: naik 2px + penuh (transform/opacity saja). ===== */
+.jaringan{position:relative;z-index:1;display:grid;gap:14px;margin-top:clamp(36px,5vw,64px);padding-top:clamp(18px,2vw,24px);border-top:1px solid var(--line)}
+@media (min-width:1200px){.jaringan{grid-template-columns:minmax(150px,200px) minmax(0,1fr);align-items:center;gap:28px}}
+.jaringan-label{font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.jaringan-daftar{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+/* nama selalu satu baris (pemilik) → sel Yayasan & English Now lebih lebar. HP: Yayasan satu baris penuh, TK/SD/SMP, lalu SMA/EN */
+.jaringan-daftar li{display:flex;grid-column:span 2;border-left:1px solid var(--line)}
+.jaringan-daftar li:first-child{grid-column:1/-1;border-left:0}
+.jaringan-daftar li:nth-child(2),.jaringan-daftar li:nth-child(5){border-left:0}
+.jaringan-daftar li:nth-child(n+5){grid-column:span 3}
+.jaringan-daftar li:nth-child(n+2){border-top:1px solid var(--line)}
+@media (min-width:900px){
+  .jaringan-daftar{grid-template-columns:2fr 1fr 1fr 1fr 1fr 1.35fr}
+  .jaringan-daftar li,.jaringan-daftar li:first-child,.jaringan-daftar li:nth-child(n+5){grid-column:auto}
+  .jaringan-daftar li:nth-child(n){border-top:0;border-left:1px solid var(--line)}
+  .jaringan-daftar li:nth-child(1){border-left:0}}
+.jaringan-daftar a{flex:1;display:grid;place-items:center;min-height:76px;padding:10px 8px;color:var(--ink);text-decoration:none;text-align:center;opacity:.78;transition:opacity .25s ease,transform .3s var(--ease)}
+.jaringan-daftar a:hover,.jaringan-daftar a:focus-visible{opacity:1;transform:translateY(-2px)}
+.jaringan-daftar a:focus-visible{outline:3px solid var(--kunyit);outline-offset:-3px;border-radius:6px}
+.jaringan-daftar img{display:block;max-width:min(132px,100%);max-height:40px;width:auto;height:auto;object-fit:contain}
+.jw{display:grid;gap:2px;line-height:1.05}
+.jw b{font-family:var(--f-display);font-weight:700;font-size:clamp(1.1rem,.95rem + .4vw,1.35rem);letter-spacing:-.01em;white-space:nowrap}
+.jw small{font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);white-space:nowrap}
+.jw small:first-child+b{font-size:clamp(.92rem,.85rem + .3vw,1.08rem);line-height:1.15}
+@media (prefers-reduced-motion: reduce){.jaringan-daftar a{transition:opacity .2s}.jaringan-daftar a:hover{transform:none}}
 /* ===== AMANAH BEASISWA (sesi 19 Nov, revisi "jangan corny"): judul + pengantar | tiga ketentuan bernomor Arab ===== */
 .amanah{padding-top:calc(var(--jarak-section) * 1.2)}
 .amanah-grid{display:grid;gap:clamp(28px,4vw,64px)}
@@ -1519,11 +1546,14 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
    Jaringan pendidikan — garis tipis, baris legal. Tanpa tombol aksi besar. Kontak & jaringan hanya dari data yang ada di
    site-config.js (kontak.*, jaringan[]); ikon garis SVG (currentColor). HP: identitas penuh, sisanya dua kolom. */
 .foot{padding-block:clamp(28px,4vw,48px) 24px;display:grid;gap:clamp(24px,3vw,36px)}
-.foot-grid{display:grid;gap:28px 24px;grid-template-columns:1fr 1fr}
+.foot-grid{display:grid;gap:28px 24px;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+/* HP sempit: nama Yayasan selalu satu baris (pemilik) → Jelajahi & Jaringan selebar penuh; tautan Jelajahi dua kolom */
+@media (max-width:599px){.foot-grid>:nth-child(2),.foot-grid>:nth-child(4){grid-column:1/-1}
+  .foot-grid>:nth-child(2) .foot-links{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:24px}}
 .foot-id{grid-column:1/-1;display:grid;gap:10px;align-content:start;max-width:36ch}
 .foot-id img{display:block;width:120px;height:auto}
-.foot-nama{font-family:var(--f-display);font-weight:600;font-size:1.05rem;line-height:1.3}
-.foot-desk{font-size:var(--step--1);line-height:1.6;color:var(--ink-soft)}
+.foot-nama{font-family:var(--f-display);font-weight:600;font-size:1.05rem;line-height:1.3;text-wrap:balance}
+.foot-desk{text-wrap:pretty;font-size:var(--step--1);line-height:1.6;color:var(--ink-soft)}
 .foot-tagline{font-family:var(--f-display);font-style:italic;font-weight:600;color:var(--zamrud-ink)}
 /* HP: Jelajahi di kiri (dua baris), Hubungi kami & Jaringan bertumpuk di kanan */
 /* HP: Hubungi kami selebar penuh tepat di bawah identitas (alamat & nomor tidak terlipat), lalu Jelajahi | Jaringan */
@@ -1651,6 +1681,7 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
      Pembaca layar membaca kalimat utuh (.sr-only); versi per kata hanya visual (aria-hidden). --i = urutan kata, --n = jumlah kata.
      Foto stok SEMENTARA (assets/photos/CREDITS.md). -->
 <section data-lentera class="band intro" id="pengantar" aria-labelledby="intro-h">
+  <div class="intro-panggung">
   <div class="wrap intro-grid">
     <div class="intro-teks">
       <h2 class="intro-kalimat" id="intro-h" style="--n:8" data-judul=".k">
@@ -1664,6 +1695,22 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
     </div>
   </div>
   <i class="orn-slice intro-slice" aria-hidden="true"></i>
+  </div>
+  <!-- JARINGAN (sesi 19 Nov, pemilik: "section our networks berisi logo unit Yayasan; jangan di footer"): pita di akhir
+       Pengantar — tepat setelah kalimat "beasiswa bahasa dari Yayasan …", jadi logo menjelaskan siapa Yayasan itu. Data =
+       site-config.js jaringan[] (url + logo). Logo hanya dari berkas resmi (`logo`); tanpa logo = nama unit sebagai
+       tulisan (bukan penampung kosong). HTML di bawah = cadangan tanpa JS, isinya sama dengan site-config.js. -->
+  <div class="wrap jaringan">
+    <p class="jaringan-label" id="jaringan-h">Jaringan pendidikan</p>
+    <ul class="jaringan-daftar" id="jaringan-daftar" aria-labelledby="jaringan-h" data-i18n-lewati>
+      <li><a href="https://alfacentauri.sch.id/yayasan/" target="_blank" rel="noopener"><span class="jw"><small>Yayasan</small> <b>Taqwa Cerdas Kreatif</b></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://alfacentauri.sch.id/tk" target="_blank" rel="noopener"><span class="jw"><b>TK</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://sdalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SD</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://smpalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SMP</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://smaalfacentauri.sch.id" target="_blank" rel="noopener"><span class="jw"><b>SMA</b> <small>Alfa Centauri</small></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+      <li><a href="https://englishnow.co.id" target="_blank" rel="noopener"><span class="jw"><b>English Now</b></span><span class="sr-only"> (buka di tab baru)</span></a></li>
+    </ul>
+  </div>
 </section>
 
 <!-- ============ KENAPA LCDU: blok hijau, foto menempel di kiri (desktop) berganti mengikuti pernyataan ============
@@ -1815,14 +1862,14 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   <div class="wrap amanah-grid">
     <div class="amanah-kiri">
       <h2 class="amanah-judul" id="amanah-h" data-judul>Beasiswa ini <span class="amanah-kunci">amanah.</span></h2>
-      <p class="amanah-lead">Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh. Ada tiga ketentuan yang menyertainya.</p>
+      <p class="amanah-lead">Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh.</p>
     </div>
     <div class="amanah-kanan">
       <p class="amanah-label" id="ketentuan-h">Ketentuan beasiswa</p>
       <ol class="ketentuan" aria-labelledby="ketentuan-h">
-        <li data-muncul style="--d:0ms"><span class="ketentuan-no" aria-hidden="true">١</span><div><h3>Placement Test dikerjakan mandiri</h3><p>Sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.</p></div></li>
-        <li data-muncul style="--d:90ms"><span class="ketentuan-no" aria-hidden="true">٢</span><div><h3>Kontribusi dibayar setiap term</h3><p>Pembayaran pertama saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.</p></div></li>
-        <li data-muncul style="--d:180ms"><span class="ketentuan-no" aria-hidden="true">٣</span><div><h3>Diikuti sampai term selesai</h3><p>Beasiswa diberikan per term, untuk satu term penuh.</p></div></li>
+        <li data-muncul style="--d:0ms"><span class="ketentuan-no" aria-hidden="true">١</span><div><h3>Mengerjakan Placement Test secara mandiri</h3><p>Dalam sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.</p></div></li>
+        <li data-muncul style="--d:90ms"><span class="ketentuan-no" aria-hidden="true">٢</span><div><h3>Membayar kontribusi setiap term</h3><p>Pembayaran pertama dilakukan saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.</p></div></li>
+        <li data-muncul style="--d:180ms"><span class="ketentuan-no" aria-hidden="true">٣</span><div><h3>Mengikuti kelas sampai term selesai</h3><p>Beasiswa berlaku untuk satu term penuh.</p></div></li>
       </ol>
     </div>
   </div>
@@ -2489,6 +2536,21 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
       ? '<li><a class="foot-alamat-tautan" href="' + esc(kantor.peta) + '" target="_blank" rel="noopener">' + IKON.alamat + '<span>' + esc(alamatKantor) + '<span class="sr-only"> ' + T('(Google Maps, buka di tab baru)') + '</span></span></a></li>'
       : '<li><address class="foot-alamat">' + IKON.alamat + '<span>' + esc(alamatKantor) + '</span></address></li>');
     var jar = cfg('jaringan'), uj = $('#foot-jaringan');
+    /* pita Jaringan pendidikan (akhir Pengantar): dari jaringan[]; logo resmi bila `logo` diisi, selain itu nama sebagai tulisan */
+    var jd = $('#jaringan-daftar');
+    if (jd && jar && jar.length){
+      var tulisan = function(nama){
+        var m = /^(TK|SD|SMP|SMA)\s+(.+)$/.exec(nama), y = /^Yayasan\s+(.+)$/.exec(nama);
+        if (m) return '<b>' + esc(m[1]) + '</b> <small>' + esc(m[2]) + '</small>';
+        if (y) return '<small>Yayasan</small> <b>' + esc(y[1]) + '</b>';
+        return '<b>' + esc(T(nama)) + '</b>';
+      };
+      jd.innerHTML = jar.filter(function(j){ return j && j.url; }).map(function(j){
+        var isi = j.logo ? '<img src="' + esc(j.logo) + '" alt="' + esc(T(j.nama)) + '" loading="lazy" decoding="async">'
+                         : '<span class="jw">' + tulisan(j.nama) + '</span>';
+        return '<li><a href="' + esc(j.url) + '" target="_blank" rel="noopener">' + isi + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></a></li>';
+      }).join('');
+    }
     if (uj && jar && jar.length){
       var ada = jar.filter(function(j){ return j && j.url; });
       if (ada.length) uj.innerHTML = ada.map(function(j){
@@ -2928,5 +2990,24 @@ document.addEventListener('click', e => {
 });
 </script>
 <script type="module" src="./hero/hero.js"></script>
+<script>
+/* Nama "Yayasan Taqwa Cerdas Kreatif" selalu satu baris (pemilik: "nama jangan terpisah beda baris"): spasi di dalam nama
+   diganti spasi tak-putus (U+00A0) pada simpul teks — juga untuk teks yang dibuat skrip kemudian (FAQ, pencarian), lewat
+   MutationObserver. Dijalankan SETELAH terjemahan, jadi kunci kamus i18n tidak berubah. */
+(function(){
+  var RE = /Yayasan Taqwa Cerdas Kreatif/g, NB = 'Yayasan\u00A0Taqwa\u00A0Cerdas\u00A0Kreatif';
+  function jaga(akar){
+    if (!akar) return;
+    if (akar.nodeType === 3){ if (akar.nodeValue.indexOf('Yayasan Taqwa') > -1) akar.nodeValue = akar.nodeValue.replace(RE, NB); return; }
+    if (akar.nodeType !== 1 || /^(SCRIPT|STYLE|TEXTAREA|INPUT)$/.test(akar.tagName)) return;
+    var w = document.createTreeWalker(akar, NodeFilter.SHOW_TEXT), n;
+    while ((n = w.nextNode())) if (n.nodeValue.indexOf('Yayasan Taqwa') > -1) n.nodeValue = n.nodeValue.replace(RE, NB);
+  }
+  jaga(document.body);
+  if ('MutationObserver' in window) new MutationObserver(function(ms){
+    ms.forEach(function(m){ for (var i = 0; i < m.addedNodes.length; i++) jaga(m.addedNodes[i]); });
+  }).observe(document.body, { childList: true, subtree: true });
+})();
+</script>
 </body>
 </html>

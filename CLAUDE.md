@@ -321,8 +321,9 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   "tanpa biaya bulanan". Syarat tertulis hanya yang benar berlaku: usia 16+, membaca Al-Qur'an, laptop/HP, **mengikuti
   Placement Test**, **konsisten sampai term selesai**. Kehadiran minimum ada tetapi TIDAK ditegakkan → jangan ditulis
   sebagai aturan. Section baru **Amanah beasiswa** `#amanah` (setelah Biaya, awal fase sore): "Beasiswa ini amanah." +
-  satu kalimat pengantar + "Ketentuan beasiswa" = TIGA ketentuan faktual bernomor Arab (judul Fraunces + satu kalimat):
-  Placement Test dikerjakan mandiri · Kontribusi dibayar setiap term · Diikuti sampai term selesai. Pemilik MENOLAK nada
+  satu kalimat pengantar + "Ketentuan beasiswa" = TIGA ketentuan faktual bernomor Arab (judul Fraunces + satu kalimat),
+  judul berkata kerja aktif (pemilik: "mengikuti", bukan "diikuti"): Mengerjakan Placement Test secara mandiri · Membayar
+  kontribusi setiap term · Mengikuti kelas sampai term selesai. Kalimat "Ada tiga ketentuan…" dihapus (pemilik). Pemilik MENOLAK nada
   ikrar/janji, kutipan "Belajarmu bukan hanya untuk dirimu…", kalimat "bukan sekadar mencoba-coba", dan tanda tangan
   (semua "corny"/terlalu eksplisit) → nada: tenang, profesional, faktual, tanpa slogan. FAQ: biaya (angka di atas), syarat, "Siapa
   pemberi beasiswanya?" (tetap 9 pertanyaan).
@@ -565,6 +566,20 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   tersembunyi/reduced-motion; label "Tanya Admin" (keping tinta di kiri) saat hover/fokus + sekali 4 s saat pertama muncul
   (`.sapa`). Teks label tetap di `.fab-teks` (kunci i18n tidak berubah). Foto stok contoh: pemilik setuju
   (situs Vercel = mockup), tetapi unduhan Pexels/Unsplash ditolak proxy → belum ada; `?contoh-foto` siap.
+
+## Sesi 19 Nov (2): nama satu baris + Jaringan pendidikan
+- **Nama "Yayasan Taqwa Cerdas Kreatif" tidak boleh terpotong baris** (pemilik): skrip kecil sebelum `</body>` mengganti
+  spasi di dalam nama dengan U+00A0 di semua simpul teks (+ MutationObserver untuk teks buatan skrip) SETELAH terjemahan →
+  kunci i18n tidak berubah. Footer HP < 600px: Jelajahi (dua kolom tautan) & Jaringan selebar penuh supaya nama muat.
+  `p{text-wrap:pretty}` global; `.foot-nama` `text-wrap:balance`.
+- **Pita "Jaringan pendidikan"** (pemilik: "section our networks berisi logo unit Yayasan, jangan di footer"): di AKHIR
+  Pengantar (`.jaringan`, setelah kalimat "beasiswa bahasa dari Yayasan …" — bukan langsung di bawah hero, karena pengunjung
+  belum tahu LCDU itu apa dan logo TK/SD/SMP di situ membuat LCDU terbaca sebagai sekolah). Data = `site-config.js`
+  `jaringan[]` (`logo` baru). **Logo resmi belum ada**: situs unit hanya punya logo kecil & tidak seragam (SMP 203×41, SD
+  648×124 warna, SMA hanya ikon bintang; unduhan dari container diblokir proxy) → selama `logo` kosong tampil nama unit
+  sebagai tulisan (Fraunces + label kecil, satu baris, `nowrap`). Grid: Yayasan 2fr, TK/SD/SMP/SMA 1fr, English Now 1,35fr
+  (≥ 900px satu baris; label di kiri ≥ 1200px); HP: Yayasan satu baris, TK/SD/SMP, SMA/English Now. Irisan semangka
+  Pengantar kini di `.intro-panggung` (tidak menimpa pita). Daftar `data-i18n-lewati` (nama = nama diri).
 
 ## Belum lengkap (lihat juga checklist di README)
 Foto asli (tim, kelas, testimoni), logo mitra, link formulir registrasi/Instagram/alamat, ejaan 5 nama guru,

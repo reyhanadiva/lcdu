@@ -63,7 +63,7 @@ sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bent
 |---|---|
 | Hero | Cerita scroll 3 babak (tinggi 190vh, 13vh terakhir "tahan fajar"): malam → lampu menyala dari Kubah ke luar → fajar. Hero **Foto**: foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu. Geser kencang tetap berakhir di fajar penuh. Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
 | Navbar | Selama hero: bar transparan di atas foto (logo putih, tautan, ID/EN/عربي, Daftar); setelah hero: pil kaca. HP: tombol menu → panel tautan + Daftar. |
-| Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Dengan beasiswa." yang menyala kata per kata, foto lengkung Al-Aqsa. |
+| Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Dengan beasiswa." yang menyala kata per kata, foto lengkung Al-Aqsa; di bawahnya pita "Jaringan pendidikan" (unit Yayasan dari `jaringan[]`, logo bila ada). |
 | Kenapa LCDU | Blok hijau, foto lengkung berganti mengikuti pernyataan (desktop); di HP tiap pernyataan = slide geser. |
 | Biaya / Beasiswa | Blok merah: "Setiap pelajar menerima beasiswa." + struk "Rincian beasiswa" (nilai program ~~Rp1.800.000~~, beasiswa Yayasan −Rp1.700.000, donasi Palestina tidak wajib, kamu membayar Rp100.000 per term/semester; penutup "Sisanya, bayar dengan kesungguhan.") yang tercetak keluar dari printer mengikuti scroll. |
 | Amanah beasiswa | "Beasiswa ini amanah." + tiga ketentuan beasiswa (Placement Test mandiri, kontribusi setiap term, diikuti sampai term selesai). |
@@ -173,6 +173,9 @@ Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai 
 **2. Verifikasi fakta yang sudah tampil**
 - [ ] **Jadwal kelas**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Arti "term"**: halaman menulis "per term (semester)", Rp100.000.
+- [ ] **Logo resmi unit Yayasan** (Yayasan, TK, SD, SMP, SMA, English Now) untuk pita "Jaringan pendidikan" di akhir
+  Pengantar: PNG/SVG transparan versi warna, tinggi ≥ 80 px, beserta izin pakai → `assets/jaringan/` + isi `logo` di
+  `site-config.js` `jaringan[]`. Selama kosong, nama unit tampil sebagai tulisan.
 - [ ] **Citra beasiswa** (19 Nov 2026): nilai program Rp1.800.000 per term, beasiswa Yayasan Rp1.700.000, kontribusi siswa
   Rp100.000. Teks ketentuan (section "Amanah beasiswa") & FAQ "Siapa pemberi beasiswanya?" ditulis Claude — mohon ditinjau.
   Kewajiban yang ditulis sebagai SYARAT hanya: Placement Test & konsisten sampai term selesai. Kehadiran minimum belum
