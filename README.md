@@ -1,6 +1,6 @@
 # LCDU Landing Page
 
-Landing page **LCDU (Language Course for Da'wah dan Ummah)**: kelas Bahasa Arab & Inggris online, nirlaba, di bawah
+Landing page **LCDU (Language Course for Da'wah dan Ummah)**: kelas Bahasa Arab & Inggris online **dengan beasiswa** dari
 Yayasan Taqwa Cerdas Kreatif (Alfa Centauri Schools, Bandung). Tujuan halaman: pendaftaran siswa dan donasi untuk Palestina.
 
 Situs **statis tanpa build step**: satu `index.html` (CSS & JS inline), modul hero di `hero/`, data yang sering berubah di
@@ -62,11 +62,13 @@ sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bent
 | Section | Interaksi |
 |---|---|
 | Hero | Cerita scroll 3 babak (tinggi 190vh, 13vh terakhir "tahan fajar"): malam → lampu menyala dari Kubah ke luar → fajar. Hero **Foto**: foto malam/fajar dari ChatGPT, cahaya di jendela, lentera, dan tiang lampu. Geser kencang tetap berakhir di fajar penuh. Kode di folder `hero/`. Tepi bawah: motif keffiyeh × semangka. |
-| Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Nirlaba." yang menyala kata per kata, foto lengkung Al-Aqsa. |
+| Navbar | Selama hero: bar transparan di atas foto (logo putih, tautan, ID/EN/عربي, Daftar); setelah hero: pil kaca. HP: tombol menu → panel tautan + Daftar. |
+| Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Dengan beasiswa." yang menyala kata per kata, foto lengkung Al-Aqsa. |
 | Kenapa LCDU | Blok hijau, foto lengkung berganti mengikuti pernyataan (desktop); di HP tiap pernyataan = slide geser. |
-| Biaya | Blok merah: "Tanpa biaya bulanan." + struk (biaya bulanan Rp0, donasi Palestina tidak wajib, total Rp100.000 per term/semester) yang tercetak keluar dari printer mengikuti scroll. "Rp100.000" hanya muncul di total struk. |
+| Biaya / Beasiswa | Blok merah: "Beasiswa Rp1,7 juta setiap term." + struk "Rincian beasiswa" (nilai program ~~Rp1.800.000~~, beasiswa Yayasan −Rp1.700.000, donasi Palestina tidak wajib, kamu membayar Rp100.000 per term/semester; penutup "Sisanya, bayar dengan kesungguhan.") yang tercetak keluar dari printer mengikuti scroll. |
+| Amanah beasiswa | "Beasiswa ini amanah." + ikrar penerima (4 janji moral, angka Arab) + garis tanda tangan "kamu" yang tergambar. Ikrar = janji, bukan aturan resmi. |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
-| Cara bergabung | Syarat satu kalimat (empat hal), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
+| Cara bergabung | Syarat penerima beasiswa satu kalimat (lima hal, termasuk Placement Test), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Dinding foto: tiga foto cetak (selotip keffiyeh, sedikit miring) dengan kutipan di atas foto + kartu "Ceritamu"; HP = geser. Data = kartu `<li class="cerita-kartu">` di `index.html`. Foto sementara = foto stok tanpa wajah bertanda "Foto ilustrasi"; foto asli penulis (dengan izin) lewat `node tools/build-photos.mjs --potret <folder> stories` → otomatis menggantikan (slug `aninda-salma`, `fitriza-rahma`). |
 | Tim | Gaya "cineflow": layar lebar orang terpilih (warna kelompok + monogram; bila ada foto ASLI: potret di bingkai lengkung arkade di kanan layar) + pita wajah tiga kelompok (Pengelola, Guru Bahasa Inggris, Guru Bahasa Arab + مُعَلِّم). Data di array `TEAM`; foto lewat `node tools/build-photos.mjs --potret <folder> team`. |
 | FAQ | "Yang sering ditanyakan": 9 pertanyaan dari fakta yang sudah ada (array `FAQ` di index.html + JSON-LD dari array yang sama), kotak cari dengan sorotan, topik, tautan langsung `#faq-<id>`. |
@@ -86,7 +88,8 @@ halaman di 360/390px; geser horizontal hanya di dalam komponen `.geser` (keputus
 - Tautan: 28 anchor internal valid; 5 tautan eksternal hidup (Yayasan 200, Placement EN/AR 200, AWG 200 tetapi lambat
   ±19 s, wa.me 302 → api.whatsapp.com); semua tautan keluar `target=_blank` + `rel=noopener`.
 - Sisa kerangka ("stub", "menyusul", `href="#"`, "Logo mitra", "Lorem", `console.log`): **0**.
-- Fakta: "Rp100.000" hanya di total struk Biaya & jawaban FAQ biaya; "Rp0" hanya di struk; tidak ada "gratis", "sudah
+- Fakta (diperbarui 19 Nov 2026, citra beasiswa): "Rp100.000" hanya di total struk & FAQ biaya; "Rp1.800.000" (nilai program per
+  term, coret) & "Rp1.700.000" (beasiswa Yayasan) di struk & FAQ; tidak ada "nirlaba", "Rp0", "tanpa biaya bulanan", "gratis", "sudah
   termasuk seluruh biaya belajar", "tanpa biaya tambahan"; jadwal, nomor WhatsApp, rekening konsisten dengan config.
 
 ## Gambar hero (hero Foto)
@@ -170,6 +173,11 @@ Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai 
 **2. Verifikasi fakta yang sudah tampil**
 - [ ] **Jadwal kelas**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Arti "term"**: halaman menulis "per term (semester)", Rp100.000.
+- [ ] **Citra beasiswa** (19 Nov 2026): nilai program Rp1.800.000 per term, beasiswa Yayasan Rp1.700.000, kontribusi siswa
+  Rp100.000. Teks ikrar (section "Amanah beasiswa") & FAQ "Siapa pemberi beasiswanya?" ditulis Claude — mohon ditinjau.
+  Kewajiban yang ditulis sebagai SYARAT hanya: Placement Test & konsisten sampai term selesai. Kehadiran minimum belum
+  berlaku → tidak ditulis sebagai aturan (ikrar "hadir dan bersungguh-sungguh" = janji moral). Saran: tambahkan pernyataan
+  komitmen di formulir registrasi supaya amanah ini punya mekanisme nyata.
 - [ ] **Nomor WhatsApp admin** 0819-6009-333 (dari lcdu.org).
 - [ ] **Format nomor rekening** saat disalin (angka tanpa titik: `1010118394`).
 - [ ] **Ejaan 5 nama guru** (dibaca dari screenshot resolusi rendah): Alexandria Cempaka Harum, Ridha Fadilah, Astria

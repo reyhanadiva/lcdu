@@ -156,8 +156,7 @@
           var d = document.querySelector('meta[name="description"]'); if (d && K.meta.description) d.setAttribute('content', K.meta.description);
         }
       }
-      /* pemilih: di hero (kanan atas) dan di navbar (sebelum tombol Daftar) */
-      var hero = document.querySelector('.hero-stage'); if (hero) hero.appendChild(pemilih('bahasa-hero'));
+      /* pemilih: di navbar (sebelum tombol Daftar); navbar kini tampil juga di atas hero */
       var navBtn = document.querySelector('.nav-bar > .btn'); if (navBtn) navBtn.parentNode.insertBefore(pemilih('bahasa-nav'), navBtn);
       html.classList.remove('i18n-tunggu');
     }

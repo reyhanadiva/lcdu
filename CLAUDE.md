@@ -2,7 +2,7 @@
 
 ## Proyek
 Landing page marketing LCDU (**Language Course for Da'wah dan Ummah**): kelas Bahasa Arab & Inggris online (usia 16+),
-untuk dakwah dan umat, nirlaba, di bawah
+untuk dakwah dan umat, **dengan beasiswa** (bukan "nirlaba/gratis", sejak 19 Nov 2026) dari
 Yayasan Taqwa Cerdas Kreatif (Alfa Centauri Schools, Bandung). Tujuan halaman: pendaftaran siswa dan donasi.
 Pemilik: Bapak Reyhan (non-developer, berpikir sebagai desainer). Kode akhirnya diserahkan ke tim IT sekolah.
 
@@ -301,9 +301,27 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   **gelap → terang**. Cerita 3 babak lewat scroll (copy persis, hanya pemilik yang mengubah):
   1. "Kelas Bahasa Arab & Inggris untuk dakwah dan umat." 2. "Setiap ilmu yang kita pelajari menyalakan satu cahaya."
   3. "Bersama, kita nyalakan harapan untuk Palestina."
-- Wordmark permanen kiri atas hero: logo + "LCDU" saja (keputusan pemilik; nama panjang hanya untuk pembaca layar, `.sr-only`).
-  Identitas, bukan tombol/tautan.
-- Biaya (fakta dari pemilik): **Rp100.000 per term (1 term = 1 semester).** Di term pertama biaya ini disebut
+- ~~Wordmark permanen kiri atas hero~~ → sejak 19 Nov 2026 **navbar tampil di atas hero** (pemilik: "perlu navbar seperti
+  situs SMP"): `.nav.di-hero` = bar lebar transparan (logo putih, tautan putih bayangan, pilihan bahasa, Daftar), pita
+  gelap scrim atas hero diperkuat untuk fajar. Keluar/masuk hero: bar sembunyi .38 s → ganti gaya → turun lagi (lebar tidak
+  dianimasikan). HP < 900px: `.nav-menu-btn` → `#nav-panel` (kartu kertas, salinan `.nav-links` + Daftar; Esc, klik luar,
+  klik tautan menutup; fokus ke tautan pertama). Pilihan bahasa hanya di navbar (`.bahasa-hero` dihapus). Nama panjang
+  tetap `.sr-only` di hero.
+- **CITRA BEASISWA (keputusan pemilik, 19 Nov 2026 — menggantikan butir Biaya & "Nirlaba" di bawah)**: LCDU TIDAK
+  dicitrakan gratis/nirlaba (mengundang peserta "asal-asalan"), melainkan **beasiswa** dari Yayasan: Yayasan sangat
+  murah hati, penerima memikul amanah (niat & etos tinggi), dan bangga karena belajarnya = kontribusi untuk umat, cinta
+  ilmu, cinta Palestina. Fakta: **nilai program Rp1.800.000 per term** (jangan sebut "HPP"), **beasiswa Yayasan
+  Rp1.700.000**, **siswa membayar Rp100.000 per term (semester)**. Tampilan harga = **coret + nilai beasiswa** (pilihan
+  pemilik): struk "Rincian beasiswa" — Nilai program per term ~~Rp1.800.000~~ · Beasiswa Yayasan −Rp1.700.000 (hijau
+  kulit) · Donasi untuk Palestina sebebasnya (tidak wajib) · "Kamu membayar per term (semester) Rp100.000" · penutup
+  "Sisanya, bayar dengan kesungguhan.". Pernyataan besar Biaya: "Beasiswa Rp1,7 juta setiap term." Pengantar baris 3:
+  "Dengan beasiswa." Navbar & footer "Biaya" → "Beasiswa" (id tetap `biaya`). **Dilarang**: "nirlaba", "gratis", "Rp0",
+  "tanpa biaya bulanan". Syarat tertulis hanya yang benar berlaku: usia 16+, membaca Al-Qur'an, laptop/HP, **mengikuti
+  Placement Test**, **konsisten sampai term selesai**. Kehadiran minimum ada tetapi TIDAK ditegakkan → jangan ditulis
+  sebagai aturan. Section baru **Amanah beasiswa** `#amanah` (setelah Biaya, awal fase sore): "Beasiswa ini amanah." +
+  ikrar 4 janji MORAL (bukan aturan) + garis tanda tangan "kamu" tergambar. FAQ: biaya (angka di atas), syarat, "Siapa
+  pemberi beasiswanya?" (tetap 9 pertanyaan).
+- Biaya (fakta dari pemilik, LAMA — lihat butir citra beasiswa di atas): **Rp100.000 per term (1 term = 1 semester).** Di term pertama biaya ini disebut
   biaya registrasi (fakta; tidak lagi ditulis di halaman atas permintaan pemilik). **"Rp100.000" hanya di total struk
   Biaya**; boleh di maksimal dua tempat lain (langkah 4 Cara bergabung, FAQ) — sekarang langkah 4 berbunyi "Isi formulir
   registrasi dan bayar biaya term pertama." tanpa angka. Meta description tetap memuat angka (keputusan pemilik; tidak
@@ -313,7 +331,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - **Donasi terbuka = untuk Palestina**, sukarela, terpisah dari biaya kelas, disalurkan melalui **AWG (Aqsa Working Group)**,
   tanpa frasa "mitra lama" di halaman (sesi F). Tidak ada "Donasi LCDU" terpisah di halaman.
 - **Urutan section setelah hero** (id dalam kurung): Pengantar (`pengantar`), Kenapa LCDU (`kenapa`), Pilih kelas (`kelas`),
-  Biaya (`biaya`), Cara bergabung = syarat + Placement Test (tombol per bahasa) + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
+  Biaya (`biaya`), Amanah beasiswa (`amanah`, awal fase sore), Cara bergabung = syarat + Placement Test (tombol per bahasa) + langkah (`bergabung`), Testimoni (`testimoni`), Tim (`tim`),
   FAQ (`faq`), Donasi untuk Palestina (`donasi`), Footer. Pemetaan fase: Pengantar & Kenapa = pagi; Kelas & Biaya = siang;
   Bergabung & Testimoni = sore; Tim & FAQ = senja; Donasi & Footer = malam. Navbar: Kelas, Biaya, Cara bergabung, Tim,
   FAQ, Donasi + pill "Daftar" (→ `#bergabung`).
@@ -356,7 +374,7 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
 - Kursor: kursor bawaan tidak disembunyikan, tidak ada kursor kustom. Di hero: cahaya hangat lembut mengikuti kursor
   (HP: mengikuti jari) dan menyingkap fajar di sekitarnya. Di luar hero: tanpa efek kursor khusus.
 - Navbar: kaca transparan ala Apple (isi 58%, blur 8px, saturate 1.8, garis tepi putih tipis; jangan terlalu blur).
-  Tersembunyi selama hero; setelahnya muncul, baru hilang setelah scroll ke bawah ±220 px (geser + pudar halus .7s),
+  Selama hero: mode transparan `.di-hero` (lihat atas); setelahnya pil kaca muncul, baru hilang setelah scroll ke bawah ±220 px (geser + pudar halus .7s),
   muncul lagi saat scroll ke atas; muncul saat fokus
   keyboard; skip link "Lewati ke konten"; tanpa slide saat reduced-motion.
 - Teks hero kontras ≥ 4.5:1 di semua babak (scrim), dan tidak menutupi kubah.

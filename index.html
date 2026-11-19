@@ -10,7 +10,7 @@
 <!-- Hero foto: foto malam dimuat lebih awal sesuai orientasi layar (ukuran dipilih browser; rumusnya sama dengan pickWidth di hero/lentera-hd.js) -->
 <link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-tall-750.avif" imagesrcset="assets/hero/build/night-tall-750.avif 750w, assets/hero/build/night-tall-1024.avif 1024w" imagesizes="(min-aspect-ratio: 2/3) 100vw, 66.67vh" media="(orientation: portrait)" fetchpriority="high">
 <link rel="preload" as="image" type="image/avif" href="assets/hero/build/night-wide-v2-1280.avif" imagesrcset="assets/hero/build/night-wide-v2-1280.avif 1280w, assets/hero/build/night-wide-v2-1536.avif 1536w" imagesizes="(min-aspect-ratio: 3/2) 100vw, 150vh" media="(orientation: landscape)" fetchpriority="high">
-<meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU (Language Course for Da'wah dan Ummah), untuk dakwah dan umat. Biaya Rp100.000 per term (1 semester).">
+<meta name="description" content="Kelas Bahasa Arab &amp; Inggris online dari LCDU (Language Course for Da'wah dan Ummah), untuk dakwah dan umat, dengan beasiswa Yayasan Taqwa Cerdas Kreatif: nilai program Rp1.800.000, kamu membayar Rp100.000 per term (1 semester).">
 <!-- Font di-host sendiri (woff2 variabel, subset Latin/Arab). Preload: judul hero + teks badan. -->
 <script>document.documentElement.classList.add('js');
 /* bahasa (i18n/i18n.js): pasang lang lebih awal & sembunyikan body sebentar supaya teks Indonesia tidak berkedip */
@@ -423,7 +423,8 @@ html:root [data-fase="malam"] .logo-dark{display:block!important}
 .skip{position:fixed;left:16px;top:12px;z-index:200;padding:12px 18px;border-radius:999px;background:var(--kunyit);color:var(--kunyit-ink);font-weight:800;text-decoration:none;transform:translateY(-200%)}
 .skip:focus{transform:none}
 main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) + 84px)}
-.nav .wrap{display:flex;justify-content:center}
+.nav .wrap{display:block}
+.nav-bar{margin-inline:auto}
 .nav-bar{pointer-events:auto;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 18px;border-radius:999px;background:color-mix(in srgb,var(--surface) 58%,transparent);backdrop-filter:blur(8px) saturate(1.8);-webkit-backdrop-filter:blur(8px) saturate(1.8);border:1px solid color-mix(in srgb,#fff 45%,transparent);box-shadow:0 1px 0 color-mix(in srgb,#fff 50%,transparent) inset,0 8px 28px -14px rgba(16,26,61,.35);width:100%;max-width:880px;justify-content:space-between}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .nav-bar{border-color:rgba(255,255,255,.12);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 8px 28px -14px rgba(0,0,0,.6)}}
 :root[data-theme="dark"] .nav-bar{border-color:rgba(255,255,255,.12);box-shadow:0 1px 0 rgba(255,255,255,.1) inset,0 8px 28px -14px rgba(0,0,0,.6)}
@@ -439,6 +440,41 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .nav-links a:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 7%,transparent)}
 .nav .btn{min-height:42px;padding:.5em 1.1em;font-size:.92rem;box-shadow:none}
 @media (min-width:900px){.nav-links{display:flex}}
+/* NAVBAR DI ATAS HERO (sesi 19 Nov, pemilik: "perlu navbar seperti situs SMP"): selama hero navbar TAMPIL tanpa kaca —
+   bar lebar transparan, logo putih, tautan putih, pilihan bahasa, Daftar. Setelah hero berganti ke pil kaca (bar sembunyi
+   dulu .38 s, ganti gaya, lalu turun lagi — lebar bar tidak dianimasikan). Keterbacaan di fajar: pita gelap atas scrim hero
+   + bayangan teks. HP < 900px: tombol menu (garis tiga) membuka .nav-panel (kartu kertas, bukan kaca). */
+.nav.di-hero .wrap{max-width:none}
+.nav.di-hero .nav-bar{background:transparent;border-color:transparent;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;max-width:none;padding-left:0}
+@media (min-width:720px){.nav.di-hero .wrap{padding-left:max(40px,env(safe-area-inset-left,0px));padding-right:max(28px,env(safe-area-inset-right,0px))}}
+@media (max-width:899px){.nav-bar{gap:2px}.nav .bahasa a{min-width:32px;padding:0 .4em;font-size:.76rem}.nav .btn{padding:.5em .9em}}
+.nav.di-hero .brand img{height:34px}
+html:root .nav.di-hero .logo-light{display:none!important}
+html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1px 8px rgba(4,8,32,.55))}
+.nav.di-hero .nav-links a{color:#fff;text-shadow:0 1px 10px rgba(4,8,32,.7)}
+.nav.di-hero .nav-links a:hover{color:#fff;background:rgb(255 255 255 / .14)}
+.nav.di-hero .bahasa a{color:#fff;text-shadow:0 1px 8px rgba(4,8,32,.7)}
+.nav.di-hero .bahasa a:hover{color:#fff;background:rgb(255 255 255 / .14)}
+.nav.di-hero .bahasa a[aria-current="true"]{background:#fff;color:#10163A;text-shadow:none}
+.nav.di-hero .nav-menu-btn{color:#fff;filter:drop-shadow(0 1px 6px rgba(4,8,32,.7))}
+.nav-menu-btn{display:grid;place-items:center;width:44px;height:44px;margin-left:2px;border:0;border-radius:999px;background:transparent;color:var(--ink);cursor:pointer}
+.nav-menu-btn svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.nav-menu-btn .ikon-tutup,.nav-menu-btn[aria-expanded="true"] .ikon-buka{display:none}
+.nav-menu-btn[aria-expanded="true"] .ikon-tutup{display:block}
+.nav-menu-btn:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px}
+@media (min-width:900px){.nav-menu-btn,.nav-panel{display:none!important}}
+.nav-panel{pointer-events:auto;margin:8px auto 0;max-width:880px;padding:10px;border-radius:20px;background:#FFFDF8;color:#10163A;
+  box-shadow:0 0 0 1px rgb(16 22 58 / .08),0 24px 48px -20px rgb(16 22 58 / .55);transform-origin:top center}
+.nav-panel[hidden]{display:none}
+.nav-panel ul{list-style:none;margin:0;padding:0;display:grid}
+.nav-panel li+li{border-top:1px solid rgb(16 22 58 / .08)}
+.nav-panel ul a{display:flex;align-items:center;justify-content:space-between;min-height:52px;padding:0 14px;color:#10163A;font-family:var(--f-display);font-size:1.3rem;font-weight:600;text-decoration:none;border-radius:12px}
+.nav-panel ul a::after{content:"";width:9px;height:9px;border-top:2px solid currentColor;border-right:2px solid currentColor;transform:rotate(45deg);opacity:.4}
+.nav-panel ul a:hover,.nav-panel ul a:focus-visible{background:rgb(16 22 58 / .05)}
+.nav-panel .btn{display:flex;justify-content:center;margin-top:8px;min-height:52px;font-size:1rem}
+.gerak .nav-panel:not([hidden]){animation:panel-buka .32s var(--ease)}
+@keyframes panel-buka{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+@media (max-width:379px){.nav-bar>.btn{display:none}}
 
 /* ===== HERO: gelap → terang lewat scroll (hero Foto, hero/lentera-hd.js). Tinggi 190vh: ±77vh peta babak + 13vh tahan fajar ===== */
 .hero{--night:#040820;--hero-fg:#F3F5FC;--hero-soft:rgba(243,245,252,.78);--sun:#F2C14E;
@@ -452,12 +488,6 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .hero-scrim::after{content:"";position:absolute;inset:0;background:inherit;opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.6)}
 @media (max-width:899px){.hero-scrim::after{opacity:clamp(0,calc((var(--p,0) - .6)*2.5),.9)}}
 .hero-copy{position:relative;height:100%;pointer-events:none}
-/* identitas tetap di pojok kiri atas hero (bukan tautan); scrim atas menjaga keterbacaannya saat fajar */
-.hero-id{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 18px);margin:0;display:flex;align-items:center;gap:10px;text-shadow:0 1px 12px rgba(4,8,32,.6)}
-.hero-id{flex-direction:column;align-items:flex-start;gap:6px}
-.hero-id img{display:block;height:clamp(30px,2.2rem,40px);width:auto;filter:drop-shadow(0 1px 8px rgba(4,8,32,.5))}
-.hero-id small{display:block;font-size:.72rem;font-weight:600;color:var(--hero-soft);letter-spacing:.01em}
-@media (min-width:720px){.hero-id{left:max(40px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 26px)}}
 /* teks babak: kiri-bawah, memudar di tempat (tanpa geser) */
 .beat{--bottom:calc(env(safe-area-inset-bottom,0px) + clamp(120px,17vh,168px));position:absolute;bottom:var(--bottom);margin:0;opacity:0;font-family:var(--f-display);font-weight:600;font-size:clamp(2.2rem,1.3rem + 3.8vw,4.9rem);line-height:1.04;letter-spacing:-.015em;text-shadow:0 1px 2px rgba(4,8,32,.45),0 2px 28px rgba(4,8,32,.6);text-wrap:balance;will-change:opacity}
 .beat-0{opacity:1}
@@ -478,7 +508,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 /* scrim: pita tipis di atas (wordmark) + gradasi lebar & lembut dari pojok kiri-atas (seperti langit yang lebih gelap di
    sisi itu, bukan bercak) selama teks putih babak 1–2 tampil; memudar habis sebelum babak 3. Babak 3 jatuh di langit
    fajar yang terang, jadi teksnya biru tua (kontras ≥ 6:1) tanpa penggelapan sama sekali */
-.hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.6) 0%,rgba(4,8,32,.32) 7%,transparent 13%)}
+.hero[data-text="top"] .hero-scrim{background:linear-gradient(180deg,rgba(4,8,32,.66) 0%,rgba(4,8,32,.5) 5%,rgba(4,8,32,.24) 10%,rgba(4,8,32,.08) 14%,transparent 18%)}
 .hero[data-text="top"] .hero-scrim::after{display:block;opacity:calc(1 - clamp(0,(var(--p,0) - .67)*7,1));
   background:radial-gradient(ellipse 95% 80% at 0% 18%,rgba(4,8,32,.7) 0%,rgba(4,8,32,.6) 30%,rgba(4,8,32,.32) 58%,rgba(4,8,32,.1) 78%,transparent 100%)}
 @media (orientation: portrait){.hero[data-text="top"] .hero-scrim::after{background:linear-gradient(180deg,rgba(4,8,32,.62) 0%,rgba(4,8,32,.56) 22%,rgba(4,8,32,.3) 36%,rgba(4,8,32,.08) 46%,transparent 54%)}}
@@ -499,7 +529,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 
 /* ===== PENGANTAR =====
    Tiga fragmen berirama (teks persis dari pemilik): baris 1 ringan & besar ("Arab" hijau kulit, "Inggris" biru, tebal),
-   baris 2–3 tebal miring dan jauh lebih besar ("Nirlaba." merah). Hierarki dari ukuran & ketebalan, warna hanya penegas.
+   baris 2–3 tebal miring dan jauh lebih besar ("Dengan beasiswa." merah). Hierarki dari ukuran & ketebalan, warna hanya penegas.
    Kata menyala satu per satu (gerak "menyala"): --p (0..1) dianimasikan view timeline kalimat (tanpa pin), cadangan JS di
    skrip. Nilai awal 1 = semua kata penuh (reduced-motion / tanpa JS). Seni: foto Al-Aqsa berbingkai lengkung di kanan,
    irisan semangka menjorok dari tepi layar di belakang foto. Ke Kenapa: hanya pergeseran warna (gradasi di atas blok hijau). */
@@ -614,7 +644,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .cost-label{font-family:var(--f-body);font-weight:500;font-size:clamp(1.1rem,1rem + .4vw,1.3rem);line-height:1.3;letter-spacing:.01em;color:#F5DEC1;margin-bottom:clamp(12px,2vw,28px)}
 /* frasa kunci: teks tetap putih (6,6:1), aksen kunyit sebagai garis bawah tebal (bukan warna teks: kunyit 4,1:1) */
 .cost-kunci{background:linear-gradient(var(--kunyit),var(--kunyit)) 0 92%/100% .1em no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.cost-besar{font-family:var(--f-display);font-weight:700;font-size:clamp(3.2rem,1.4rem + 6.4vw,7.6rem);line-height:.95;letter-spacing:-.035em;text-wrap:balance}
+.cost-besar{font-family:var(--f-display);font-weight:700;font-size:clamp(3rem,1.3rem + 5.6vw,6.4rem);line-height:.95;letter-spacing:-.035em;text-wrap:balance}
 .cost-dukung{max-width:52ch;font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
 /* biji semangka tersebar halus di tepi kiri & kanan */
 .cost-biji{position:absolute;z-index:0;top:0;bottom:0;width:clamp(56px,11vw,170px);--biji:var(--keffiyeh);--orn-alpha:.22}
@@ -642,6 +672,10 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .rline::before{content:"";grid-column:2;grid-row:1;border-bottom:1px dotted color-mix(in srgb,var(--ink) 45%,transparent);transform:translateY(-4px)}
 .rline>span:first-child{grid-column:1;grid-row:1}
 .rline>span:nth-of-type(2){grid-column:3;grid-row:1;font-weight:700;text-align:right}
+/* nilai program dicoret (bukan diskon toko: baris berikutnya menjelaskan beasiswa Yayasan); beasiswa hijau kulit 6,5:1 */
+.rline-nilai s{font-weight:600;color:var(--ink-soft);text-decoration-thickness:2px;text-decoration-color:var(--semangka-tua)}
+.rline-beasiswa>span{color:var(--kulit)}
+.rline-beasiswa>span:first-child{font-weight:700}
 /* layar HP: huruf & tepi sedikit dikecilkan supaya label, titik-titik (min. 20px), dan nilai tetap satu baris (≥ 360px) */
 @media (max-width:420px){.receipt{padding-left:16px;padding-right:16px}.rline{font-size:.88rem}}
 @media (max-width:370px){.rline{font-size:.82rem}}
@@ -792,6 +826,31 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
    (keputusan pemilik): kartu Placement Test menampilkan tombol per bahasa. */
 .gabung{padding-bottom:calc(var(--jarak-section) * .6)}
 .gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
+/* ===== AMANAH BEASISWA (sesi 19 Nov): judul Fraunces besar + ikrar bernomor Arab; garis tanda tangan "kamu" tergambar ===== */
+.amanah{padding-top:calc(var(--jarak-section) * 1.2)}
+.amanah-grid{display:grid;gap:clamp(28px,4vw,64px)}
+@media (min-width:1000px){.amanah-grid{grid-template-columns:5fr 7fr;align-items:start}}
+.amanah-kiri{display:grid;gap:16px;align-content:start;max-width:46ch}
+@media (min-width:1000px){.amanah-kiri{position:sticky;top:110px}}
+.amanah-judul{font-family:var(--f-display);font-weight:700;font-size:clamp(2.5rem,1.6rem + 3.2vw,4.6rem);line-height:1;letter-spacing:-.03em;text-wrap:balance}
+.amanah-kunci{color:var(--zamrud-ink);font-style:italic}
+.amanah-lead{font-size:var(--step-1);line-height:1.5;color:var(--ink)}
+.amanah-bangga{font-size:var(--step-0);line-height:1.6;color:var(--ink-soft);padding-left:14px;border-left:3px solid var(--semangka-tua)}
+.amanah-label{font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--zamrud-ink)}
+.ikrar{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
+.ikrar li{display:grid;grid-template-columns:clamp(44px,5vw,64px) minmax(0,1fr);gap:clamp(12px,1.6vw,22px);align-items:baseline;padding:clamp(16px,2vw,24px) 0;border-bottom:1px solid var(--line)}
+.ikrar-no{font-family:var(--f-ar);font-weight:700;font-size:clamp(2rem,1.4rem + 1.8vw,3rem);line-height:1;color:var(--zamrud-ink);text-align:center}
+.ikrar p{font-family:var(--f-display);font-weight:500;font-size:clamp(1.25rem,1rem + .9vw,1.8rem);line-height:1.25;letter-spacing:-.01em;color:var(--ink);text-wrap:pretty}
+.ikrar-ttd{display:grid;gap:22px;margin-top:clamp(22px,3vw,36px)}
+@media (min-width:600px){.ikrar-ttd{grid-template-columns:1fr 1fr;align-items:end}}
+.ttd{display:grid;gap:8px;font-size:var(--step--1);color:var(--ink-soft)}
+.ttd b{color:var(--ink)}
+.ttd-garis{display:block;height:54px;border-bottom:1.5px solid var(--ink);position:relative}
+.ttd-garis svg{position:absolute;left:4px;right:30%;bottom:4px;width:70%;height:48px;overflow:visible}
+.ttd-garis path{fill:none;stroke:var(--lazuardi-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
+.gerak .ttd-garis path{stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.45,.05,.25,1) .5s}
+.gerak .ikrar-ttd.is-in .ttd-garis path{stroke-dashoffset:0}
+.ttd-garis--polos{border-bottom-style:dashed;border-bottom-color:color-mix(in srgb,var(--ink) 40%,transparent)}
 .gabung-judul{display:grid;gap:12px;max-width:52ch}
 .gabung-syarat{font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
 .gabung-syarat b{font-weight:700;color:var(--ink)}
@@ -1542,12 +1601,7 @@ main section[id]:not(#hero){scroll-margin-top:calc(env(safe-area-inset-top,0px) 
 .bahasa a[aria-current="true"]{background:var(--ink);color:#fff}
 .bahasa a:focus-visible{outline:3px solid var(--kunyit);outline-offset:2px}
 .bahasa-nav{margin-left:auto;margin-right:4px}
-.bahasa-hero{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 14px);right:max(16px,env(safe-area-inset-right,0px));
-  background:rgb(4 8 32 / .42);box-shadow:inset 0 0 0 1px rgb(255 255 255 / .22)}
-.bahasa-hero a{color:#fff}
-.bahasa-hero a:hover{color:#fff;background:rgb(255 255 255 / .14)}
-.bahasa-hero a[aria-current="true"]{background:#fff;color:#10163A}
-@media (min-width:900px){.bahasa-hero{top:calc(env(safe-area-inset-top,0px) + 22px);right:max(28px,env(safe-area-inset-right,0px))}}
+@media (min-width:900px){.nav-links{margin-left:auto}.bahasa-nav{margin-left:10px}}
 html[lang="ar"]{--f-display:"Fraunces","Noto Naskh Arabic",Georgia,serif;--f-body:"Plus Jakarta Sans","Noto Naskh Arabic",system-ui,sans-serif}
 /* huruf Arab bersambung: tanpa jarak huruf & tanpa miring sintetis; baris sedikit lebih lega */
 html[lang="ar"] [data-i18n],html[lang="ar"] [data-i18n] *{letter-spacing:0!important;font-style:normal!important}
@@ -1564,14 +1618,16 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
       <a class="brand" href="#top"><img class="logo-light" src="assets/brand/web/lcdu-lockup-color-240.png" width="90" height="30" alt="LCDU"><img class="logo-dark" src="assets/brand/web/lcdu-lockup-white-240.png" width="90" height="30" alt="LCDU"></a>
       <ul class="nav-links">
         <li><a href="#kelas">Kelas</a></li>
-        <li><a href="#biaya">Biaya</a></li>
+        <li><a href="#biaya">Beasiswa</a></li>
         <li><a href="#bergabung">Cara bergabung</a></li>
         <li><a href="#tim">Tim</a></li>
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#donasi">Donasi</a></li>
       </ul>
       <a class="btn btn-sun" href="#bergabung">Daftar</a>
+      <button class="nav-menu-btn" type="button" aria-expanded="false" aria-controls="nav-panel"><svg class="ikon-buka" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16"/></svg><svg class="ikon-tutup" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6 18 18M18 6 6 18"/></svg><span class="sr-only">Menu</span></button>
     </nav>
+    <div class="nav-panel" id="nav-panel" hidden></div>
   </div>
 </header>
 
@@ -1581,7 +1637,7 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   <div class="hero-stage">
     <div class="hero-canvas" id="hero-canvas" role="img" aria-label="Kompleks Masjid Al-Aqsa yang perlahan berubah dari gelap malam menjadi terang fajar"></div>
     <div class="hero-scrim" aria-hidden="true"></div>
-    <p class="hero-id"><img src="assets/brand/web/lcdu-lockup-white-240.png" width="120" height="40" alt="LCDU"><span class="sr-only" lang="en">Language Course for Da'wah dan Ummah</span></p>
+    <p class="sr-only" lang="en">Language Course for Da'wah dan Ummah</p>
     <div class="hero-copy">
       <h1 class="beat beat-0">Kelas Bahasa Arab &amp; Inggris untuk dakwah dan umat.</h1>
       <p class="beat beat-1" aria-hidden="true">Setiap ilmu yang kita pelajari menyalakan satu cahaya.</p>
@@ -1607,11 +1663,11 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
 <section data-lentera class="band intro" id="pengantar" aria-labelledby="intro-h">
   <div class="wrap intro-grid">
     <div class="intro-teks">
-      <h2 class="intro-kalimat" id="intro-h" style="--n:7" data-judul=".k">
-        <span class="sr-only">Belajar Bahasa Arab dan Inggris. Online. Nirlaba.</span>
-        <span aria-hidden="true"><span class="intro-l1"><span class="k" style="--i:0">Belajar</span> <span class="k" style="--i:1">Bahasa</span> <span class="k k-ar" style="--i:2">Arab</span> <span class="k" style="--i:3">dan</span> <span class="k k-en" style="--i:4">Inggris.</span></span><span class="intro-l2"><span class="k" style="--i:5">Online.</span></span><span class="intro-l3"><span class="k k-merah" style="--i:6">Nirlaba.</span></span></span>
+      <h2 class="intro-kalimat" id="intro-h" style="--n:8" data-judul=".k">
+        <span class="sr-only">Belajar Bahasa Arab dan Inggris. Online. Dengan beasiswa.</span>
+        <span aria-hidden="true"><span class="intro-l1"><span class="k" style="--i:0">Belajar</span> <span class="k" style="--i:1">Bahasa</span> <span class="k k-ar" style="--i:2">Arab</span> <span class="k" style="--i:3">dan</span> <span class="k k-en" style="--i:4">Inggris.</span></span><span class="intro-l2"><span class="k" style="--i:5">Online.</span></span><span class="intro-l3"><span class="k k-merah" style="--i:6">Dengan</span> <span class="k k-merah" style="--i:7">beasiswa.</span></span></span>
       </h2>
-      <p class="intro-yayasan"><i class="orn-leaf" aria-hidden="true"></i><span>LCDU (<span lang="en" data-cfg-text="lcdu.namaLengkap">Language Course for Da'wah dan Ummah</span>) dikelola <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a>.</span><i class="orn-band" aria-hidden="true"></i></p>
+      <p class="intro-yayasan"><i class="orn-leaf" aria-hidden="true"></i><span>LCDU (<span lang="en" data-cfg-text="lcdu.namaLengkap">Language Course for Da'wah dan Ummah</span>), beasiswa bahasa dari <a class="tautan-yayasan" href="https://alfacentauri.sch.id/yayasan/" data-cfg-href="yayasan.url" target="_blank" rel="noopener">Yayasan Taqwa Cerdas Kreatif<span class="sr-only"> (buka di tab baru)</span></a>.</span><i class="orn-band" aria-hidden="true"></i></p>
     </div>
     <div class="intro-seni" aria-hidden="true">
       <figure class="frame-arch"><picture><source type="image/avif" srcset="assets/photos/aqsa-480.avif 480w, assets/photos/aqsa-960.avif 960w" sizes="(min-width:900px) 400px, 72vw"><img src="assets/photos/aqsa-960.webp" srcset="assets/photos/aqsa-480.webp 480w, assets/photos/aqsa-960.webp 960w" sizes="(min-width:900px) 400px, 72vw" alt="" loading="lazy" decoding="async" style="object-position:100% 50%"></picture></figure>
@@ -1735,19 +1791,20 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   <div class="wrap cost">
     <div class="cost-copy">
       <h2 class="cost-label" id="cost-h" data-judul>Berapa biayanya?</h2>
-      <p class="cost-besar">Tanpa <span class="cost-kunci">biaya bulanan</span>.</p>
-      <p class="cost-dukung">LCDU adalah program nirlaba. Kamu cukup membayar satu kali per term (semester).</p>
+      <p class="cost-besar">Beasiswa <span class="cost-kunci">Rp1,7 juta</span> setiap term.</p>
+      <p class="cost-dukung">Yayasan Taqwa Cerdas Kreatif menanggung sebagian besar nilai setiap term, karena bahasa adalah bekal dakwah. Yang kami minta darimu: kesungguhan sampai term selesai.</p>
     </div>
     <div class="receipt-wrap">
       <i class="orn-slice cost-slice" aria-hidden="true"></i>
       <div class="printer" aria-hidden="true"></div>
       <div class="struk-jendela">
         <div class="receipt" id="receipt">
-          <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian biaya</span></div>
-          <div class="rline"><span>Biaya bulanan</span><span>Rp0</span></div>
+          <div class="receipt-head"><b>LCDU<span class="sr-only">,</span></b><span>Rincian beasiswa</span></div>
+          <div class="rline rline-nilai"><span>Nilai program per term</span><span><s>Rp1.800.000</s></span></div>
+          <div class="rline rline-beasiswa"><span>Beasiswa Yayasan</span><span>−Rp1.700.000</span></div>
           <div class="rline rline-donasi"><span>Donasi untuk Palestina</span><span>sebebasnya</span><small class="rline-ket">(tidak wajib)</small></div>
-          <div class="rtotal"><span>Total per term (semester)</span><span>Rp100.000</span></div>
-          <p class="receipt-foot"><i class="orn-band" aria-hidden="true"></i><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Terima kasih sudah belajar bersama LCDU.</p>
+          <div class="rtotal"><span>Kamu membayar per term (semester)</span><span>Rp100.000</span></div>
+          <p class="receipt-foot"><i class="orn-band" aria-hidden="true"></i><span lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</span>Sisanya, bayar dengan kesungguhan.</p>
         </div>
       </div>
     </div>
@@ -1760,12 +1817,39 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
 <!-- ============ CARA BERGABUNG: syarat → kartu Placement Test → enam langkah ============
      Tanpa pilihan bahasa (dihapus, keputusan pemilik): tombol di kartu langsung per bahasa. Status & tautan per bahasa
      dari site-config.js (placement.en / placement.ar). Checklist "Kamu siap bergabung?" dihapus (keputusan pemilik). -->
+<!-- ============ AMANAH BEASISWA (sesi 19 Nov, pemilik: "citra beasiswa, etos & niat tinggi, ada moral baggage, pride") ============
+     Ikrar = janji moral penerima, BUKAN aturan resmi. Hanya dua kewajiban nyata yang disebut sebagai syarat di halaman
+     (Placement Test, konsisten sampai term selesai — keputusan pemilik); kehadiran minimum TIDAK ditulis sebagai aturan.
+     Tipografi saja (bukan kartu kertas lagi): angka Arab ١–٤ hijau kulit, garis tanda tangan "kamu" tergambar sekali. -->
+<section data-lentera class="band amanah" id="amanah" aria-labelledby="amanah-h">
+  <div class="wrap amanah-grid">
+    <div class="amanah-kiri">
+      <h2 class="amanah-judul" id="amanah-h" data-judul>Beasiswa ini <span class="amanah-kunci">amanah.</span></h2>
+      <p class="amanah-lead">Setiap kursi di kelas LCDU dibiayai Yayasan Taqwa Cerdas Kreatif. Kami memberikannya kepada pelajar yang datang dengan niat, bukan sekadar mencoba-coba.</p>
+      <p class="amanah-bangga">Belajarmu bukan hanya untuk dirimu. Setiap kata yang kamu kuasai adalah bekal dakwah, tanda cinta pada ilmu, dan doa untuk Palestina.</p>
+    </div>
+    <div class="amanah-kanan">
+      <p class="amanah-label" id="ikrar-h">Ikrar penerima beasiswa</p>
+      <ol class="ikrar" aria-labelledby="ikrar-h">
+        <li data-muncul style="--d:0ms"><span class="ikrar-no" aria-hidden="true">١</span><p>Aku meluruskan niat: belajar bahasa untuk dakwah dan umat.</p></li>
+        <li data-muncul style="--d:90ms"><span class="ikrar-no" aria-hidden="true">٢</span><p>Aku mengerjakan Placement Test dengan jujur, tanpa penerjemah otomatis atau bantuan orang lain.</p></li>
+        <li data-muncul style="--d:180ms"><span class="ikrar-no" aria-hidden="true">٣</span><p>Aku hadir dan bersungguh-sungguh sampai term selesai.</p></li>
+        <li data-muncul style="--d:270ms"><span class="ikrar-no" aria-hidden="true">٤</span><p>Aku membagikan ilmu ini, dan Palestina selalu ada dalam doaku.</p></li>
+      </ol>
+      <div class="ikrar-ttd" data-muncul style="--d:300ms">
+        <p class="ttd"><span class="ttd-garis" aria-hidden="true"><svg viewBox="0 0 220 60" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M6 42c18-22 30-30 34-20s-10 22-2 22 22-30 30-28-6 26 2 26 16-18 24-20 4 14 12 14 20-10 30-12 18 4 30 2 28-6 42-8"/></svg></span><span>Penerima amanah: <b>kamu</b></span></p>
+        <p class="ttd"><span class="ttd-garis ttd-garis--polos" aria-hidden="true"></span><span>Pemberi amanah: <b>Yayasan Taqwa Cerdas Kreatif</b></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section data-lentera class="band gabung" id="bergabung" aria-labelledby="req-h">
   <div class="wrap gabung-kepala">
     <div class="gabung-judul">
       <h2 class="h2" id="req-h" data-judul>Cara bergabung</h2>
       <!-- (D) syarat: empat fakta yang sama dengan checklist lama (usia, Al-Qur'an, perangkat, konsisten); frasa kunci tebal -->
-      <p class="gabung-syarat">Cukup empat hal: <b>usia 16+</b>, <b>bisa membaca Al-Qur'an</b>, <b>punya laptop atau HP</b>, dan <b>siap konsisten sampai term selesai</b>.</p>
+      <p class="gabung-syarat">Syarat penerima beasiswa: <b>usia 16+</b>, <b>bisa membaca Al-Qur'an</b>, <b>punya laptop atau HP</b>, <b>mengikuti Placement Test</b>, dan <b>siap konsisten sampai term selesai</b>.</p>
     </div>
   </div>
 
@@ -1820,7 +1904,7 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
       <li class="langkah" style="--i:0"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">1</span><h4><a href="#placement">Kerjakan Placement Test</a></h4><p>Untuk mengetahui level yang pas buat kamu.</p></li>
       <li class="langkah" style="--i:1"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">2</span><h4>Kirim hasilnya</h4><p>Screenshot hasil tes, lalu kirim ke Admin LCDU (Mr. Syahril).</p></li>
       <li class="langkah" style="--i:2"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">3</span><h4>Dapatkan kelas</h4><p>Admin memberi tahu kelas yang tersedia untuk kamu.</p></li>
-      <li class="langkah" style="--i:3"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">4</span><h4>Registrasi</h4><p>Isi formulir registrasi dan bayar biaya term pertama.</p></li>
+      <li class="langkah" style="--i:3"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">4</span><h4>Registrasi</h4><p>Isi formulir registrasi dan bayar kontribusi term pertama.</p></li>
       <li class="langkah" style="--i:4"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">5</span><h4>Masuk grup dan Canvas</h4><p>Kamu masuk grup WhatsApp kelas dan mengaktifkan akun Canvas LMS.</p></li>
       <li class="langkah" style="--i:5"><span class="langkah-lentera" aria-hidden="true"></span><span class="langkah-no" aria-hidden="true">6</span><h4>Mulai belajar</h4><p>Materi dan link Zoom tersedia di Canvas. Sampai jumpa di kelas.</p></li>
       </ol>
@@ -2022,12 +2106,12 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
       <div class="foot-id">
         <img src="assets/brand/web/lcdu-lockup-white-240.png" width="120" height="40" alt="LCDU" loading="lazy" decoding="async">
         <p class="foot-nama" lang="en" data-cfg-text="lcdu.namaLengkap">Language Course for Da'wah dan Ummah</p>
-        <p class="foot-desk">Kelas Bahasa Arab dan Inggris online. Program nirlaba di bawah Yayasan Taqwa Cerdas Kreatif.</p>
+        <p class="foot-desk">Kelas Bahasa Arab dan Inggris online dengan beasiswa dari Yayasan Taqwa Cerdas Kreatif.</p>
         <p class="foot-tagline" lang="en">For a Better Ummah</p>
       </div>
       <div>
         <h3>Jelajahi</h3>
-        <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Biaya</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#testimoni">Testimoni</a></li><li><a href="#tim">Tim</a></li><li><a href="#faq">FAQ</a></li><li><a href="#lokasi">Lokasi kantor</a></li><li><a href="#donasi">Donasi</a></li></ul>
+        <ul class="foot-links"><li><a href="#kelas">Kelas</a></li><li><a href="#biaya">Beasiswa</a></li><li><a href="#bergabung">Cara bergabung</a></li><li><a href="#testimoni">Testimoni</a></li><li><a href="#tim">Tim</a></li><li><a href="#faq">FAQ</a></li><li><a href="#lokasi">Lokasi kantor</a></li><li><a href="#donasi">Donasi</a></li></ul>
       </div>
       <div>
         <h3>Hubungi kami</h3>
@@ -2157,19 +2241,50 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   /* tombol Tanya Admin: label menyapa sekali saat pertama muncul; gelombang berhenti setelah pengunjung mengeklik */
   var fabSapa = false;
   fab.addEventListener('click', function(){ fab.classList.add('sudah'); });
-  function navUpdate(){
+  /* navbar dua gaya: .di-hero (transparan, selalu tampil di atas foto) ↔ pil kaca (setelah hero). Pergantian = sembunyi
+     .38 s → ganti gaya → turun lagi, supaya lebar bar tidak melompat di depan mata. */
+  var tukarT = 0, menukar = false, panelBuka = false;
+  function gayaNav(diHero, langsung){
+    if (nav.classList.contains('di-hero') === diHero && !menukar) return;
+    clearTimeout(tukarT);
+    if (langsung || reduce){ menukar = false; nav.classList.toggle('di-hero', diHero); nav.classList.remove('is-hidden'); return; }
+    menukar = true; nav.classList.add('is-hidden');
+    tukarT = setTimeout(function(){ menukar = false; nav.classList.toggle('di-hero', diHero); nav.classList.remove('is-hidden'); run = 0; }, 380);
+  }
+  function navUpdate(awal){
     nTick = false;
     var y = window.scrollY, dy = y - lastY; lastY = y;
     var past = y >= heroEl.offsetTop + heroEl.offsetHeight - 80;
     fab.classList.toggle('is-away', !past);
     if (past && !fabSapa){ fabSapa = true; fab.classList.add('sapa'); setTimeout(function(){ fab.classList.remove('sapa'); }, 4000); }
-    if (!past){ inHero = true; nav.classList.add('is-hidden'); return; }
-    if (inHero){ inHero = false; run = 0; grace = window.innerHeight*.8; nav.classList.remove('is-hidden'); return; }  // baru melewati hero: tampil dulu
+    if (!past){ inHero = true; gayaNav(true, awal === true); return; }
+    if (inHero){ inHero = false; run = 0; grace = window.innerHeight*.8; gayaNav(false, awal === true); return; }  // baru melewati hero: tampil dulu
+    if (menukar || panelBuka) return;
     if (dy < 0){ run = Math.min(run, 0) + dy; if (run < -6){ nav.classList.remove('is-hidden'); grace = 0; } }
     else if (dy > 0){ run = Math.max(run, 0) + dy; if (run > grace + 220){ nav.classList.add('is-hidden'); grace = 0; } }  // turun ±220px dulu baru hilang
   }
+  /* menu HP (< 900px): panel berisi tautan yang sama (disalin dari .nav-links, sudah diterjemahkan) + tombol Daftar */
+  var menuBtn = $('.nav-menu-btn'), panel = $('#nav-panel');
+  if (menuBtn && panel){
+    var ul = $('.nav-links').cloneNode(true); ul.className = '';
+    var daftar = $('.nav-bar > .btn').cloneNode(true);
+    panel.appendChild(ul); panel.appendChild(daftar);
+    var tutupPanel = function(fokus){
+      if (!panelBuka) return; panelBuka = false; panel.hidden = true; menuBtn.setAttribute('aria-expanded', 'false');
+      if (fokus) menuBtn.focus();
+    };
+    menuBtn.addEventListener('click', function(){
+      if (panelBuka){ tutupPanel(); return; }
+      panelBuka = true; panel.hidden = false; menuBtn.setAttribute('aria-expanded', 'true'); nav.classList.remove('is-hidden');
+      var a1 = panel.querySelector('a'); if (a1) a1.focus({ preventScroll: true });
+    });
+    panel.addEventListener('click', function(e){ if (e.target.closest('a')) tutupPanel(); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && panelBuka) tutupPanel(true); });
+    document.addEventListener('pointerdown', function(e){ if (panelBuka && !e.target.closest('.nav')) tutupPanel(); });
+    window.addEventListener('resize', function(){ if (window.innerWidth >= 900) tutupPanel(); });
+  }
   window.addEventListener('scroll', function(){ if (!nTick){ nTick = true; requestAnimationFrame(navUpdate); } }, {passive:true});
-  navUpdate();
+  navUpdate(true);
   /* footer sudah memuat WhatsApp Admin: tombol mengambang menepi supaya tidak menutupi isi footer */
   if ('IntersectionObserver' in window && $('footer')) new IntersectionObserver(function(en){ fab.classList.toggle('is-kaki', en[0].isIntersecting); }, { rootMargin: '0px 0px -12% 0px' }).observe($('footer'));
 
@@ -2420,11 +2535,11 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
     var awg = cfg('donasi.mitra') || 'Aqsa Working Group (AWG)';
     var FAQ = [
       { id: 'biaya', topik: 'biaya', tanya: T('Berapa biayanya?'),
-        jawab: T('Rp100.000 per term (semester), tanpa biaya bulanan.') },
+        jawab: T('Nilai program LCDU Rp1.800.000 per term (semester). Beasiswa Yayasan menanggung Rp1.700.000, jadi kamu membayar Rp100.000 per term.') },
       { id: 'syarat', topik: 'daftar', tanya: T('Siapa yang boleh ikut?'),
-        jawab: T('Cukup empat hal: usia 16+, bisa membaca Al-Qur\'an, punya laptop atau HP, dan siap konsisten sampai term selesai.') },
+        jawab: T('Syarat penerima beasiswa: usia 16+, bisa membaca Al-Qur\'an, punya laptop atau HP, mengikuti Placement Test, dan siap konsisten sampai term selesai.') },
       { id: 'daftar', topik: 'daftar', tanya: T('Bagaimana cara daftar?'),
-        jawab: T('Dalam enam langkah: kerjakan Placement Test, kirim screenshot hasilnya ke Admin LCDU (Mr. Syahril), tunggu admin memberi tahu kelas yang tersedia, isi formulir registrasi dan bayar biaya term pertama, masuk grup WhatsApp kelas dan aktifkan akun Canvas LMS, lalu mulai belajar. Rinciannya ada di <a href="#bergabung">Cara bergabung</a>.') },
+        jawab: T('Dalam enam langkah: kerjakan Placement Test, kirim screenshot hasilnya ke Admin LCDU (Mr. Syahril), tunggu admin memberi tahu kelas yang tersedia, isi formulir registrasi dan bayar kontribusi term pertama, masuk grup WhatsApp kelas dan aktifkan akun Canvas LMS, lalu mulai belajar. Rinciannya ada di <a href="#bergabung">Cara bergabung</a>.') },
       { id: 'tes', topik: 'tes', tanya: T('Apa itu Placement Test?'),
         jawab: T('Tes singkat untuk menentukan kelas yang pas untukmu: 20 soal listening, 20 soal reading, dan 30 soal grammar, maksimal 60 menit, dikerjakan sekali duduk. Audio diputar maksimal 2 kali, jadi siapkan speaker atau headset.') + ' ' + statusTes },
       { id: 'belajar', topik: 'belajar', tanya: T('Belajarnya bagaimana?'),
@@ -2435,8 +2550,8 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
         jawab: T('Dua kelas: Bahasa Inggris dan Bahasa Arab, bersama guru profesional sesuai level kamu. Lihat <a href="#kelas">Pilih kelas</a>.') },
       { id: 'donasi', topik: 'donasi', tanya: T('Apakah donasi wajib?'),
         jawab: T('Tidak. Donasi bersifat sukarela dan terpisah dari biaya kelas. Donasi untuk Palestina disalurkan melalui {0}.', [awg]) },
-      { id: 'pengelola', topik: 'daftar', tanya: T('Siapa yang mengelola LCDU?'),
-        jawab: T('LCDU adalah program nirlaba yang dikelola {0}.', ['<a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></a>']) }
+      { id: 'pengelola', topik: 'daftar', tanya: T('Siapa pemberi beasiswanya?'),
+        jawab: T('{0}, pengelola LCDU. Beasiswa ini amanah: kami berharap kamu mengerjakan Placement Test dengan jujur dan bersungguh-sungguh sampai term selesai.', ['<a class="tautan-yayasan" href="' + yUrl + '" target="_blank" rel="noopener">' + yNama + '<span class="sr-only"> ' + T('(buka di tab baru)') + '</span></a>']) }
     ];
     /* warna kartu bergilir (tint palet LCDU; tinta #10163A ≥ 12:1 di semua) — kunyit TIDAK dipakai (khusus tombol aksi) */
     var WARNA = ['krem', 'biru', 'hijau', 'merah', 'kertas'];
