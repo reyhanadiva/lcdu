@@ -62,8 +62,6 @@ window.LCDU_KAMUS.ar = {
   "Mufradat": "المفردات",
   "Qira'ah": "القراءة",
   "Berapa biayanya?": "كم التكلفة؟",
-  "Beasiswa <0>Rp1,7 juta</0> setiap term.": "منحة بقيمة <0>1٫7 مليون روبية</0> في كل فصل.",
-  "Yayasan Taqwa Cerdas Kreatif menanggung sebagian besar nilai setiap term, karena bahasa adalah bekal dakwah. Yang kami minta darimu: kesungguhan sampai term selesai.": "تتحمّل مؤسسة Yayasan Taqwa Cerdas Kreatif الجزء الأكبر من قيمة كل فصل، لأن اللغة زادُ الدعوة. وما نطلبه منك: الجِدّ حتى نهاية الفصل.",
   "<0>LCDU<1>,</1></0><2>Rincian beasiswa</2>": "<0>LCDU<1>،</1></0><2>تفاصيل المنحة</2>",
   "<0>Nilai program per term</0><1><2>Rp1.800.000</2></1>": "<0>قيمة البرنامج لكل فصل</0><1><2>Rp1.800.000</2></1>",
   "<0>Donasi untuk Palestina</0><1>sebebasnya</1><2>(tidak wajib)</2>": "<0>التبرع لفلسطين</0><1>حسب استطاعتك</1><2>(غير إلزامي)</2>",
@@ -221,14 +219,15 @@ window.LCDU_KAMUS.ar = {
   "<0/><1/><2>Menu</2>": "<0/><1/><2>القائمة</2>",
   "<0>Beasiswa Yayasan</0><1>−Rp1.700.000</1>": "<0>منحة المؤسسة</0><1>−Rp1.700.000</1>",
   "Beasiswa ini <0>amanah.</0>": "هذه المنحة <0>أمانة.</0>",
-  "Setiap kursi di kelas LCDU dibiayai Yayasan Taqwa Cerdas Kreatif. Kami memberikannya kepada pelajar yang datang dengan niat, bukan sekadar mencoba-coba.": "كل مقعد في دروس LCDU تموّله مؤسسة Yayasan Taqwa Cerdas Kreatif، ونمنحه للطلاب الذين يأتون بنيّة صادقة، لا لمجرّد التجربة.",
-  "Belajarmu bukan hanya untuk dirimu. Setiap kata yang kamu kuasai adalah bekal dakwah, tanda cinta pada ilmu, dan doa untuk Palestina.": "تعلُّمك ليس لنفسك وحدها. كل كلمة تتقنها زادٌ للدعوة، وعلامةُ حبٍّ للعلم، ودعاءٌ لفلسطين.",
-  "Ikrar penerima beasiswa": "عهد الطالب الحاصل على المنحة",
-  "Aku meluruskan niat: belajar bahasa untuk dakwah dan umat.": "أُصحِّح نيّتي: أتعلّم اللغة للدعوة وللأمّة.",
-  "Aku mengerjakan Placement Test dengan jujur, tanpa penerjemah otomatis atau bantuan orang lain.": "أؤدّي اختبار تحديد المستوى بصدق، دون ترجمة آلية أو مساعدة من أحد.",
-  "Aku hadir dan bersungguh-sungguh sampai term selesai.": "أحضر وأجتهد حتى نهاية الفصل.",
-  "Aku membagikan ilmu ini, dan Palestina selalu ada dalam doaku.": "أنشر هذا العلم، وفلسطين حاضرة دائمًا في دعائي.",
-  "<0/><1>Penerima amanah: <2>kamu</2></1>": "<0/><1>المؤتمَن: <2>أنت</2></1>",
-  "<0/><1>Pemberi amanah: <2>Yayasan Taqwa Cerdas Kreatif</2></1>": "<0/><1>مانح الأمانة: <2>Yayasan Taqwa Cerdas Kreatif</2></1>"
+  "Setiap pelajar menerima <0>beasiswa</0>.": "كل طالب يحصل على <0>منحة</0>.",
+  "Sebagian besar nilai program ditanggung Yayasan Taqwa Cerdas Kreatif.": "تتحمّل مؤسسة Yayasan Taqwa Cerdas Kreatif الجزء الأكبر من قيمة البرنامج.",
+  "Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh. Ada tiga ketentuan yang menyertainya.": "تُمنح منحة LCDU للطلاب المستعدين لإتمام فصل كامل بجدّية، ولها ثلاثة شروط.",
+  "Ketentuan beasiswa": "شروط المنحة",
+  "Placement Test dikerjakan mandiri": "يُؤدّى اختبار تحديد المستوى ذاتيًّا",
+  "Sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.": "في جلسة واحدة، دون ترجمة آلية أو مساعدة من أحد. ونتيجتك تحدّد فصلك.",
+  "Kontribusi dibayar setiap term": "تُدفع المساهمة في كل فصل",
+  "Pembayaran pertama saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.": "الدفعة الأولى عند التسجيل، وتتحمّل منحة المؤسسة باقي قيمة البرنامج.",
+  "Diikuti sampai term selesai": "المواظبة حتى نهاية الفصل",
+  "Beasiswa diberikan per term, untuk satu term penuh.": "تُمنح المنحة لكل فصل، لفصل دراسي كامل."
  }
 };

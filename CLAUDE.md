@@ -314,12 +314,17 @@ Saat mengembangkan, pakai server tanpa cache (browser menyimpan modul ES lama); 
   Rp1.700.000**, **siswa membayar Rp100.000 per term (semester)**. Tampilan harga = **coret + nilai beasiswa** (pilihan
   pemilik): struk "Rincian beasiswa" — Nilai program per term ~~Rp1.800.000~~ · Beasiswa Yayasan −Rp1.700.000 (hijau
   kulit) · Donasi untuk Palestina sebebasnya (tidak wajib) · "Kamu membayar per term (semester) Rp100.000" · penutup
-  "Sisanya, bayar dengan kesungguhan.". Pernyataan besar Biaya: "Beasiswa Rp1,7 juta setiap term." Pengantar baris 3:
+  "Sisanya, bayar dengan kesungguhan.". Pernyataan besar Biaya (revisi, pemilik "kurang sreg" dgn angka di judul — angka
+  sudah di struk): "Setiap pelajar menerima beasiswa." (garis kunyit di "beasiswa", 2,8–5,2rem) + satu kalimat "Sebagian
+  besar nilai program ditanggung Yayasan Taqwa Cerdas Kreatif." Pengantar baris 3:
   "Dengan beasiswa." Navbar & footer "Biaya" → "Beasiswa" (id tetap `biaya`). **Dilarang**: "nirlaba", "gratis", "Rp0",
   "tanpa biaya bulanan". Syarat tertulis hanya yang benar berlaku: usia 16+, membaca Al-Qur'an, laptop/HP, **mengikuti
   Placement Test**, **konsisten sampai term selesai**. Kehadiran minimum ada tetapi TIDAK ditegakkan → jangan ditulis
   sebagai aturan. Section baru **Amanah beasiswa** `#amanah` (setelah Biaya, awal fase sore): "Beasiswa ini amanah." +
-  ikrar 4 janji MORAL (bukan aturan) + garis tanda tangan "kamu" tergambar. FAQ: biaya (angka di atas), syarat, "Siapa
+  satu kalimat pengantar + "Ketentuan beasiswa" = TIGA ketentuan faktual bernomor Arab (judul Fraunces + satu kalimat):
+  Placement Test dikerjakan mandiri · Kontribusi dibayar setiap term · Diikuti sampai term selesai. Pemilik MENOLAK nada
+  ikrar/janji, kutipan "Belajarmu bukan hanya untuk dirimu…", kalimat "bukan sekadar mencoba-coba", dan tanda tangan
+  (semua "corny"/terlalu eksplisit) → nada: tenang, profesional, faktual, tanpa slogan. FAQ: biaya (angka di atas), syarat, "Siapa
   pemberi beasiswanya?" (tetap 9 pertanyaan).
 - Biaya (fakta dari pemilik, LAMA — lihat butir citra beasiswa di atas): **Rp100.000 per term (1 term = 1 semester).** Di term pertama biaya ini disebut
   biaya registrasi (fakta; tidak lagi ditulis di halaman atas permintaan pemilik). **"Rp100.000" hanya di total struk

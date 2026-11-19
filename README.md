@@ -65,8 +65,8 @@ sertifikasi), `FAQ` (id, topik, tanya, jawab). Untuk CMS kelak: pertahankan bent
 | Navbar | Selama hero: bar transparan di atas foto (logo putih, tautan, ID/EN/عربي, Daftar); setelah hero: pil kaca. HP: tombol menu → panel tautan + Daftar. |
 | Pengantar | Tiga fragmen tipografi "Belajar Bahasa Arab dan Inggris. Online. Dengan beasiswa." yang menyala kata per kata, foto lengkung Al-Aqsa. |
 | Kenapa LCDU | Blok hijau, foto lengkung berganti mengikuti pernyataan (desktop); di HP tiap pernyataan = slide geser. |
-| Biaya / Beasiswa | Blok merah: "Beasiswa Rp1,7 juta setiap term." + struk "Rincian beasiswa" (nilai program ~~Rp1.800.000~~, beasiswa Yayasan −Rp1.700.000, donasi Palestina tidak wajib, kamu membayar Rp100.000 per term/semester; penutup "Sisanya, bayar dengan kesungguhan.") yang tercetak keluar dari printer mengikuti scroll. |
-| Amanah beasiswa | "Beasiswa ini amanah." + ikrar penerima (4 janji moral, angka Arab) + garis tanda tangan "kamu" yang tergambar. Ikrar = janji, bukan aturan resmi. |
+| Biaya / Beasiswa | Blok merah: "Setiap pelajar menerima beasiswa." + struk "Rincian beasiswa" (nilai program ~~Rp1.800.000~~, beasiswa Yayasan −Rp1.700.000, donasi Palestina tidak wajib, kamu membayar Rp100.000 per term/semester; penutup "Sisanya, bayar dengan kesungguhan.") yang tercetak keluar dari printer mengikuti scroll. |
+| Amanah beasiswa | "Beasiswa ini amanah." + tiga ketentuan beasiswa (Placement Test mandiri, kontribusi setiap term, diikuti sampai term selesai). |
 | Kelas | Layar terbelah Inggris \| Arab; garis pembagi bisa ditarik (desktop). HP < 700px: dua slide geser (Inggris, Arab) dengan penanda teks "Inggris \| Arab". |
 | Cara bergabung | Syarat penerima beasiswa satu kalimat (lima hal, termasuk Placement Test), kartu Placement Test dengan tombol per bahasa (status & tautan di `site-config.js` → `placement.en` / `placement.ar`; sekarang keduanya tutup sementara → "Tanya admin lewat WhatsApp"), "Daftar dalam 6 langkah" sebagai tali lentera kiri→kanan. |
 | Testimoni | Dinding foto: tiga foto cetak (selotip keffiyeh, sedikit miring) dengan kutipan di atas foto + kartu "Ceritamu"; HP = geser. Data = kartu `<li class="cerita-kartu">` di `index.html`. Foto sementara = foto stok tanpa wajah bertanda "Foto ilustrasi"; foto asli penulis (dengan izin) lewat `node tools/build-photos.mjs --potret <folder> stories` → otomatis menggantikan (slug `aninda-salma`, `fitriza-rahma`). |
@@ -174,9 +174,9 @@ Diurutkan menurut prioritas. Data di bawah **sengaja tidak ditampilkan** sampai 
 - [ ] **Jadwal kelas**: Inggris Senin & Rabu, Arab Selasa & Kamis, 16.00–17.30 WIB; weekend Sabtu 13.00–16.00 WIB (keduanya).
 - [ ] **Arti "term"**: halaman menulis "per term (semester)", Rp100.000.
 - [ ] **Citra beasiswa** (19 Nov 2026): nilai program Rp1.800.000 per term, beasiswa Yayasan Rp1.700.000, kontribusi siswa
-  Rp100.000. Teks ikrar (section "Amanah beasiswa") & FAQ "Siapa pemberi beasiswanya?" ditulis Claude — mohon ditinjau.
+  Rp100.000. Teks ketentuan (section "Amanah beasiswa") & FAQ "Siapa pemberi beasiswanya?" ditulis Claude — mohon ditinjau.
   Kewajiban yang ditulis sebagai SYARAT hanya: Placement Test & konsisten sampai term selesai. Kehadiran minimum belum
-  berlaku → tidak ditulis sebagai aturan (ikrar "hadir dan bersungguh-sungguh" = janji moral). Saran: tambahkan pernyataan
+  berlaku → tidak ditulis sebagai aturan. Saran: tambahkan pernyataan
   komitmen di formulir registrasi supaya amanah ini punya mekanisme nyata.
 - [ ] **Nomor WhatsApp admin** 0819-6009-333 (dari lcdu.org).
 - [ ] **Format nomor rekening** saat disalin (angka tanpa titik: `1010118394`).

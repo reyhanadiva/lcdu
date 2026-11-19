@@ -644,7 +644,7 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
 .cost-label{font-family:var(--f-body);font-weight:500;font-size:clamp(1.1rem,1rem + .4vw,1.3rem);line-height:1.3;letter-spacing:.01em;color:#F5DEC1;margin-bottom:clamp(12px,2vw,28px)}
 /* frasa kunci: teks tetap putih (6,6:1), aksen kunyit sebagai garis bawah tebal (bukan warna teks: kunyit 4,1:1) */
 .cost-kunci{background:linear-gradient(var(--kunyit),var(--kunyit)) 0 92%/100% .1em no-repeat;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.cost-besar{font-family:var(--f-display);font-weight:700;font-size:clamp(3rem,1.3rem + 5.6vw,6.4rem);line-height:.95;letter-spacing:-.035em;text-wrap:balance}
+.cost-besar{font-family:var(--f-display);font-weight:700;font-size:clamp(2.8rem,1.4rem + 4.2vw,5.2rem);line-height:.95;letter-spacing:-.035em;text-wrap:balance}
 .cost-dukung{max-width:52ch;font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
 /* biji semangka tersebar halus di tepi kiri & kanan */
 .cost-biji{position:absolute;z-index:0;top:0;bottom:0;width:clamp(56px,11vw,170px);--biji:var(--keffiyeh);--orn-alpha:.22}
@@ -826,7 +826,7 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
    (keputusan pemilik): kartu Placement Test menampilkan tombol per bahasa. */
 .gabung{padding-bottom:calc(var(--jarak-section) * .6)}
 .gabung-kepala{display:flex;flex-wrap:wrap;gap:20px 40px;align-items:end;justify-content:space-between}
-/* ===== AMANAH BEASISWA (sesi 19 Nov): judul Fraunces besar + ikrar bernomor Arab; garis tanda tangan "kamu" tergambar ===== */
+/* ===== AMANAH BEASISWA (sesi 19 Nov, revisi "jangan corny"): judul + pengantar | tiga ketentuan bernomor Arab ===== */
 .amanah{padding-top:calc(var(--jarak-section) * 1.2)}
 .amanah-grid{display:grid;gap:clamp(28px,4vw,64px)}
 @media (min-width:1000px){.amanah-grid{grid-template-columns:5fr 7fr;align-items:start}}
@@ -834,23 +834,13 @@ html:root .nav.di-hero .logo-dark{display:block!important;filter:drop-shadow(0 1
 @media (min-width:1000px){.amanah-kiri{position:sticky;top:110px}}
 .amanah-judul{font-family:var(--f-display);font-weight:700;font-size:clamp(2.5rem,1.6rem + 3.2vw,4.6rem);line-height:1;letter-spacing:-.03em;text-wrap:balance}
 .amanah-kunci{color:var(--zamrud-ink);font-style:italic}
-.amanah-lead{font-size:var(--step-1);line-height:1.5;color:var(--ink)}
-.amanah-bangga{font-size:var(--step-0);line-height:1.6;color:var(--ink-soft);padding-left:14px;border-left:3px solid var(--semangka-tua)}
+.amanah-lead{font-size:var(--step-1);line-height:1.55;color:var(--ink-soft)}
 .amanah-label{font-size:.82rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--zamrud-ink)}
-.ikrar{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
-.ikrar li{display:grid;grid-template-columns:clamp(44px,5vw,64px) minmax(0,1fr);gap:clamp(12px,1.6vw,22px);align-items:baseline;padding:clamp(16px,2vw,24px) 0;border-bottom:1px solid var(--line)}
-.ikrar-no{font-family:var(--f-ar);font-weight:700;font-size:clamp(2rem,1.4rem + 1.8vw,3rem);line-height:1;color:var(--zamrud-ink);text-align:center}
-.ikrar p{font-family:var(--f-display);font-weight:500;font-size:clamp(1.25rem,1rem + .9vw,1.8rem);line-height:1.25;letter-spacing:-.01em;color:var(--ink);text-wrap:pretty}
-.ikrar-ttd{display:grid;gap:22px;margin-top:clamp(22px,3vw,36px)}
-@media (min-width:600px){.ikrar-ttd{grid-template-columns:1fr 1fr;align-items:end}}
-.ttd{display:grid;gap:8px;font-size:var(--step--1);color:var(--ink-soft)}
-.ttd b{color:var(--ink)}
-.ttd-garis{display:block;height:54px;border-bottom:1.5px solid var(--ink);position:relative}
-.ttd-garis svg{position:absolute;left:4px;right:30%;bottom:4px;width:70%;height:48px;overflow:visible}
-.ttd-garis path{fill:none;stroke:var(--lazuardi-ink);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0}
-.gerak .ttd-garis path{stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.45,.05,.25,1) .5s}
-.gerak .ikrar-ttd.is-in .ttd-garis path{stroke-dashoffset:0}
-.ttd-garis--polos{border-bottom-style:dashed;border-bottom-color:color-mix(in srgb,var(--ink) 40%,transparent)}
+.ketentuan{list-style:none;margin:12px 0 0;padding:0;border-top:1px solid var(--line)}
+.ketentuan li{display:grid;grid-template-columns:clamp(36px,4vw,52px) minmax(0,1fr);gap:clamp(12px,1.6vw,20px);align-items:baseline;padding:clamp(16px,2vw,24px) 0;border-bottom:1px solid var(--line)}
+.ketentuan-no{font-family:var(--f-ar);font-weight:700;font-size:clamp(1.6rem,1.2rem + 1.2vw,2.3rem);line-height:1;color:var(--zamrud-ink);text-align:center}
+.ketentuan h3{font-family:var(--f-display);font-weight:600;font-size:clamp(1.2rem,1rem + .7vw,1.6rem);line-height:1.2;letter-spacing:-.01em;color:var(--ink)}
+.ketentuan p{margin-top:6px;font-size:var(--step-0);line-height:1.55;color:var(--ink-soft);max-width:52ch}
 .gabung-judul{display:grid;gap:12px;max-width:52ch}
 .gabung-syarat{font-size:var(--step-1);line-height:1.5;color:var(--ink-soft)}
 .gabung-syarat b{font-weight:700;color:var(--ink)}
@@ -1791,8 +1781,8 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
   <div class="wrap cost">
     <div class="cost-copy">
       <h2 class="cost-label" id="cost-h" data-judul>Berapa biayanya?</h2>
-      <p class="cost-besar">Beasiswa <span class="cost-kunci">Rp1,7 juta</span> setiap term.</p>
-      <p class="cost-dukung">Yayasan Taqwa Cerdas Kreatif menanggung sebagian besar nilai setiap term, karena bahasa adalah bekal dakwah. Yang kami minta darimu: kesungguhan sampai term selesai.</p>
+      <p class="cost-besar">Setiap pelajar menerima <span class="cost-kunci">beasiswa</span>.</p>
+      <p class="cost-dukung">Sebagian besar nilai program ditanggung Yayasan Taqwa Cerdas Kreatif.</p>
     </div>
     <div class="receipt-wrap">
       <i class="orn-slice cost-slice" aria-hidden="true"></i>
@@ -1817,29 +1807,23 @@ html[lang="ar"] h1[data-i18n],html[lang="ar"] h2[data-i18n],html[lang="ar"] h3[d
 <!-- ============ CARA BERGABUNG: syarat → kartu Placement Test → enam langkah ============
      Tanpa pilihan bahasa (dihapus, keputusan pemilik): tombol di kartu langsung per bahasa. Status & tautan per bahasa
      dari site-config.js (placement.en / placement.ar). Checklist "Kamu siap bergabung?" dihapus (keputusan pemilik). -->
-<!-- ============ AMANAH BEASISWA (sesi 19 Nov, pemilik: "citra beasiswa, etos & niat tinggi, ada moral baggage, pride") ============
-     Ikrar = janji moral penerima, BUKAN aturan resmi. Hanya dua kewajiban nyata yang disebut sebagai syarat di halaman
-     (Placement Test, konsisten sampai term selesai — keputusan pemilik); kehadiran minimum TIDAK ditulis sebagai aturan.
-     Tipografi saja (bukan kartu kertas lagi): angka Arab ١–٤ hijau kulit, garis tanda tangan "kamu" tergambar sekali. -->
+<!-- ============ AMANAH BEASISWA (sesi 19 Nov; revisi pemilik: "jangan corny, lebih smooth & profesional") ============
+     Judul + satu kalimat pengantar + TIGA KETENTUAN berupa fakta (bukan ikrar/janji): Placement Test mandiri (aturan tes resmi),
+     kontribusi per term (pertama saat registrasi, langkah 4), sampai term selesai (syarat yang sudah ada; beasiswa per term). Kehadiran minimum
+     TIDAK ditulis (belum ditegakkan). Tanpa kutipan & tanpa tanda tangan (dihapus pemilik). -->
 <section data-lentera class="band amanah" id="amanah" aria-labelledby="amanah-h">
   <div class="wrap amanah-grid">
     <div class="amanah-kiri">
       <h2 class="amanah-judul" id="amanah-h" data-judul>Beasiswa ini <span class="amanah-kunci">amanah.</span></h2>
-      <p class="amanah-lead">Setiap kursi di kelas LCDU dibiayai Yayasan Taqwa Cerdas Kreatif. Kami memberikannya kepada pelajar yang datang dengan niat, bukan sekadar mencoba-coba.</p>
-      <p class="amanah-bangga">Belajarmu bukan hanya untuk dirimu. Setiap kata yang kamu kuasai adalah bekal dakwah, tanda cinta pada ilmu, dan doa untuk Palestina.</p>
+      <p class="amanah-lead">Beasiswa LCDU diberikan untuk pelajar yang siap menempuh satu term dengan sungguh-sungguh. Ada tiga ketentuan yang menyertainya.</p>
     </div>
     <div class="amanah-kanan">
-      <p class="amanah-label" id="ikrar-h">Ikrar penerima beasiswa</p>
-      <ol class="ikrar" aria-labelledby="ikrar-h">
-        <li data-muncul style="--d:0ms"><span class="ikrar-no" aria-hidden="true">١</span><p>Aku meluruskan niat: belajar bahasa untuk dakwah dan umat.</p></li>
-        <li data-muncul style="--d:90ms"><span class="ikrar-no" aria-hidden="true">٢</span><p>Aku mengerjakan Placement Test dengan jujur, tanpa penerjemah otomatis atau bantuan orang lain.</p></li>
-        <li data-muncul style="--d:180ms"><span class="ikrar-no" aria-hidden="true">٣</span><p>Aku hadir dan bersungguh-sungguh sampai term selesai.</p></li>
-        <li data-muncul style="--d:270ms"><span class="ikrar-no" aria-hidden="true">٤</span><p>Aku membagikan ilmu ini, dan Palestina selalu ada dalam doaku.</p></li>
+      <p class="amanah-label" id="ketentuan-h">Ketentuan beasiswa</p>
+      <ol class="ketentuan" aria-labelledby="ketentuan-h">
+        <li data-muncul style="--d:0ms"><span class="ketentuan-no" aria-hidden="true">١</span><div><h3>Placement Test dikerjakan mandiri</h3><p>Sekali duduk, tanpa penerjemah otomatis atau bantuan orang lain. Hasilnya menentukan kelasmu.</p></div></li>
+        <li data-muncul style="--d:90ms"><span class="ketentuan-no" aria-hidden="true">٢</span><div><h3>Kontribusi dibayar setiap term</h3><p>Pembayaran pertama saat registrasi. Sisa nilai program ditanggung beasiswa Yayasan.</p></div></li>
+        <li data-muncul style="--d:180ms"><span class="ketentuan-no" aria-hidden="true">٣</span><div><h3>Diikuti sampai term selesai</h3><p>Beasiswa diberikan per term, untuk satu term penuh.</p></div></li>
       </ol>
-      <div class="ikrar-ttd" data-muncul style="--d:300ms">
-        <p class="ttd"><span class="ttd-garis" aria-hidden="true"><svg viewBox="0 0 220 60" preserveAspectRatio="none" focusable="false"><path pathLength="1" d="M6 42c18-22 30-30 34-20s-10 22-2 22 22-30 30-28-6 26 2 26 16-18 24-20 4 14 12 14 20-10 30-12 18 4 30 2 28-6 42-8"/></svg></span><span>Penerima amanah: <b>kamu</b></span></p>
-        <p class="ttd"><span class="ttd-garis ttd-garis--polos" aria-hidden="true"></span><span>Pemberi amanah: <b>Yayasan Taqwa Cerdas Kreatif</b></span></p>
-      </div>
     </div>
   </div>
 </section>
