@@ -579,8 +579,9 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   englishnow}.png`: latar putih diubah transparan (warna-ke-alfa, ambang 40 → garis bingkai tipis logo SMP ikut hilang),
   dipangkas, tinggi ≤ 240 px, dikuantisasi 96 warna (4–13 KB). `yayasan.png` = logo bintang Yayasan (disimpan, BELUM
   dipakai). Data = `site-config.js` `jaringan[]` (`logo`); tanpa `logo` → nama unit sebagai tulisan (`.jw`). Dikecilkan
-  (pemilik): logo tinggi 38–58 px (English Now 24–38 px, mendatar), SATU baris di semua layar (grid 1fr ×4 + 1,4fr),
-  label di kiri ≥ 1200px; tinggi pita desktop ±105 px, HP ±118 px. Opacity .9 → 1 + naik 2px saat hover. Irisan semangka Pengantar kini di
+  lagi (pemilik, 2×: "lebih kecil & lebih dekat ke atasnya"): logo 32–46 px (English Now 20–30 px), SATU baris di semua
+  layar (grid 1fr ×4 + 1,4fr), label di kiri ≥ 1200px; jarak dari baris Yayasan ke garis pita 95 → 41 px (desktop), 50 →
+  18 px (HP) (`margin-top` 0–10px, `padding-top` 12–16px); tinggi pita desktop ±83 px, HP ±98 px. Opacity .9 → 1 + naik 2px saat hover. Irisan semangka Pengantar kini di
   `.intro-panggung` (tidak menimpa pita). Daftar `data-i18n-lewati` (nama diri). Footer "Jaringan pendidikan" tetap
   memuat Yayasan (tautan teks).
 
