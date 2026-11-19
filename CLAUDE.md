@@ -578,9 +578,9 @@ Pemilik meminta audit seluruh halaman + perbaikan langsung. Selain Testimoni din
   SMP, SMA Alfa Centauri, English Now. **Logo resmi dari pemilik** (19 Nov 2026) → `assets/jaringan/{tk,sd,smp,sma,
   englishnow}.png`: latar putih diubah transparan (warna-ke-alfa, ambang 40 → garis bingkai tipis logo SMP ikut hilang),
   dipangkas, tinggi ≤ 240 px, dikuantisasi 96 warna (4–13 KB). `yayasan.png` = logo bintang Yayasan (disimpan, BELUM
-  dipakai). Data = `site-config.js` `jaringan[]` (`logo`); tanpa `logo` → nama unit sebagai tulisan (`.jw`). Logo tinggi
-  72–96 px (English Now 48–64 px, mendatar), opacity .9 → 1 + naik 2px saat hover. Grid ≥ 900px: 1fr ×4 + 1,4fr (label
-  di kiri ≥ 1200px); HP 6 kolom: TK/SD/SMP (span 2) lalu SMA/English Now (span 3). Irisan semangka Pengantar kini di
+  dipakai). Data = `site-config.js` `jaringan[]` (`logo`); tanpa `logo` → nama unit sebagai tulisan (`.jw`). Dikecilkan
+  (pemilik): logo tinggi 38–58 px (English Now 24–38 px, mendatar), SATU baris di semua layar (grid 1fr ×4 + 1,4fr),
+  label di kiri ≥ 1200px; tinggi pita desktop ±105 px, HP ±118 px. Opacity .9 → 1 + naik 2px saat hover. Irisan semangka Pengantar kini di
   `.intro-panggung` (tidak menimpa pita). Daftar `data-i18n-lewati` (nama diri). Footer "Jaringan pendidikan" tetap
   memuat Yayasan (tautan teks).
 
